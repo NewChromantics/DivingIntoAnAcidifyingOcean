@@ -18,8 +18,8 @@ void main()
 	t = mix( 1, -1, t );
 	b = mix( 1, -1, b );
 	
-	vec3 LocalPos = vec3( mix( l, r, TexCoord.x ), mix( l, r, TexCoord.y ), 0 );
-	vec3 WorldPos = vec3( 0,0,1);
+	vec3 LocalPos = vec3( mix( l, r, TexCoord.x ), mix( t, b, TexCoord.y ), 0 );
+	vec3 WorldPos = vec3( 0,0,-10) + LocalPos;
 	vec3 CameraPos = WorldPos;	//	world to camera space
 	vec4 ProjectionPos = CameraProjectionMatrix * vec4( CameraPos, 1 );
 	gl_Position = ProjectionPos;

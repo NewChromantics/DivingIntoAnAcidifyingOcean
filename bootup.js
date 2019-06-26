@@ -13,7 +13,8 @@ const SeaColours = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3',
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 
-Pop.Include('PopShaderCache.js');
+Pop.Include('PopEngineCommon/PopShaderCache.js');
+Pop.Include('PopEngineCommon/PopMath.js');
 
 
 const Spheres =
@@ -194,6 +195,7 @@ function UpdateCamera(RenderTarget)
 	camera_pos( Camera, Up, Camera.VerticalFieldOfView, Aspect, Camera.DistToFocus );
 	
 	Camera.ProjectionMatrix = perspective( [], Camera.VerticalFieldOfView, Aspect, Camera.NearDistance, Camera.FarDistance );
+	
 }
 
 
@@ -212,21 +214,12 @@ function Render(RenderTarget)
 	let SetUniforms = function(Shader)
 	{
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
-		Shader.SetUniform('camera_origin', Camera.Position );
-		Shader.SetUniform('camera_lower_left_corner', Camera.LowerLeftCorner );
-		Shader.SetUniform('camera_horizontal', Camera.Horizontal );
-		Shader.SetUniform('camera_vertical', Camera.Vertical );
-		Shader.SetUniform('camera_lens_radius', Camera.LensRadius );
-		Shader.SetUniform('window_size', WindowSize );
-		Shader.SetUniform('random_seed', RandomSeed );
-		Shader.SetUniform('Time', Time);
-		//Shader.SetUniform('Spheres',Spheres);
 	};
 
 	RenderTarget.DrawQuad( Shader, SetUniforms );
 }
 
-let Window = new Pop.Opengl.Window("Shiny");
+let Window = new Pop.Opengl.Window("Under the sea");
 Window.OnRender = Render;
 Window.OnMouseMove = function(){};
 
