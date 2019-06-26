@@ -198,7 +198,62 @@ function UpdateCamera(RenderTarget)
 	
 }
 
+let TriangleBuffer = null;
 
+function TVertexAttrib(Name,Type)
+{
+	this.Name = Name;
+	this.Type = Type;
+}
+
+function GetTriangleBuffer(RenderTarget,TriangleCount)
+{
+	if ( TriangleBuffer )
+		return TriangleBuffer;
+	
+	//	done in c++ for now
+	/*
+	//	make up new vertex definition
+	let VertexDef = [];
+	VertexDef.push( new TVertexAttrib('TexCoord','float2') );
+	let Vertexes = [ [0,0], [1,0], [1,1], [0,1] ];
+	let TriangleIndexes = [0,1,2,	2,3,0];
+	
+	TriangleBuffer = new Pop.StructuredBuffer( VertexDef, Vertexes, TriangleIndexes );
+	*/
+	
+
+	let VertexSize = 2;
+	let VertexData = [];
+	let TriangleIndexes = [];
+	
+	let AddQuad = function(TL_BR)
+	{
+		let FirstTriangleIndex = VertexData.length / VertexSize;
+		
+		let l = TL_BR[0];
+		let t = TL_BR[1];
+		let r = TL_BR[2];
+		let b = TL_BR[3];
+
+		let Verts = [	l,t,	r,t,	r,b,	l,b	];
+		Verts.forEach( v => VertexData.push(v) );
+
+		let QuadIndexes = [0,1,2,	2,3,0];
+		QuadIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
+	}
+	
+	AddQuad( [0,0,	1,1	] );
+	AddQuad( [0,1.5,	1,2.5	] );
+	//let VertexData = [ 0,0,	1,0,	1,1,	0,1	];
+	//let TriangleIndexes = [0,1,2,	2,3,0];
+	
+	Pop.Debug( VertexData );
+	Pop.Debug( TriangleIndexes );
+
+	TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexData, VertexSize, TriangleIndexes );
+	return TriangleBuffer;
+}
 
 function Render(RenderTarget)
 {
@@ -216,7 +271,8 @@ function Render(RenderTarget)
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
 	};
 
-	RenderTarget.DrawQuad( Shader, SetUniforms );
+	let TriangleBuffer = GetTriangleBuffer(RenderTarget,10);
+	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
 }
 
 let Window = new Pop.Opengl.Window("Under the sea");
