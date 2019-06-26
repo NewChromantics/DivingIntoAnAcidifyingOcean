@@ -6,9 +6,53 @@ Pop.Include = function(Filename)
 }
 
 
-//	colours from colorbrewer2.org
-const SeaColours = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
+function HexToRgb(HexRgb)
+{
+	if ( HexRgb[0] != '#' )	throw HexRgb + " doesn't begin with #";
+	
+	let GetNibble = function(CharIndex)
+	{
+		let Char = HexRgb.charCodeAt(CharIndex);
+		let a = 'a'.charCodeAt(0);
+		let zero = '0'.charCodeAt(0);
+		let nine = '9'.charCodeAt(0);
+		return (Char >= zero && Char <= nine) ? (0+Char-zero) : (10+Char-a);
+	}
+	
+	let a = GetNibble(1);
+	let b = GetNibble(2);
+	let c = GetNibble(3);
+	let d = GetNibble(4);
+	let e = GetNibble(5);
+	let f = GetNibble(6);
+	
+	let Red = (a<<4) | b;
+	let Green = (c<<4) | d;
+	let Blue = (e<<4) | f;
+	//Pop.Debug(a,b,c,d,e,f);
+	//Pop.Debug(Red,Green,Blue);
+	return [Red,Green,Blue];
+}
 
+function UnrollHexToRgb(Hexs)
+{
+	let Rgbs = [];
+	let PushRgb = function(Hex)
+	{
+		let Rgb = HexToRgb(Hex);
+		Rgbs.push( Rgb[0]/255 );
+		Rgbs.push( Rgb[1]/255 );
+		Rgbs.push( Rgb[2]/255 );
+	}
+	Hexs.forEach( PushRgb );
+	return Rgbs;
+}
+
+//	colours from colorbrewer2.org
+const SeaColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
+//const SeaColoursHex = ['#012345','#ffaa99'];
+//const SeaColoursHex = ['#f00000'];
+const SeaColours = UnrollHexToRgb(SeaColoursHex);
 
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
@@ -211,16 +255,6 @@ function GetTriangleBuffer(RenderTarget,TriangleCount)
 	if ( TriangleBuffer )
 		return TriangleBuffer;
 	
-	//	done in c++ for now
-	/*
-	//	make up new vertex definition
-	let VertexDef = [];
-	VertexDef.push( new TVertexAttrib('TexCoord','float2') );
-	let Vertexes = [ [0,0], [1,0], [1,1], [0,1] ];
-	let TriangleIndexes = [0,1,2,	2,3,0];
-	
-	TriangleBuffer = new Pop.StructuredBuffer( VertexDef, Vertexes, TriangleIndexes );
-	*/
 	
 
 	let VertexSize = 2;
@@ -243,15 +277,31 @@ function GetTriangleBuffer(RenderTarget,TriangleCount)
 		QuadIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
 	}
 	
+	let AddTriangle = function(TriangleIndex)
+	{
+		let FirstTriangleIndex = VertexData.length / VertexSize;
+		
+		let Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
+		Verts.forEach( v => VertexData.push(v) );
+		
+		let TriangleIndexes = [0,1,2];
+		TriangleIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
+	}
+	/*
 	AddQuad( [0,0,	1,1	] );
 	AddQuad( [0,1.5,	1,2.5	] );
 	//let VertexData = [ 0,0,	1,0,	1,1,	0,1	];
 	//let TriangleIndexes = [0,1,2,	2,3,0];
+	*/
+	for ( let i=0;	i<TriangleCount;	i++ )
+		AddTriangle(i);
 	
-	Pop.Debug( VertexData );
-	Pop.Debug( TriangleIndexes );
+	//Pop.Debug( VertexData );
+	//Pop.Debug( TriangleIndexes );
+	
+	const VertexAttributeName = "Vertex";
 
-	TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexData, VertexSize, TriangleIndexes );
+	TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return TriangleBuffer;
 }
 
@@ -266,16 +316,19 @@ function Render(RenderTarget)
 	let Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
 	let Time = (Pop.GetTimeNowMs() % 1000) / 1000;
 	
+
 	let SetUniforms = function(Shader)
 	{
+		Shader.SetUniform('Colours',SeaColours);
+		Shader.SetUniform('ColourCount',SeaColours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
 	};
 
-	let TriangleBuffer = GetTriangleBuffer(RenderTarget,10);
+	let TriangleBuffer = GetTriangleBuffer(RenderTarget,100*100);
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
 }
 
-let Window = new Pop.Opengl.Window("Under the sea");
+let Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = Render;
 Window.OnMouseMove = function(){};
 

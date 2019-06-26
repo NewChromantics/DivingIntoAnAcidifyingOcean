@@ -1,31 +1,49 @@
 #version 410
 uniform vec4 VertexRect = vec4(0,0,1,1);
-in vec2 TexCoord;
-out vec2 uv;
+in vec2 Vertex;
 out vec4 Rgba;
 
 uniform mat4 CameraProjectionMatrix;
 
+uniform vec3 LocalPositions[3] = vec3[3](
+										vec3( -1,-1,0 ),
+										vec3( 1,-1,0 ),
+										vec3( 0,1,0 )
+										);
+#define MAX_COLOUR_COUNT	9
+uniform int ColourCount = 0;
+uniform vec3 Colours[MAX_COLOUR_COUNT];
+
+uniform float TriangleScale = 0.2;
+uniform float SpacingScale = 0.35;
+
+vec3 GetTriangleWorldPos(int TriangleIndex)
+{
+	float t = float(TriangleIndex);
+	float x = mod( t, 100 ) - (100/2);
+	float y = (t / 100) - (100/2);
+	return vec3( x, y, 0 ) * vec3(SpacingScale,SpacingScale,SpacingScale);
+}
+
+vec3 GetTriangleColour(int TriangleIndex)
+{
+	if ( ColourCount == 0 )
+		return vec3(1,0,0);
+	
+	return Colours[ TriangleIndex % ColourCount];
+}
+
 void main()
 {
-	float l = VertexRect[0];
-	float t = VertexRect[1];
-	float r = l+VertexRect[2];
-	float b = t+VertexRect[3];
+	int VertexIndex = int(Vertex.x);
+	int TriangleIndex = int(Vertex.y);
 	
-	l = mix( -1, 1, l );
-	r = mix( -1, 1, r );
-	t = mix( 1, -1, t );
-	b = mix( 1, -1, b );
-	
-	vec3 LocalPos = vec3( mix( l, r, TexCoord.x ), mix( t, b, TexCoord.y ), 0 );
-	vec3 WorldPos = vec3( 0,0,-10) + LocalPos;
-	vec3 CameraPos = WorldPos;	//	world to camera space
+	vec3 LocalPos = LocalPositions[VertexIndex] * TriangleScale;
+	vec3 WorldPos = GetTriangleWorldPos(TriangleIndex) + LocalPos;
+	vec3 CameraPos = WorldPos + vec3(0,0,-10);	//	world to camera space
 	vec4 ProjectionPos = CameraProjectionMatrix * vec4( CameraPos, 1 );
 	gl_Position = ProjectionPos;
 	
-	
-	uv = vec2( TexCoord.x, TexCoord.y );
-	Rgba = vec4( 1,0,0,1 );
+	Rgba = vec4( GetTriangleColour(TriangleIndex), 1 );
 }
 
