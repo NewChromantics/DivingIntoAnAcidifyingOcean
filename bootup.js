@@ -22,6 +22,8 @@ function ParsePlyFile(Filename,OnVertex)
 	Pop.Debug("Parsing x" + PlyLines.length + " lines...");
 	let ProcessLine = function(Line)
 	{
+		Line = Line.trim();
+		
 		if ( !HeaderFinished )
 		{
 			if ( Line == 'end_header' )
@@ -30,6 +32,11 @@ function ParsePlyFile(Filename,OnVertex)
 		}
 		
 		let xyz = Line.split(' ');
+		if ( xyz.length != 3 )
+		{
+			Pop.Debug("ignoring line " + Line, xyz.length);
+			return;
+		}
 		let x = parseFloat(xyz[0]);
 		let y = parseFloat(xyz[1]);
 		let z = parseFloat(xyz[2]);
@@ -40,7 +47,7 @@ function ParsePlyFile(Filename,OnVertex)
 
 function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 {
-	let VertexSize = 4;
+	let VertexSize = 2;
 	let VertexData = [];
 	let TriangleIndexes = [];
 	let WorldPositions = [];
@@ -51,8 +58,11 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 	{
 		let FirstTriangleIndex = VertexData.length / VertexSize;
 		
-		//let Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
-		let Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
+		let Verts;
+		if ( VertexSize == 2 )
+			Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
+		else
+			Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
 		Verts.forEach( v => VertexData.push(v) );
 		
 		let TriangleIndexes = [0,1,2];
@@ -90,6 +100,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 			const y = Math.Range( WorldMin[1], WorldMax[1], xyz[1] );
 			const z = Math.Range( WorldMin[2], WorldMax[2], xyz[2] );
 			Index *= Channels;
+			Pop.Debug(WorldMin,WorldMax,xyz);
 			WorldPixels[Index+0] = Math.floor(x * 255);
 			WorldPixels[Index+1] = Math.floor(y * 255);
 			WorldPixels[Index+2] = Math.floor(z * 255);
@@ -97,6 +108,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 		WorldPositions.forEach( PushPixel );
 		
 		WorldPositionImage.WritePixels( WorldPositions.length, 1, WorldPixels, 'RGB' );
+		
 	}
 	
 	const VertexAttributeName = "Vertex";
@@ -167,7 +179,7 @@ const Spheres =
 
 
 let Camera = {};
-Camera.Position = [ 0,1.0,3 ];
+Camera.Position = [ -4,-1.0,-10 ];
 Camera.LookAt = [ 0,0,0 ];
 Camera.Aperture = 0.1;
 Camera.LowerLeftCorner = [0,0,0];
@@ -421,9 +433,13 @@ function Render(RenderTarget)
 
 	let SetUniforms = function(Shader)
 	{
+		Shader.SetUniform('WorldPositions',SeaWorldPositionsTexture);
+		Shader.SetUniform('WorldPositionsWidth',SeaWorldPositionsTexture.GetWidth());
+		Shader.SetUniform('WorldPositionsHeight',SeaWorldPositionsTexture.GetHeight());
 		Shader.SetUniform('Colours',SeaColours);
 		Shader.SetUniform('ColourCount',SeaColours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
+		Shader.SetUniform('CameraWorldPosition',Camera.Position);
 	};
 
 	let TriangleBuffer = GetTriangleBuffer(RenderTarget,100*100);
