@@ -5,6 +5,106 @@ Pop.Include = function(Filename)
 	return Pop.CompileAndRun( Source, Filename );
 }
 
+Pop.Include('PopEngineCommon/PopShaderCache.js');
+Pop.Include('PopEngineCommon/PopMath.js');
+
+
+function ParsePlyFile(Filename,OnVertex)
+{
+	const PlyContents = Pop.LoadFileAsString(Filename);
+	Pop.Debug("Parsing " + Filename + "...");
+	const PlyLines = PlyContents.split('\r\n');
+	if ( PlyLines[0] != 'ply' )
+		throw "Filename first line is not ply, is " + PlyLines[0];
+
+	let HeaderFinished = false;
+	
+	Pop.Debug("Parsing x" + PlyLines.length + " lines...");
+	let ProcessLine = function(Line)
+	{
+		if ( !HeaderFinished )
+		{
+			if ( Line == 'end_header' )
+				HeaderFinished = true;
+			return;
+		}
+		
+		let xyz = Line.split(' ');
+		let x = parseFloat(xyz[0]);
+		let y = parseFloat(xyz[1]);
+		let z = parseFloat(xyz[2]);
+		OnVertex( x,y,z);
+	}
+	PlyLines.forEach(ProcessLine);
+}
+
+function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
+{
+	let VertexSize = 4;
+	let VertexData = [];
+	let TriangleIndexes = [];
+	let WorldPositions = [];
+	let WorldMin = [null,null,null];
+	let WorldMax = [null,null,null];
+
+	let AddTriangle = function(TriangleIndex,x,y,z)
+	{
+		let FirstTriangleIndex = VertexData.length / VertexSize;
+		
+		//let Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
+		let Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
+		Verts.forEach( v => VertexData.push(v) );
+		
+		let TriangleIndexes = [0,1,2];
+		TriangleIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
+	}
+	
+	let TriangleCounter = 0;
+	let OnVertex = function(x,y,z)
+	{
+		if ( TriangleCounter == 0 )
+		{
+			WorldMin = [x,y,z];
+			WorldMax = [x,y,z];
+		}
+		AddTriangle( TriangleCounter,x,y,z );
+		TriangleCounter++;
+		WorldPositions.push( [x,y,z] );
+		WorldMin[0] = Math.min( WorldMin[0], x );
+		WorldMin[1] = Math.min( WorldMin[1], y );
+		WorldMin[2] = Math.min( WorldMin[2], z );
+		WorldMax[0] = Math.max( WorldMax[0], x );
+		WorldMax[1] = Math.max( WorldMax[1], y );
+		WorldMax[2] = Math.max( WorldMax[2], z );
+	}
+	ParsePlyFile(Filename,OnVertex);
+	
+	if ( WorldPositionImage )
+	{
+		let Channels = 3;
+		let WorldPixels = new Uint8Array( Channels * WorldPositions.length );
+		let PushPixel = function(xyz,Index)
+		{
+			//	normalize and turn into 0-255
+			const x = Math.Range( WorldMin[0], WorldMax[0], xyz[0] );
+			const y = Math.Range( WorldMin[1], WorldMax[1], xyz[1] );
+			const z = Math.Range( WorldMin[2], WorldMax[2], xyz[2] );
+			Index *= Channels;
+			WorldPixels[Index+0] = Math.floor(x * 255);
+			WorldPixels[Index+1] = Math.floor(y * 255);
+			WorldPixels[Index+2] = Math.floor(z * 255);
+		}
+		WorldPositions.forEach( PushPixel );
+		
+		WorldPositionImage.WritePixels( WorldPositions.length, 1, WorldPixels, 'RGB' );
+	}
+	
+	const VertexAttributeName = "Vertex";
+	
+	TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
+	return TriangleBuffer;
+}
+
 
 function HexToRgb(HexRgb)
 {
@@ -57,8 +157,6 @@ const SeaColours = UnrollHexToRgb(SeaColoursHex);
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 
-Pop.Include('PopEngineCommon/PopShaderCache.js');
-Pop.Include('PopEngineCommon/PopMath.js');
 
 
 const Spheres =
@@ -243,6 +341,8 @@ function UpdateCamera(RenderTarget)
 }
 
 let TriangleBuffer = null;
+let SeaWorldPositionsTexture = null;
+const SeaWorldPositionsPlyFilename = 'test.ply.txt';
 
 function TVertexAttrib(Name,Type)
 {
@@ -255,7 +355,9 @@ function GetTriangleBuffer(RenderTarget,TriangleCount)
 	if ( TriangleBuffer )
 		return TriangleBuffer;
 	
-	
+	SeaWorldPositionsTexture = new Pop.Image();
+	TriangleBuffer = LoadPlyGeometry(RenderTarget,SeaWorldPositionsPlyFilename,SeaWorldPositionsTexture);
+	return TriangleBuffer;
 
 	let VertexSize = 2;
 	let VertexData = [];
