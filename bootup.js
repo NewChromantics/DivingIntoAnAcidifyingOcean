@@ -7,43 +7,9 @@ Pop.Include = function(Filename)
 
 Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopMath.js');
+Pop.Include('PopEngineCommon/PopPly.js');
+Pop.Include('PopEngineCommon/PopObj.js');
 
-
-function ParsePlyFile(Filename,OnVertex)
-{
-	const PlyContents = Pop.LoadFileAsString(Filename);
-	Pop.Debug("Parsing " + Filename + "...");
-	const PlyLines = PlyContents.split('\r\n');
-	if ( PlyLines[0] != 'ply' )
-		throw "Filename first line is not ply, is " + PlyLines[0];
-
-	let HeaderFinished = false;
-	
-	Pop.Debug("Parsing x" + PlyLines.length + " lines...");
-	let ProcessLine = function(Line)
-	{
-		Line = Line.trim();
-		
-		if ( !HeaderFinished )
-		{
-			if ( Line == 'end_header' )
-				HeaderFinished = true;
-			return;
-		}
-		
-		let xyz = Line.split(' ');
-		if ( xyz.length != 3 )
-		{
-			Pop.Debug("ignoring line " + Line, xyz.length);
-			return;
-		}
-		let x = parseFloat(xyz[0]);
-		let y = parseFloat(xyz[1]);
-		let z = parseFloat(xyz[2]);
-		OnVertex( x,y,z);
-	}
-	PlyLines.forEach(ProcessLine);
-}
 
 function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 {
@@ -87,12 +53,20 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 		WorldMax[1] = Math.max( WorldMax[1], y );
 		WorldMax[2] = Math.max( WorldMax[2], z );
 	}
-	ParsePlyFile(Filename,OnVertex);
+	
+	if ( Filename.endsWith('.ply') )
+		Pop.ParsePlyFile(Filename,OnVertex);
+	else if ( Filename.endsWith('.obj') )
+		Pop.ParseObjFile(Filename,OnVertex);
+	else
+		throw "Don't know how to load " + Filename;
 	
 	if ( WorldPositionImage )
 	{
 		let Channels = 3;
-		let WorldPixels = new Uint8Array( Channels * WorldPositions.length );
+		const Width = 1024;
+		const Height = Math.ceil( WorldPositions.length / Width );
+		let WorldPixels = new Uint8Array( Channels * Width*Height );
 		let PushPixel = function(xyz,Index)
 		{
 			//	normalize and turn into 0-255
@@ -100,14 +74,14 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 			const y = Math.Range( WorldMin[1], WorldMax[1], xyz[1] );
 			const z = Math.Range( WorldMin[2], WorldMax[2], xyz[2] );
 			Index *= Channels;
-			Pop.Debug(WorldMin,WorldMax,xyz);
+			//Pop.Debug(WorldMin,WorldMax,xyz);
 			WorldPixels[Index+0] = Math.floor(x * 255);
 			WorldPixels[Index+1] = Math.floor(y * 255);
 			WorldPixels[Index+2] = Math.floor(z * 255);
 		}
 		WorldPositions.forEach( PushPixel );
 		
-		WorldPositionImage.WritePixels( WorldPositions.length, 1, WorldPixels, 'RGB' );
+		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'RGB' );
 		
 	}
 	
@@ -382,7 +356,9 @@ function OnCameraZoom(x,y,FirstClick)
 let TriangleBuffer = null;
 let SeaWorldPositionsTexture = null;
 let NoiseTexture = new Pop.Image('Noise0.png');
-const SeaWorldPositionsPlyFilename = 'test.ply.txt';
+//const SeaWorldPositionsPlyFilename = 'test.ply';
+//const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
+const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
 function TVertexAttrib(Name,Type)
 {
