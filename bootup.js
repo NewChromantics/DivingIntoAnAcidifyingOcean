@@ -352,21 +352,36 @@ function UpdateCamera(RenderTarget)
 	
 }
 
-function OnCameraDrag(x,y,FirstClick)
+function OnCameraPan(x,y,FirstClick)
 {
 	if ( FirstClick )
-		Camera.LastDragPos = [x,y];
+		Camera.LastPanPos = [x,y];
 	
-	let Deltax = Camera.LastDragPos[0] - x;
-	let Deltay = Camera.LastDragPos[1] - y;
+	let Deltax = Camera.LastPanPos[0] - x;
+	let Deltay = Camera.LastPanPos[1] - y;
 	Camera.Position[0] -= Deltax * 0.01
 	Camera.Position[1] += Deltay * 0.01
 	
-	Camera.LastDragPos = [x,y];
+	Camera.LastPanPos = [x,y];
 }
+
+function OnCameraZoom(x,y,FirstClick)
+{
+	if ( FirstClick )
+		Camera.LastZoomPos = [x,y];
+	
+	let Deltax = Camera.LastZoomPos[0] - x;
+	let Deltay = Camera.LastZoomPos[1] - y;
+	//Camera.Position[0] -= Deltax * 0.01
+	Camera.Position[2] += Deltay * 0.01
+	
+	Camera.LastZoomPos = [x,y];
+}
+
 
 let TriangleBuffer = null;
 let SeaWorldPositionsTexture = null;
+let NoiseTexture = new Pop.Image('Noise0.png');
 const SeaWorldPositionsPlyFilename = 'test.ply.txt';
 
 function TVertexAttrib(Name,Type)
@@ -442,13 +457,15 @@ function Render(RenderTarget)
 	let RandomSeed = 0;
 	let Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
 	let Time = (Pop.GetTimeNowMs() % 1000) / 1000;
-	
 
+	//let PosTexture = NoiseTexture;
+	let PosTexture = SeaWorldPositionsTexture;
+	
 	let SetUniforms = function(Shader)
 	{
-		Shader.SetUniform('WorldPositions',SeaWorldPositionsTexture);
-		Shader.SetUniform('WorldPositionsWidth',SeaWorldPositionsTexture.GetWidth());
-		Shader.SetUniform('WorldPositionsHeight',SeaWorldPositionsTexture.GetHeight());
+		Shader.SetUniform('WorldPositions',PosTexture);
+		Shader.SetUniform('WorldPositionsWidth',PosTexture.GetWidth());
+		Shader.SetUniform('WorldPositionsHeight',PosTexture.GetHeight());
 		Shader.SetUniform('Colours',SeaColours);
 		Shader.SetUniform('ColourCount',SeaColours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
@@ -465,12 +482,16 @@ Window.OnRender = Render;
 Window.OnMouseDown = function(x,y,Button)
 {
 	if ( Button == 0 )
-		OnCameraDrag( x, y, true );
+		OnCameraPan( x, y, true );
+	if ( Button == 1 )
+		OnCameraZoom( x, y, true );
 }
 
 Window.OnMouseMove = function(x,y,Button)
 {
 	if ( Button == 0 )
-		OnCameraDrag( x, y, false );
+		OnCameraPan( x, y, false );
+	if ( Button == 1 )
+		OnCameraZoom( x, y, false );
 };
 
