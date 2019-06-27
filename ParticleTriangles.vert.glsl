@@ -2,6 +2,8 @@
 uniform vec4 VertexRect = vec4(0,0,1,1);
 in vec2 Vertex;
 out vec4 Rgba;
+out vec2 TriangleUv;
+
 uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
@@ -62,5 +64,6 @@ void main()
 	gl_Position = ProjectionPos;
 	
 	Rgba = vec4( GetTriangleColour(TriangleIndex), 1 );
+	TriangleUv = LocalPositions[VertexIndex].xy;
 }
 

@@ -352,6 +352,19 @@ function UpdateCamera(RenderTarget)
 	
 }
 
+function OnCameraDrag(x,y,FirstClick)
+{
+	if ( FirstClick )
+		Camera.LastDragPos = [x,y];
+	
+	let Deltax = Camera.LastDragPos[0] - x;
+	let Deltay = Camera.LastDragPos[1] - y;
+	Camera.Position[0] -= Deltax * 0.01
+	Camera.Position[1] += Deltay * 0.01
+	
+	Camera.LastDragPos = [x,y];
+}
+
 let TriangleBuffer = null;
 let SeaWorldPositionsTexture = null;
 const SeaWorldPositionsPlyFilename = 'test.ply.txt';
@@ -448,5 +461,16 @@ function Render(RenderTarget)
 
 let Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = Render;
-Window.OnMouseMove = function(){};
+
+Window.OnMouseDown = function(x,y,Button)
+{
+	if ( Button == 0 )
+		OnCameraDrag( x, y, true );
+}
+
+Window.OnMouseMove = function(x,y,Button)
+{
+	if ( Button == 0 )
+		OnCameraDrag( x, y, false );
+};
 
