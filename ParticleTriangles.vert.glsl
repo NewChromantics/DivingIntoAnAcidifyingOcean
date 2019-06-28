@@ -23,7 +23,7 @@ uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
 uniform float TriangleScale = 0.1;
-uniform float WorldScale = 20;
+uniform float WorldScale = 5;
 
 //	world space
 uniform float SphereRadius = 0.04;

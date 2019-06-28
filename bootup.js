@@ -10,6 +10,14 @@ Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
 
+const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
+const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
+const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
+const BlitCopyShader = Pop.LoadFileAsString('BlitCopy.frag.glsl');
+const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
+const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
+
+
 
 function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 {
@@ -87,47 +95,33 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 	
 	const VertexAttributeName = "Vertex";
 	
-	TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
+	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return TriangleBuffer;
 }
 
 
-function HexToRgb(HexRgb)
+//	todo: tie with render target!
+let QuadGeometry = null;
+function GetQuadGeometry(RenderTarget)
 {
-	if ( HexRgb[0] != '#' )	throw HexRgb + " doesn't begin with #";
+	if ( QuadGeometry )
+		return QuadGeometry;
+
+	let VertexSize = 2;
+	let l = 0;
+	let t = 0;
+	let r = 1;
+	let b = 1;
+	let VertexData = [	l,t,	r,t,	r,b,	l,b	];
+	let TriangleIndexes = [0,1,2,	2,3,0];
 	
-	let GetNibble = function(CharIndex)
-	{
-		let Char = HexRgb.charCodeAt(CharIndex);
-		let a = 'a'.charCodeAt(0);
-		let zero = '0'.charCodeAt(0);
-		let nine = '9'.charCodeAt(0);
-		return (Char >= zero && Char <= nine) ? (0+Char-zero) : (10+Char-a);
-	}
+	const VertexAttributeName = "TexCoord";
 	
-	let a = GetNibble(1);
-	let b = GetNibble(2);
-	let c = GetNibble(3);
-	let d = GetNibble(4);
-	let e = GetNibble(5);
-	let f = GetNibble(6);
-	
-	let Red = (a<<4) | b;
-	let Green = (c<<4) | d;
-	let Blue = (e<<4) | f;
-	//Pop.Debug(a,b,c,d,e,f);
-	//Pop.Debug(Red,Green,Blue);
-	return [Red,Green,Blue];
+	QuadGeometry = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
+	return QuadGeometry;
 }
 
-function HexToRgbf(HexRgb)
-{
-	let rgb = HexToRgb( HexRgb );
-	rgb[0] /= 255;
-	rgb[1] /= 255;
-	rgb[2] /= 255;
-	return rgb;
-}
+
 
 function UnrollHexToRgb(Hexs)
 {
@@ -150,16 +144,6 @@ const SeaColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d
 const SeaColours = UnrollHexToRgb(SeaColoursHex);
 const FogColour = HexToRgbf('#4e646e');
 
-const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
-const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
-
-
-
-const Spheres =
-[
- //	x,y,z,rad,	r,g,b,emission,	shiny,?,?,?	?,?,?,?
- [ 0,0,0,1,		1,0,0,0,		1,0,0,0,	0,0,0,0 ],
-];
 
 
 let Camera = {};
@@ -363,8 +347,66 @@ function OnCameraZoom(x,y,FirstClick)
 }
 
 
-let TriangleBuffer = null;
-let SeaWorldPositionsTexture = null;
+
+function PhysicsIteration(RenderTarget,PositionTexture,VelocityTexture,ScratchTexture)
+{
+	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
+	let UpdateVelocityShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdateVelocity, QuadVertShader );
+	let UpdatePositionsShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdatePosition, QuadVertShader );
+	let Quad = GetQuadGeometry(RenderTarget);
+
+	//	copy old velocitys
+	let CopyVelcoityToScratch = function(RenderTarget)
+	{
+		let SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('Texture',VelocityTexture);
+		}
+		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+	}
+	Pop.Debug("ScratchTexture",ScratchTexture);
+	RenderTarget.RenderToRenderTarget( ScratchTexture, CopyVelcoityToScratch );
+	
+	//	update velocitys
+	let UpdateVelocitys = function(RenderTarget)
+	{
+		let SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('LastVelocitys',ScratchTexture);
+		}
+		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );
+	}
+	RenderTarget.RenderToRenderTarget( VelocityTexture, UpdateVelocitys );
+	
+	//	copy old positions
+	let CopyPositionsToScratch = function(RenderTarget)
+	{
+		let SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('Texture',PositionTexture);
+		}
+		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+	}
+	RenderTarget.RenderToRenderTarget( ScratchTexture, CopyPositionsToScratch );
+
+	//	update positions
+	let UpdatePositions = function(RenderTarget)
+	{
+		let SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('Velocitys',Velocitys);
+			Shader.SetUniform('LastPositions',ScratchTexture);
+		}
+		RenderTarget.DrawGeometry( Quad, UpdatePositionsShader, SetUniforms );
+	}
+	RenderTarget.RenderToRenderTarget( PositionTexture, UpdateVelocitys );
+	
+}
+
+
+
+
+
 let NoiseTexture = new Pop.Image('Noise0.png');
 //const SeaWorldPositionsPlyFilename = 'seatest.ply';
 //const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
@@ -375,13 +417,33 @@ function TActor(GeoFilename)
 {
 	this.TriangleBuffer = null;
 	
+	this.PhysicsIteration = function(RenderTarget)
+	{
+		//	need data initialised
+		this.GetTriangleBuffer(RenderTarget);
+		
+		Pop.Debug("PhysicsIteration", JSON.stringify(this) );
+		PhysicsIteration( RenderTarget, this.PositionTexture, this.VelocityTexture, this.ScratchTexture );
+	}
+	
+	this.ResetPhysicsTextures = function()
+	{
+		Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
+		//	need to init these to zero?
+		const Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
+		this.VelocityTexture = new Pop.Image(Size);
+		this.ScratchTexture = new Pop.Image(Size);
+	}
+	
 	this.GetTriangleBuffer = function(RenderTarget)
 	{
 		if ( this.TriangleBuffer )
 			return this.TriangleBuffer;
 		
-		this.WorldPositions = new Pop.Image();
-		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.WorldPositions );
+		this.PositionTexture = new Pop.Image();
+		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.PositionTexture );
+		this.ResetPhysicsTextures();
+		
 		return this.TriangleBuffer;
 	}
 }
@@ -402,9 +464,9 @@ function RenderActor(RenderTarget,Actor)
 
 	let SetUniforms = function(Shader)
 	{
-		Shader.SetUniform('WorldPositions',Actor.WorldPositions);
-		Shader.SetUniform('WorldPositionsWidth',Actor.WorldPositions.GetWidth());
-		Shader.SetUniform('WorldPositionsHeight',Actor.WorldPositions.GetHeight());
+		Shader.SetUniform('WorldPositions',Actor.PositionTexture);
+		Shader.SetUniform('WorldPositionsWidth',Actor.PositionTexture.GetWidth());
+		Shader.SetUniform('WorldPositionsHeight',Actor.PositionTexture.GetHeight());
 	
 		Shader.SetUniform('Colours',SeaColours);
 		Shader.SetUniform('ColourCount',SeaColours.length/3);
@@ -422,6 +484,10 @@ function RenderActor(RenderTarget,Actor)
 function Render(RenderTarget)
 {
 	UpdateCamera(RenderTarget);
+
+	//	update physics
+	Actor_Shell.PhysicsIteration(RenderTarget);
+	Actor_SeaSurface.PhysicsIteration(RenderTarget);
 
 	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
 	RenderActor( RenderTarget, Actor_Shell );
