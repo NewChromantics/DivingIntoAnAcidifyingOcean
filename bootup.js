@@ -370,107 +370,62 @@ let NoiseTexture = new Pop.Image('Noise0.png');
 //const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
 const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
-function TVertexAttrib(Name,Type)
+
+function TActor(GeoFilename)
 {
-	this.Name = Name;
-	this.Type = Type;
+	this.TriangleBuffer = null;
+	
+	this.GetTriangleBuffer = function(RenderTarget)
+	{
+		if ( this.TriangleBuffer )
+			return this.TriangleBuffer;
+		
+		this.WorldPositions = new Pop.Image();
+		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.WorldPositions );
+		return this.TriangleBuffer;
+	}
 }
 
-function GetTriangleBuffer(RenderTarget,TriangleCount)
-{
-	if ( TriangleBuffer )
-		return TriangleBuffer;
-	
-	SeaWorldPositionsTexture = new Pop.Image();
-	TriangleBuffer = LoadPlyGeometry(RenderTarget,SeaWorldPositionsPlyFilename,SeaWorldPositionsTexture);
-	return TriangleBuffer;
+let Actor_Shell = new TActor('Shell/shellFromBlender.obj');
+let Actor_SeaSurface = new TActor('SeaTest.ply');
 
-	let VertexSize = 2;
-	let VertexData = [];
-	let TriangleIndexes = [];
-	
-	let AddQuad = function(TL_BR)
-	{
-		let FirstTriangleIndex = VertexData.length / VertexSize;
-		
-		let l = TL_BR[0];
-		let t = TL_BR[1];
-		let r = TL_BR[2];
-		let b = TL_BR[3];
-
-		let Verts = [	l,t,	r,t,	r,b,	l,b	];
-		Verts.forEach( v => VertexData.push(v) );
-
-		let QuadIndexes = [0,1,2,	2,3,0];
-		QuadIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
-	}
-	
-	let AddTriangle = function(TriangleIndex)
-	{
-		let FirstTriangleIndex = VertexData.length / VertexSize;
-		
-		let Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
-		Verts.forEach( v => VertexData.push(v) );
-		
-		let TriangleIndexes = [0,1,2];
-		TriangleIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
-	}
-	/*
-	AddQuad( [0,0,	1,1	] );
-	AddQuad( [0,1.5,	1,2.5	] );
-	//let VertexData = [ 0,0,	1,0,	1,1,	0,1	];
-	//let TriangleIndexes = [0,1,2,	2,3,0];
-	*/
-	for ( let i=0;	i<TriangleCount;	i++ )
-		AddTriangle(i);
-	
-	//Pop.Debug( VertexData );
-	//Pop.Debug( TriangleIndexes );
-	
-	const VertexAttributeName = "Vertex";
-
-	TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
-	return TriangleBuffer;
-}
 
 let FogParams = {};
 //	todo: radial vs ortho etc
-FogParams.MinDistance = 3;
-FogParams.MaxDistance = 10;
+FogParams.MinDistance = 5;
+FogParams.MaxDistance = 20;
 FogParams.Colour = FogColour;
 
-function Render(RenderTarget)
+function RenderActor(RenderTarget,Actor)
 {
-	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
-	
-	UpdateCamera(RenderTarget);
-	
-	let WindowSize = [ RenderTarget.GetWidth(), RenderTarget.GetHeight() ];
-	let RandomSeed = 0;
 	let Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
-	let Time = (Pop.GetTimeNowMs() % 1000) / 1000;
 
-	//let PosTexture = NoiseTexture;
-	let PosTexture = SeaWorldPositionsTexture;
-	
 	let SetUniforms = function(Shader)
 	{
-		Shader.SetUniform('WorldPositions',PosTexture);
-		Shader.SetUniform('WorldPositionsWidth',PosTexture.GetWidth());
-		Shader.SetUniform('WorldPositionsHeight',PosTexture.GetHeight());
+		Shader.SetUniform('WorldPositions',Actor.WorldPositions);
+		Shader.SetUniform('WorldPositionsWidth',Actor.WorldPositions.GetWidth());
+		Shader.SetUniform('WorldPositionsHeight',Actor.WorldPositions.GetHeight());
+	
 		Shader.SetUniform('Colours',SeaColours);
 		Shader.SetUniform('ColourCount',SeaColours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
 		Shader.SetUniform('CameraWorldPosition',Camera.Position);
-		
 		Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
 		Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
 		Shader.SetUniform('Fog_Colour',FogParams.Colour);
-		
 	};
-
-	let TriangleBuffer = GetTriangleBuffer(RenderTarget,100*100);
+	
+	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
+}
+
+function Render(RenderTarget)
+{
+	UpdateCamera(RenderTarget);
+
+	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
+	RenderActor( RenderTarget, Actor_Shell );
+	RenderActor( RenderTarget, Actor_SeaSurface );
 }
 
 let Window = new Pop.Opengl.Window("Tarqunder the sea");

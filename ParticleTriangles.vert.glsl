@@ -23,7 +23,6 @@ uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
 uniform float TriangleScale = 0.1;
-uniform float SpacingScale = 0.35;
 uniform float WorldScale = 20;
 
 //	world space
@@ -41,12 +40,6 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 	float3 xyz = textureLod( WorldPositions, float2(u,v), 0 ).xyz;
 	//float3 xyz = float3( x,y,0 );
 	return xyz * WorldScale;
-	
-	/*
-	//float x = mod( t, 100 ) - (100/2);
-	//float y = (t / 100) - (100/2);
-	return vec3( x, y, 0 ) * vec3(SpacingScale,SpacingScale,SpacingScale);
-	 */
 }
 
 vec3 GetTriangleColour(int TriangleIndex)
