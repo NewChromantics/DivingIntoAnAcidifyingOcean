@@ -120,6 +120,15 @@ function HexToRgb(HexRgb)
 	return [Red,Green,Blue];
 }
 
+function HexToRgbf(HexRgb)
+{
+	let rgb = HexToRgb( HexRgb );
+	rgb[0] /= 255;
+	rgb[1] /= 255;
+	rgb[2] /= 255;
+	return rgb;
+}
+
 function UnrollHexToRgb(Hexs)
 {
 	let Rgbs = [];
@@ -139,6 +148,7 @@ const SeaColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d
 //const SeaColoursHex = ['#012345','#ffaa99'];
 //const SeaColoursHex = ['#f00000'];
 const SeaColours = UnrollHexToRgb(SeaColoursHex);
+const FogColour = HexToRgbf('#4e646e');
 
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
@@ -153,7 +163,7 @@ const Spheres =
 
 
 let Camera = {};
-Camera.Position = [ -4,-1.0,-10 ];
+Camera.Position = [ 0,1.0,10 ];
 Camera.LookAt = [ 0,0,0 ];
 Camera.Aperture = 0.1;
 Camera.LowerLeftCorner = [0,0,0];
@@ -333,8 +343,8 @@ function OnCameraPan(x,y,FirstClick)
 	
 	let Deltax = Camera.LastPanPos[0] - x;
 	let Deltay = Camera.LastPanPos[1] - y;
-	Camera.Position[0] -= Deltax * 0.01
-	Camera.Position[1] += Deltay * 0.01
+	Camera.Position[0] += Deltax * 0.01
+	Camera.Position[1] -= Deltay * 0.01
 	
 	Camera.LastPanPos = [x,y];
 }
@@ -347,7 +357,7 @@ function OnCameraZoom(x,y,FirstClick)
 	let Deltax = Camera.LastZoomPos[0] - x;
 	let Deltay = Camera.LastZoomPos[1] - y;
 	//Camera.Position[0] -= Deltax * 0.01
-	Camera.Position[2] += Deltay * 0.01
+	Camera.Position[2] -= Deltay * 0.01
 	
 	Camera.LastZoomPos = [x,y];
 }
@@ -356,7 +366,7 @@ function OnCameraZoom(x,y,FirstClick)
 let TriangleBuffer = null;
 let SeaWorldPositionsTexture = null;
 let NoiseTexture = new Pop.Image('Noise0.png');
-//const SeaWorldPositionsPlyFilename = 'test.ply';
+//const SeaWorldPositionsPlyFilename = 'seatest.ply';
 //const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
 const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
@@ -423,9 +433,15 @@ function GetTriangleBuffer(RenderTarget,TriangleCount)
 	return TriangleBuffer;
 }
 
+let FogParams = {};
+//	todo: radial vs ortho etc
+FogParams.MinDistance = 3;
+FogParams.MaxDistance = 10;
+FogParams.Colour = FogColour;
+
 function Render(RenderTarget)
 {
-	RenderTarget.ClearColour( 0,0,0 );
+	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
 	
 	UpdateCamera(RenderTarget);
 	
@@ -446,6 +462,11 @@ function Render(RenderTarget)
 		Shader.SetUniform('ColourCount',SeaColours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
 		Shader.SetUniform('CameraWorldPosition',Camera.Position);
+		
+		Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
+		Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
+		Shader.SetUniform('Fog_Colour',FogParams.Colour);
+		
 	};
 
 	let TriangleBuffer = GetTriangleBuffer(RenderTarget,100*100);

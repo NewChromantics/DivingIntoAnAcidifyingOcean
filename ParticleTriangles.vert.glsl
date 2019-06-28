@@ -65,7 +65,7 @@ void main()
 	float3 LocalPos = LocalPositions[VertexIndex] * TriangleScale;
 	float3 TrianglePos = GetTriangleWorldPos(TriangleIndex);
 	float3 WorldPos = TrianglePos + LocalPos;
-	float3 CameraPos = WorldPos + CameraWorldPosition;	//	world to camera space
+	float3 CameraPos = WorldPos - CameraWorldPosition;	//	world to camera space
 	float4 ProjectionPos = CameraProjectionMatrix * float4( CameraPos, 1 );
 	gl_Position = ProjectionPos;
 	
