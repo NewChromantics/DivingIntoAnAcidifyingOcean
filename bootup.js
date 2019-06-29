@@ -9,6 +9,7 @@ Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
+Pop.Include('PopEngineCommon/PopTexture.js');
 
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
@@ -153,15 +154,16 @@ function UnrollHexToRgb(Hexs)
 
 //	colours from colorbrewer2.org
 const SeaColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
-//const SeaColoursHex = ['#012345','#ffaa99'];
-//const SeaColoursHex = ['#f00000'];
 const SeaColours = UnrollHexToRgb(SeaColoursHex);
-const FogColour = HexToRgbf('#4e646e');
-
+const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xF2F2F2,0xE0CEB2,0x9A7F5F,0xEBDEC3,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
+const ShellColours = UnrollHexToRgb(ShellColoursHex);
+const FogColour = HexToRgbf(0x4e646e);
+const FogColourCorrect = HexToRgbf("#4e646e");
+Pop.Debug("FogColour", 0x4e646e, FogColour, FogColourCorrect);
 
 
 let Camera = {};
-Camera.Position = [ 0,1.0,10 ];
+Camera.Position = [ 5,1.0,20 ];
 Camera.LookAt = [ 0,0,0 ];
 Camera.Aperture = 0.1;
 Camera.LowerLeftCorner = [0,0,0];
@@ -385,6 +387,7 @@ function PhysicsIteration(RenderTarget,PositionTexture,VelocityTexture,ScratchTe
 	{
 		let SetUniforms = function(Shader)
 		{
+			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
 		}
 		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );
@@ -426,9 +429,10 @@ let NoiseTexture = new Pop.Image('Noise0.png');
 const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
 
-function TActor(GeoFilename)
+function TActor(GeoFilename,Colours)
 {
 	this.TriangleBuffer = null;
+	this.Colours = Colours;
 	
 	this.PhysicsIteration = function(RenderTarget)
 	{
@@ -441,7 +445,7 @@ function TActor(GeoFilename)
 	
 	this.ResetPhysicsTextures = function()
 	{
-		Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
+		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
 		const Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
 		this.VelocityTexture = new Pop.Image(Size,'Float4');
@@ -461,15 +465,14 @@ function TActor(GeoFilename)
 	}
 }
 
-let Actor_Shell = new TActor('Shell/shellFromBlender.obj');
-//let Actor_SeaSurface = new TActor('SeaTest.ply');
-let Actor_SeaSurface = null;
-
+let Actor_Shell = new TActor('Shell/shellFromBlender.obj',ShellColours);
+let Actor_SeaSurface = new TActor('SeaTest.ply',SeaColours);
+let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 let FogParams = {};
 //	todo: radial vs ortho etc
 FogParams.MinDistance = 5;
-FogParams.MaxDistance = 20000;
+FogParams.MaxDistance = 20;
 FogParams.Colour = FogColour;
 
 function RenderActor(RenderTarget,Actor)
@@ -484,8 +487,8 @@ function RenderActor(RenderTarget,Actor)
 		Shader.SetUniform('WorldPositionsWidth',Actor.PositionTexture.GetWidth());
 		Shader.SetUniform('WorldPositionsHeight',Actor.PositionTexture.GetHeight());
 	
-		Shader.SetUniform('Colours',SeaColours);
-		Shader.SetUniform('ColourCount',SeaColours.length/3);
+		Shader.SetUniform('Colours',Actor.Colours);
+		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
 		Shader.SetUniform('CameraWorldPosition',Camera.Position);
 		Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
@@ -502,7 +505,8 @@ function Render(RenderTarget)
 	UpdateCamera(RenderTarget);
 
 	//	update physics
-	Actor_Shell.PhysicsIteration(RenderTarget);
+	if ( Actor_Shell )
+		Actor_Shell.PhysicsIteration(RenderTarget);
 	if ( Actor_SeaSurface )
 		Actor_SeaSurface.PhysicsIteration(RenderTarget);
 

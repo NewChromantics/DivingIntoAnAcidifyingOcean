@@ -18,11 +18,11 @@ uniform vec3 LocalPositions[3] = vec3[3](
 										vec3( 1,-1,0 ),
 										vec3( 0,1,0 )
 										);
-#define MAX_COLOUR_COUNT	9
+#define MAX_COLOUR_COUNT	16
 uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
-uniform float TriangleScale = 0.1;
+uniform float TriangleScale = 0.2;
 uniform float WorldScale = 10;
 
 //	world space
