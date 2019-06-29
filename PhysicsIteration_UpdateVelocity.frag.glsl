@@ -8,7 +8,7 @@ void main()
 {
 	//	gr: just a blit should be stable
 	vec4 Vel = texture( LastVelocitys, uv );
-	Vel.y += 0.003;//1 * Step;
+	Vel.y += 0.1 * Step;
 	gl_FragColor = Vel;
 }
 

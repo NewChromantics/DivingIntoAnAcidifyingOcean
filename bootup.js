@@ -71,25 +71,39 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
 	
 	if ( WorldPositionImage )
 	{
+		let FloatFormat = true;
 		let Channels = 3;
+		let Quantisise = true;
+		let NormaliseCoord8 = function(x)
+		{
+			return Math.floor(x * 255);
+		}
+		let NormaliseCoordf = function(x,Index)
+		{
+			return x;
+		}
+		let ScaleCoord = FloatFormat ? NormaliseCoordf : NormaliseCoord8;
 		const Width = 1024;
 		const Height = Math.ceil( WorldPositions.length / Width );
-		let WorldPixels = new Uint8Array( Channels * Width*Height );
+		let WorldPixels = FloatFormat ? new Float32Array( Channels * Width*Height ) : new Uint8Array( Channels * Width*Height );
 		let PushPixel = function(xyz,Index)
 		{
 			//	normalize and turn into 0-255
-			const x = Math.Range( WorldMin[0], WorldMax[0], xyz[0] );
-			const y = Math.Range( WorldMin[1], WorldMax[1], xyz[1] );
-			const z = Math.Range( WorldMin[2], WorldMax[2], xyz[2] );
+			let x = Quantisise ? Math.Range( WorldMin[0], WorldMax[0], xyz[0] ) : xyz[0];
+			let y = Quantisise ? Math.Range( WorldMin[1], WorldMax[1], xyz[1] ) : xyz[1];
+			let z = Quantisise ? Math.Range( WorldMin[2], WorldMax[2], xyz[2] ) : xyz[2];
 			Index *= Channels;
-			//Pop.Debug(WorldMin,WorldMax,xyz);
-			WorldPixels[Index+0] = Math.floor(x * 255);
-			WorldPixels[Index+1] = Math.floor(y * 255);
-			WorldPixels[Index+2] = Math.floor(z * 255);
+			x = ScaleCoord(x,Index);
+			y = ScaleCoord(y,Index);
+			z = ScaleCoord(z,Index);
+			Pop.Debug(WorldMin,WorldMax,x,y,z);
+			WorldPixels[Index+0] = x;
+			WorldPixels[Index+1] = y;
+			WorldPixels[Index+2] = z;
 		}
 		WorldPositions.forEach( PushPixel );
 		
-		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'RGB' );
+		WorldPositionImage.WritePixels( Width, Height, WorldPixels, FloatFormat ? 'Float3' : 'RGB' );
 		
 	}
 	
@@ -364,7 +378,6 @@ function PhysicsIteration(RenderTarget,PositionTexture,VelocityTexture,ScratchTe
 		}
 		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 	}
-	Pop.Debug("ScratchTexture",ScratchTexture);
 	RenderTarget.RenderToRenderTarget( ScratchTexture, CopyVelcoityToScratch );
 	
 	//	update velocitys
@@ -422,7 +435,7 @@ function TActor(GeoFilename)
 		//	need data initialised
 		this.GetTriangleBuffer(RenderTarget);
 		
-		Pop.Debug("PhysicsIteration", JSON.stringify(this) );
+		//Pop.Debug("PhysicsIteration", JSON.stringify(this) );
 		PhysicsIteration( RenderTarget, this.PositionTexture, this.VelocityTexture, this.ScratchTexture );
 	}
 	
@@ -431,8 +444,8 @@ function TActor(GeoFilename)
 		Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
 		const Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
-		this.VelocityTexture = new Pop.Image(Size);
-		this.ScratchTexture = new Pop.Image(Size);
+		this.VelocityTexture = new Pop.Image(Size,'Float4');
+		this.ScratchTexture = new Pop.Image(Size,'Float4');
 	}
 	
 	this.GetTriangleBuffer = function(RenderTarget)
@@ -449,17 +462,20 @@ function TActor(GeoFilename)
 }
 
 let Actor_Shell = new TActor('Shell/shellFromBlender.obj');
-let Actor_SeaSurface = new TActor('SeaTest.ply');
+//let Actor_SeaSurface = new TActor('SeaTest.ply');
+let Actor_SeaSurface = null;
 
 
 let FogParams = {};
 //	todo: radial vs ortho etc
 FogParams.MinDistance = 5;
-FogParams.MaxDistance = 20;
+FogParams.MaxDistance = 20000;
 FogParams.Colour = FogColour;
 
 function RenderActor(RenderTarget,Actor)
 {
+	if ( !Actor )
+		return;
 	let Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
 
 	let SetUniforms = function(Shader)
@@ -487,7 +503,8 @@ function Render(RenderTarget)
 
 	//	update physics
 	Actor_Shell.PhysicsIteration(RenderTarget);
-	Actor_SeaSurface.PhysicsIteration(RenderTarget);
+	if ( Actor_SeaSurface )
+		Actor_SeaSurface.PhysicsIteration(RenderTarget);
 
 	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
 	RenderActor( RenderTarget, Actor_Shell );
