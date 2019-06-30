@@ -10,7 +10,9 @@ uniform vec3 CameraWorldPosition;
 uniform float Fog_MinDistance = 0;
 uniform float Fog_MaxDistance = 20;
 uniform float3 Fog_Colour = float3(0,1,0);
-uniform float4 Light_Colour = float4(1,1,1,0.8);
+uniform float3 Light_Colour = float3(1,1,1);
+uniform float Light_MinPower = 0.1;
+uniform float Light_MaxPower = 1.0;
 
 float Range(float Min,float Max,float Value)
 {
@@ -113,15 +115,17 @@ float4 GetLightColour(float3 Normal,float3 WorldPos)
 
 
 	float LightStrength = dot( Normal, UpDir );
-	LightStrength *= 1;
+	LightStrength *= 1.4;
 	LightStrength *= LightStrength;
 	//LightStrength = LightStrength > 0.8  ? 1 : 0;
-	LightStrength = RangeClamped01( 0.3, 1.0, LightStrength );
+	LightStrength = RangeClamped01( 0.6, 1.0, LightStrength );
 	
-	float4 Result = Light_Colour;
-	Result.w *= LightStrength;
+	LightStrength = mix( Light_MinPower, Light_MaxPower, LightStrength );
 	
-	return Result;
+	float UnderWater = RangeClamped01( -1, 0, WorldPos.y );
+	LightStrength *= UnderWater;
+	
+	return float4( Light_Colour, LightStrength );
 	
 	/*
 	float3 LightNormal = reflect( DirToCamera, Normal );
@@ -153,10 +157,12 @@ void main()
 	
 	//	draw normal
 	gl_FragColor.xyz = mix( Normal, Rgba.xyz, 0.9 );
+	//gl_FragColor.xyz = float3(0,0,0);
 	
 	//	light
 	float4 Light = GetLightColour(Normal,HitPos);
 	gl_FragColor.xyz = mix( gl_FragColor.xyz, Light.xyz, Light.w );
+	//gl_FragColor.xyz *= Light.w;
 	
 	//	fog
 	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, HitPos );
