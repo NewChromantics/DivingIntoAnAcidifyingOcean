@@ -22,8 +22,8 @@ uniform vec3 LocalPositions[3] = vec3[3](
 uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
-uniform float TriangleScale = 0.2;
-uniform float WorldScale = 10;
+uniform float TriangleScale = 0.08;
+uniform float WorldScale = 1;
 
 //	world space
 uniform float SphereRadius = 0.04;

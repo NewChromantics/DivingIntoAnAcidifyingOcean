@@ -18,6 +18,7 @@ const BlitCopyShader = Pop.LoadFileAsString('BlitCopy.frag.glsl');
 const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
 const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
 
+const NoiseTexture = new Pop.Image('Noise0.png');
 
 
 function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
@@ -153,8 +154,8 @@ function UnrollHexToRgb(Hexs)
 }
 
 //	colours from colorbrewer2.org
-const SeaColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
-const SeaColours = UnrollHexToRgb(SeaColoursHex);
+const OceanColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
+const OceanColours = UnrollHexToRgb(OceanColoursHex);
 const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xF2F2F2,0xE0CEB2,0x9A7F5F,0xEBDEC3,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
 const ShellColours = UnrollHexToRgb(ShellColoursHex);
 const FogColour = HexToRgbf(0x4e646e);
@@ -163,7 +164,7 @@ Pop.Debug("FogColour", 0x4e646e, FogColour, FogColourCorrect);
 
 
 let Camera = {};
-Camera.Position = [ 5,1.0,20 ];
+Camera.Position = [ 0,1.0,10 ];
 Camera.LookAt = [ 0,0,0 ];
 Camera.Aperture = 0.1;
 Camera.LowerLeftCorner = [0,0,0];
@@ -422,19 +423,17 @@ function PhysicsIteration(RenderTarget,PositionTexture,VelocityTexture,ScratchTe
 
 
 
-
-let NoiseTexture = new Pop.Image('Noise0.png');
 //const SeaWorldPositionsPlyFilename = 'seatest.ply';
 //const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
 const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
 
-function TActor(GeoFilename,Colours)
+function TPhysicsActor(GeoFilename,Colours)
 {
 	this.TriangleBuffer = null;
 	this.Colours = Colours;
 	
-	this.PhysicsIteration = function(RenderTarget)
+	this.PhysicsIteration = function(DurationSecs,RenderTarget)
 	{
 		//	need data initialised
 		this.GetTriangleBuffer(RenderTarget);
@@ -452,6 +451,11 @@ function TActor(GeoFilename,Colours)
 		this.ScratchTexture = new Pop.Image(Size,'Float4');
 	}
 	
+	this.GetPositionsTexture = function()
+	{
+		return this.PositionTexture;
+	}
+	
 	this.GetTriangleBuffer = function(RenderTarget)
 	{
 		if ( this.TriangleBuffer )
@@ -465,9 +469,101 @@ function TActor(GeoFilename,Colours)
 	}
 }
 
-let Actor_Shell = new TActor('Shell/shellFromBlender.obj',ShellColours);
-let Actor_SeaSurface = new TActor('SeaTest.ply',SeaColours);
+function TAnimationBuffer(Filenames)
+{
+	this.Frames = null;
+	
+	this.Init = function(RenderTarget)
+	{
+		if ( this.Frames )
+			return;
+		
+		let LoadFrame = function(Filename,Index)
+		{
+			let Scale = 1.0;
+			let FrameDuration = 1/60;
+			let Frame = {};
+			Frame.Time = Index * FrameDuration;
+			Frame.PositionTexture = new Pop.Image();
+			Frame.TriangleBuffer = LoadPlyGeometry( RenderTarget, Filename, Frame.PositionTexture, Scale );
+			this.Frames.push(Frame);
+		}
+
+		this.Frames = [];
+		Filenames.forEach( LoadFrame.bind(this) );
+	}
+	
+	this.GetDuration = function()
+	{
+		return this.Frames[this.Frames.length-1].Time;
+	}
+	
+	this.GetFrame = function(Time)
+	{
+		Time = Time % this.GetDuration();
+		for ( let i=0;	i<this.Frames.length;	i++ )
+		{
+			let Frame = this.Frames[i];
+			if ( Time <= Frame.Time )
+				return Frame;
+		}
+		throw "Failed to find frame for time " + Time;
+	}
+	
+	this.GetTriangleBuffer = function(Time)
+	{
+		const Frame = this.GetFrame(Time);
+		return Frame.TriangleBuffer;
+	}
+	
+	this.GetPositionsTexture = function(Time)
+	{
+		const Frame = this.GetFrame(Time);
+		return Frame.PositionTexture;
+	}
+	
+}
+
+
+function TAnimatedActor(GeoFilenames,Colours)
+{
+	this.Animation = new TAnimationBuffer(GeoFilenames);
+	this.TriangleBuffer = null;
+	this.Colours = Colours;
+	this.Time = 0;
+	
+	this.PhysicsIteration = function(DurationSecs,RenderTarget)
+	{
+		this.Animation.Init(RenderTarget);
+		this.Time += DurationSecs;
+	}
+	
+	this.GetTriangleBuffer = function(RenderTarget)
+	{
+		const tb = this.Animation.GetTriangleBuffer( this.Time );
+		return tb;
+	}
+
+	this.GetPositionsTexture = function(RenderTarget)
+	{
+		const tb = this.Animation.GetPositionsTexture( this.Time );
+		return tb;
+	}
+}
+
+
+
+
+let OceanFilenames = [];
+//for ( let i=1;	i<=96;	i++ )
+for ( let i=1;	i<=10;	i++ )
+	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
+
+let Actor_Shell = new TPhysicsActor( 'Shell/shellFromBlender.obj', ShellColours );
+let Actor_Ocean = new TAnimatedActor( OceanFilenames, OceanColours );
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
+
+
 
 let FogParams = {};
 //	todo: radial vs ortho etc
@@ -475,17 +571,23 @@ FogParams.MinDistance = 5;
 FogParams.MaxDistance = 20;
 FogParams.Colour = FogColour;
 
+
+
+
 function RenderActor(RenderTarget,Actor)
 {
 	if ( !Actor )
 		return;
-	let Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
+	
+	const Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
+	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
+	const PositionsTexture = Actor.GetPositionsTexture();
 
 	let SetUniforms = function(Shader)
 	{
-		Shader.SetUniform('WorldPositions',Actor.PositionTexture);
-		Shader.SetUniform('WorldPositionsWidth',Actor.PositionTexture.GetWidth());
-		Shader.SetUniform('WorldPositionsHeight',Actor.PositionTexture.GetHeight());
+		Shader.SetUniform('WorldPositions',PositionsTexture);
+		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
+		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
 	
 		Shader.SetUniform('Colours',Actor.Colours);
 		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
@@ -496,7 +598,6 @@ function RenderActor(RenderTarget,Actor)
 		Shader.SetUniform('Fog_Colour',FogParams.Colour);
 	};
 	
-	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
 }
 
@@ -504,15 +605,17 @@ function Render(RenderTarget)
 {
 	UpdateCamera(RenderTarget);
 
+	const DurationSecs = 1 / 60;
+	
 	//	update physics
 	if ( Actor_Shell )
-		Actor_Shell.PhysicsIteration(RenderTarget);
-	if ( Actor_SeaSurface )
-		Actor_SeaSurface.PhysicsIteration(RenderTarget);
+		Actor_Shell.PhysicsIteration( DurationSecs, RenderTarget );
+	if ( Actor_Ocean )
+		Actor_Ocean.PhysicsIteration( DurationSecs, RenderTarget );
 
 	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
 	RenderActor( RenderTarget, Actor_Shell );
-	RenderActor( RenderTarget, Actor_SeaSurface );
+	RenderActor( RenderTarget, Actor_Ocean );
 }
 
 let Window = new Pop.Opengl.Window("Tarqunder the sea");
