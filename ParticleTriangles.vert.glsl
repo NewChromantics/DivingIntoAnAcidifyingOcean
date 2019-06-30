@@ -22,11 +22,12 @@ uniform vec3 LocalPositions[3] = vec3[3](
 uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
-uniform float TriangleScale = 0.08;
-uniform float WorldScale = 1;
+uniform float TriangleScale = 0.04;
+uniform float3 Transform_WorldPosition = float3(0,0,0);
 
 //	world space
-uniform float SphereRadius = 0.04;
+#define SphereRadius (TriangleScale * 0.4)
+//uniform float SphereRadius = 0.04;
 
 vec3 GetTriangleWorldPos(int TriangleIndex)
 {
@@ -39,7 +40,7 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 	float v = y / float(WorldPositionsHeight);
 	float3 xyz = textureLod( WorldPositions, float2(u,v), 0 ).xyz;
 	//float3 xyz = float3( x,y,0 );
-	return xyz * WorldScale;
+	return xyz + Transform_WorldPosition;
 }
 
 vec3 GetTriangleColour(int TriangleIndex)

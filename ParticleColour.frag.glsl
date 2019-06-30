@@ -122,7 +122,7 @@ float4 GetLightColour(float3 Normal,float3 WorldPos)
 	
 	LightStrength = mix( Light_MinPower, Light_MaxPower, LightStrength );
 	
-	float UnderWater = RangeClamped01( -1, 0, WorldPos.y );
+	float UnderWater = RangeClamped01( -2, -1, WorldPos.y );
 	LightStrength *= UnderWater;
 	
 	return float4( Light_Colour, LightStrength );

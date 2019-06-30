@@ -266,10 +266,8 @@ const OceanColoursHex = ['#c9e7f2','#4eb3d3','#2b8cbe','#0868ac','#084081','#023
 const OceanColours = UnrollHexToRgb(OceanColoursHex);
 const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xF2F2F2,0xE0CEB2,0x9A7F5F,0xEBDEC3,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
 const ShellColours = UnrollHexToRgb(ShellColoursHex);
-const FogColour = HexToRgbf(0x4e646e);
-const FogColourCorrect = HexToRgbf("#4e646e");
-Pop.Debug("FogColour", 0x4e646e, FogColour, FogColourCorrect);
-
+const FogColour = HexToRgbf(0x1d76a4);
+const LightColour = HexToRgbf(0x9ee5fa);
 
 let Camera = {};
 Camera.Position = [ 0,1.0,10 ];
@@ -536,8 +534,9 @@ function PhysicsIteration(RenderTarget,PositionTexture,VelocityTexture,ScratchTe
 const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
 
-function TPhysicsActor(GeoFilename,Colours)
+function TPhysicsActor(GeoFilename,Colours,Scale,Position)
 {
+	this.Position = Position;
 	this.TriangleBuffer = null;
 	this.Colours = Colours;
 	
@@ -577,7 +576,7 @@ function TPhysicsActor(GeoFilename,Colours)
 	}
 }
 
-function TAnimationBuffer(Filenames)
+function TAnimationBuffer(Filenames,Scale)
 {
 	this.Frames = null;
 	
@@ -588,7 +587,6 @@ function TAnimationBuffer(Filenames)
 		
 		let LoadFrame = function(Filename,Index)
 		{
-			let Scale = 1.0;
 			let FrameDuration = 1/30;
 			let Frame = {};
 			Frame.Time = Index * FrameDuration;
@@ -633,9 +631,10 @@ function TAnimationBuffer(Filenames)
 }
 
 
-function TAnimatedActor(GeoFilenames,Colours)
+function TAnimatedActor(GeoFilenames,Colours,Scale,Position)
 {
-	this.Animation = new TAnimationBuffer(GeoFilenames);
+	this.Position = Position;
+	this.Animation = new TAnimationBuffer(GeoFilenames,Scale);
 	this.TriangleBuffer = null;
 	this.Colours = Colours;
 	this.Time = 0;
@@ -667,8 +666,8 @@ for ( let i=1;	i<=96;	i++ )
 //for ( let i=1;	i<=2;	i++ )
 	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
-let Actor_Shell = new TPhysicsActor( 'Shell/shellFromBlender.obj', ShellColours );
-let Actor_Ocean = new TAnimatedActor( OceanFilenames, OceanColours );
+let Actor_Shell = new TPhysicsActor( 'Shell/shellFromBlender.obj', ShellColours, 1.0, [0,-3,10] );
+let Actor_Ocean = new TAnimatedActor( OceanFilenames, OceanColours, 1.0, [0,0,0] );
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
@@ -697,6 +696,8 @@ function RenderActor(RenderTarget,Actor)
 		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
 		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
 	
+		Shader.SetUniform('Transform_WorldPosition', Actor.Position);
+		
 		Shader.SetUniform('Colours',Actor.Colours);
 		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
@@ -704,6 +705,7 @@ function RenderActor(RenderTarget,Actor)
 		Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
 		Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
 		Shader.SetUniform('Fog_Colour',FogParams.Colour);
+		Shader.SetUniform('Light_Colour', LightColour );
 	};
 	
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
