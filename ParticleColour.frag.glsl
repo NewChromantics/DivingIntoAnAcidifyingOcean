@@ -10,7 +10,7 @@ uniform vec3 CameraWorldPosition;
 uniform float Fog_MinDistance = 0;
 uniform float Fog_MaxDistance = 20;
 uniform float3 Fog_Colour = float3(0,1,0);
-
+uniform float4 Light_Colour = float4(1,1,1,0.8);
 
 float Range(float Min,float Max,float Value)
 {
@@ -52,7 +52,7 @@ float3 slerp(float3 start, float3 end, float percent)
 
 
 //	returns normal & distance
-float4 GetCameraIntersection(float3 WorldPos,float4 Sphere)
+float GetCameraIntersection(float3 WorldPos,float4 Sphere,out float3 Normal,out float3 HitPos)
 {
 	//	get ray
 	float3 DirToCamera = -normalize(WorldPos - CameraWorldPosition);
@@ -66,7 +66,10 @@ float4 GetCameraIntersection(float3 WorldPos,float4 Sphere)
 	
 	float SdfDistance = distance( WorldPos, Sphere.xyz );
 
-	return float4( SdfNormal, SdfDistance );
+	Normal = SdfNormal;
+	HitPos = RealWorldPos;
+	
+	return SdfDistance;
 }
 
 
@@ -102,19 +105,62 @@ float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 	return Rgb;
 }
 
+
+float4 GetLightColour(float3 Normal,float3 WorldPos)
+{
+	float3 UpDir = float3(0,1,0);
+	float3 DirToCamera = normalize(WorldPos - CameraWorldPosition);
+
+
+	float LightStrength = dot( Normal, UpDir );
+	LightStrength *= 1;
+	LightStrength *= LightStrength;
+	//LightStrength = LightStrength > 0.8  ? 1 : 0;
+	LightStrength = RangeClamped01( 0.3, 1.0, LightStrength );
+	
+	float4 Result = Light_Colour;
+	Result.w *= LightStrength;
+	
+	return Result;
+	
+	/*
+	float3 LightNormal = reflect( DirToCamera, Normal );
+	float LightStrength = dot( normalize(LightNormal), UpDir );
+	//LightNormal.xz = float2(0,0);
+	//LightNormal = Normal;
+	return float4(LightStrength,LightStrength,LightStrength,1);
+	/*
+	float LightStrength = dot( normalize(LightNormal), UpDir );
+	LightStrength = RangeClamped01( 0.0, 1.0, LightStrength );
+	float4 Result = Light_Colour;
+	Result.w *= LightStrength;
+	return float4(LightStrength,LightStrength,LightStrength,1);
+	return Result;
+	 */
+}
+
 void main()
 {	
 	//	do 3D test
-	float4 Intersection = GetCameraIntersection(FragWorldPos,Sphere4);
-	if ( Intersection.w > Sphere4.w )
+	float3 Normal;
+	float3 HitPos;
+	float Distance = GetCameraIntersection(FragWorldPos,Sphere4, Normal, HitPos);
+	if ( Distance > Sphere4.w )
 		discard;
 	
 	//	normal in visible range
-	float3 Normal = Range3( float3(-1,-1,-1), float3(1,1,1), Intersection.xyz );
+	Normal = Range3( float3(-1,-1,-1), float3(1,1,1), Normal );
 	
 	//	draw normal
-	gl_FragColor.xyz = mix( Normal, Rgba.xyz, 0.7 );
-	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, FragWorldPos );
+	gl_FragColor.xyz = mix( Normal, Rgba.xyz, 0.9 );
+	
+	//	light
+	float4 Light = GetLightColour(Normal,HitPos);
+	gl_FragColor.xyz = mix( gl_FragColor.xyz, Light.xyz, Light.w );
+	
+	//	fog
+	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, HitPos );
+	
 	gl_FragColor.w = 1;
 
 	//gl_FragColor = Rgba;
