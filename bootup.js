@@ -55,11 +55,11 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 		WorldPositions.push(z);
 	}
 	
-	let OnMeta = undefined;
-/*
+
 	//	replace data with arrays... no noticable speed improvement!
 	let OnMeta = function(Meta)
 	{
+		/*
 		VertexData = new Float32Array( Meta.VertexCount * 3 * VertexSize );
 		PushVertexData = function(f)
 		{
@@ -70,7 +70,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 		{
 			return VertexDataCount;
 		}
-
+		*/
 		
 		TriangleIndexes = new Int32Array( Meta.VertexCount * 3 );
 		PushIndex = function(f)
@@ -88,7 +88,8 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 			WorldPositionsCount += 3;
 		}
 	}
-*/
+	OnMeta = undefined;
+
 	let AddTriangle = function(TriangleIndex,x,y,z)
 	{
 		let FirstTriangleIndex = GetVertexDataLength() / VertexSize;
@@ -155,10 +156,11 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 		const Width = 1024;
 		const Height = Math.ceil( WorldPositions.length / WorldPositionSize / Width );
 		let WorldPixels = new Float32Array( Channels * Width*Height );
-		WorldPositions.copyWithin( WorldPixels );
+		//WorldPositions.copyWithin( WorldPixels );
 		
 		let ModifyXyz = function(Index)
 		{
+			Index *= Channels;
 			let x = WorldPixels[Index+0];
 			let y = WorldPixels[Index+1];
 			let z = WorldPixels[Index+2];
@@ -177,15 +179,17 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 	
 		let PushPixel = function(xyz,Index)
 		{
-			Index *= Channels;
-			WorldPixels[Index+0] = xyz[0];
-			WorldPixels[Index+1] = xyz[1];
-			WorldPixels[Index+2] = xyz[2];
+			WorldPixels[Index*Channels+0] = xyz[0];
+			WorldPixels[Index*Channels+1] = xyz[1];
+			WorldPixels[Index*Channels+2] = xyz[2];
 			ModifyXyz( Index );
 		}
 		for ( let i=0;	i<WorldPositions.length;	i+=WorldPositionSize )
+		{
 			PushPixel( WorldPositions.slice(i,i+WorldPositionSize), i/WorldPositionSize );
-
+		//	ModifyXyz( WorldPositions.slice(i,i+WorldPositionSize), i/WorldPositionSize );
+		}
+		
 		Pop.Debug("Making world positions took", Pop.GetTimeNowMs()-WorldPosTime);
 
 		let WriteTime = Pop.GetTimeNowMs();
@@ -194,8 +198,14 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 	}
 	
 	const VertexAttributeName = "Vertex";
-
-	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
+	
+	//	loads much faster as a typed array
+	let VertexDataf = new Float32Array( VertexData );
+	
+	let CreateBufferTime = Pop.GetTimeNowMs();
+	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexDataf, VertexSize, TriangleIndexes );
+	Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
+	
 	return TriangleBuffer;
 }
 
@@ -565,7 +575,7 @@ function TAnimationBuffer(Filenames)
 		let LoadFrame = function(Filename,Index)
 		{
 			let Scale = 1.0;
-			let FrameDuration = 1/60;
+			let FrameDuration = 1/30;
 			let Frame = {};
 			Frame.Time = Index * FrameDuration;
 			Frame.PositionTexture = new Pop.Image();
@@ -640,7 +650,7 @@ function TAnimatedActor(GeoFilenames,Colours)
 
 let OceanFilenames = [];
 for ( let i=1;	i<=96;	i++ )
-//for ( let i=1;	i<=10;	i++ )
+//for ( let i=1;	i<=2;	i++ )
 	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let Actor_Shell = new TPhysicsActor( 'Shell/shellFromBlender.obj', ShellColours );
