@@ -22,11 +22,11 @@ uniform vec3 LocalPositions[3] = vec3[3](
 uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
-uniform float TriangleScale = 0.04;
+uniform float TriangleScale = 0.06;
 uniform float3 Transform_WorldPosition = float3(0,0,0);
 
 //	world space
-#define SphereRadius (TriangleScale * 0.4)
+#define SphereRadius (TriangleScale * 0.5)
 //uniform float SphereRadius = 0.04;
 
 vec3 GetTriangleWorldPos(int TriangleIndex)

@@ -23,7 +23,7 @@ const NoiseTexture = new Pop.Image('Noise0.png');
 
 
 
-function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
+function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0)
 {
 	let VertexSize = 2;
 	let VertexData = [];
@@ -106,8 +106,12 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 	}
 	
 	let TriangleCounter = 0;
+	let VertexCounter = 0;
 	let OnVertex = function(x,y,z)
 	{
+		if ( VertexCounter++ % (VertexSkip+1) > 0 )
+			return;
+
 		/*
 		if ( TriangleCounter == 0 )
 		{
@@ -568,8 +572,10 @@ function TPhysicsActor(GeoFilename,Colours,Scale,Position)
 		if ( this.TriangleBuffer )
 			return this.TriangleBuffer;
 		
+		let VertexSkip = 3;
+		
 		this.PositionTexture = new Pop.Image();
-		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.PositionTexture );
+		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.PositionTexture, Scale, VertexSkip );
 		this.ResetPhysicsTextures();
 		
 		return this.TriangleBuffer;
