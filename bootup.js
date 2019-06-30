@@ -248,7 +248,8 @@ function UnrollHexToRgb(Hexs)
 }
 
 //	colours from colorbrewer2.org
-const OceanColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
+const OceanColoursHex = ['#c9e7f2','#4eb3d3','#2b8cbe','#0868ac','#084081','#023859','#03658c','#218da6','#17aebf','#15bfbf'];
+//const OceanColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
 const OceanColours = UnrollHexToRgb(OceanColoursHex);
 const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xF2F2F2,0xE0CEB2,0x9A7F5F,0xEBDEC3,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
 const ShellColours = UnrollHexToRgb(ShellColoursHex);
