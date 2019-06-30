@@ -21,96 +21,180 @@ const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIte
 const NoiseTexture = new Pop.Image('Noise0.png');
 
 
-function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage)
+
+
+function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 {
 	let VertexSize = 2;
 	let VertexData = [];
+	let VertexDataCount = 0;
 	let TriangleIndexes = [];
+	let TriangleIndexCount = 0;
 	let WorldPositions = [];
+	let WorldPositionsCount = 0;
+	let WorldPositionSize = 3;
 	let WorldMin = [null,null,null];
 	let WorldMax = [null,null,null];
 
+	let PushIndex = function(Index)
+	{
+		TriangleIndexes.push(Index);
+	}
+	let PushVertexData = function(f)
+	{
+		VertexData.push(f);
+	}
+	let GetVertexDataLength = function()
+	{
+		return VertexData.length;
+	}
+	let PushWorldPos = function(x,y,z)
+	{
+		WorldPositions.push(x);
+		WorldPositions.push(y);
+		WorldPositions.push(z);
+	}
+	
+	let OnMeta = undefined;
+/*
+	//	replace data with arrays... no noticable speed improvement!
+	let OnMeta = function(Meta)
+	{
+		VertexData = new Float32Array( Meta.VertexCount * 3 * VertexSize );
+		PushVertexData = function(f)
+		{
+			VertexData[VertexDataCount] = f;
+			VertexDataCount++;
+		}
+		GetVertexDataLength = function()
+		{
+			return VertexDataCount;
+		}
+
+		
+		TriangleIndexes = new Int32Array( Meta.VertexCount * 3 );
+		PushIndex = function(f)
+		{
+			TriangleIndexes[TriangleIndexCount] = f;
+			TriangleIndexCount++;
+		}
+		
+		WorldPositions = new Float32Array( Meta.VertexCount * 3 );
+		PushWorldPos = function(x,y,z)
+		{
+			WorldPositions[WorldPositionsCount+0] = x;
+			WorldPositions[WorldPositionsCount+1] = y;
+			WorldPositions[WorldPositionsCount+2] = z;
+			WorldPositionsCount += 3;
+		}
+	}
+*/
 	let AddTriangle = function(TriangleIndex,x,y,z)
 	{
-		let FirstTriangleIndex = VertexData.length / VertexSize;
+		let FirstTriangleIndex = GetVertexDataLength() / VertexSize;
 		
 		let Verts;
 		if ( VertexSize == 2 )
 			Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
 		else
 			Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
-		Verts.forEach( v => VertexData.push(v) );
+		Verts.forEach( v => PushVertexData(v) );
 		
-		let TriangleIndexes = [0,1,2];
-		TriangleIndexes.forEach( i => TriangleIndexes.push( i + FirstTriangleIndex ) );
+		PushIndex( FirstTriangleIndex+0 );
+		PushIndex( FirstTriangleIndex+1 );
+		PushIndex( FirstTriangleIndex+2 );
 	}
 	
 	let TriangleCounter = 0;
 	let OnVertex = function(x,y,z)
 	{
+		/*
 		if ( TriangleCounter == 0 )
 		{
 			WorldMin = [x,y,z];
 			WorldMax = [x,y,z];
 		}
+		*/
 		AddTriangle( TriangleCounter,x,y,z );
 		TriangleCounter++;
-		WorldPositions.push( [x,y,z] );
+		PushWorldPos( x,y,z );
+		/*
 		WorldMin[0] = Math.min( WorldMin[0], x );
 		WorldMin[1] = Math.min( WorldMin[1], y );
 		WorldMin[2] = Math.min( WorldMin[2], z );
 		WorldMax[0] = Math.max( WorldMax[0], x );
 		WorldMax[1] = Math.max( WorldMax[1], y );
 		WorldMax[2] = Math.max( WorldMax[2], z );
+		*/
 	}
 	
+	let LoadTime = Pop.GetTimeNowMs();
 	if ( Filename.endsWith('.ply') )
-		Pop.ParsePlyFile(Filename,OnVertex);
+		Pop.ParsePlyFile(Filename,OnVertex,OnMeta);
 	else if ( Filename.endsWith('.obj') )
-		Pop.ParseObjFile(Filename,OnVertex);
+		Pop.ParseObjFile(Filename,OnVertex,OnMeta);
 	else
 		throw "Don't know how to load " + Filename;
 	
+	Pop.Debug("Loading took", Pop.GetTimeNowMs()-LoadTime);
+	
 	if ( WorldPositionImage )
 	{
-		let FloatFormat = true;
+		let WorldPosTime = Pop.GetTimeNowMs();
+
+		Scale = Scale||1;
 		let Channels = 3;
-		let Quantisise = true;
-		let NormaliseCoord8 = function(x)
-		{
-			return Math.floor(x * 255);
-		}
+		let Quantisise = false;
+	
 		let NormaliseCoordf = function(x,Index)
 		{
+			x *= Scale;
 			return x;
 		}
-		let ScaleCoord = FloatFormat ? NormaliseCoordf : NormaliseCoord8;
+		
 		const Width = 1024;
-		const Height = Math.ceil( WorldPositions.length / Width );
-		let WorldPixels = FloatFormat ? new Float32Array( Channels * Width*Height ) : new Uint8Array( Channels * Width*Height );
-		let PushPixel = function(xyz,Index)
+		const Height = Math.ceil( WorldPositions.length / WorldPositionSize / Width );
+		let WorldPixels = new Float32Array( Channels * Width*Height );
+		WorldPositions.copyWithin( WorldPixels );
+		
+		let ModifyXyz = function(Index)
 		{
+			let x = WorldPixels[Index+0];
+			let y = WorldPixels[Index+1];
+			let z = WorldPixels[Index+2];
 			//	normalize and turn into 0-255
-			let x = Quantisise ? Math.Range( WorldMin[0], WorldMax[0], xyz[0] ) : xyz[0];
-			let y = Quantisise ? Math.Range( WorldMin[1], WorldMax[1], xyz[1] ) : xyz[1];
-			let z = Quantisise ? Math.Range( WorldMin[2], WorldMax[2], xyz[2] ) : xyz[2];
-			Index *= Channels;
-			x = ScaleCoord(x,Index);
-			y = ScaleCoord(y,Index);
-			z = ScaleCoord(z,Index);
-			Pop.Debug(WorldMin,WorldMax,x,y,z);
+			x = Quantisise ? Math.Range( WorldMin[0], WorldMax[0], x ) : x;
+			y = Quantisise ? Math.Range( WorldMin[1], WorldMax[1], y ) : y;
+			z = Quantisise ? Math.Range( WorldMin[2], WorldMax[2], z ) : z;
+			x = NormaliseCoordf(x);
+			y = NormaliseCoordf(y);
+			z = NormaliseCoordf(z);
+			//Pop.Debug(WorldMin,WorldMax,x,y,z);
 			WorldPixels[Index+0] = x;
 			WorldPixels[Index+1] = y;
 			WorldPixels[Index+2] = z;
 		}
-		WorldPositions.forEach( PushPixel );
-		
-		WorldPositionImage.WritePixels( Width, Height, WorldPixels, FloatFormat ? 'Float3' : 'RGB' );
-		
+	
+		let PushPixel = function(xyz,Index)
+		{
+			Index *= Channels;
+			WorldPixels[Index+0] = xyz[0];
+			WorldPixels[Index+1] = xyz[1];
+			WorldPixels[Index+2] = xyz[2];
+			ModifyXyz( Index );
+		}
+		for ( let i=0;	i<WorldPositions.length;	i+=WorldPositionSize )
+			PushPixel( WorldPositions.slice(i,i+WorldPositionSize), i/WorldPositionSize );
+
+		Pop.Debug("Making world positions took", Pop.GetTimeNowMs()-WorldPosTime);
+
+		let WriteTime = Pop.GetTimeNowMs();
+		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'Float3' );
+		Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
 	}
 	
 	const VertexAttributeName = "Vertex";
-	
+
 	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return TriangleBuffer;
 }
@@ -555,8 +639,8 @@ function TAnimatedActor(GeoFilenames,Colours)
 
 
 let OceanFilenames = [];
-//for ( let i=1;	i<=96;	i++ )
-for ( let i=1;	i<=10;	i++ )
+for ( let i=1;	i<=96;	i++ )
+//for ( let i=1;	i<=10;	i++ )
 	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let Actor_Shell = new TPhysicsActor( 'Shell/shellFromBlender.obj', ShellColours );
