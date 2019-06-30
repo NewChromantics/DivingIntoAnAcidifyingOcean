@@ -50,9 +50,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 	}
 	let PushWorldPos = function(x,y,z)
 	{
-		WorldPositions.push(x);
-		WorldPositions.push(y);
-		WorldPositions.push(z);
+		WorldPositions.push([x,y,z]);
 	}
 	
 
@@ -78,7 +76,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 			TriangleIndexes[TriangleIndexCount] = f;
 			TriangleIndexCount++;
 		}
-		
+		/*
 		WorldPositions = new Float32Array( Meta.VertexCount * 3 );
 		PushWorldPos = function(x,y,z)
 		{
@@ -87,6 +85,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 			WorldPositions[WorldPositionsCount+2] = z;
 			WorldPositionsCount += 3;
 		}
+		*/
 	}
 	OnMeta = undefined;
 
@@ -141,6 +140,19 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 	
 	if ( WorldPositionImage )
 	{
+		//	sort the positions
+		let SortPosition = function(a,b)
+		{
+			if ( a[2] < b[2] )	return -1;
+			if ( a[2] > b[2] )	return 1;
+			return 0;
+		}
+		WorldPositions.sort(SortPosition);
+		//	unroll
+		let Unrolled = [];
+		WorldPositions.forEach( xyz => {	Unrolled.push(xyz[0]);	Unrolled.push(xyz[1]);	Unrolled.push(xyz[2]);}	);
+		WorldPositions = Unrolled;
+		
 		let WorldPosTime = Pop.GetTimeNowMs();
 
 		Scale = Scale||1;
@@ -200,10 +212,11 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale)
 	const VertexAttributeName = "Vertex";
 	
 	//	loads much faster as a typed array
-	let VertexDataf = new Float32Array( VertexData );
+	VertexData = new Float32Array( VertexData );
+	TriangleIndexes = new Int32Array(TriangleIndexes);
 	
 	let CreateBufferTime = Pop.GetTimeNowMs();
-	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexDataf, VertexSize, TriangleIndexes );
+	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
 	
 	return TriangleBuffer;
