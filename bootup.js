@@ -23,7 +23,7 @@ const NoiseTexture = new Pop.Image('Noise0.png');
 
 
 
-function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0)
+function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null)
 {
 	let VertexSize = 2;
 	let VertexData = [];
@@ -144,15 +144,15 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 	
 	if ( WorldPositionImage )
 	{
-		//	sort the positions
-		let SortPosition = function(a,b)
+		//	sort, but consistently
+		if ( GetIndexMap )
 		{
-			if ( a[2] < b[2] )	return -1;
-			if ( a[2] > b[2] )	return 1;
-			return 0;
+			let Map = GetIndexMap(WorldPositions);
+			let NewPositions = [];
+			Map.forEach( i => NewPositions.push(WorldPositions[i]) );
+			WorldPositions = NewPositions;
 		}
-		WorldPositions.sort(SortPosition);
-		//	unroll
+		
 		let Unrolled = [];
 		WorldPositions.forEach( xyz => {	Unrolled.push(xyz[0]);	Unrolled.push(xyz[1]);	Unrolled.push(xyz[2]);}	);
 		WorldPositions = Unrolled;
@@ -544,6 +544,35 @@ function TPhysicsActor(GeoFilename,Colours,Scale,Position)
 	this.TriangleBuffer = null;
 	this.Colours = Colours;
 	
+	this.IndexMap = null;
+	this.GetIndexMap = function(Positions)
+	{
+		//	generate
+		if ( !this.IndexMap )
+		{
+			//	add index to each position
+			let SetIndex = function(Element,Index)
+			{
+				Element.push(Index);
+			}
+			Positions.forEach( SetIndex );
+			
+			//	sort the positions
+			let SortPosition = function(a,b)
+			{
+				if ( a[2] < b[2] )	return -1;
+				if ( a[2] > b[2] )	return 1;
+				return 0;
+			}
+			Positions.sort(SortPosition);
+			
+			//	extract new index map
+			this.IndexMap = [];
+			Positions.forEach( xyzi => this.IndexMap.push(xyzi[3]) );
+		}
+		return this.IndexMap;
+	}
+	
 	this.PhysicsIteration = function(DurationSecs,RenderTarget)
 	{
 		//	need data initialised
@@ -575,7 +604,7 @@ function TPhysicsActor(GeoFilename,Colours,Scale,Position)
 		let VertexSkip = 3;
 		
 		this.PositionTexture = new Pop.Image();
-		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.PositionTexture, Scale, VertexSkip );
+		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, GeoFilename, this.PositionTexture, Scale, VertexSkip, this.GetIndexMap.bind(this) );
 		this.ResetPhysicsTextures();
 		
 		return this.TriangleBuffer;
