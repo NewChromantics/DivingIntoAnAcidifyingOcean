@@ -5,7 +5,8 @@ uniform float Radius = 0.5;
 varying vec3 FragWorldPos;
 varying vec4 Sphere4;	//	the shape rendered by this triangle in world space
 
-uniform vec3 CameraWorldPosition;
+uniform float3 CameraWorldPosition;
+uniform float3 Timeline_CameraPosition;
 
 uniform float Fog_MinDistance = 0;
 uniform float Fog_MaxDistance = 20;
@@ -13,6 +14,11 @@ uniform float3 Fog_Colour = float3(0,1,0);
 uniform float3 Light_Colour = float3(1,1,1);
 uniform float Light_MinPower = 0.1;
 uniform float Light_MaxPower = 1.0;
+
+float3 GetCameraWorldPosition()
+{
+	return Timeline_CameraPosition + CameraWorldPosition;
+}
 
 float Range(float Min,float Max,float Value)
 {
@@ -57,7 +63,7 @@ float3 slerp(float3 start, float3 end, float percent)
 float GetCameraIntersection(float3 WorldPos,float4 Sphere,out float3 Normal,out float3 HitPos)
 {
 	//	get ray
-	float3 DirToCamera = -normalize(WorldPos - CameraWorldPosition);
+	float3 DirToCamera = -normalize(WorldPos - GetCameraWorldPosition() );
 	
 	float3 SdfNormal = ((WorldPos - Sphere.xyz) / Sphere.w);
 	//SdfNormal = normalize( slerp( SdfNormal, DirToCamera, 1-length(SdfNormal) ) );
@@ -98,7 +104,7 @@ float3 NormalToRedGreen(float Normal)
 
 float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 {
-	float FogDistance = length( CameraWorldPosition - WorldPos );
+	float FogDistance = length( GetCameraWorldPosition() - WorldPos );
 	float FogStrength = RangeClamped01( Fog_MinDistance, Fog_MaxDistance, FogDistance );
 	Rgb = mix( Rgb, Fog_Colour, FogStrength );
 	//Rgb = NormalToRedGreen(FogStrength);
@@ -111,7 +117,7 @@ float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 float4 GetLightColour(float3 Normal,float3 WorldPos)
 {
 	float3 UpDir = float3(0,1,0);
-	float3 DirToCamera = normalize(WorldPos - CameraWorldPosition);
+	float3 DirToCamera = normalize(WorldPos - GetCameraWorldPosition() );
 
 
 	float LightStrength = dot( Normal, UpDir );

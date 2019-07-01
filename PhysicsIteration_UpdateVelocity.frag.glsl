@@ -3,7 +3,7 @@ precision highp float;
 varying vec2 uv;
 uniform sampler2D LastVelocitys;
 uniform sampler2D Noise;
-uniform float Step = 1.0/60.0;
+uniform float PhysicsStep = 1.0/60.0;
 uniform float NoiseScale = 0.1;
 uniform float Gravity = -0.1;
 
@@ -123,8 +123,8 @@ void main()
 	//	gr: just a blit should be stable
 	vec4 Vel = texture( LastVelocitys, uv );
 	
-	Vel.xyz += GetNoise(uv) * Step;
-	Vel.xyz += GetGravity(uv) * Step;
+	Vel.xyz += GetNoise(uv) * PhysicsStep;
+	Vel.xyz += GetGravity(uv) * PhysicsStep;
 	
 	gl_FragColor = Vel;
 }
