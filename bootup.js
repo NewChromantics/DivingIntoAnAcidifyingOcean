@@ -10,6 +10,7 @@ Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
+Pop.Include('PopEngineCommon/ParamsWindow.js');
 
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
@@ -21,7 +22,16 @@ const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIte
 const NoiseTexture = new Pop.Image('Noise0.png');
 
 
-
+function GenerateRandomVertexes(OnVertex)
+{
+	for ( let i=0;	i<10000;	i++ )
+	{
+		let x = Math.random() - 0.5;
+		let y = Math.random() - 0.5;
+		let z = Math.random() - 0.5;
+		OnVertex(x,y,z);
+	}
+}
 
 function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null)
 {
@@ -132,15 +142,17 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		*/
 	}
 	
-	let LoadTime = Pop.GetTimeNowMs();
+	//let LoadTime = Pop.GetTimeNowMs();
 	if ( Filename.endsWith('.ply') )
 		Pop.ParsePlyFile(Filename,OnVertex,OnMeta);
 	else if ( Filename.endsWith('.obj') )
 		Pop.ParseObjFile(Filename,OnVertex,OnMeta);
+	else if ( Filename.endsWith('.random') )
+		GenerateRandomVertexes(OnVertex);
 	else
 		throw "Don't know how to load " + Filename;
 	
-	Pop.Debug("Loading took", Pop.GetTimeNowMs()-LoadTime);
+	//Pop.Debug("Loading took", Pop.GetTimeNowMs()-LoadTime);
 	
 	if ( WorldPositionImage )
 	{
@@ -157,7 +169,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		WorldPositions.forEach( xyz => {	Unrolled.push(xyz[0]);	Unrolled.push(xyz[1]);	Unrolled.push(xyz[2]);}	);
 		WorldPositions = Unrolled;
 		
-		let WorldPosTime = Pop.GetTimeNowMs();
+		//let WorldPosTime = Pop.GetTimeNowMs();
 
 		Scale = Scale||1;
 		let Channels = 3;
@@ -206,11 +218,11 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		//	ModifyXyz( WorldPositions.slice(i,i+WorldPositionSize), i/WorldPositionSize );
 		}
 		
-		Pop.Debug("Making world positions took", Pop.GetTimeNowMs()-WorldPosTime);
+		//Pop.Debug("Making world positions took", Pop.GetTimeNowMs()-WorldPosTime);
 
-		let WriteTime = Pop.GetTimeNowMs();
+		//let WriteTime = Pop.GetTimeNowMs();
 		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'Float3' );
-		Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
+		//Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
 	}
 	
 	const VertexAttributeName = "Vertex";
@@ -219,9 +231,9 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 	VertexData = new Float32Array( VertexData );
 	TriangleIndexes = new Int32Array(TriangleIndexes);
 	
-	let CreateBufferTime = Pop.GetTimeNowMs();
+	//let CreateBufferTime = Pop.GetTimeNowMs();
 	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
-	Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
+	//Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
 	
 	return TriangleBuffer;
 }
@@ -266,12 +278,15 @@ function UnrollHexToRgb(Hexs)
 
 //	colours from colorbrewer2.org
 const OceanColoursHex = ['#c9e7f2','#4eb3d3','#2b8cbe','#0868ac','#084081','#023859','#03658c','#218da6','#17aebf','#15bfbf'];
+const DebrisColoursHex = ['#084081','#0868ac'];
 //const OceanColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
 const OceanColours = UnrollHexToRgb(OceanColoursHex);
 const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xc2ae8f,0x9A7F5F,0xbfb39b,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
 const ShellColours = UnrollHexToRgb(ShellColoursHex);
-const FogColour = HexToRgbf(0x1d76a4);
+const FogColour = HexToRgbf(0x000000);
 const LightColour = HexToRgbf(0xeef2df);//HexToRgbf(0x9ee5fa);
+
+const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
 let Camera = {};
 Camera.Position = [ 0,1,17 ];
@@ -507,6 +522,28 @@ function TTimeline(Keyframes)
 		
 		//Pop.Debug(JSON.stringify(Slice));
 		return Slice;
+	}
+	
+	this.GetUniform = function(Time,Key)
+	{
+		let Slice = this.GetTimeSlice( Time );
+		let UniformsA = Keyframes[Slice.StartIndex].Uniforms;
+		let UniformsB = Keyframes[Slice.EndIndex].Uniforms;
+
+		let LerpUniform = function(Key)
+		{
+			let a = UniformsA[Key];
+			let b = UniformsB[Key];
+			
+			let Value;
+			if ( Array.isArray(a) )
+				Value = Math.LerpArray( a, b, Slice.Lerp );
+			else
+				Value = Math.Lerp( a, b, Slice.Lerp );
+			return Value;
+		}
+		let Value = LerpUniform( Key );
+		return Value;
 	}
 	
 	this.EnumUniforms = function(Time,EnumUniform)
@@ -760,14 +797,13 @@ function TAnimatedActor(Meta)
 
 const Keyframes =
 [
- new TKeyframe(	0,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,0,0]	} ),
- new TKeyframe(	10,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-0.15,-5]	} ),
- new TKeyframe(	20,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-2,	-9]	} ),
- new TKeyframe(	30,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-3.3,	-10]	} ),
- new TKeyframe(	40,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-3.4,	-10.1]	} ),
- new TKeyframe(	50,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,	-10.2]	} ),
- new TKeyframe(	60,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,	-11]	} ),
- new TKeyframe(	120,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,-16]	} ),
+ new TKeyframe(	0,		{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,0,	 0]	} ),
+ new TKeyframe(	10,		{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-0.20, -5]	} ),
+ new TKeyframe(	20,		{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.30, -10]	} ),
+ new TKeyframe(	28.9,	{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.40, -10.1]	} ),
+ new TKeyframe(	40,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.50, -10.2]	} ),
+ new TKeyframe(	50,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.55, -11]	} ),
+ new TKeyframe(	110,	{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.60, -16]	} ),
 ];
 const Timeline = new TTimeline( Keyframes );
 
@@ -784,26 +820,49 @@ ShellMeta.TriangleScale = 0.03;
 ShellMeta.Colours = ShellColours;
 ShellMeta.VertexSkip = 0;
 
+let DebrisMeta = {};
+DebrisMeta.Filename = '.random';
+DebrisMeta.Position = [0,-10,0];
+DebrisMeta.Scale = 20;
+DebrisMeta.TriangleScale = 0.015;
+DebrisMeta.Colours = DebrisColours;
+DebrisMeta.VertexSkip = 0;
+
+
 let OceanMeta = {};
 OceanMeta.Filename = OceanFilenames;
 OceanMeta.Position = [0,0,0];
 OceanMeta.Scale = 1.0;
-OceanMeta.TriangleScale = 0.06;
+OceanMeta.TriangleScale = 0.03;
 OceanMeta.Colours = OceanColours;
 
-let Actor_Shell = new TPhysicsActor( ShellMeta );
+//let Actor_Shell = new TPhysicsActor( ShellMeta );
+let Actor_Shell = null;
 let Actor_Ocean = new TAnimatedActor( OceanMeta );
+let Actor_Debris = new TPhysicsActor( DebrisMeta );
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
 
-let FogParams = {};
+let Params = {};
 //	todo: radial vs ortho etc
-FogParams.MinDistance = 1;
-FogParams.MaxDistance = 15;
-FogParams.Colour = FogColour;
+Params.FogMinDistance = 1;
+Params.FogMaxDistance = 18;
+Params.FogColour = FogColour;
+Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
+Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 
+let OnParamsChanged = function(Params)
+{
+	Actor_Ocean.Meta.TriangleScale = Params.Ocean_TriangleScale;
+	Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
+}
 
+let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged);
+ParamsWindow.AddParam('FogMinDistance',0,30);
+ParamsWindow.AddParam('FogMaxDistance',0,30);
+ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
+ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
 
 
 function RenderActor(RenderTarget,Actor,Time)
@@ -828,9 +887,9 @@ function RenderActor(RenderTarget,Actor,Time)
 		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
 		Shader.SetUniform('CameraProjectionMatrix', Camera.ProjectionMatrix );
 		Shader.SetUniform('CameraWorldPosition',Camera.Position);
-		Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
-		Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
-		Shader.SetUniform('Fog_Colour',FogParams.Colour);
+		Shader.SetUniform('Fog_MinDistance',Params.FogMinDistance);
+		Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
+		Shader.SetUniform('Fog_Colour',Params.FogColour);
 		Shader.SetUniform('Light_Colour', LightColour );
 		
 		Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
@@ -853,9 +912,18 @@ function Render(RenderTarget)
 		Actor_Shell.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
 	if ( Actor_Ocean )
 		Actor_Ocean.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
+	if ( Actor_Debris )
+		Actor_Debris.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
 
 	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
-	RenderActor( RenderTarget, Actor_Shell, GlobalTime );
+	
+	let ShellAlpha = Timeline.GetUniform(GlobalTime,'ShellAlpha');
+	if ( ShellAlpha > 0.5 )
+		RenderActor( RenderTarget, Actor_Shell, GlobalTime );
+	
+	if ( Actor_Debris )
+		RenderActor( RenderTarget, Actor_Debris, GlobalTime );
+
 	RenderActor( RenderTarget, Actor_Ocean, GlobalTime );
 }
 
