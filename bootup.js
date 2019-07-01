@@ -684,7 +684,7 @@ function TAnimationBuffer(Filenames,Scale)
 		
 		let LoadFrame = function(Filename,Index)
 		{
-			let FrameDuration = 1/30;
+			let FrameDuration = 1/20;
 			let Frame = {};
 			Frame.Time = Index * FrameDuration;
 			Frame.PositionTexture = new Pop.Image();
@@ -761,19 +761,19 @@ function TAnimatedActor(Meta)
 const Keyframes =
 [
  new TKeyframe(	0,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,0,0]	} ),
- new TKeyframe(	10,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-0.5,-5]	} ),
+ new TKeyframe(	10,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-0.15,-5]	} ),
  new TKeyframe(	20,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-2,	-9]	} ),
- new TKeyframe(	30,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-3.5,	-10]	} ),
- new TKeyframe(	40,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-3.5,	-10]	} ),
- new TKeyframe(	50,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,	-10]	} ),
+ new TKeyframe(	30,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-3.3,	-10]	} ),
+ new TKeyframe(	40,	{	PhysicsStep:0,		Timeline_CameraPosition:[0,-3.4,	-10.1]	} ),
+ new TKeyframe(	50,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,	-10.2]	} ),
  new TKeyframe(	60,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,	-11]	} ),
  new TKeyframe(	120,	{	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.5,-16]	} ),
 ];
 const Timeline = new TTimeline( Keyframes );
 
 let OceanFilenames = [];
-//for ( let i=1;	i<=96;	i++ )
-for ( let i=1;	i<=2;	i++ )
+for ( let i=1;	i<=96;	i++ )
+//for ( let i=1;	i<=2;	i++ )
 	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let ShellMeta = {};
