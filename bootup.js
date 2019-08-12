@@ -9,6 +9,7 @@ Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
+//Pop.Include('PopEngineCommon/PopCollada.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="Web/win95.css">
+</head>
+<body>
+
+	<script src='PopEngineCommon/PopWebApi.js'></script>
+	<script src='PopEngineCommon/PopWebOpenglApi.js'></script>
+	<script src='PopEngineCommon/PopWebGuiApi.js'></script>
+	<script src='PopEngineCommon/PopWebImageApi.js'></script>
+	<script>
+		
+		async function Bootup()
+		{
+			//	preload some assets that we don't load asynchronously
+			
+			await Pop.AsyncCacheAssetAsString('Shell/shellFromBlender.obj');
+			await Pop.AsyncCacheAssetAsString('Quad.vert.glsl');
+			await Pop.AsyncCacheAssetAsString('ParticleTriangles.vert.glsl');
+			await Pop.AsyncCacheAssetAsString('ParticleColour.frag.glsl');
+			await Pop.AsyncCacheAssetAsString('BlitCopy.frag.glsl');
+			await Pop.AsyncCacheAssetAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
+			await Pop.AsyncCacheAssetAsString('PhysicsIteration_UpdatePosition.frag.glsl');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopShaderCache.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopFrameCounter.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopCamera.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopMath.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/ParamsWindow.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopPly.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopObj.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopTexture.js');
+			await Pop.AsyncCacheAssetAsImage('Noise0.png');
+
+			let Source = await Pop.LoadFileAsStringAsync('bootup.js');
+			Pop.CompileAndRun( Source, 'bootup.js' );
+		}
+
+		Bootup().then( e=>Pop.Debug("Finished!",e) ).catch( console.error );
+	
+	</script>
+	
+</body>
+
