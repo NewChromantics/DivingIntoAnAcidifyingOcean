@@ -222,7 +222,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		//Pop.Debug("Making world positions took", Pop.GetTimeNowMs()-WorldPosTime);
 
 		//let WriteTime = Pop.GetTimeNowMs();
-		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'Float3' );
+		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'Float'+Channels );
 		//Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
 	}
 	
@@ -517,6 +517,7 @@ function TPhysicsActor(Meta)
 	
 	this.GetTransformMatrix = function()
 	{
+		//Pop.Debug("physics pos", JSON.stringify(this));
 		return Math.CreateTranslationMatrix( ...this.Position );
 	}
 }
@@ -638,9 +639,9 @@ ShellMeta.VertexSkip = 0;
 
 let DebrisMeta = {};
 DebrisMeta.Filename = '.random';
-DebrisMeta.Position = [0,-10,0];
-DebrisMeta.Scale = 20;
-DebrisMeta.TriangleScale = 0.015;
+DebrisMeta.Position = [0,0,0];
+DebrisMeta.Scale = 10;
+DebrisMeta.TriangleScale = 0.2015;
 DebrisMeta.Colours = DebrisColours;
 DebrisMeta.VertexSkip = 0;
 
@@ -652,12 +653,10 @@ OceanMeta.Scale = 1.0;
 OceanMeta.TriangleScale = 0.03;
 OceanMeta.Colours = OceanColours;
 
-//let Actor_Shell = new TPhysicsActor( ShellMeta );
-let Actor_Shell = null;
+let Actor_Shell = new TPhysicsActor( ShellMeta );
 let Actor_Ocean = new TAnimatedActor( OceanMeta );
 let Actor_Debris = new TPhysicsActor( DebrisMeta );
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
-
 
 
 let Params = {};
@@ -691,19 +690,20 @@ function RenderActor(RenderTarget,Actor,Time)
 	const PositionsTexture = Actor.GetPositionsTexture();
 	const Viewport = RenderTarget.GetScreenRect();
 	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
-	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+	let WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+	
+	//	apply timeline camera pos
+	let TimelineCameraPos = Timeline.GetUniform(Time,'Timeline_CameraPosition');
+	//WorldToCameraTransform = Math.MatrixMultiply4x4( Math.CreateTranslationMatrix(...TimelineCameraPos), WorldToCameraTransform );
+	
+	//let Geo = GetAsset( Actor.Geometry, RenderTarget );
+	//let Shader = Pop.GetShader( RenderTarget, Actor.FragShader, Actor.VertShader );
 	
 	let SetUniforms = function(Shader)
 	{
-		//	actor
+		//	defaults
 		Shader.SetUniform('LocalToWorldTransform', Actor.GetTransformMatrix() );
-		Shader.SetUniform('WorldPositions',PositionsTexture);
-		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
-		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
-		Shader.SetUniform('TriangleScale', Actor.Meta.TriangleScale);
-		Shader.SetUniform('Colours',Actor.Colours);
-		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
-
+		
 		//	global
 		Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
 		Shader.SetUniform('CameraProjectionTransform', CameraProjectionTransform );
@@ -713,10 +713,71 @@ function RenderActor(RenderTarget,Actor,Time)
 		Shader.SetUniform('Light_Colour', LightColour );
 		
 		Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
+		
+		//	actor specific
+		let SetUniform = function(Key)
+		{
+			let Value = Actor.Uniforms[Key];
+			Shader.SetUniform( Key, Value );
+		}
+		Object.keys( Actor.Uniforms ).forEach( SetUniform );
+		
+		//	actor
+		Shader.SetUniform('WorldPositions',PositionsTexture);
+		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
+		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
+		Shader.SetUniform('TriangleScale', Actor.Meta.TriangleScale);
+		Shader.SetUniform('Colours',Actor.Colours);
+		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
 	};
 	
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
 }
+
+
+
+function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
+{
+	this.LocalToWorldTransform = Transform;
+	this.Geometry = Geometry;
+	this.VertShader = VertShader;
+	this.FragShader = FragShader;
+	this.Uniforms = Uniforms || [];
+}
+
+function GetRenderScene()
+{
+	let Scene = [];
+	
+	let PushPositionBufferActor = function(Actor)
+	{
+		const PositionsTexture = Actor.GetPositionsTexture();
+		Actor.Uniforms = [];
+		Actor.Uniforms['WorldPositions'] = PositionsTexture;
+		Actor.Uniforms['WorldPositionsWidth'] = PositionsTexture.GetWidth();
+		Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
+		Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
+		Actor.Uniforms['Colours']= Actor.Colours;
+		Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
+		//let a = new TActor( )
+		Scene.push( Actor );
+	}
+	
+	let ShellAlpha = Timeline.GetUniform(GlobalTime,'ShellAlpha');
+	if ( ShellAlpha > 0.5 )
+		PushPositionBufferActor( Actor_Shell );
+	
+	if ( Actor_Debris )
+		PushPositionBufferActor( Actor_Debris );
+	
+	if ( Actor_Ocean )
+		PushPositionBufferActor( Actor_Ocean );
+
+	return Scene;
+}
+
+
+
 
 
 let GlobalTime = 0;
@@ -735,14 +796,13 @@ function Render(RenderTarget)
 
 	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
 	
-	let ShellAlpha = Timeline.GetUniform(GlobalTime,'ShellAlpha');
-	if ( ShellAlpha > 0.5 )
-		RenderActor( RenderTarget, Actor_Shell, GlobalTime );
+	const Scene = GetRenderScene();
+	let RenderSceneActor = function(Actor)
+	{
+		RenderActor( RenderTarget, Actor, GlobalTime );
+	}
+	Scene.forEach( RenderSceneActor );
 	
-	if ( Actor_Debris )
-		RenderActor( RenderTarget, Actor_Debris, GlobalTime );
-
-	RenderActor( RenderTarget, Actor_Ocean, GlobalTime );
 }
 
 let Window = new Pop.Opengl.Window("Tarqunder the sea");
@@ -763,6 +823,11 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 	if ( Button == 1 )
 	{
 		Camera.OnCameraPan( 0, 0, y, FirstClick );
+		//Camera.OnCameraLookAtPan( 0, 0, y, FirstClick );
+	}
+	if ( Button == 2 )
+	{
+		Camera.OnCameraOrbit( x, y, 0, FirstClick );
 		//Camera.OnCameraLookAtPan( 0, 0, y, FirstClick );
 	}
 };
