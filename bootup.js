@@ -821,7 +821,7 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 	}
 	if ( Button == 2 )
 	{
-		Camera.OnCameraPan( 0, y, 0, FirstClick );
+		Camera.OnCameraPan( x, y, 0, FirstClick );
 	}
 	if ( Button == 1 )
 	{
