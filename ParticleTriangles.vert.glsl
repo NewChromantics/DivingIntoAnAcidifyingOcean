@@ -64,10 +64,8 @@ void main()
 	float3 TrianglePos = GetTriangleWorldPos(TriangleIndex);
 	float4 WorldPos = LocalToWorldTransform * float4(LocalPos,1.0);
 	WorldPos.xyz += TrianglePos;
-	WorldPos.w = 1.0;
 	
 	float4 CameraPos = WorldToCameraTransform * WorldPos;
-		
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
 	

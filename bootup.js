@@ -817,18 +817,15 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 {
 	if ( Button == 0 )
 	{
-		Camera.OnCameraPan( x, y, 0, FirstClick );
-		//Camera.OnCameraLookAtPan( x, y, 0, FirstClick );
-	}
-	if ( Button == 1 )
-	{
-		Camera.OnCameraPan( 0, 0, y, FirstClick );
-		//Camera.OnCameraLookAtPan( 0, 0, y, FirstClick );
+		Camera.OnCameraPan( x, 0, y, FirstClick );
 	}
 	if ( Button == 2 )
 	{
+		Camera.OnCameraPan( 0, y, 0, FirstClick );
+	}
+	if ( Button == 1 )
+	{
 		Camera.OnCameraOrbit( x, y, 0, FirstClick );
-		//Camera.OnCameraLookAtPan( 0, 0, y, FirstClick );
 	}
 };
 
