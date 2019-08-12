@@ -1,17 +1,19 @@
-#version 410
-uniform vec4 VertexRect = vec4(0,0,1,1);
-in vec2 Vertex;
-out vec4 Rgba;
-out vec2 TriangleUv;
-out vec3 FragWorldPos;
-out vec4 Sphere4;	//	the shape rendered by this triangle in world space
+
+attribute vec2 Vertex;
+varying vec4 Rgba;
+varying vec2 TriangleUv;
+varying vec3 FragWorldPos;
+varying vec3 FragCameraPos;
+varying vec4 Sphere4;	//	the shape rendered by this triangle in world space
 
 uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
 
-uniform mat4 CameraProjectionMatrix;
-uniform float3 CameraWorldPosition = float3(0,0,-10);
+uniform mat4 LocalToWorldTransform;
+uniform mat4 WorldToCameraTransform;
+uniform mat4 CameraProjectionTransform;
+
 uniform float3 Timeline_CameraPosition = float3(0,0,0);
 
 uniform vec3 LocalPositions[3] = vec3[3](
@@ -24,17 +26,11 @@ uniform int ColourCount = 0;
 uniform vec3 Colours[MAX_COLOUR_COUNT];
 
 uniform float TriangleScale = 0.06;
-uniform float3 Transform_WorldPosition = float3(0,0,0);
 
 
 //	world space
 #define SphereRadius (TriangleScale * 0.5)
 //uniform float SphereRadius = 0.04;
-
-float3 GetCameraWorldPosition()
-{
-	return Timeline_CameraPosition + CameraWorldPosition;
-}
 
 
 vec3 GetTriangleWorldPos(int TriangleIndex)
@@ -48,7 +44,7 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 	float v = y / float(WorldPositionsHeight);
 	float3 xyz = textureLod( WorldPositions, float2(u,v), 0 ).xyz;
 	//float3 xyz = float3( x,y,0 );
-	return xyz + Transform_WorldPosition;
+	return xyz;
 }
 
 vec3 GetTriangleColour(int TriangleIndex)
@@ -66,14 +62,19 @@ void main()
 	
 	float3 LocalPos = LocalPositions[VertexIndex] * TriangleScale;
 	float3 TrianglePos = GetTriangleWorldPos(TriangleIndex);
-	float3 WorldPos = TrianglePos + LocalPos;
-	float3 CameraPos = WorldPos - GetCameraWorldPosition();	//	world to camera space
-	float4 ProjectionPos = CameraProjectionMatrix * float4( CameraPos, 1 );
+	float4 WorldPos = LocalToWorldTransform * float4(LocalPos,1.0);
+	WorldPos.xyz += TrianglePos;
+	WorldPos.w = 1.0;
+	
+	float4 CameraPos = WorldToCameraTransform * WorldPos;
+		
+	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
 	
 	Rgba = float4( GetTriangleColour(TriangleIndex), 1 );
 	TriangleUv = LocalPositions[VertexIndex].xy;
-	FragWorldPos = WorldPos;
+	FragWorldPos = WorldPos.xyz;
+	FragCameraPos = CameraPos.xyz;
 	Sphere4 = float4( TrianglePos, SphereRadius );
 }
 
