@@ -674,7 +674,8 @@ let OnParamsChanged = function(Params)
 	Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
 }
 
-let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged);
+const ParamsWindowRect = [800,20,350,200];
+let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('FogMinDistance',0,30);
 ParamsWindow.AddParam('FogMaxDistance',0,30);
 ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
@@ -699,12 +700,14 @@ function RenderActor(RenderTarget,Actor,Time)
 	
 	//let Geo = GetAsset( Actor.Geometry, RenderTarget );
 	//let Shader = Pop.GetShader( RenderTarget, Actor.FragShader, Actor.VertShader );
-	
+	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
+
 	let SetUniforms = function(Shader)
 	{
 		//	defaults
 		Shader.SetUniform('LocalToWorldTransform', Actor.GetTransformMatrix() );
-		
+		Shader.SetUniform('LocalPositions', LocalPositions );
+
 		//	global
 		Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
 		Shader.SetUniform('CameraProjectionTransform', CameraProjectionTransform );
@@ -712,6 +715,8 @@ function RenderActor(RenderTarget,Actor,Time)
 		Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
 		Shader.SetUniform('Fog_Colour',Params.FogColour);
 		Shader.SetUniform('Light_Colour', LightColour );
+		Shader.SetUniform('Light_MinPower', 0.1 );
+		Shader.SetUniform('Light_MaxPower', 1.0 );
 		
 		Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
 		

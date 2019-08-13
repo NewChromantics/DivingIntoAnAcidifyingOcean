@@ -1,16 +1,16 @@
 precision highp float;
 varying vec4 Rgba;
 varying vec2 TriangleUv;
-uniform float Radius = 0.5;
+const float Radius = 0.4;
 varying vec3 FragWorldPos;
 varying vec4 Sphere4;	//	the shape rendered by this triangle in world space
 
-uniform float Fog_MinDistance = 0;
-uniform float Fog_MaxDistance = 20;
-uniform float3 Fog_Colour = float3(0,1,0);
-uniform float3 Light_Colour = float3(1,1,1);
-uniform float Light_MinPower = 0.1;
-uniform float Light_MaxPower = 1.0;
+uniform float Fog_MinDistance;
+uniform float Fog_MaxDistance;
+uniform float3 Fog_Colour;
+uniform float3 Light_Colour;
+uniform float Light_MinPower;
+uniform float Light_MaxPower;
 
 uniform mat4 LocalToWorldTransform;
 uniform mat4 WorldToCameraTransform;
@@ -29,7 +29,7 @@ float Range(float Min,float Max,float Value)
 float RangeClamped01(float Min,float Max,float Value)
 {
 	float t = Range( Min, Max, Value );
-	t = clamp( t, 0, 1 );
+	t = clamp( t, 0.0, 1.0 );
 	return t;
 }
 
@@ -69,7 +69,7 @@ float GetCameraIntersection(float3 WorldPos,float4 Sphere,out float3 Normal,out 
 	
 	float3 SdfNormal = ((WorldPos - Sphere.xyz) / Sphere.w);
 	//SdfNormal = normalize( slerp( SdfNormal, DirToCamera, 1-length(SdfNormal) ) );
-	SdfNormal = slerp( SdfNormal, DirToCamera, 1-length(SdfNormal) );
+	SdfNormal = slerp( SdfNormal, DirToCamera, 1.0-length(SdfNormal) );
 	SdfNormal = normalize( SdfNormal );
 	//	intersection
 	float3 RealWorldPos = WorldPos + (SdfNormal*Sphere.w);
@@ -85,7 +85,7 @@ float GetCameraIntersection(float3 WorldPos,float4 Sphere,out float3 Normal,out 
 
 float3 NormalToRedGreen(float Normal)
 {
-	if ( Normal < 0 )
+	if ( Normal < 0.0 )
 	{
 		return float3( 1,0,1 );
 	}
@@ -94,10 +94,10 @@ float3 NormalToRedGreen(float Normal)
 		Normal = Normal / 0.5;
 		return float3( 1, Normal, 0 );
 	}
-	else if ( Normal <= 1 )
+	else if ( Normal <= 1.0 )
 	{
 		Normal = (Normal-0.5) / 0.5;
-		return float3( 1-Normal, 1, 0 );
+		return float3( 1.0-Normal, 1, 0 );
 	}
 	
 	//	>1
@@ -131,7 +131,7 @@ float4 GetLightColour(float3 Normal,float3 WorldPos)
 	
 	LightStrength = mix( Light_MinPower, Light_MaxPower, LightStrength );
 	
-	float UnderWater = RangeClamped01( -3, -0.5, WorldPos.y );
+	float UnderWater = RangeClamped01( -3.0, -0.5, WorldPos.y );
 	LightStrength *= UnderWater;
 	
 	return float4( Light_Colour, LightStrength );
@@ -176,7 +176,7 @@ void main()
 	//	fog
 	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, HitPos );
 	
-	gl_FragColor.w = 1;
+	gl_FragColor.w = 1.0;
 
 	//gl_FragColor = Rgba;
 /*
