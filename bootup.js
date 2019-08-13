@@ -108,7 +108,7 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		let Verts;
 		if ( VertexSize == 2 )
 			Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
-		else
+		else if ( VertexSize == 4 )
 			Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
 		Verts.forEach( v => PushVertexData(v) );
 		
@@ -253,11 +253,12 @@ function GetQuadGeometry(RenderTarget)
 	let t = 0;
 	let r = 1;
 	let b = 1;
-	let VertexData = [	l,t,	r,t,	r,b,	l,b	];
+	//let VertexData = [	l,t,	r,t,	r,b,	l,b	];
+	let VertexData = [	l,t,	r,t,	r,b,	r,b, l,b, l,t	];
 	let TriangleIndexes = [0,1,2,	2,3,0];
 	
 	const VertexAttributeName = "TexCoord";
-	
+
 	QuadGeometry = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return QuadGeometry;
 }
@@ -380,16 +381,19 @@ function TTimeline(Keyframes)
 
 function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,ScratchTexture)
 {
+	return;
+	
 	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	let UpdateVelocityShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdateVelocity, QuadVertShader );
 	let UpdatePositionsShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdatePosition, QuadVertShader );
 	let Quad = GetQuadGeometry(RenderTarget);
-
+	
 	//	copy old velocitys
 	let CopyVelcoityToScratch = function(RenderTarget)
 	{
 		let SetUniforms = function(Shader)
 		{
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('Texture',VelocityTexture);
 		}
 		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
@@ -401,6 +405,10 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 	{
 		let SetUniforms = function(Shader)
 		{
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
+			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
+			Shader.SetUniform('NoiseScale', 0.1 );
+			Shader.SetUniform('Gravity', -0.1);
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
 			
@@ -415,25 +423,28 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 	{
 		let SetUniforms = function(Shader)
 		{
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('Texture',PositionTexture);
 		}
 		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 	}
 	RenderTarget.RenderToRenderTarget( ScratchTexture, CopyPositionsToScratch );
-
+	
 	//	update positions
 	let UpdatePositions = function(RenderTarget)
 	{
 		let SetUniforms = function(Shader)
 		{
-			Shader.SetUniform('Velocitys',Velocitys);
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
+			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
+			Shader.SetUniform('Velocitys',VelocityTexture);
 			Shader.SetUniform('LastPositions',ScratchTexture);
 			
 			Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdatePositionsShader, SetUniforms );
 	}
-	RenderTarget.RenderToRenderTarget( PositionTexture, UpdateVelocitys );
+	RenderTarget.RenderToRenderTarget( PositionTexture, UpdatePositions );
 	
 }
 
@@ -494,9 +505,9 @@ function TPhysicsActor(Meta)
 	{
 		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
-		const Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
-		this.VelocityTexture = new Pop.Image(Size,'Float4');
-		this.ScratchTexture = new Pop.Image(Size,'Float4');
+		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
+		this.VelocityTexture = new Pop.Image(Size,'Float3');
+		this.ScratchTexture = new Pop.Image(Size,'Float3');
 	}
 	
 	this.GetPositionsTexture = function()
@@ -504,6 +515,11 @@ function TPhysicsActor(Meta)
 		return this.PositionTexture;
 	}
 	
+	this.GetVelocitysTexture = function()
+	{
+		return this.VelocityTexture;
+	}
+
 	this.GetTriangleBuffer = function(RenderTarget)
 	{
 		if ( this.TriangleBuffer )
@@ -575,6 +591,11 @@ function TAnimationBuffer(Filenames,Scale)
 		return Frame.PositionTexture;
 	}
 	
+	this.GetVelocitysTexture = function()
+	{
+		return null;
+	}
+
 }
 
 
@@ -605,6 +626,11 @@ function TAnimatedActor(Meta)
 		return tb;
 	}
 	
+	this.GetVelocitysTexture = function(RenderTarget)
+	{
+		return null;
+	}
+
 	this.GetTransformMatrix = function()
 	{
 		return Math.CreateTranslationMatrix( ...this.Position );
@@ -615,10 +641,10 @@ function TAnimatedActor(Meta)
 
 const Keyframes =
 [
- new TKeyframe(	0,		{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,0,	 0]	} ),
- new TKeyframe(	10,		{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-0.20, -5]	} ),
- new TKeyframe(	20,		{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.30, -10]	} ),
- new TKeyframe(	28.9,	{	ShellAlpha:0,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.40, -10.1]	} ),
+ new TKeyframe(	0,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,0,	 0]	} ),
+ new TKeyframe(	10,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-0.20, -5]	} ),
+ new TKeyframe(	20,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.30, -10]	} ),
+ new TKeyframe(	28.9,	{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.40, -10.1]	} ),
  new TKeyframe(	40,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.50, -10.2]	} ),
  new TKeyframe(	50,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.55, -11]	} ),
  new TKeyframe(	110,	{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.60, -16]	} ),
@@ -632,7 +658,7 @@ for ( let i=1;	i<=2;	i++ )
 
 let ShellMeta = {};
 ShellMeta.Filename = 'Shell/shellFromBlender.obj';
-ShellMeta.Position = [0,-3,7];
+ShellMeta.Position = [0,0,-2];
 ShellMeta.Scale = 0.9;
 ShellMeta.TriangleScale = 0.03;
 ShellMeta.Colours = ShellColours;
@@ -657,6 +683,8 @@ OceanMeta.Colours = OceanColours;
 let Actor_Shell = new TPhysicsActor( ShellMeta );
 let Actor_Ocean = new TAnimatedActor( OceanMeta );
 let Actor_Debris = new TPhysicsActor( DebrisMeta );
+//let Actor_Ocean = null;
+//let Actor_Debris = null;
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
@@ -665,31 +693,40 @@ let Params = {};
 Params.FogMinDistance = 1;
 Params.FogMaxDistance = 18;
 Params.FogColour = FogColour;
+Params.LightColour = LightColour;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
 Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
+Params.DebugPhysicsTextures = false;
 
 let OnParamsChanged = function(Params)
 {
-	Actor_Ocean.Meta.TriangleScale = Params.Ocean_TriangleScale;
-	Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
+	if ( Actor_Ocean )
+		Actor_Ocean.Meta.TriangleScale = Params.Ocean_TriangleScale;
+	
+	if ( Actor_Debris )
+		Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
 }
 
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
-ParamsWindow.AddParam('FogMinDistance',0,30);
-ParamsWindow.AddParam('FogMaxDistance',0,30);
+ParamsWindow.AddParam('FogColour','Colour');
+ParamsWindow.AddParam('LightColour','Colour');
 ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
 ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
+ParamsWindow.AddParam('FogMinDistance',0,30);
+ParamsWindow.AddParam('FogMaxDistance',0,30);
+ParamsWindow.AddParam('DebugPhysicsTextures');
 
-
-function RenderActor(RenderTarget,Actor,Time)
+function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 {
 	if ( !Actor )
 		return;
 	
+	const PositionsTexture = Actor.GetPositionsTexture();
+	const VelocitysTexture = Actor.GetVelocitysTexture();
+	const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	const Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
 	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
-	const PositionsTexture = Actor.GetPositionsTexture();
 	const Viewport = RenderTarget.GetScreenRect();
 	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
 	let WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
@@ -714,7 +751,7 @@ function RenderActor(RenderTarget,Actor,Time)
 		Shader.SetUniform('Fog_MinDistance',Params.FogMinDistance);
 		Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
 		Shader.SetUniform('Fog_Colour',Params.FogColour);
-		Shader.SetUniform('Light_Colour', LightColour );
+		Shader.SetUniform('Light_Colour', Params.LightColour );
 		Shader.SetUniform('Light_MinPower', 0.1 );
 		Shader.SetUniform('Light_MaxPower', 1.0 );
 		
@@ -738,6 +775,29 @@ function RenderActor(RenderTarget,Actor,Time)
 	};
 	
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
+	
+	
+	if ( Params.DebugPhysicsTextures )
+	{
+		let w = 0.2;
+		let x = ActorIndex * (w * 1.05);
+		let Quad = GetQuadGeometry(RenderTarget);
+		let SetDebugPositionsUniforms = function(Shader)
+		{
+			Shader.SetUniform('VertexRect', [x, 0, w, 0.25 ] );
+			Shader.SetUniform('Texture',PositionsTexture);
+		};
+		let SetDebugVelocitysUniforms = function(Shader)
+		{
+			Shader.SetUniform('VertexRect', [x, 0.3, w, 0.25 ] );
+			Shader.SetUniform('Texture',VelocitysTexture);
+		};
+	
+		if ( PositionsTexture )
+			RenderTarget.DrawGeometry( Quad, BlitShader, SetDebugPositionsUniforms );
+		if ( VelocitysTexture )
+			RenderTarget.DrawGeometry( Quad, BlitShader, SetDebugVelocitysUniforms );
+	}
 }
 
 
@@ -800,12 +860,12 @@ function Render(RenderTarget)
 	if ( Actor_Debris )
 		Actor_Debris.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
 
-	RenderTarget.ClearColour( FogColour[0],FogColour[1],FogColour[2] );
+	RenderTarget.ClearColour( ...Params.FogColour );
 	
 	const Scene = GetRenderScene();
-	let RenderSceneActor = function(Actor)
+	let RenderSceneActor = function(Actor,ActorIndex)
 	{
-		RenderActor( RenderTarget, Actor, GlobalTime );
+		RenderActor( RenderTarget, Actor, GlobalTime, ActorIndex );
 	}
 	Scene.forEach( RenderSceneActor );
 	
