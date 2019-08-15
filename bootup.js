@@ -638,18 +638,25 @@ function TAnimatedActor(Meta)
 }
 
 
-
-const Keyframes =
-[
- new TKeyframe(	0,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,0,	 0]	} ),
- new TKeyframe(	10,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-0.20, -5]	} ),
- new TKeyframe(	20,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.30, -10]	} ),
- new TKeyframe(	28.9,	{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.40, -10.1]	} ),
- new TKeyframe(	40,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.50, -10.2]	} ),
- new TKeyframe(	50,		{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.55, -11]	} ),
- new TKeyframe(	110,	{	ShellAlpha:1,	PhysicsStep:1/60,	Timeline_CameraPosition:[0,-3.60, -16]	} ),
-];
-const Timeline = new TTimeline( Keyframes );
+function LoadTimeline(Filename)
+{
+	const Contents = Pop.LoadFileAsString(Filename);
+	const FileKeyframes = JSON.parse( Contents );
+	const Keyframes = [];
+	const PushKeyframe = function(KeyframeTimeKey)
+	{
+		const Uniforms = FileKeyframes[KeyframeTimeKey];
+		const KeyframeTime = parseFloat(KeyframeTimeKey);
+		if ( isNaN(KeyframeTime) )
+			throw "Key in timeline is not a float: " + KeyframeTimeKey;
+		const Keyframe = new TKeyframe( KeyframeTime, Uniforms );
+		Keyframes.push( Keyframe );
+	}
+	Object.keys(FileKeyframes).forEach( PushKeyframe );
+	const Timeline = new TTimeline( Keyframes );
+	return Timeline;
+}
+const Timeline = LoadTimeline('Timeline.json');
 
 let OceanFilenames = [];
 //for ( let i=1;	i<=96;	i++ )
@@ -687,9 +694,11 @@ let Actor_Debris = new TPhysicsActor( DebrisMeta );
 //let Actor_Debris = null;
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
+const TimelineMinYear = 1600;
+const TimelineMaxYear = 2099;
 
 let Params = {};
-//	todo: radial vs ortho etc
+Params.TimelineYear = TimelineMinYear;
 Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 24.45;
 Params.FogColour = FogColour;
@@ -710,6 +719,7 @@ let OnParamsChanged = function(Params)
 
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
+ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);
 ParamsWindow.AddParam('FogColour','Colour');
 ParamsWindow.AddParam('LightColour','Colour');
 ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
@@ -814,7 +824,7 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	this.Uniforms = Uniforms || [];
 }
 
-function GetRenderScene()
+function GetRenderScene(Time)
 {
 	let Scene = [];
 	
@@ -832,7 +842,7 @@ function GetRenderScene()
 		Scene.push( Actor );
 	}
 	
-	let ShellAlpha = Timeline.GetUniform(GlobalTime,'ShellAlpha');
+	let ShellAlpha = Timeline.GetUniform(Time,'ShellAlpha');
 	if ( ShellAlpha > 0.5 )
 		PushPositionBufferActor( Actor_Shell );
 	
@@ -849,26 +859,31 @@ function GetRenderScene()
 
 
 
-let GlobalTime = 0;
 function Render(RenderTarget)
 {
 	const DurationSecs = 1 / 60;
-	GlobalTime += DurationSecs;
+	//let Time = Math.Range( TimelineMinYear, TimelineMaxYear, Params.TimelineYear );
+	let Time = Params.TimelineYear;
+	//GlobalTime += DurationSecs;
+	
+	//	update some stuff from timeline
+	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
+	ParamsWindow.OnParamChanged('FogColour');
 	
 	//	update physics
 	if ( Actor_Shell )
-		Actor_Shell.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
+		Actor_Shell.PhysicsIteration( DurationSecs, Time, RenderTarget );
 	if ( Actor_Ocean )
-		Actor_Ocean.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
+		Actor_Ocean.PhysicsIteration( DurationSecs, Time, RenderTarget );
 	if ( Actor_Debris )
-		Actor_Debris.PhysicsIteration( DurationSecs, GlobalTime, RenderTarget );
+		Actor_Debris.PhysicsIteration( DurationSecs, Time, RenderTarget );
 
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
-	const Scene = GetRenderScene();
+	const Scene = GetRenderScene(Time);
 	let RenderSceneActor = function(Actor,ActorIndex)
 	{
-		RenderActor( RenderTarget, Actor, GlobalTime, ActorIndex );
+		RenderActor( RenderTarget, Actor, Time, ActorIndex );
 	}
 	Scene.forEach( RenderSceneActor );
 	

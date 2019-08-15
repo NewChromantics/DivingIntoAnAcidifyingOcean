@@ -14,6 +14,7 @@
 		async function Bootup()
 		{
 			//	preload some assets that we don't load asynchronously
+			await Pop.AsyncCacheAssetAsString('Timeline.json');
 			await Pop.AsyncCacheAssetAsString('Ocean/ocean_pts.0001.ply');
 			await Pop.AsyncCacheAssetAsString('Ocean/ocean_pts.0002.ply');
 			await Pop.AsyncCacheAssetAsString('Shell/shellFromBlender.obj');
