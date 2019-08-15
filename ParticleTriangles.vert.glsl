@@ -92,7 +92,10 @@ void main()
 	WorldPos.w = 1.0;
 	float4 CameraPos = WorldToCameraTransform * WorldPos;
 	if ( BillboardTriangles )
-		CameraPos.xyz += VertexPos;
+	{
+		//	gr: this seems like a fix for scale difference, but need to figure out if it's accurate
+		CameraPos.xyz += VertexPos*0.5;
+	}
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
 	
