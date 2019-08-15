@@ -287,7 +287,7 @@ const OceanColours = UnrollHexToRgb(OceanColoursHex);
 const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xc2ae8f,0x9A7F5F,0xbfb39b,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
 const ShellColours = UnrollHexToRgb(ShellColoursHex);
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
-const LightColour = Pop.Colour.HexToRgbf(0xeef2df);//HexToRgbf(0x9ee5fa);
+const LightColour = [0.86,0.95,0.94];
 
 const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
@@ -668,7 +668,7 @@ let DebrisMeta = {};
 DebrisMeta.Filename = '.random';
 DebrisMeta.Position = [0,0,0];
 DebrisMeta.Scale = 10;
-DebrisMeta.TriangleScale = 0.2015;
+DebrisMeta.TriangleScale = 0.2015;	//	0.0398
 DebrisMeta.Colours = DebrisColours;
 DebrisMeta.VertexSkip = 0;
 
@@ -677,7 +677,7 @@ let OceanMeta = {};
 OceanMeta.Filename = OceanFilenames;
 OceanMeta.Position = [0,0,0];
 OceanMeta.Scale = 1.0;
-OceanMeta.TriangleScale = 0.03;
+OceanMeta.TriangleScale = 0.0148;
 OceanMeta.Colours = OceanColours;
 
 let Actor_Shell = new TPhysicsActor( ShellMeta );
@@ -690,13 +690,14 @@ let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 let Params = {};
 //	todo: radial vs ortho etc
-Params.FogMinDistance = 1;
-Params.FogMaxDistance = 18;
+Params.FogMinDistance = 11.37;
+Params.FogMaxDistance = 24.45;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
 Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 Params.DebugPhysicsTextures = false;
+Params.BillboardTriangles = true;
 
 let OnParamsChanged = function(Params)
 {
@@ -716,6 +717,7 @@ ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
 ParamsWindow.AddParam('FogMaxDistance',0,30);
 ParamsWindow.AddParam('DebugPhysicsTextures');
+ParamsWindow.AddParam('BillboardTriangles');
 
 function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 {
@@ -727,7 +729,7 @@ function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 	const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	const Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
 	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
-	const Viewport = RenderTarget.GetScreenRect();
+	const Viewport = RenderTarget.GetRenderTargetRect();
 	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
 	let WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
 	
@@ -744,6 +746,7 @@ function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 		//	defaults
 		Shader.SetUniform('LocalToWorldTransform', Actor.GetTransformMatrix() );
 		Shader.SetUniform('LocalPositions', LocalPositions );
+		Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
 
 		//	global
 		Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
