@@ -1,10 +1,7 @@
 {
-	"1600":	{	"FogColour":[0,0,0],	"ShellAlpha":1,	"PhysicsStep":0.016,	"Timeline_CameraPosition":[0,0,	 -10]	},
-	"1650":	{	"Music": "Track0.mp3",	"Timeline_CameraPosition":[0,-0.20, -5]	},
-	"1700":	{	"Timeline_CameraPosition":[0,-3.30, 0]	},
-	"1750":	{	"Timeline_CameraPosition":[0,-3.40, 0.1]	},
-	"1800":	{	"Timeline_CameraPosition":[0,-3.50, 0.2]	},
-	"1900":	{	"FogColour":[0.51,0.34,0.13],	"Timeline_CameraPosition":[0,-3.55, 1]	},
-	"2000":	{	"Timeline_CameraPosition":[0,-3.60, 6]	}
+	"1860":	{	"Music": "Track0.mp3",	"Timeline_CameraPosition":[0,0, -10]	},
+	"1900":	{	"Timeline_CameraPosition":[0,-0.20, 0]	},
+	"1950":	{	"Timeline_CameraPosition":[0,-3.40, 0.1]	},
+	"2019":	{	"FogColour":[0,0,0],	"Timeline_CameraPosition":[0,-3.50, 0.2]	},
+	"2100":	{	"FogColour":[0.09,0.06,0.02],	"Timeline_CameraPosition":[0,-3.60, 6]	}
 }
-

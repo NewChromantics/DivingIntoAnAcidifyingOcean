@@ -402,7 +402,7 @@ function TTimeline(OrigKeyframes)
 		Slice.StartIndex = undefined;
 		Slice.EndIndex = undefined;
 		
-		for ( let i=0;	i<this.Keyframes.length-1;	i++ )
+		for ( let i=0;	i<this.Keyframes.length;	i++ )
 		{
 			const Keyframe = this.Keyframes[i];
 			if ( !Keyframe.Uniforms.hasOwnProperty(UniformName) )
@@ -834,12 +834,12 @@ let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
 
-const TimelineMinYear = 1600;
-const TimelineMaxYear = 2099;
+const TimelineMinYear = 1860;
+const TimelineMaxYear = 2100;
 
 let Params = {};
 Params.TimelineYear = TimelineMinYear;
-Params.DebugCameraPositionCount = 100;
+Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.05;
 Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 24.45;
