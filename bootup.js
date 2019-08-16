@@ -295,8 +295,8 @@ const LightColour = [0.86,0.95,0.94];
 const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
 let Camera = new Pop.Camera();
-Camera.Position = [ 0,0.2,1 ];
-Camera.LookAt = [ 0,0,0 ];
+Camera.Position = [ 0,0,0 ];
+Camera.LookAt = [ 0,0,1 ];
 
 
 
@@ -1062,11 +1062,15 @@ function Render(RenderTarget)
 	
 	const Viewport = RenderTarget.GetRenderTargetRect();
 	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
-	let WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
 
-	//	apply timeline camera pos
+	//	apply timeline camera pos temporarily and then remove again
 	let TimelineCameraPos = Timeline.GetUniform(Time,'Timeline_CameraPosition');
-	//WorldToCameraTransform = Math.MatrixMultiply4x4( Math.CreateTranslationMatrix(...TimelineCameraPos), WorldToCameraTransform );
+	Camera.Position = Math.Add3( Camera.Position, TimelineCameraPos );
+	Camera.LookAt = Math.Add3( Camera.LookAt, TimelineCameraPos );
+	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+	Camera.Position = Math.Subtract3( Camera.Position, TimelineCameraPos );
+	Camera.LookAt = Math.Subtract3( Camera.LookAt, TimelineCameraPos );
+
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 
 	const Scene = GetRenderScene(Time);
