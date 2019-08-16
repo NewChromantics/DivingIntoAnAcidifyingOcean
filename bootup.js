@@ -21,8 +21,6 @@ const BlitCopyShader = Pop.LoadFileAsString('BlitCopy.frag.glsl');
 const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
 const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
 
-const NoiseTexture = new Pop.Image('Noise0.png');
-
 
 function GenerateRandomVertexes(OnVertex)
 {
@@ -35,6 +33,8 @@ function GenerateRandomVertexes(OnVertex)
 	}
 }
 
+
+//	gr: this now loads any format
 function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null)
 {
 	let VertexSize = 2;
@@ -576,11 +576,6 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 
 
 
-//const SeaWorldPositionsPlyFilename = 'seatest.ply';
-//const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
-const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
-
-
 function TPhysicsActor(Meta)
 {
 	this.Position = Meta.Position;
@@ -783,10 +778,19 @@ function LoadTimeline(Filename)
 }
 const Timeline = LoadTimeline('Timeline.json');
 
-let OceanFilenames = [];
-//for ( let i=1;	i<=96;	i++ )
-for ( let i=1;	i<=2;	i++ )
-	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
+
+
+
+
+
+
+
+
+//	scene!
+
+//const SeaWorldPositionsPlyFilename = 'seatest.ply';
+//const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
+const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
 
 let ShellMeta = {};
 ShellMeta.Filename = 'Shell/shellFromBlender.obj';
@@ -805,6 +809,11 @@ DebrisMeta.Colours = DebrisColours;
 DebrisMeta.VertexSkip = 0;
 
 
+let OceanFilenames = [];
+//for ( let i=1;	i<=96;	i++ )
+for ( let i=1;	i<=2;	i++ )
+OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
+
 let OceanMeta = {};
 OceanMeta.Filename = OceanFilenames;
 OceanMeta.Position = [0,0,0];
@@ -818,6 +827,14 @@ let Actor_Debris = new TPhysicsActor( DebrisMeta );
 //let Actor_Ocean = null;
 //let Actor_Debris = null;
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
+
+
+
+
+
+
+
+
 
 const TimelineMinYear = 1600;
 const TimelineMaxYear = 2099;
@@ -855,6 +872,16 @@ ParamsWindow.AddParam('FogMaxDistance',0,30);
 ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
+
+
+
+
+
+
+
+
+
+
 
 function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 {
