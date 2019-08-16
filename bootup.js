@@ -505,7 +505,8 @@ function TTimeline(OrigKeyframes)
 
 function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,ScratchTexture)
 {
-	return;
+	if ( !Params.EnablePhysicsIteration )
+		return;
 	
 	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	let UpdateVelocityShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdateVelocity, QuadVertShader );
@@ -831,6 +832,7 @@ Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
 Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
+Params.EnablePhysicsIteration = false;
 
 let OnParamsChanged = function(Params)
 {
@@ -843,13 +845,14 @@ let OnParamsChanged = function(Params)
 
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
-ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);
+ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear,Math.floor);
 ParamsWindow.AddParam('FogColour','Colour');
 ParamsWindow.AddParam('LightColour','Colour');
 ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
 ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
 ParamsWindow.AddParam('FogMaxDistance',0,30);
+ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
 
