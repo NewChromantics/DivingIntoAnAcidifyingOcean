@@ -14,13 +14,16 @@ Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 
+Pop.Include('AssetManager.js');
+
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 const BlitCopyShader = Pop.LoadFileAsString('BlitCopy.frag.glsl');
 const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
 const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
-
+const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
+const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
 
 function GenerateRandomVertexes(OnVertex)
 {
@@ -292,7 +295,7 @@ const LightColour = [0.86,0.95,0.94];
 const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
 let Camera = new Pop.Camera();
-Camera.Position = [ 0,1,17 ];
+Camera.Position = [ 0,0.2,1 ];
 Camera.LookAt = [ 0,0,0 ];
 
 
@@ -776,9 +779,6 @@ function LoadTimeline(Filename)
 	const Timeline = new TTimeline( Keyframes );
 	return Timeline;
 }
-const Timeline = LoadTimeline('Timeline.json');
-
-
 
 
 
@@ -802,9 +802,9 @@ ShellMeta.VertexSkip = 0;
 
 let DebrisMeta = {};
 DebrisMeta.Filename = '.random';
-DebrisMeta.Position = [0,0,0];
-DebrisMeta.Scale = 10;
-DebrisMeta.TriangleScale = 0.2015;	//	0.0398
+DebrisMeta.Position = [0,-17,0];
+DebrisMeta.Scale = 30;
+DebrisMeta.TriangleScale = 0.052015;	//	0.0398
 DebrisMeta.Colours = DebrisColours;
 DebrisMeta.VertexSkip = 0;
 
@@ -824,8 +824,6 @@ OceanMeta.Colours = OceanColours;
 let Actor_Shell = new TPhysicsActor( ShellMeta );
 let Actor_Ocean = new TAnimatedActor( OceanMeta );
 let Actor_Debris = new TPhysicsActor( DebrisMeta );
-//let Actor_Ocean = null;
-//let Actor_Debris = null;
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
@@ -841,6 +839,8 @@ const TimelineMaxYear = 2099;
 
 let Params = {};
 Params.TimelineYear = TimelineMinYear;
+Params.DebugCameraPositionCount = 100;
+Params.DebugCameraPositionScale = 0.05;
 Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 24.45;
 Params.FogColour = FogColour;
@@ -850,6 +850,7 @@ Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
 Params.EnablePhysicsIteration = false;
+Params.ShowClippedParticle = false;
 
 let OnParamsChanged = function(Params)
 {
@@ -863,15 +864,18 @@ let OnParamsChanged = function(Params)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear,Math.floor);
+ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
+ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
 ParamsWindow.AddParam('FogColour','Colour');
 ParamsWindow.AddParam('LightColour','Colour');
-ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
-ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
+ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
+ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
 ParamsWindow.AddParam('FogMaxDistance',0,30);
 ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
+ParamsWindow.AddParam('ShowClippedParticle');
 
 
 
@@ -883,7 +887,7 @@ ParamsWindow.AddParam('BillboardTriangles');
 
 
 
-function RenderActor(RenderTarget,Actor,Time,ActorIndex)
+function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time)
 {
 	if ( !Actor )
 		return;
@@ -893,13 +897,7 @@ function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 	const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	const Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
 	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
-	const Viewport = RenderTarget.GetRenderTargetRect();
-	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
-	let WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
 	
-	//	apply timeline camera pos
-	let TimelineCameraPos = Timeline.GetUniform(Time,'Timeline_CameraPosition');
-	//WorldToCameraTransform = Math.MatrixMultiply4x4( Math.CreateTranslationMatrix(...TimelineCameraPos), WorldToCameraTransform );
 	
 	//let Geo = GetAsset( Actor.Geometry, RenderTarget );
 	//let Shader = Pop.GetShader( RenderTarget, Actor.FragShader, Actor.VertShader );
@@ -907,32 +905,11 @@ function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 
 	let SetUniforms = function(Shader)
 	{
-		//	defaults
+		SetGlobalUniforms( Shader );
+
 		Shader.SetUniform('LocalToWorldTransform', Actor.GetTransformMatrix() );
 		Shader.SetUniform('LocalPositions', LocalPositions );
 		Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
-
-		//	global
-		Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
-		Shader.SetUniform('CameraProjectionTransform', CameraProjectionTransform );
-		Shader.SetUniform('Fog_MinDistance',Params.FogMinDistance);
-		Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
-		Shader.SetUniform('Fog_Colour',Params.FogColour);
-		Shader.SetUniform('Light_Colour', Params.LightColour );
-		Shader.SetUniform('Light_MinPower', 0.1 );
-		Shader.SetUniform('Light_MaxPower', 1.0 );
-		
-		Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
-		
-		//	actor specific
-		let SetUniform = function(Key)
-		{
-			let Value = Actor.Uniforms[Key];
-			Shader.SetUniform( Key, Value );
-		}
-		Object.keys( Actor.Uniforms ).forEach( SetUniform );
-		
-		//	actor
 		Shader.SetUniform('WorldPositions',PositionsTexture);
 		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
 		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
@@ -968,7 +945,23 @@ function RenderActor(RenderTarget,Actor,Time,ActorIndex)
 }
 
 
+//	debug
+function GetCameraPath()
+{
+	let CameraPositions = [];
+	for ( let i=0;	i<Params.DebugCameraPositionCount;	i++ )
+	{
+		let t = i / Params.DebugCameraPositionCount;
+		let Year = Math.lerp( TimelineMinYear, TimelineMaxYear, t );
+		let Pos = Timeline.GetUniform( Year, 'Timeline_CameraPosition' );
+		CameraPositions.push( Pos );
+	}
+	return CameraPositions;
+}
 
+
+
+//	todo: use generic actor
 function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 {
 	this.LocalToWorldTransform = Transform;
@@ -976,14 +969,34 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	this.VertShader = VertShader;
 	this.FragShader = FragShader;
 	this.Uniforms = Uniforms || [];
+	
+	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
+	{
+		const Geo = GetAsset( this.Geometry, RenderTarget );
+		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
+		
+		const SetUniforms = function(Shader)
+		{
+			SetGlobalUniforms( Shader );
+			Shader.SetUniform('LocalToWorldTransform', this.LocalToWorldTransform );
+		}
+		
+		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms.bind(this) );
+	}
 }
 
+//	get scene graph
 function GetRenderScene(Time)
 {
 	let Scene = [];
 	
 	let PushPositionBufferActor = function(Actor)
 	{
+		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
+		{
+			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
+		}
+		
 		const PositionsTexture = Actor.GetPositionsTexture();
 		Actor.Uniforms = [];
 		Actor.Uniforms['WorldPositions'] = PositionsTexture;
@@ -995,17 +1008,30 @@ function GetRenderScene(Time)
 		//let a = new TActor( )
 		Scene.push( Actor );
 	}
-	
+	/*
 	let ShellAlpha = Timeline.GetUniform(Time,'ShellAlpha');
 	if ( ShellAlpha > 0.5 )
 		PushPositionBufferActor( Actor_Shell );
-	
-	if ( Actor_Debris )
-		PushPositionBufferActor( Actor_Debris );
-	
-	if ( Actor_Ocean )
-		PushPositionBufferActor( Actor_Ocean );
+	*/
+	if ( Actor_Debris )	PushPositionBufferActor( Actor_Debris );
 
+	if ( Actor_Ocean )	PushPositionBufferActor( Actor_Ocean );
+
+	
+	let PushCameraPosActor = function(Position)
+	{
+		const Actor = new TActor();
+		const LocalScale = Params.DebugCameraPositionScale;
+		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix(...Position);
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, Math.CreateScaleMatrix(LocalScale) );
+		Actor.Geometry = 'Cube';
+		Actor.VertShader = GeoVertShader;
+		Actor.FragShader = ColourFragShader;
+		Scene.push( Actor );
+	}
+	const CameraPositions = GetCameraPath();
+	CameraPositions.forEach( PushCameraPosActor );
+	
 	return Scene;
 }
 
@@ -1034,16 +1060,57 @@ function Render(RenderTarget)
 
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
+	const Viewport = RenderTarget.GetRenderTargetRect();
+	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
+	let WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+
+	//	apply timeline camera pos
+	let TimelineCameraPos = Timeline.GetUniform(Time,'Timeline_CameraPosition');
+	//WorldToCameraTransform = Math.MatrixMultiply4x4( Math.CreateTranslationMatrix(...TimelineCameraPos), WorldToCameraTransform );
+	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
+
 	const Scene = GetRenderScene(Time);
 	let RenderSceneActor = function(Actor,ActorIndex)
 	{
-		RenderActor( RenderTarget, Actor, Time, ActorIndex );
+		const SetGlobalUniforms = function(Shader)
+		{
+			Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
+			Shader.SetUniform('CameraToWorldTransform', CameraToWorldTransform );
+			Shader.SetUniform('CameraProjectionTransform', CameraProjectionTransform );
+			Shader.SetUniform('Fog_MinDistance',Params.FogMinDistance);
+			Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
+			Shader.SetUniform('Fog_Colour',Params.FogColour);
+			Shader.SetUniform('Light_Colour', Params.LightColour );
+			Shader.SetUniform('Light_MinPower', 0.1 );
+			Shader.SetUniform('Light_MaxPower', 1.0 );
+		
+			Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
+		
+			//	actor specific
+			let SetUniform = function(Key)
+			{
+				let Value = Actor.Uniforms[Key];
+				Shader.SetUniform( Key, Value );
+			}
+			Object.keys( Actor.Uniforms ).forEach( SetUniform );
+		}
+		
+		Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
 	}
 	Scene.forEach( RenderSceneActor );
 	
 }
 
-let Window = new Pop.Opengl.Window("Tarqunder the sea");
+
+
+
+
+
+const Timeline = LoadTimeline('Timeline.json');
+
+
+
+const Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = Render;
 
 Window.OnMouseDown = function(x,y,Button)

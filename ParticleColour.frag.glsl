@@ -16,6 +16,8 @@ uniform mat4 LocalToWorldTransform;
 uniform mat4 WorldToCameraTransform;
 uniform mat4 CameraProjectionTransform;
 
+uniform bool ShowClippedParticle;
+
 float3 GetFogWorldPos()
 {
 	return -WorldToCameraTransform[3].xyz;
@@ -153,14 +155,20 @@ float4 GetLightColour(float3 Normal,float3 WorldPos)
 }
 
 void main()
-{	
+{
 	//	do 3D test
 	float3 Normal;
 	float3 HitPos;
 	float Distance = GetCameraIntersection( FragWorldPos, Sphere4, Normal, HitPos);
 	if ( Distance > Sphere4.w )
+	{
+		if ( ShowClippedParticle )
+		{
+			gl_FragColor = float4(1,0,0,1);
+			return;
+		}
 		discard;
-	
+	}
 	//	normal in visible range
 	Normal = Range3( float3(-1,-1,-1), float3(1,1,1), Normal );
 	

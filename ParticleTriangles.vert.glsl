@@ -11,6 +11,7 @@ uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
 
+uniform mat4 CameraToWorldTransform;
 uniform mat4 LocalToWorldTransform;
 uniform mat4 WorldToCameraTransform;
 uniform mat4 CameraProjectionTransform;
@@ -94,14 +95,18 @@ void main()
 	if ( BillboardTriangles )
 	{
 		//	gr: this seems like a fix for scale difference, but need to figure out if it's accurate
-		CameraPos.xyz += VertexPos*0.5;
+		CameraPos.xyz += VertexPos;//*0.5;
+		CameraPos.w = 1.0;
 	}
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
 	
 	Rgba = GetTriangleColour(TriangleIndex);
 	TriangleUv = LocalPositions[VertexIndex].xy;
-	FragWorldPos = WorldPos.xyz + VertexPos;
+	WorldPos = CameraToWorldTransform * float4(CameraPos.xyz,1);
+	//WorldPos.xyz /= WorldPos.w;
+	FragWorldPos = WorldPos.xyz;
+	TriangleWorldPos += (LocalToWorldTransform * float4(0,0,0,1)).xyz;
 	Sphere4 = float4( TriangleWorldPos, SphereRadius );
 }
 
