@@ -311,9 +311,13 @@ function LerpValue(a,b,Lerp)
 	if ( Array.isArray(a) )
 		return Math.LerpArray( a, b, Lerp );
 
-	if ( typeof a == 'string' )
-		return (Lerp < 0.5) ? a : b;
+	let IsLerpable = ( typeof a == 'number' );
 
+	//	bool, string, object, return previous until we hit next keyframe
+	if ( !IsLerpable )
+		return (Lerp < 1.0) ? a : b;
+	
+	//	lerp number
 	return Math.Lerp( a, b, Lerp );
 }
 
