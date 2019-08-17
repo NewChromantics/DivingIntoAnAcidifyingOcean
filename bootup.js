@@ -25,6 +25,9 @@ const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIte
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
 
+const MeshAssetFileExtension = '.mesh.json';
+
+
 function GenerateRandomVertexes(OnVertex)
 {
 	for ( let i=0;	i<10000;	i++ )
@@ -37,23 +40,64 @@ function GenerateRandomVertexes(OnVertex)
 }
 
 
-//	gr: this now loads any format
-function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null)
+var AutoTriangleIndexes = [];
+function GetAutoTriangleIndexes(IndexCount)
 {
+	let OldLength = AutoTriangleIndexes.length;
+	while ( AutoTriangleIndexes.length < IndexCount )
+		AutoTriangleIndexes.push( AutoTriangleIndexes.length );
+	if ( OldLength != AutoTriangleIndexes.length )
+		Pop.Debug("New AutoTriangleIndexes.length", AutoTriangleIndexes.length);
+	
+	//	slice so we don't modify our array, but still the length desired
+	//	slow?
+	return AutoTriangleIndexes.slice( 0, IndexCount );
+	/*
+	Pop.Debug("auto gen triangles",TriangleCount);
+	GeometryAsset.TriangleIndexes = new Int32Array( TriangleCount );
+	for ( let t=0;	t<TriangleCount;	t++ )
+		GeometryAsset.TriangleIndexes[t] = t;
+	*/
+
+}
+
+//	returns a "mesh asset"
+function ParseGeometryFromFile(Filename,VertexSkip)
+{
+	//	auto load cached version
+	if ( Pop.FileExists(Filename+MeshAssetFileExtension) )
+	{
+		Pop.Debug("Found cached version of " + Filename);
+		Filename += MeshAssetFileExtension;
+	}
+	
+	if ( Filename.endsWith(MeshAssetFileExtension) )
+	{
+		const Contents = Pop.LoadFileAsString( Filename );
+		const Asset = JSON.parse( Contents );
+		return Asset;
+	}
+	
+	//	parse files!
 	let VertexSize = 2;
 	let VertexData = [];
 	let VertexDataCount = 0;
-	let TriangleIndexes = [];
+	let TriangleIndexes = 'auto';
 	let TriangleIndexCount = 0;
 	let WorldPositions = [];
 	let WorldPositionsCount = 0;
 	let WorldPositionSize = 3;
 	let WorldMin = [null,null,null];
 	let WorldMax = [null,null,null];
-
-	let PushIndex = function(Index)
+	
+	let PushTriangleIndex = function(Indexa,Indexb,Indexc)
 	{
-		TriangleIndexes.push(Index);
+		//	todo; check out of order?
+		if ( TriangleIndexes == 'auto' )
+			return;
+		TriangleIndexes.push(Indexa);
+		TriangleIndexes.push(Indexb);
+		TriangleIndexes.push(Indexc);
 	}
 	let PushVertexData = function(f)
 	{
@@ -68,42 +112,11 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		WorldPositions.push([x,y,z]);
 	}
 	
-
-	//	replace data with arrays... no noticable speed improvement!
 	let OnMeta = function(Meta)
 	{
-		/*
-		VertexData = new Float32Array( Meta.VertexCount * 3 * VertexSize );
-		PushVertexData = function(f)
-		{
-			VertexData[VertexDataCount] = f;
-			VertexDataCount++;
-		}
-		GetVertexDataLength = function()
-		{
-			return VertexDataCount;
-		}
-		*/
 		
-		TriangleIndexes = new Int32Array( Meta.VertexCount * 3 );
-		PushIndex = function(f)
-		{
-			TriangleIndexes[TriangleIndexCount] = f;
-			TriangleIndexCount++;
-		}
-		/*
-		WorldPositions = new Float32Array( Meta.VertexCount * 3 );
-		PushWorldPos = function(x,y,z)
-		{
-			WorldPositions[WorldPositionsCount+0] = x;
-			WorldPositions[WorldPositionsCount+1] = y;
-			WorldPositions[WorldPositionsCount+2] = z;
-			WorldPositionsCount += 3;
-		}
-		*/
 	}
-	OnMeta = undefined;
-
+	
 	let AddTriangle = function(TriangleIndex,x,y,z)
 	{
 		let FirstTriangleIndex = GetVertexDataLength() / VertexSize;
@@ -115,36 +128,33 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 			Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
 		Verts.forEach( v => PushVertexData(v) );
 		
-		PushIndex( FirstTriangleIndex+0 );
-		PushIndex( FirstTriangleIndex+1 );
-		PushIndex( FirstTriangleIndex+2 );
+		PushTriangleIndex( FirstTriangleIndex+0, FirstTriangleIndex+1, FirstTriangleIndex+2 );
 	}
 	
-	let TriangleCounter = 0;
 	let VertexCounter = 0;
 	let OnVertex = function(x,y,z)
 	{
 		if ( VertexCounter++ % (VertexSkip+1) > 0 )
 			return;
-
+		
 		/*
-		if ( TriangleCounter == 0 )
-		{
-			WorldMin = [x,y,z];
-			WorldMax = [x,y,z];
-		}
-		*/
-		AddTriangle( TriangleCounter,x,y,z );
-		TriangleCounter++;
+		 if ( TriangleCounter == 0 )
+		 {
+		 WorldMin = [x,y,z];
+		 WorldMax = [x,y,z];
+		 }
+		 */
+		AddTriangle( TriangleIndexCount,x,y,z );
+		TriangleIndexCount++;
 		PushWorldPos( x,y,z );
 		/*
-		WorldMin[0] = Math.min( WorldMin[0], x );
-		WorldMin[1] = Math.min( WorldMin[1], y );
-		WorldMin[2] = Math.min( WorldMin[2], z );
-		WorldMax[0] = Math.max( WorldMax[0], x );
-		WorldMax[1] = Math.max( WorldMax[1], y );
-		WorldMax[2] = Math.max( WorldMax[2], z );
-		*/
+		 WorldMin[0] = Math.min( WorldMin[0], x );
+		 WorldMin[1] = Math.min( WorldMin[1], y );
+		 WorldMin[2] = Math.min( WorldMin[2], z );
+		 WorldMax[0] = Math.max( WorldMax[0], x );
+		 WorldMax[1] = Math.max( WorldMax[1], y );
+		 WorldMax[2] = Math.max( WorldMax[2], z );
+		 */
 	}
 	
 	//let LoadTime = Pop.GetTimeNowMs();
@@ -157,7 +167,64 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 	else
 		throw "Don't know how to load " + Filename;
 	
+	
+	let Asset = {};
+	Asset.VertexAttributeName = "Vertex";
+	Asset.VertexSize = VertexSize;
+	Asset.TriangleIndexes = TriangleIndexes;
+	Asset.VertexBuffer = VertexData;
+	Asset.WorldPositions = WorldPositions;
+	Asset.WorldPositionSize = WorldPositionSize;
+	
+	return Asset;
+}
+
+function VerifyGeometryAsset(Asset)
+{
+	if ( typeof Asset.VertexAttributeName != 'string' )
+		throw "Asset.VertexAttributeName not a string: " + Asset.VertexAttributeName;
+	
+	if ( typeof Asset.VertexSize != 'number' )
+		throw "Asset.VertexSize not a number: " + Asset.VertexSize;
+	
+	if ( !Array.isArray(Asset.TriangleIndexes) && Asset.TriangleIndexes != 'auto' )
+		throw "Asset.TriangleIndexes not an array: " + Asset.TriangleIndexes;
+	
+	if ( !Array.isArray(Asset.VertexBuffer) )
+		throw "Asset.VertexBuffer not an array: " + Asset.VertexBuffer;
+	
+	if ( Asset.WorldPositions !== undefined )
+		if ( !Array.isArray(Asset.WorldPositions) )
+			throw "Asset.WorldPositions not an array: " + Asset.WorldPositions;
+
+}
+
+function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null)
+{
+	const GeometryAsset = ParseGeometryFromFile( Filename, VertexSkip );
+	VerifyGeometryAsset( GeometryAsset );
+	
+	//	auto cache some!
+	if ( Filename.endsWith('.ply') )
+	{
+		const CachedFilename = Filename+MeshAssetFileExtension;
+		if ( Pop.FileExists && !Pop.FileExists(CachedFilename) )
+		{
+			try
+			{
+				const GeoAssetJson = JSON.stringify( GeometryAsset );
+				Pop.WriteStringToFile( Filename + MeshAssetFileExtension, GeoAssetJson );
+			}
+			catch(e)
+			{
+				Pop.Debug(e);
+			}
+		}
+	}
+	
 	//Pop.Debug("Loading took", Pop.GetTimeNowMs()-LoadTime);
+	let WorldPositionSize = GeometryAsset.WorldPositionSize;
+	let WorldPositions = GeometryAsset.WorldPositions;
 	
 	if ( WorldPositionImage )
 	{
@@ -230,14 +297,19 @@ function LoadPlyGeometry(RenderTarget,Filename,WorldPositionImage,Scale,VertexSk
 		//Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
 	}
 	
-	const VertexAttributeName = "Vertex";
+	//	auto generated data
+	if ( GeometryAsset.TriangleIndexes == 'auto' )
+	{
+		const TriangleCount = GeometryAsset.VertexBuffer.length / GeometryAsset.VertexSize;
+		GeometryAsset.TriangleIndexes = GetAutoTriangleIndexes( TriangleCount );
+	}
 	
 	//	loads much faster as a typed array
-	VertexData = new Float32Array( VertexData );
-	TriangleIndexes = new Int32Array(TriangleIndexes);
+	GeometryAsset.VertexBuffer = new Float32Array( GeometryAsset.VertexBuffer );
+	GeometryAsset.TriangleIndexes = new Int32Array( GeometryAsset.TriangleIndexes );
 	
 	//let CreateBufferTime = Pop.GetTimeNowMs();
-	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
+	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, GeometryAsset.VertexAttributeName, GeometryAsset.VertexBuffer, GeometryAsset.VertexSize, GeometryAsset.TriangleIndexes );
 	//Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
 	
 	return TriangleBuffer;
@@ -652,7 +724,7 @@ function TPhysicsActor(Meta)
 			return this.TriangleBuffer;
 		
 		this.PositionTexture = new Pop.Image();
-		this.TriangleBuffer = LoadPlyGeometry( RenderTarget, Meta.Filename, this.PositionTexture, Meta.Scale, Meta.VertexSkip, this.GetIndexMap.bind(this) );
+		this.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Meta.Filename, this.PositionTexture, Meta.Scale, Meta.VertexSkip, this.GetIndexMap.bind(this) );
 		this.ResetPhysicsTextures();
 		
 		return this.TriangleBuffer;
@@ -680,7 +752,7 @@ function TAnimationBuffer(Filenames,Scale)
 			let Frame = {};
 			Frame.Time = Index * FrameDuration;
 			Frame.PositionTexture = new Pop.Image();
-			Frame.TriangleBuffer = LoadPlyGeometry( RenderTarget, Filename, Frame.PositionTexture, Scale );
+			Frame.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Filename, Frame.PositionTexture, Scale );
 			this.Frames.push(Frame);
 		}
 
@@ -695,6 +767,7 @@ function TAnimationBuffer(Filenames,Scale)
 	
 	this.GetFrame = function(Time)
 	{
+		//	auto loop
 		Time = Time % this.GetDuration();
 		for ( let i=0;	i<this.Frames.length;	i++ )
 		{
@@ -814,7 +887,7 @@ DebrisMeta.VertexSkip = 0;
 
 let OceanFilenames = [];
 //for ( let i=1;	i<=96;	i++ )
-for ( let i=1;	i<=2;	i++ )
+for ( let i=1;	i<=4;	i++ )
 OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let OceanMeta = {};
@@ -1129,13 +1202,14 @@ function GetRenderScene(Time)
 
 
 
+var AppTime = 0;
 
 function Render(RenderTarget)
 {
 	const DurationSecs = 1 / 60;
 	//let Time = Math.Range( TimelineMinYear, TimelineMaxYear, Params.TimelineYear );
 	let Time = Params.TimelineYear;
-	//GlobalTime += DurationSecs;
+	AppTime += DurationSecs;
 	
 	//	update some stuff from timeline
 	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
@@ -1143,11 +1217,11 @@ function Render(RenderTarget)
 	
 	//	update physics
 	if ( Actor_Shell )
-		Actor_Shell.PhysicsIteration( DurationSecs, Time, RenderTarget );
+		Actor_Shell.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
 	if ( Actor_Ocean )
-		Actor_Ocean.PhysicsIteration( DurationSecs, Time, RenderTarget );
+		Actor_Ocean.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
 	if ( Actor_Debris )
-		Actor_Debris.PhysicsIteration( DurationSecs, Time, RenderTarget );
+		Actor_Debris.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
 
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
