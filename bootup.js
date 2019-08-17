@@ -992,6 +992,15 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
+		if ( ActorNode.Name == 'Ocean_top_surface' && Actor_Ocean )
+		{
+			//	gr: currently total mismatch with size, so just set y
+			Pop.Debug(ActorNode.Name,ActorNode.Position);
+			Actor_Ocean.Position[1] = ActorNode.Position[1];
+			return;
+		}
+		
+		Pop.Debug("Loading actor", ActorNode.Name);
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
