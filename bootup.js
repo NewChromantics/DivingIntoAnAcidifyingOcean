@@ -923,8 +923,8 @@ DebrisMeta.VertexSkip = 0;
 
 
 let OceanFilenames = [];
-//for ( let i=1;	i<=96;	i++ )
-for ( let i=1;	i<=4;	i++ )
+for ( let i=1;	i<=96;	i++ )
+//for ( let i=1;	i<=4;	i++ )
 OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let OceanMeta = {};
@@ -952,7 +952,7 @@ const TimelineMaxYear = 2100;
 
 let Params = {};
 Params.TimelineYear = TimelineMinYear;
-Params.DebugCameraPositionCount = 50;
+Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.05;
 Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 24.45;
