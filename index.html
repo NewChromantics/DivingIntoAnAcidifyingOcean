@@ -15,6 +15,8 @@
 		{
 			//	preload some assets that we don't load asynchronously
 			await Pop.AsyncCacheAssetAsString('Timeline.json');
+			await Pop.AsyncCacheAssetAsString('CameraSpline.dae.json');
+			
 			await Pop.AsyncCacheAssetAsString('Ocean/ocean_pts.0001.ply');
 			await Pop.AsyncCacheAssetAsString('Ocean/ocean_pts.0002.ply');
 			await Pop.AsyncCacheAssetAsString('Shell/shellFromBlender.obj');
@@ -35,6 +37,7 @@
 			await Pop.AsyncCacheAssetAsString('PopEngineCommon/ParamsWindow.js');
 			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopPly.js');
 			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopObj.js');
+			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopCollada.js');
 			await Pop.AsyncCacheAssetAsString('PopEngineCommon/PopTexture.js');
 			await Pop.AsyncCacheAssetAsImage('Noise0.png');
 

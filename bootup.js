@@ -9,7 +9,7 @@ Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
-//Pop.Include('PopEngineCommon/PopCollada.js');
+Pop.Include('PopEngineCommon/PopCollada.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
@@ -839,7 +839,7 @@ const TimelineMaxYear = 2100;
 
 let Params = {};
 Params.TimelineYear = TimelineMinYear;
-Params.DebugCameraPositionCount = 0;
+Params.DebugCameraPositionCount = 50;
 Params.DebugCameraPositionScale = 0.05;
 Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 24.45;
@@ -945,6 +945,31 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 }
 
 
+function LoadCameraScene(Filename)
+{
+	const FileContents = Pop.LoadFileAsString(Filename);
+	
+	let Scene = [];
+	
+	let OnSpline = function(SplineNode)
+	{
+		Pop.Debug("Found spline ", SplineNode.Name);
+	}
+	let OnActor = function(ActorNode)
+	{
+		let Actor = new TActor();
+		Actor.Name = ActorNode.Name;
+		Actor.Geometry = 'Cube';
+		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...ActorNode.Position );
+		Actor.VertShader = GeoVertShader;
+		Actor.FragShader = ColourFragShader;
+		Scene.push( Actor );
+	}
+	Pop.Collada.Parse( FileContents, OnActor, OnSpline );
+	
+	return Scene;
+}
+
 //	debug
 function GetCameraPath()
 {
@@ -1032,6 +1057,8 @@ function GetRenderScene(Time)
 	const CameraPositions = GetCameraPath();
 	CameraPositions.forEach( PushCameraPosActor );
 	
+	CameraScene.forEach( a => Scene.push(a) );
+	
 	return Scene;
 }
 
@@ -1107,8 +1134,7 @@ function Render(RenderTarget)
 
 
 
-
-
+const CameraScene = LoadCameraScene('CameraSpline.dae.json');
 
 const Timeline = LoadTimeline('Timeline.json');
 
