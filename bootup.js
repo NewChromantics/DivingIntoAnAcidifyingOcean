@@ -871,7 +871,7 @@ ParamsWindow.AddParam('LightColour','Colour');
 ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
 ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
-ParamsWindow.AddParam('FogMaxDistance',0,30);
+ParamsWindow.AddParam('FogMaxDistance',0,100);
 ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
@@ -945,6 +945,29 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 }
 
 
+function LoadCameraSpline(Positions)
+{
+	//	make a new timeline
+	const Keyframes = [];
+	const CameraPositionUniform = 'CameraPosition';
+
+	for ( let i=0;	i<Positions.length;	i++ )
+	{
+		let Time = Math.Range( 0, Positions.length-1, i );
+		let Year = Math.Lerp( TimelineMinYear, TimelineMaxYear, Time );
+		let Uniforms = [];
+		Uniforms[CameraPositionUniform] = Positions[i];
+		let Keyframe = new TKeyframe( Year, Uniforms );
+		Keyframes.push( Keyframe );
+	}
+
+	let Timeline = new TTimeline( Keyframes );
+	GetCameraTimelineAndUniform = function()
+	{
+		return [Timeline,CameraPositionUniform];
+	}
+}
+
 function LoadCameraScene(Filename)
 {
 	const FileContents = Pop.LoadFileAsString(Filename);
@@ -953,6 +976,14 @@ function LoadCameraScene(Filename)
 	
 	let OnSpline = function(SplineNode)
 	{
+		if ( SplineNode.Name == 'CameraSpline' )
+		{
+			//	replace the global function
+			//	make a new timeline to replace the default camera timeline accessor
+			const CameraPath = SplineNode.PathPositions;
+			LoadCameraSpline( CameraPath );
+			return;
+		}
 		Pop.Debug("Found spline ", SplineNode.Name);
 	}
 	let OnActor = function(ActorNode)
@@ -963,27 +994,44 @@ function LoadCameraScene(Filename)
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...ActorNode.Position );
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = ColourFragShader;
-		Scene.push( Actor );
+		//Scene.push( Actor );
 	}
 	Pop.Collada.Parse( FileContents, OnActor, OnSpline );
 	
 	return Scene;
 }
 
-//	debug
+
+//	default reads from default timeline
+let GetCameraTimelineAndUniform = function()
+{
+	return [Timeline,'Timeline_CameraPosition'];
+}
+
 function GetCameraPath()
 {
-	let CameraPositions = [];
+	const TimelineAndUniform = GetCameraTimelineAndUniform();
+	const Timeline = TimelineAndUniform[0];
+	const CameraUniform = TimelineAndUniform[1];
+	const CameraPositions = [];
 	for ( let i=0;	i<Params.DebugCameraPositionCount;	i++ )
 	{
 		let t = i / Params.DebugCameraPositionCount;
 		let Year = Math.lerp( TimelineMinYear, TimelineMaxYear, t );
-		let Pos = Timeline.GetUniform( Year, 'Timeline_CameraPosition' );
+		let Pos = Timeline.GetUniform( Year, CameraUniform );
 		CameraPositions.push( Pos );
 	}
 	return CameraPositions;
 }
 
+function GetTimelineCameraPosition(Year)
+{
+	const TimelineAndUniform = GetCameraTimelineAndUniform();
+	const Timeline = TimelineAndUniform[0];
+	const CameraUniform = TimelineAndUniform[1];
+	let Pos = Timeline.GetUniform( Year, CameraUniform );
+	return Pos;
+}
 
 
 //	todo: use generic actor
@@ -1091,7 +1139,7 @@ function Render(RenderTarget)
 	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
 
 	//	apply timeline camera pos temporarily and then remove again
-	let TimelineCameraPos = Timeline.GetUniform(Time,'Timeline_CameraPosition');
+	const TimelineCameraPos = GetTimelineCameraPosition(Time);
 	Camera.Position = Math.Add3( Camera.Position, TimelineCameraPos );
 	Camera.LookAt = Math.Add3( Camera.LookAt, TimelineCameraPos );
 	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
