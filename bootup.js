@@ -296,7 +296,7 @@ const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
 let Camera = new Pop.Camera();
 Camera.Position = [ 0,0,0 ];
-Camera.LookAt = [ 0,0,1 ];
+Camera.LookAt = [ 0,0,-1 ];
 
 
 
