@@ -39,7 +39,6 @@ function GenerateRandomVertexes(OnVertex)
 	}
 }
 
-
 var AutoTriangleIndexes = [];
 function GetAutoTriangleIndexes(IndexCount)
 {
@@ -78,9 +77,10 @@ function ParseGeometryFromFile(Filename,VertexSkip)
 		return Asset;
 	}
 	
+	Pop.Debug("Loading " + Filename);
 	//	parse files!
 	let VertexSize = 2;
-	let VertexData = [];
+	let VertexData = 'auto_vt';
 	let VertexDataCount = 0;
 	let TriangleIndexes = 'auto';
 	let TriangleIndexCount = 0;
@@ -101,11 +101,15 @@ function ParseGeometryFromFile(Filename,VertexSkip)
 	}
 	let PushVertexData = function(f)
 	{
-		VertexData.push(f);
+		if ( Array.isArray(VertexData) )
+			VertexData.push(f);
+		VertexDataCount++;
 	}
 	let GetVertexDataLength = function()
 	{
-		return VertexData.length;
+		if ( Array.isArray(VertexData) )
+			return VertexData.length;
+		return VertexDataCount;
 	}
 	let PushWorldPos = function(x,y,z)
 	{
@@ -121,12 +125,19 @@ function ParseGeometryFromFile(Filename,VertexSkip)
 	{
 		let FirstTriangleIndex = GetVertexDataLength() / VertexSize;
 		
-		let Verts;
 		if ( VertexSize == 2 )
-			Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
+		{
+			if ( VertexData != 'auto_vt' )
+			{
+				let Verts = [	0,TriangleIndex,	1,TriangleIndex,	2,TriangleIndex	];
+				Verts.forEach( v => PushVertexData(v) );
+			}
+		}
 		else if ( VertexSize == 4 )
-			Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
-		Verts.forEach( v => PushVertexData(v) );
+		{
+			let Verts = [	x,y,z,0,	x,y,z,1,	x,y,z,2	];
+			Verts.forEach( v => PushVertexData(v) );
+		}
 		
 		PushTriangleIndex( FirstTriangleIndex+0, FirstTriangleIndex+1, FirstTriangleIndex+2 );
 	}
@@ -190,8 +201,9 @@ function VerifyGeometryAsset(Asset)
 	if ( !Array.isArray(Asset.TriangleIndexes) && Asset.TriangleIndexes != 'auto' )
 		throw "Asset.TriangleIndexes not an array: " + Asset.TriangleIndexes;
 	
-	if ( !Array.isArray(Asset.VertexBuffer) )
-		throw "Asset.VertexBuffer not an array: " + Asset.VertexBuffer;
+	if ( Asset.VertexBuffer != 'auto_vt' )
+		if ( !Array.isArray(Asset.VertexBuffer) )
+			throw "Asset.VertexBuffer not an array: " + Asset.VertexBuffer;
 	
 	if ( Asset.WorldPositions !== undefined )
 		if ( !Array.isArray(Asset.WorldPositions) )
@@ -297,7 +309,32 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 		//Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
 	}
 	
-	//	auto generated data
+	//	auto generated vertexes
+	if ( GeometryAsset.VertexBuffer == 'auto_vt' )
+	{
+		Pop.Debug("Auto generating vertex buffer ", GeometryAsset.VertexBuffer);
+		if ( GeometryAsset.VertexSize != 2 )
+			throw "Expected vertex size of 2 (not " + GeometryAsset.VertexSize + ") for " + GeometryAsset.VertexBuffer;
+		
+		//	need to work out triangle count...
+		const TriangleCount = GeometryAsset.WorldPositions.length;
+		
+		//	gr: we can cache this like GetAutoTriangleIndexes
+		GeometryAsset.VertexBuffer = new Float32Array( GeometryAsset.VertexSize * TriangleCount * 3 );
+		for ( let t=0;	t<TriangleCount;	t++ )
+		{
+			for ( let v=0;	v<3;	v++ )
+			{
+				let Index = t * 3;
+				Index += v;
+				Index *= GeometryAsset.VertexSize;
+				GeometryAsset.VertexBuffer[Index+0] = v;
+				GeometryAsset.VertexBuffer[Index+1] = t;
+			}
+		}
+	}
+	
+	//	auto generated triangles
 	if ( GeometryAsset.TriangleIndexes == 'auto' )
 	{
 		const TriangleCount = GeometryAsset.VertexBuffer.length / GeometryAsset.VertexSize;
