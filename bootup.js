@@ -363,7 +363,7 @@ function TTimeline(OrigKeyframes)
 	{
 		//	get list of all uniforms
 		const AllUniforms = this.EnumAllUniforms();
-		Pop.Debug( JSON.stringify( AllUniforms,null,'\t' ) );
+		//Pop.Debug( JSON.stringify( AllUniforms,null,'\t' ) );
 		
 		//	now go through all keyframes and fill gaps
 		let FillKeyframe = function(Keyframe)
@@ -386,7 +386,6 @@ function TTimeline(OrigKeyframes)
 				}
 				else
 				{
-					Pop.Debug('Lerping');
 					const Slice = this.GetTimeSliceForUniform( Keyframe.Time, UniformName );
 					const PrevValue = this.Keyframes[Slice.StartIndex].Uniforms[UniformName];
 					const NextValue = this.Keyframes[Slice.EndIndex].Uniforms[UniformName];
@@ -397,7 +396,7 @@ function TTimeline(OrigKeyframes)
 		}
 		this.Keyframes.forEach( FillKeyframe.bind(this) );
 					
-		Pop.Debug( "Filled keyframes", JSON.stringify(this.Keyframes,null,'\t') );
+		//Pop.Debug( "Filled keyframes", JSON.stringify(this.Keyframes,null,'\t') );
 	}
 
 	this.GetTimeSliceForUniform = function(Time,UniformName)
