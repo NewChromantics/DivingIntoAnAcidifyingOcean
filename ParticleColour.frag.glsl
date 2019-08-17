@@ -17,6 +17,7 @@ uniform mat4 WorldToCameraTransform;
 uniform mat4 CameraProjectionTransform;
 
 uniform bool ShowClippedParticle;
+uniform bool DebugFogCenter;
 
 float3 GetFogWorldPos()
 {
@@ -108,7 +109,14 @@ float3 NormalToRedGreen(float Normal)
 
 float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 {
-	float FogDistance = length( GetFogWorldPos() - WorldPos );
+	float3 CameraPos = (WorldToCameraTransform * float4(WorldPos,1.0) ).xyz;
+	//float FogDistance = length( GetFogWorldPos() - WorldPos );
+	float FogDistance = length( CameraPos );
+	
+	if ( DebugFogCenter )
+		if ( FogDistance < 10.0 )
+			return float3(1,0,0);
+	
 	float FogStrength = RangeClamped01( Fog_MinDistance, Fog_MaxDistance, FogDistance );
 	Rgb = mix( Rgb, Fog_Colour, FogStrength );
 	//Rgb = NormalToRedGreen(FogStrength);
@@ -182,7 +190,7 @@ void main()
 	//gl_FragColor.xyz *= Light.w;
 	
 	//	fog
-	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, HitPos );
+	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, FragWorldPos );
 	
 	gl_FragColor.w = 1.0;
 
