@@ -1210,5 +1210,11 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 	{
 		Camera.OnCameraOrbit( x, y, 0, FirstClick );
 	}
-};
+}
+
+Window.OnMouseScroll = function(x,y,Button,Delta)
+{
+	Camera.OnCameraPanLocal( 0, 0, 0, true );
+	Camera.OnCameraPanLocal( 0, 0, Delta[1] * -10, false );
+}
 
