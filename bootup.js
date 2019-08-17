@@ -990,16 +990,20 @@ function LoadCameraScene(Filename)
 		}
 		Pop.Debug("Found spline ", SplineNode.Name);
 	}
+	
 	let OnActor = function(ActorNode)
 	{
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
-		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...ActorNode.Position );
+		let LocalScale = Math.CreateScaleMatrix(0.1);
+		let WorldPos = Math.CreateTranslationMatrix( ...ActorNode.Position );
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPos, LocalScale );
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = ColourFragShader;
-		//Scene.push( Actor );
+		Scene.push( Actor );
 	}
+	
 	Pop.Collada.Parse( FileContents, OnActor, OnSpline );
 	
 	return Scene;
