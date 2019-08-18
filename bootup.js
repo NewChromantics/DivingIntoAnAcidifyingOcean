@@ -988,13 +988,16 @@ Params.BillboardTriangles = true;
 Params.EnablePhysicsIteration = false;
 Params.ShowClippedParticle = false;
 
-let OnParamsChanged = function(Params)
+let OnParamsChanged = function(Params,ChangedParamName)
 {
 	if ( Actor_Ocean )
 		Actor_Ocean.Meta.TriangleScale = Params.Ocean_TriangleScale;
 	
 	if ( Actor_Debris )
 		Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
+	
+	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
+		OnSwitchedToDebugCamera();
 }
 
 const ParamsWindowRect = [800,20,350,200];
@@ -1378,6 +1381,26 @@ function Render(RenderTarget)
 }
 
 
+function OnSwitchedToDebugCamera()
+{
+	//	erk, not grabbing from single place
+	let Year = Params.TimelineYear;
+	
+	//	snap debug camera to run from current viewing position
+	let TimelineCamera = GetTimelineCamera(Year);
+	DebugCamera.Position = TimelineCamera.Position.slice();
+	DebugCamera.LookAt = TimelineCamera.LookAt.slice();
+}
+
+function SwitchToDebugCamera()
+{
+	if ( Params.UseDebugCamera )
+		return;
+	
+	Params.UseDebugCamera = true;
+	ParamsWindow.OnParamChanged('UseDebugCamera');
+}
+
 
 const CameraScene = LoadCameraScene('CameraSpline.dae.json');
 
@@ -1397,29 +1420,25 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 {
 	if ( Button == 0 )
 	{
-		Params.UseDebugCamera = true;
-		ParamsWindow.OnParamChanged('UseDebugCamera');
+		SwitchToDebugCamera();
 		DebugCamera.OnCameraPanLocal( x, 0, y, FirstClick );
 	}
 	if ( Button == 2 )
 	{
-		Params.UseDebugCamera = true;
-		ParamsWindow.OnParamChanged('UseDebugCamera');
+		SwitchToDebugCamera();
 		DebugCamera.OnCameraPanLocal( x, y, 0, FirstClick );
 	}
 	if ( Button == 1 )
 	{
-		//Params.UseDebugCamera = true;
-		//ParamsWindow.OnParamChanged('UseDebugCamera');
+		SwitchToDebugCamera();
 		DebugCamera.OnCameraOrbit( x, y, 0, FirstClick );
 	}
 }
 
 Window.OnMouseScroll = function(x,y,Button,Delta)
 {
+	SwitchToDebugCamera();
 	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
 	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * -10, false );
-	Params.UseDebugCamera = true;
-	ParamsWindow.OnParamChanged('UseDebugCamera');
 }
 
