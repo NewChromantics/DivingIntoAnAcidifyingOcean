@@ -925,10 +925,6 @@ function LoadTimeline(Filename)
 
 //	scene!
 
-//const SeaWorldPositionsPlyFilename = 'seatest.ply';
-//const SeaWorldPositionsPlyFilename = 'Shell/shellSmall.ply';
-const SeaWorldPositionsPlyFilename = 'Shell/shellFromBlender.obj';
-
 let ShellMeta = {};
 ShellMeta.Filename = 'Shell/shellFromBlender.obj';
 ShellMeta.Position = [0,0,-2];
@@ -957,7 +953,8 @@ OceanMeta.Scale = 1.0;
 OceanMeta.TriangleScale = 0.0148;
 OceanMeta.Colours = OceanColours;
 
-let Actor_Shell = new TPhysicsActor( ShellMeta );
+//let Actor_Shell = new TPhysicsActor( ShellMeta );
+let Actor_Shell = null;
 let Actor_Ocean = new TAnimatedActor( OceanMeta );
 let Actor_Debris = new TPhysicsActor( DebrisMeta );
 let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
