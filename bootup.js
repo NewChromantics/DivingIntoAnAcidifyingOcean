@@ -803,8 +803,17 @@ function TAnimationBuffer(Filenames,Scale)
 			let Frame = {};
 			Frame.Time = Index * FrameDuration;
 			Frame.PositionTexture = new Pop.Image();
-			Frame.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Filename, Frame.PositionTexture, Scale );
-			this.Frames.push(Frame);
+			//	gr: load as many as we can (so we can control which ones are availible at the preload time)
+			//	todo: change this so it loads async but on demand so doesn't fall over if stuff is missing
+			try
+			{
+				Frame.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Filename, Frame.PositionTexture, Scale );
+				this.Frames.push(Frame);
+			}
+			catch(e)
+			{
+				Pop.Debug("Ignored frame error",e);
+			}
 		}
 
 		this.Frames = [];
@@ -937,9 +946,8 @@ DebrisMeta.VertexSkip = 0;
 
 
 let OceanFilenames = [];
-//for ( let i=1;	i<=96;	i++ )
-for ( let i=1;	i<=4;	i++ )
-OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
+for ( let i=1;	i<=96;	i++ )
+	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let OceanMeta = {};
 OceanMeta.Filename = OceanFilenames;
@@ -1124,7 +1132,7 @@ function LoadCameraScene(Filename)
 
 			Actor_Ocean.Instances.push( ActorNode.Position );
 			//	temp until we do instances
-			Actor_Ocean.Position[1] = ActorNode.Position[1];
+			Actor_Ocean.Position = ActorNode.Position;
 			return;
 		}
 		
