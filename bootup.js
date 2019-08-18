@@ -987,6 +987,7 @@ Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
 Params.EnablePhysicsIteration = false;
 Params.ShowClippedParticle = false;
+Params.CameraFarDistance = 100;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -995,6 +996,8 @@ let OnParamsChanged = function(Params,ChangedParamName)
 	
 	if ( Actor_Debris )
 		Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
+	
+	DebugCamera.FarDistance = Params.CameraFarDistance;
 	
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
 		OnSwitchedToDebugCamera();
@@ -1016,7 +1019,7 @@ ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
 ParamsWindow.AddParam('ShowClippedParticle');
-
+ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 
 
 
@@ -1204,6 +1207,7 @@ function GetTimelineCamera(Time)
 	let Camera = new Pop.Camera();
 	Camera.Position = GetTimelineCameraPosition(Time);
 	Camera.LookAt = GetTimelineCameraPosition(Time+0.01);
+	Camera.FarDistance = DebugCamera.FarDistance;
 	return Camera;
 }
 
@@ -1249,8 +1253,12 @@ function GetRenderScene(Time)
 		let Camera = GetTimelineCamera(Time);
 		const Actor = new TActor();
 		const LocalScale = Params.DebugCameraPositionScale;
-		Actor.LocalToWorldTransform = Camera.GetLocalToWorldMatrix();
-		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, Math.CreateScaleMatrix(LocalScale) );
+		//Actor.LocalToWorldTransform = Camera.GetLocalToWorldMatrix();
+		//Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, Math.CreateScaleMatrix(LocalScale) );
+		let ProjectionViewRect = [-1,-1,1,1];
+		Actor.LocalToWorldTransform = Camera.GetProjectionMatrix(ProjectionViewRect);
+		Actor.LocalToWorldTransform = Math.MatrixInverse4x4( Actor.LocalToWorldTransform );
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), Actor.LocalToWorldTransform );
 		Actor.Geometry = 'Cube';
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = ColourFragShader;
