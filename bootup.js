@@ -1130,6 +1130,19 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
+		if ( ActorNode.Name.startsWith('Water_') && Actor_Debris )
+		{
+			//	add an instance
+			if ( !Actor_Debris.Instances )
+				Actor_Debris.Instances = [];
+			
+			Actor_Debris.Instances.push( ActorNode.Position );
+			//	temp until we do instances
+			Actor_Debris.Position = ActorNode.Position;
+			return;
+		}
+		
+		
 		if ( ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
 		{
 			//	add an instance
