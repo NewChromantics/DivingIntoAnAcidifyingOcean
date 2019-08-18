@@ -417,9 +417,9 @@ const LightColour = [0.86,0.95,0.94];
 
 const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
-let Camera = new Pop.Camera();
-Camera.Position = [ 0,0,0 ];
-Camera.LookAt = [ 0,0,-1 ];
+let DebugCamera = new Pop.Camera();
+DebugCamera.Position = [ 0,0,0 ];
+DebugCamera.LookAt = [ 0,0,-1 ];
 
 
 
@@ -974,6 +974,7 @@ const TimelineMaxYear = 2100;
 
 let Params = {};
 Params.TimelineYear = TimelineMinYear;
+Params.UseDebugCamera = false;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.05;
 Params.FogMinDistance = 11.37;
@@ -999,6 +1000,7 @@ let OnParamsChanged = function(Params)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear,Math.floor);
+ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
 ParamsWindow.AddParam('FogColour','Colour');
@@ -1185,6 +1187,30 @@ function GetTimelineCameraPosition(Year)
 	return Pos;
 }
 
+function GetTimelineCamera(Time)
+{
+	//	apply timeline camera pos temporarily and then remove again
+	/*
+	 Camera.Position = Math.Add3( Camera.Position, TimelineCameraPos );
+	 Camera.LookAt = Math.Add3( Camera.LookAt, TimelineCameraPos );
+	 const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+	 Camera.Position = Math.Subtract3( Camera.Position, TimelineCameraPos );
+	 Camera.LookAt = Math.Subtract3( Camera.LookAt, TimelineCameraPos );
+	 */
+	
+	let Camera = new Pop.Camera();
+	Camera.Position = GetTimelineCameraPosition(Time);
+	Camera.LookAt = GetTimelineCameraPosition(Time+0.01);
+	return Camera;
+}
+
+function GetRenderCamera(Time)
+{
+	if ( Params.UseDebugCamera )
+		return DebugCamera;
+	
+	return GetTimelineCamera(Time);
+}
 
 //	todo: use generic actor
 function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
@@ -1214,6 +1240,19 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 function GetRenderScene(Time)
 {
 	let Scene = [];
+	
+	let PushDebugCameraActor = function()
+	{
+		let Camera = GetTimelineCamera(Time);
+		const Actor = new TActor();
+		const LocalScale = Params.DebugCameraPositionScale;
+		Actor.LocalToWorldTransform = Camera.GetLocalToWorldMatrix();
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, Math.CreateScaleMatrix(LocalScale) );
+		Actor.Geometry = 'Cube';
+		Actor.VertShader = GeoVertShader;
+		Actor.FragShader = ColourFragShader;
+		Scene.push( Actor );
+	}
 	
 	let PushPositionBufferActor = function(Actor)
 	{
@@ -1264,6 +1303,11 @@ function GetRenderScene(Time)
 	
 	CameraScene.forEach( a => Scene.push(a) );
 	
+	if ( Params.UseDebugCamera )
+	{
+		PushDebugCameraActor();
+	}
+	
 	return Scene;
 }
 
@@ -1293,16 +1337,11 @@ function Render(RenderTarget)
 
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
+	const RenderCamera = GetRenderCamera( Time );
 	const Viewport = RenderTarget.GetRenderTargetRect();
-	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
+	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
 
-	//	apply timeline camera pos temporarily and then remove again
-	const TimelineCameraPos = GetTimelineCameraPosition(Time);
-	Camera.Position = Math.Add3( Camera.Position, TimelineCameraPos );
-	Camera.LookAt = Math.Add3( Camera.LookAt, TimelineCameraPos );
-	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
-	Camera.Position = Math.Subtract3( Camera.Position, TimelineCameraPos );
-	Camera.LookAt = Math.Subtract3( Camera.LookAt, TimelineCameraPos );
+	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 
@@ -1358,21 +1397,29 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 {
 	if ( Button == 0 )
 	{
-		Camera.OnCameraPanLocal( x, 0, y, FirstClick );
+		Params.UseDebugCamera = true;
+		ParamsWindow.OnParamChanged('UseDebugCamera');
+		DebugCamera.OnCameraPanLocal( x, 0, y, FirstClick );
 	}
 	if ( Button == 2 )
 	{
-		Camera.OnCameraPanLocal( x, y, 0, FirstClick );
+		Params.UseDebugCamera = true;
+		ParamsWindow.OnParamChanged('UseDebugCamera');
+		DebugCamera.OnCameraPanLocal( x, y, 0, FirstClick );
 	}
 	if ( Button == 1 )
 	{
-		Camera.OnCameraOrbit( x, y, 0, FirstClick );
+		//Params.UseDebugCamera = true;
+		//ParamsWindow.OnParamChanged('UseDebugCamera');
+		DebugCamera.OnCameraOrbit( x, y, 0, FirstClick );
 	}
 }
 
 Window.OnMouseScroll = function(x,y,Button,Delta)
 {
-	Camera.OnCameraPanLocal( 0, 0, 0, true );
-	Camera.OnCameraPanLocal( 0, 0, Delta[1] * -10, false );
+	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
+	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * -10, false );
+	Params.UseDebugCamera = true;
+	ParamsWindow.OnParamChanged('UseDebugCamera');
 }
 
