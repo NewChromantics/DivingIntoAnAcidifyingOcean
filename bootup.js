@@ -421,7 +421,7 @@ const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
 DebugCamera.LookAt = [ 0,0,-1 ];
-
+DebugCamera.FarDistance = 300;	//	try not to clip anythig in debug mode
 
 
 function TKeyframe(Time,Uniforms)
@@ -970,7 +970,7 @@ let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 const TimelineMinYear = 1860;
 const TimelineMaxYear = 2100;
 
-let Params = {};
+const Params = {};
 Params.TimelineYear = TimelineMinYear;
 Params.UseDebugCamera = false;
 Params.DebugCameraPositionCount = 0;
@@ -986,7 +986,7 @@ Params.BillboardTriangles = true;
 Params.EnablePhysicsIteration = false;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
-Params.CameraFarDistance = 100;
+Params.CameraFarDistance = 50;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
