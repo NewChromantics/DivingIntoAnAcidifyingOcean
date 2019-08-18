@@ -19,7 +19,8 @@ void main()
 	//WorldPos.xyz /= WorldPos.w;
 	
 	float4 CameraPos = WorldToCameraTransform * WorldPos;	//	world to camera space
-	CameraPos.w = 1.0;
+	//CameraPos.xyz /= CameraPos.w;
+	//CameraPos.w = 1.0;
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
 	

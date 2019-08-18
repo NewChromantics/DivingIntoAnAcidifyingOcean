@@ -24,6 +24,7 @@ const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIte
 const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
+const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 
 const MeshAssetFileExtension = '.mesh.json';
 
@@ -987,6 +988,7 @@ Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
 Params.EnablePhysicsIteration = false;
 Params.ShowClippedParticle = false;
+Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 100;
 
 let OnParamsChanged = function(Params,ChangedParamName)
@@ -996,8 +998,6 @@ let OnParamsChanged = function(Params,ChangedParamName)
 	
 	if ( Actor_Debris )
 		Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
-	
-	DebugCamera.FarDistance = Params.CameraFarDistance;
 	
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
 		OnSwitchedToDebugCamera();
@@ -1019,6 +1019,7 @@ ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
 ParamsWindow.AddParam('ShowClippedParticle');
+ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 
 
@@ -1207,7 +1208,8 @@ function GetTimelineCamera(Time)
 	let Camera = new Pop.Camera();
 	Camera.Position = GetTimelineCameraPosition(Time);
 	Camera.LookAt = GetTimelineCameraPosition(Time+0.01);
-	Camera.FarDistance = DebugCamera.FarDistance;
+	Camera.NearDistance = Params.CameraNearDistance;
+	Camera.FarDistance = Params.CameraFarDistance;
 	return Camera;
 }
 
@@ -1261,7 +1263,7 @@ function GetRenderScene(Time)
 		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), Actor.LocalToWorldTransform );
 		Actor.Geometry = 'Cube';
 		Actor.VertShader = GeoVertShader;
-		Actor.FragShader = ColourFragShader;
+		Actor.FragShader = EdgeFragShader;
 		Scene.push( Actor );
 	}
 	
@@ -1351,9 +1353,7 @@ function Render(RenderTarget)
 	const RenderCamera = GetRenderCamera( Time );
 	const Viewport = RenderTarget.GetRenderTargetRect();
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
-
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
-
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 
 	const Scene = GetRenderScene(Time);
