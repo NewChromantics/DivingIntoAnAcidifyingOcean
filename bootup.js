@@ -1103,7 +1103,7 @@ function LoadCameraScene(Filename)
 	
 	let OnSpline = function(SplineNode)
 	{
-		if ( SplineNode.Name == 'CameraSpline' )
+		if ( SplineNode.Name == 'Camera_Spline' )
 		{
 			//	replace the global function
 			//	make a new timeline to replace the default camera timeline accessor
@@ -1116,10 +1116,14 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
-		if ( ActorNode.Name == 'Ocean_top_surface' && Actor_Ocean )
+		if ( ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
 		{
-			//	gr: currently total mismatch with size, so just set y
-			Pop.Debug(ActorNode.Name,ActorNode.Position);
+			//	add an instance
+			if ( !Actor_Ocean.Instances )
+				Actor_Ocean.Instances = [];
+
+			Actor_Ocean.Instances.push( ActorNode.Position );
+			//	temp until we do instances
 			Actor_Ocean.Position[1] = ActorNode.Position[1];
 			return;
 		}
@@ -1205,6 +1209,11 @@ function GetRenderScene(Time)
 	
 	let PushPositionBufferActor = function(Actor)
 	{
+		if ( Actor.Instances )
+		{
+			//	turn below into a proper TActor and then draw multiple cases with different transforms
+		}
+		
 		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 		{
 			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
