@@ -238,6 +238,20 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 	let WorldPositionSize = GeometryAsset.WorldPositionSize;
 	let WorldPositions = GeometryAsset.WorldPositions;
 	
+	//	get bounds
+	if ( WorldPositions )
+	{
+		let Min = WorldPositions[0];
+		let Max = WorldPositions[0];
+		let Update = function(xyz)
+		{
+			Min = Math.Min3( Min, xyz );
+			Max = Math.Max3( Max, xyz );
+		}
+		WorldPositions.forEach( Update );
+		Pop.Debug( Filename + " bounds == ", Min, Max );
+	}
+	
 	if ( WorldPositionImage )
 	{
 		//	sort, but consistently
@@ -923,8 +937,8 @@ DebrisMeta.VertexSkip = 0;
 
 
 let OceanFilenames = [];
-for ( let i=1;	i<=96;	i++ )
-//for ( let i=1;	i<=4;	i++ )
+//for ( let i=1;	i<=96;	i++ )
+for ( let i=1;	i<=4;	i++ )
 OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 let OceanMeta = {};

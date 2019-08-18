@@ -18,9 +18,9 @@
 			let Load = async function(Filename)
 			{
 				//	can either await each one, or accumulate
-				//await Pop.AsyncCacheAssetAsString(Filename);
-				let Promise = Pop.AsyncCacheAssetAsString(Filename);
-				AssetPromises.push( Promise );
+				await Pop.AsyncCacheAssetAsString(Filename);
+				//let Promise = Pop.AsyncCacheAssetAsString(Filename);
+				//AssetPromises.push( Promise );
 			}
 			Load('Timeline.json');
 			Load('CameraSpline.dae.json');
@@ -29,7 +29,7 @@
 			{
 				//Load('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 			}
-			for ( let i=1;	i<=96;	i++ )
+			for ( let i=1;	i<=4;	i++ )
 			{
 				Load('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply.mesh.json');
 			}
