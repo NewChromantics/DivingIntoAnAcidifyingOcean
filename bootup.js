@@ -1265,12 +1265,7 @@ function GetRenderScene(Time)
 		let Camera = GetTimelineCamera(Time);
 		const Actor = new TActor();
 		const LocalScale = Params.DebugCameraPositionScale;
-		//Actor.LocalToWorldTransform = Camera.GetLocalToWorldMatrix();
-		//Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, Math.CreateScaleMatrix(LocalScale) );
-		let ProjectionViewRect = [-1,-1,1,1];
-		Actor.LocalToWorldTransform = Camera.GetProjectionMatrix(ProjectionViewRect);
-		Actor.LocalToWorldTransform = Math.MatrixInverse4x4( Actor.LocalToWorldTransform );
-		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), Actor.LocalToWorldTransform );
+		Actor.LocalToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix();
 		Actor.Geometry = 'Cube';
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = EdgeFragShader;

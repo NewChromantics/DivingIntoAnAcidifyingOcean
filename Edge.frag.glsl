@@ -52,7 +52,7 @@ void main()
 	*/
 	
 	//	z depth scales inversely, so hack: just make the far edge test smaller
-	float FarMax = 1.0 - (LineWidth*0.01);
+	float FarMax = 1.0 - (LineWidth*0.001);
 	bool EdgeX = ( LocalPos.x < LineWidth );
 	bool EdgeY = ( LocalPos.y < LineWidth );
 	bool EdgeZ = ( LocalPos.z < LineWidth );
