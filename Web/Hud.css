@@ -1,3 +1,27 @@
+body
+{
+	overflow:	hidden;
+}
+
+#TitleText
+{
+	display:	block;
+	position:	absolute;
+	z-index:	2;
+	left:		20vw;
+	top:		1vw;
+	background-color:	red;
+	width:		60vw;
+	height:		90vh;
+	text-align:	center;
+	xvertical-align:	middle;
+	font-size:	20vmin;
+	
+	display:	flex;
+	align-items:	center;
+	justify-content:	center;
+}
+
 #Hud #Music
 {
 	/* position me */

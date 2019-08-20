@@ -10,8 +10,9 @@ Pop.Hud.Label = function()
 
 	this.SetVisible = function(Visible)
 	{
-		this.Element.style.display = Visible ? 'initial' : 'none';
-		//this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		//	initial overwrites css, we want to switch back to css :/
+		//this.Element.style.display = Visible ? 'initial' : 'none';
+		this.Element.style.visibility = Visible ? 'visible' : 'hidden';
 	}
 }
 
