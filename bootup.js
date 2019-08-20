@@ -1343,6 +1343,11 @@ function Init()
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinYear, TimelineMaxYear );
+	
+	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
+	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
+	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
+	Hud.Stats_Ph = new Pop.Hud.Label('Stats_Ph_Label');
 }
 
 
@@ -1365,6 +1370,16 @@ function Update(FrameDurationSecs)
 	Hud.YearSlider.SetValue( Params.TimelineYear );
 	const CurrentMusicTrack = Timeline.GetUniform( Time, 'Music' );
 	Hud.MusicLabel.SetValue( CurrentMusicTrack );
+	
+	const DecimalPlaces = 2;
+	const Stats_Temp = Timeline.GetUniform( Time, 'Stats_Temp' ).toFixed(DecimalPlaces);
+	const Stats_Co2 = Timeline.GetUniform( Time, 'Stats_Co2' ).toFixed(DecimalPlaces);
+	const Stats_Oxygen = Timeline.GetUniform( Time, 'Stats_Oxygen' ).toFixed(DecimalPlaces);
+	const Stats_Ph = Timeline.GetUniform( Time, 'Stats_Ph' ).toFixed(DecimalPlaces);
+	Hud.Stats_Temp.SetValue( Stats_Temp );
+	Hud.Stats_Co2.SetValue( Stats_Co2 );
+	Hud.Stats_Oxygen.SetValue( Stats_Oxygen );
+	Hud.Stats_Ph.SetValue( Stats_Ph );
 }
 
 
