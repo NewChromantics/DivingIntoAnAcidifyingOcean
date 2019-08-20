@@ -1,6 +1,6 @@
 {
-	"1860":	{	"Music": "Track0.mp3",	"Timeline_CameraPosition":[0,0, -10]	},
-	"1900":	{	"Timeline_CameraPosition":[0,-0.20, 0]	},
+	"1860":	{	"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",	"Timeline_CameraPosition":[0,0, -10]	},
+	"1900":	{	"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3",	"Timeline_CameraPosition":[0,-0.20, 0]	},
 	"1950":	{	"Timeline_CameraPosition":[0,-3.40, 0.1]	},
 	"2019":	{	"FogColour":[0,0,0],	"Timeline_CameraPosition":[0,-3.50, 0.2]	},
 	"2100":	{	"FogColour":[0.09,0.06,0.02],	"Timeline_CameraPosition":[0,-3.60, 6]	}
