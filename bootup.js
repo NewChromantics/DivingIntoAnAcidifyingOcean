@@ -969,7 +969,9 @@ let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
 const TimelineMinYear = 1400;
+const TimelineMinInteractiveYear = 1650;
 const TimelineMaxYear = 2100;
+const TimelineMaxInteractiveYear = 2100;
 
 const Params = {};
 Params.TimelineYear = TimelineMinYear;
@@ -988,6 +990,7 @@ Params.EnablePhysicsIteration = false;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 50;
+Params.CameraFaceForward = true;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -1019,8 +1022,7 @@ ParamsWindow.AddParam('BillboardTriangles');
 ParamsWindow.AddParam('ShowClippedParticle');
 ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 ParamsWindow.AddParam('CameraFarDistance', 1, 100);
-
-
+ParamsWindow.AddParam('CameraFaceForward');
 
 
 
@@ -1218,7 +1220,16 @@ function GetTimelineCamera(Time)
 	
 	let Camera = new Pop.Camera();
 	Camera.Position = GetTimelineCameraPosition(Time);
-	Camera.LookAt = GetTimelineCameraPosition(Time+0.01);
+	if ( Params.CameraFaceForward )
+	{
+		Camera.LookAt = Camera.Position.slice();
+		Camera.LookAt[2] -= 1.0;
+	}
+	else
+	{
+		Camera.LookAt = GetTimelineCameraPosition(Time+0.01);
+	}
+	
 	Camera.NearDistance = Params.CameraNearDistance;
 	Camera.FarDistance = Params.CameraFarDistance;
 	return Camera;
@@ -1344,7 +1355,7 @@ function Init()
 	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
-	Hud.YearSlider.SetMinMax( TimelineMinYear, TimelineMaxYear );
+	Hud.YearSlider.SetMinMax( TimelineMinInteractiveYear, TimelineMaxInteractiveYear );
 
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
