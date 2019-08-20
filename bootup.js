@@ -1095,17 +1095,41 @@ function LoadCameraSpline(Positions)
 	const Keyframes = [];
 	const CameraPositionUniform = 'CameraPosition';
 
+	//	spline points are line strips from cinema 4D, which are more dense on curves.
+	//	we need a linear spline
+	const RunningDistances = [];
+	RunningDistances[0] = 0;
+	for ( let i=1;	i<Positions.length;	i++ )
+	{
+		const Prev = Positions[i-1];
+		const Next = Positions[i];
+		const Distance = Math.Distance3( Prev, Next );
+		const LastDistance = RunningDistances[i-1];
+		RunningDistances[i] = LastDistance + Distance;
+	}
+	const TotalDistance = RunningDistances[RunningDistances.length-1];
+	
+	const NormaliseSpline = !Pop.GetExeArguments().includes('RawCameraSpline');
+	const DistanceToYear = function(Distance,PositionIndex)
+	{
+		const DistanceNormalised = Distance / TotalDistance;
+		const IndexNormalised = PositionIndex / (Positions.length-1);
+		const Time = NormaliseSpline ? DistanceNormalised : IndexNormalised;
+		const Year = Math.Lerp( TimelineMinYear, TimelineMaxYear, Time );
+		return Year;
+	}
+	
+	//	now each pos can have a normalised time
 	for ( let i=0;	i<Positions.length;	i++ )
 	{
-		let Time = Math.Range( 0, Positions.length-1, i );
-		let Year = Math.Lerp( TimelineMinYear, TimelineMaxYear, Time );
-		let Uniforms = [];
+		const Year = DistanceToYear( RunningDistances[i], i );
+		const Uniforms = [];
 		Uniforms[CameraPositionUniform] = Positions[i];
-		let Keyframe = new TKeyframe( Year, Uniforms );
+		const Keyframe = new TKeyframe( Year, Uniforms );
 		Keyframes.push( Keyframe );
 	}
 
-	let Timeline = new TTimeline( Keyframes );
+	const Timeline = new TTimeline( Keyframes );
 	GetCameraTimelineAndUniform = function()
 	{
 		return [Timeline,CameraPositionUniform];

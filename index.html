@@ -66,9 +66,7 @@
 		
 		async function Bootup()
 		{
-			const UrlParams = window.location.search.toLowerCase().replace('?',' ').trim().split('&');
-			console.log('UrlParams',UrlParams);
-			const AsyncAssetLoads = UrlParams.includes('AsyncAssets');
+			const AsyncAssetLoads = Pop.GetExeArguments().includes('AsyncAssets');
 			
 			//	preload some assets that we don't load asynchronously
 			let AssetPromises = [];
