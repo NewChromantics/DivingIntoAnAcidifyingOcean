@@ -968,7 +968,7 @@ let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
 
-const TimelineMinYear = 1860;
+const TimelineMinYear = 1400;
 const TimelineMaxYear = 2100;
 
 const Params = {};
@@ -1339,11 +1339,13 @@ function Init()
 {
 	AppTime = 0;
 	
-	Hud.MusicLabel = new Pop.Hud.Label('MusicLabel');
+	Hud.MusicLabel = new Pop.Hud.Label('AudioMusicLabel');
+	Hud.VoiceLabel = new Pop.Hud.Label('AudioVoiceLabel');
+	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinYear, TimelineMaxYear );
-	
+
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
@@ -1368,9 +1370,13 @@ function Update(FrameDurationSecs)
 	//	update hud
 	Hud.YearLabel.SetValue( Params.TimelineYear );
 	Hud.YearSlider.SetValue( Params.TimelineYear );
-	const CurrentMusicTrack = Timeline.GetUniform( Time, 'Music' );
-	Hud.MusicLabel.SetValue( CurrentMusicTrack );
-	
+	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
+	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
+	const Subtitle = Timeline.GetUniform( Time, 'Subtitle' );
+	Hud.MusicLabel.SetValue( CurrentMusic );
+	Hud.VoiceLabel.SetValue( CurrentVoice );
+	Hud.SubtitleLabel.SetValue( Subtitle );
+
 	const DecimalPlaces = 2;
 	const Stats_Temp = Timeline.GetUniform( Time, 'Stats_Temp' ).toFixed(DecimalPlaces);
 	const Stats_Co2 = Timeline.GetUniform( Time, 'Stats_Co2' ).toFixed(DecimalPlaces);
