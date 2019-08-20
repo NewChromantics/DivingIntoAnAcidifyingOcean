@@ -1341,6 +1341,8 @@ function Init()
 	
 	Hud.MusicLabel = new Pop.Hud.Label('MusicLabel');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
+	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
+	Hud.YearSlider.SetMinMax( TimelineMinYear, TimelineMaxYear );
 }
 
 
@@ -1360,6 +1362,7 @@ function Update(FrameDurationSecs)
 	
 	//	update hud
 	Hud.YearLabel.SetValue( Params.TimelineYear );
+	Hud.YearSlider.SetValue( Params.TimelineYear );
 	const CurrentMusicTrack = Timeline.GetUniform( Time, 'Music' );
 	Hud.MusicLabel.SetValue( CurrentMusicTrack );
 }
