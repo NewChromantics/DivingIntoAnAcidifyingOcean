@@ -31,6 +31,7 @@
 	top:			50vh;
 	width:			60vw;
 	height:			20vh;
+	font-size:		5vh;
 	
 	text-align:			center;
 	display:			flex;
@@ -40,13 +41,21 @@
 
 #Stats
 {
+	font-size:		4vh;
+	line-height:	5vh;
 	position:		absolute;
 	right:			5vw;
 	top:			5vh;
-	width:			20vw;
-	height:			30vh;
+	width:			50vh;
+	height:			20vh;
 	background-color:	blue;
 }
+
+#Stats div
+{
+	overflow:	hidden;
+}
+
 
 #Hud #Music
 {
