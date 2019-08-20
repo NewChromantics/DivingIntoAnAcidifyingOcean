@@ -969,12 +969,14 @@ let RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
 const TimelineMinYear = 1400;
-const TimelineMinInteractiveYear = 1650;
+const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
 
 const Params = {};
 Params.TimelineYear = TimelineMinYear;
+Params.ExperiencePlaying = true;
+Params.ExperienceDurationSecs = 240;
 Params.UseDebugCamera = false;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.05;
@@ -1006,7 +1008,9 @@ let OnParamsChanged = function(Params,ChangedParamName)
 
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
-ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear,Math.floor);
+ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
+ParamsWindow.AddParam('ExperiencePlaying');
+ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
@@ -1398,6 +1402,17 @@ function Update(FrameDurationSecs)
 	
 	AppTime += FrameDurationSecs;
 
+	//	auto increment year
+	if ( Params.ExperiencePlaying )
+	{
+		const ExpYears = TimelineMaxYear - TimelineMinYear;
+		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
+		const YearsPerFrame = FrameDurationSecs * YearsPerSec;
+		Params.TimelineYear += YearsPerFrame;
+		Pop.Debug("Changing year",Params.TimelineYear);
+		ParamsWindow.OnParamChanged('TimelineYear');
+	}
+
 	let Time = Params.TimelineYear;
 
 	//	update some stuff from timeline
@@ -1405,7 +1420,7 @@ function Update(FrameDurationSecs)
 	ParamsWindow.OnParamChanged('FogColour');
 	
 	//	update hud
-	Hud.YearLabel.SetValue( Params.TimelineYear );
+	Hud.YearLabel.SetValue( Math.floor(Params.TimelineYear) );
 	Hud.YearSlider.SetValue( Params.TimelineYear );
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
 	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
