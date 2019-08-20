@@ -4,7 +4,16 @@
 Pop.Hud = {};
 
 //	reference to a label
-Pop.Hud.Label = Pop.Gui.Label;
+Pop.Hud.Label = function()
+{
+	Pop.Gui.Label.apply( this, arguments );
+
+	this.SetVisible = function(Visible)
+	{
+		this.Element.style.display = Visible ? 'initial' : 'none';
+		//this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+	}
+}
 
 //	reference to a slider
 Pop.Hud.Slider = Pop.Gui.Slider;

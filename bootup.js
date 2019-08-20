@@ -1357,6 +1357,8 @@ function Init()
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinInteractiveYear, TimelineMaxInteractiveYear );
 
+	Hud.Title = new Pop.Hud.Label('TitleText');
+	
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
@@ -1388,6 +1390,8 @@ function Update(FrameDurationSecs)
 	Hud.VoiceLabel.SetValue( CurrentVoice );
 	Hud.SubtitleLabel.SetValue( Subtitle );
 
+	Hud.Title.SetVisible( Timeline.GetUniform( Time, 'TitleVisible' ) );
+	
 	const DecimalPlaces = 2;
 	const Stats_Temp = Timeline.GetUniform( Time, 'Stats_Temp' ).toFixed(DecimalPlaces);
 	const Stats_Co2 = Timeline.GetUniform( Time, 'Stats_Co2' ).toFixed(DecimalPlaces);

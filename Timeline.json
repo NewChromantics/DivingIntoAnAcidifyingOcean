@@ -2,13 +2,15 @@
 	"1400":
 	{
 		"Subtitle":"",
-		"VoiceAudio":""
+		"VoiceAudio":"",
+		"TitleVisible":true
 	},
 
 	"1401":
 	{
 		"Subtitle":"Every second breath we take comes from the ocean...",
-		"VoiceAudio":"Audio/Voice_EverySecondBreath.mp3"
+		"VoiceAudio":"Audio/Voice_EverySecondBreath.mp3",
+		"TitleVisible":false
 	},
 	"1450":
 	{
