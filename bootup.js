@@ -1409,7 +1409,6 @@ function Update(FrameDurationSecs)
 		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
 		const YearsPerFrame = FrameDurationSecs * YearsPerSec;
 		Params.TimelineYear += YearsPerFrame;
-		Pop.Debug("Changing year",Params.TimelineYear);
 		ParamsWindow.OnParamChanged('TimelineYear');
 	}
 
