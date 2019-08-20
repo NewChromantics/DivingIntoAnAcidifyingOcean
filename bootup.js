@@ -15,6 +15,7 @@ Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 
 Pop.Include('AssetManager.js');
+Pop.Include('Hud.js');
 
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
@@ -1330,20 +1331,48 @@ function GetRenderScene(Time)
 }
 
 
+var AppTime = null;
+var Hud = {};
+
+//	need a better place for this, app state!
+function Init()
+{
+	AppTime = 0;
+	
+	Hud.MusicLabel = new Pop.Hud.Label('MusicLabel');
+	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
+}
 
 
-var AppTime = 0;
+//	todo: proper app loop, currently triggered from render
+function Update(FrameDurationSecs)
+{
+	if ( AppTime === null )
+		Init();
+	
+	AppTime += FrameDurationSecs;
+
+	let Time = Params.TimelineYear;
+
+	//	update some stuff from timeline
+	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
+	ParamsWindow.OnParamChanged('FogColour');
+	
+	//	update hud
+	Hud.YearLabel.SetValue( Params.TimelineYear );
+	const CurrentMusicTrack = Timeline.GetUniform( Time, 'Music' );
+	Hud.MusicLabel.SetValue( CurrentMusicTrack );
+}
+
+
 
 function Render(RenderTarget)
 {
 	const DurationSecs = 1 / 60;
+	Update( DurationSecs );
+	
 	//let Time = Math.Range( TimelineMinYear, TimelineMaxYear, Params.TimelineYear );
 	let Time = Params.TimelineYear;
-	AppTime += DurationSecs;
-	
-	//	update some stuff from timeline
-	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
-	ParamsWindow.OnParamChanged('FogColour');
 	
 	//	update physics
 	if ( Actor_Shell )

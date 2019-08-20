@@ -1,10 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="Web/win95.css">
+	<link rel="stylesheet" type="text/css" href="Web/win95.css" />
+	<link rel="stylesheet" type="text/css" href="Web/Hud.css" />
+<style>
+
+	body
+	{
+		background-color:	#000;
+		color:				#ccc;	/* text colour */
+	}
+
+	#Hud
+	{
+		pointer-events:	none;
+		/*	need a static position to make z index work */
+		position:		relative;
+		z-index:		100;
+	}
+
+	input
+	{
+		/* always allow pointer events on inputs */
+		pointer-events:	auto !important;
+	}
+
+</style>
 </head>
 <body>
 
+	<div id="Hud">
+		<div id="Music">Music: <span id="MusicLabel">Track</span></div>
+		<div id="Year">Year: <span id="YearLabel">000</span></div>
+	</div>
+	
 	<script src='PopEngineCommon/PopWebApi.js'></script>
 	<script src='PopEngineCommon/PopWebOpenglApi.js'></script>
 	<script src='PopEngineCommon/PopWebGuiApi.js'></script>
@@ -59,6 +88,7 @@
 			await Load('PhysicsIteration_UpdatePosition.frag.glsl');
 
 			await Load('AssetManager.js');
+			await Load('Hud.js');
 			await Load('PopEngineCommon/PopShaderCache.js');
 			await Load('PopEngineCommon/PopFrameCounter.js');
 			await Load('PopEngineCommon/PopCamera.js');

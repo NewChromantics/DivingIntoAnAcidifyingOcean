@@ -1,0 +1,21 @@
+#Hud #Music
+{
+	/* position me */
+}
+
+/* currently playing track */
+#Hud #MusicLabel
+{
+	font-size:	10vh;
+}
+
+#Hud #Year
+{
+	/* position me */
+}
+
+/* Current year */
+#Hud #YearLabel
+{
+	font-size:	20vh;
+}
