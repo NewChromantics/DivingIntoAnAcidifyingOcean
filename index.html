@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link href="https://fonts.googleapis.com/css?family=Karla&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="Web/win95.css" />
 	<link rel="stylesheet" type="text/css" href="Web/Hud.css" />
 <style>
 
 	body
 	{
+		font-family:		'Karla', sans-serif;
+		font-style:			bold;
+		overflow:			hidden;
+
 		background-color:	#000;
 		color:				#ccc;	/* text colour */
 	}
@@ -32,15 +37,17 @@
 	<div id="Hud">
 		<div id="AudioMusic">Music: <span id="AudioMusicLabel">Track</span></div>
 		<div id="AudioVoice">Voice: <span id="AudioVoiceLabel">Voice</span></div>
-		<div ><span id="SubtitleLabel">Subtitles</span></div>
+		<div id="Subtitle"><span id="SubtitleLabel">Subtitles</span></div>
 
 		<div id="Timeline"><span id="YearStart">1860</span><input type=range id="YearSlider" /><span id="YearEnd">2100</span></div>
 		<div id="Year">Year: <span id="YearLabel">000</span></div>
 
-		<div id="Stats_Temp">Temperature: <span id="Stats_Temp_Label">XXX</span>&deg;</div>
-		<div id="Stats_Co2">CO2 Intake: <span id="Stats_Co2_Label">XXX</span>% More</div>
-		<div id="Stats_Oxygen">Oxygen Level: <span id="Stats_Oxygen_Label">-X.XX</span>%</div>
-		<div id="Stats_Ph">pH acidity: <span id="Stats_Ph_Label">X</span>% more</div>
+		<div id="Stats">
+			<div id="Stats_Temp">Temperature: <span id="Stats_Temp_Label">XXX</span>&deg;C</div>
+			<div id="Stats_Co2">CO2 Intake: <span id="Stats_Co2_Label">XXX</span>% More</div>
+			<div id="Stats_Oxygen">Oxygen Level: <span id="Stats_Oxygen_Label">-X.XX</span>%</div>
+			<div id="Stats_Ph">pH acidity: <span id="Stats_Ph_Label">X</span>% more</div>
+		</div>
 		
 		<div id="TitleText">DIVING INTO AN ACIDIC OCEAN</div>
 		<div id="Hint_Start">Start</div><!-- gr: will change this to a button -->
