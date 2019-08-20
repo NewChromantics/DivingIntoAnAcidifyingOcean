@@ -21,15 +21,43 @@
 }
 
 /* slider http://danielstern.ca/range.css/#/ */
+#Timeline
+{
+	display:	block;
+	position:	absolute;
+	left:		15vw;
+	xxbottom:		10vh;
+	top:		85vh;
+	width:		60vw;
+	height:		9vh;
+
+	/* layout with flexbox https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+	display:		flex;
+	flex-wrap:		nowrap;
+	justify-content:	space-evenly;
+	align-items:	stretch;
+	overflow:	hidden;
+}
+
+#YearStart, #YearEnd
+{
+	display:	block;
+	flex-grow:	0;
+	width:		4vw;
+	text-align:			center;
+	background-color:	red;
+	border:				2px solid green;
+	
+	/*	gr: not working */
+	vertical-align:	middle;
+	xheight:		9vh;	/* need height to vertically align */
+}
+
 #YearSlider
 {
 	-webkit-appearance: none;
 	display:	block;
-	position:	absolute;
-	left:		15vw;
-	bottom:		1vh;
-	top:		90vh;
-	width:		60vw;
+	flex-grow:	1;
 }
 
 #YearSlider:focus
