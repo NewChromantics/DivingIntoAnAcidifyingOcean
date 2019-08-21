@@ -11,7 +11,7 @@
 	left:		10vw;
 	top:		1vw;
 	xbackground-color:	red;
-	width:		75vw;
+	width:		80vw;
 	height:		90vh;
 	font-size:	20vmin;
 	line-height:	18vh;
@@ -57,6 +57,87 @@
 	overflow:	hidden;
 }
 
+#Hint_Start
+{
+	display:	block;
+	position:	absolute;
+	left:		10vw;
+	top:		30.35vh;
+	width:		80vw;
+	height:		90vh;
+	font-size:	3vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+#Hint_Headphones
+{
+display:	block;
+	position:	absolute;
+	left:		10vw;
+	top:		1vw;
+	width:		80vw;
+	height:		90vh;
+	font-size:	2vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+#Hint_TapAnimal
+{
+	display:	block;
+	position:	absolute;
+	left:		10vw;
+	top:		1vw;
+	width:		80vw;
+	height:		90vh;
+	font-size:	2vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+#Hint_DragTimeline
+{
+	display:	block;
+	position:	absolute;
+	left:		10vw;
+	top:		1vw;
+	width:		80vw;
+	height:		90vh;
+	font-size:	2vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+#AnimalCard
+{
+	display:	block;
+	position:	absolute;
+	right:		5vw;
+	top:		1vw;
+	width:		40vw;
+	height:		90vh;
+	font-size:	3vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
 
 #Hud #Music
 {
@@ -81,36 +162,39 @@
 }
 
 /* slider http://danielstern.ca/range.css/#/ */
+/* I'm not sure this is visible in all screen sizes... */
 #Timeline
 {
-	display:	block;
+	display:	flex;
 	position:	absolute;
 	/* crtq: don't think this is in the middle in every screen */
-	left:		1.6vw;
+	left:		7.35vw;
 	xxbottom:		5vh;
-	top:		90vh;
-	width:		95vw;
+	top:		88vh;
+	width:		85vw;
 	height:		5vh;
 
 	/* layout with flexbox https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
-	display:		flex;
+
 	flex-wrap:		nowrap;
 	justify-content:	center;
 	align-items:	stretch;
 	overflow:		hidden;
+	
 }
 
 #YearStart, #YearEnd
 {
 	display:	block;
 	flex-grow:	0;
+	top: 2vh;
 	width:		4vw;
 	text-align:			center;
-	background-color:	green;
+	background-color:	rgba(0, 0, 0, 0.05);
 	
 	/*	gr: not working */
 	vertical-align:	middle;
-	xheight:		9vh;	/* need height to vertically align */
+
 }
 
 
