@@ -93,7 +93,11 @@
 			{
 				//Load('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 			}
-			for ( let i=1;	i<=10;	i++ )
+			
+			let LoadOceanFrames = 96;
+			if ( Pop.GetExeArguments().includes('ShortOcean') )
+				LoadOceanFrames = 4;
+			for ( let i=1;	i<=LoadOceanFrames;	i++ )
 			{
 				await Load('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply.mesh.json');
 			}
