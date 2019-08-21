@@ -802,9 +802,12 @@ function TAnimationBuffer(Filenames,Scale)
 		
 		let LoadFrame = function(Filename,Index)
 		{
-			let FrameDuration = 1/20;
+			//	gr: making frame duration dynamic now, so time here is always 1
 			let Frame = {};
-			Frame.Time = Index * FrameDuration;
+			Frame.GetTime = function()
+			{
+				return Index / Params.OceanAnimationFrameRate;
+			};
 			Frame.PositionTexture = new Pop.Image();
 			//	gr: load as many as we can (so we can control which ones are availible at the preload time)
 			//	todo: change this so it loads async but on demand so doesn't fall over if stuff is missing
@@ -825,17 +828,19 @@ function TAnimationBuffer(Filenames,Scale)
 	
 	this.GetDuration = function()
 	{
-		return this.Frames[this.Frames.length-1].Time;
+		return this.Frames[this.Frames.length-1].GetTime();
 	}
 	
 	this.GetFrame = function(Time)
 	{
 		//	auto loop
 		Time = Time % this.GetDuration();
+
 		for ( let i=0;	i<this.Frames.length;	i++ )
 		{
 			let Frame = this.Frames[i];
-			if ( Time <= Frame.Time )
+			let FrameTime = Frame.GetTime();
+			if ( Time <= FrameTime )
 				return Frame;
 		}
 		throw "Failed to find frame for time " + Time;
@@ -995,6 +1000,7 @@ Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
+Params.OceanAnimationFrameRate = 20;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -1030,7 +1036,7 @@ ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 ParamsWindow.AddParam('CameraFaceForward');
 ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
-
+ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 
 
 
