@@ -1,6 +1,6 @@
 #Hud
 {
-	font-size:	1vmin;
+	font-size:	3vmin;
 }
 
 #TitleText
@@ -85,16 +85,17 @@
 {
 	display:	block;
 	position:	absolute;
-	left:		10vw;
+	/* crtq: don't think this is in the middle in every screen */
+	left:		1.6vw;
 	xxbottom:		5vh;
 	top:		90vh;
-	width:		80vw;
+	width:		95vw;
 	height:		5vh;
 
 	/* layout with flexbox https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 	display:		flex;
 	flex-wrap:		nowrap;
-	justify-content:	space-evenly;
+	justify-content:	center;
 	align-items:	stretch;
 	overflow:		hidden;
 }
@@ -112,107 +113,91 @@
 	xheight:		9vh;	/* need height to vertically align */
 }
 
-#YearSlider
-{
-	-webkit-appearance: none;
-	display:	block;
-	flex-grow:	1;
+
+#YearSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 20.75px 0;
+}
+#YearSlider:focus {
+  outline: none;
+}
+#YearSlider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+  background: #ffffff;
+  border-radius: 4.2px;
+  border: 0px solid #010101;
+}
+#YearSlider::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #ffffff;
+  height: 15px;
+  width: 5px;
+  border-radius: 1px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7.75px;
+}
+#YearSlider::-webkit-slider-runnable-track {
+  background: #ffffff;
+}
+#YearSlider::-moz-range-track {
+  width: 100%;
+  height: 0.5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+  background: #ffffff;
+  border-radius: 4.2px;
+  border: 0px solid #010101;
+}
+#YearSlider::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #ffffff;
+  height: 15px;
+  width: 5px;
+  border-radius: 1px;
+  background: #ffffff;
+  cursor: pointer;
+}
+#YearSlider::-ms-track {
+  width: 100%;
+  height: 0.5px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+#YearSlider::-ms-fill-lower {
+  background: #f2f2f2;
+  border: 0px solid #010101;
+  border-radius: 8.4px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+}
+#YearSlider::-ms-fill-upper {
+  background: #ffffff;
+  border: 0px solid #010101;
+  border-radius: 8.4px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+}
+#YearSlider::-ms-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #ffffff;
+  height: 15px;
+  width: 5px;
+  border-radius: 1px;
+  background: #ffffff;
+  cursor: pointer;
+  height: 1.5px;
+}
+#YearSlider:focus::-ms-fill-lower {
+  background: #ffffff;
+}
+#YearSlider:focus::-ms-fill-upper {
+  background: #ffffff;
 }
 
-#YearSlider:focus
-{
-	outline: none;
-}
-
-#YearSlider::-webkit-slider-runnable-track
-{
-	cursor: pointer;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: rgba(255, 255, 255, 0.44);
-	
-}
-
-#YearSlider::-webkit-slider-thumb
-{
-	box-shadow: 3.4px 3.4px 0px #000000, 0px 0px 3.4px #0d0d0d;
-	border: 0px solid #000000;
-	height: 28px;
-	width: 33px;
-	border-radius: 43px;
-	background: #ffb81e;
-	cursor: pointer;
-	-webkit-appearance: none;
-	margin-top: -7.9px;
-}
-
-#YearSlider:focus::-webkit-slider-runnable-track
-{
-	background: rgba(255, 255, 255, 0.44);
-}
-
-#YearSlider::-moz-range-track
-{
-	cursor: pointer;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: rgba(255, 255, 255, 0.44);
-	border-radius: 17.6px;
-	border: 2px solid rgba(169, 127, 37, 0.38);
-}
-
-#YearSlider::-moz-range-thumb
-{
-	box-shadow: 3.4px 3.4px 0px #000000, 0px 0px 3.4px #0d0d0d;
-	border: 0px solid #000000;
-	height: 28px;
-	width: 33px;
-	border-radius: 43px;
-	background: #ffb81e;
-	cursor: pointer;
-}
-
-#YearSlider::-ms-track
-{
-	cursor: pointer;
-	background: transparent;
-	border-color: transparent;
-	color: transparent;
-}
-
-#YearSlider::-ms-fill-lower
-{
-	background: rgba(255, 255, 255, 0.44);
-	border: 2px solid rgba(169, 127, 37, 0.38);
-	border-radius: 35.2px;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-}
-
-#YearSlider::-ms-fill-upper
-{
-	background: rgba(255, 255, 255, 0.44);
-	border: 2px solid rgba(169, 127, 37, 0.38);
-	border-radius: 35.2px;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-}
-
-#YearSlider::-ms-thumb
-{
-	box-shadow: 3.4px 3.4px 0px #000000, 0px 0px 3.4px #0d0d0d;
-	border: 0px solid #000000;
-	height: 28px;
-	width: 33px;
-	border-radius: 43px;
-	background: #ffb81e;
-	cursor: pointer;
-	height: 16.2px;
-}
-
-#YearSlider:focus::-ms-fill-lower
-{
-	background: rgba(255, 255, 255, 0.44);
-}
-
-#YearSlider:focus::-ms-fill-upper
-{
-	background: rgba(255, 255, 255, 0.44);
-}
 
