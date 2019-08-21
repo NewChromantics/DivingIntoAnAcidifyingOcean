@@ -15,6 +15,7 @@ Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 
 Pop.Include('AssetManager.js');
+Pop.Include('AudioManager.js');
 Pop.Include('Hud.js');
 
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
@@ -993,6 +994,7 @@ Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
+Params.AudioCrossFadeDurationSecs = 2;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -1027,6 +1029,7 @@ ParamsWindow.AddParam('ShowClippedParticle');
 ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 ParamsWindow.AddParam('CameraFaceForward');
+ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
 
 
 
@@ -1370,8 +1373,14 @@ function GetRenderScene(Time)
 }
 
 
+function GetAudioGetCrossFadeDuration()
+{
+	return Params.AudioCrossFadeDurationSecs;
+}
+
 var AppTime = null;
 var Hud = {};
+var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 //	need a better place for this, app state!
 function Init()
@@ -1414,6 +1423,13 @@ function Update(FrameDurationSecs)
 
 	let Time = Params.TimelineYear;
 
+	
+	//	update audio
+	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
+	AudioManager.SetMusic( CurrentMusic );
+	AudioManager.Update( FrameDurationSecs );
+	
+	
 	//	update some stuff from timeline
 	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
 	ParamsWindow.OnParamChanged('FogColour');
@@ -1421,10 +1437,10 @@ function Update(FrameDurationSecs)
 	//	update hud
 	Hud.YearLabel.SetValue( Math.floor(Params.TimelineYear) );
 	Hud.YearSlider.SetValue( Params.TimelineYear );
-	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
+	const MusicDebug = AudioManager.GetMusicQueueDebug();
 	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
 	const Subtitle = Timeline.GetUniform( Time, 'Subtitle' );
-	Hud.MusicLabel.SetValue( CurrentMusic );
+	Hud.MusicLabel.SetValue( MusicDebug );
 	Hud.VoiceLabel.SetValue( CurrentVoice );
 	Hud.SubtitleLabel.SetValue( Subtitle );
 
