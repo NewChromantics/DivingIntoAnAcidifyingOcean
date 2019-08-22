@@ -1,6 +1,7 @@
 #Hud
 {
-	font-size:	1vmin;
+	font-size:	3vmin;
+	color: #ffffff;
 }
 
 #TitleText
@@ -11,10 +12,10 @@
 	left:		10vw;
 	top:		1vw;
 	xbackground-color:	red;
-	width:		75vw;
-	height:		90vh;
-	font-size:	20vmin;
-	line-height:	18vh;
+	width:		80vw;
+	height:		80vh;
+	font-size:	30vmin;
+	line-height:	24vh;
 
 	text-align:	center;
 	
@@ -25,7 +26,7 @@
 
 #Subtitle
 {
-	background-color:	red;
+	background-color:	rgba(255, 0, 0, 0.34);
 
 	position:		absolute;
 	left:			10vw;
@@ -57,6 +58,173 @@
 	overflow:	hidden;
 }
 
+#Hint_Start
+{
+	display:	block;
+	position:	absolute;
+	left:		10vw;
+	top:		29.35vh;
+	width:		80vw;
+	height:		90vh;
+	font-size:	3vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+#Hint_Headphones
+{
+	display: block;
+	position: absolute;
+	left: 10vw;
+	top: 80vh;
+	width: 80vw;
+	height:	5vh;
+	font-size: 2vh;
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+#IconHeadphones
+{
+	display: block;
+	position: absolute;
+	left: 10vw;
+	top: 86vh;
+	width: 80vw;
+	height:	5vh;
+	font-size: 2vh;
+	text-align:	center;
+}
+/* This is for Mobile */
+#Hint_TapAnimal
+{
+	display:	block;
+	position:	absolute;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+/* This is for Desktop */
+#Hint_ClickAnimal
+{
+	display:	block;
+	position:	absolute;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#Hint_DragTimeline_Mobile
+{
+	display:	block;
+	position:	absolute;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#Hint_DragTimeline_Desktop
+{
+	display:	block;
+	position:	absolute;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#Hint_TouchToInteract
+{
+	display:	block;
+	position:	absolute;
+	left:		46vw;
+	top:		45vh;
+	width:		7vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#AnimalCard
+{
+	display:	block;
+	position:	absolute;
+	right:		13vw;
+	top:		1vw;
+	width:		40vw;
+	height:		90vh;
+	font-size:	3vh;
+
+	text-align:	center;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
 
 #Hud #Music
 {
@@ -81,138 +249,147 @@
 }
 
 /* slider http://danielstern.ca/range.css/#/ */
+/* I'm not sure this is visible in all screen sizes... */
 #Timeline
 {
-	display:	block;
+	display:	flex;
 	position:	absolute;
+	/* crtq: don't think this is in the middle in every screen */
 	left:		10vw;
 	xxbottom:		5vh;
-	top:		90vh;
+	top:		88vh;
 	width:		80vw;
-	height:		5vh;
+	height:		3vh;
 
 	/* layout with flexbox https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
-	display:		flex;
-	flex-wrap:		nowrap;
-	justify-content:	space-evenly;
+
+	flex-wrap:	wrap;
+	justify-content:	center;
 	align-items:	stretch;
 	overflow:		hidden;
+	
 }
 
-#YearStart, #YearEnd
+#YearStart
 {
-	display:	block;
-	flex-grow:	0;
-	width:		4vw;
-	text-align:			center;
-	background-color:	green;
+	display: block;
+	position: absolute;
+	flex-grow: 0;
+	left: 8vw;
+	top: 91vh;
+	width: 4vw;
+	text-align:	center;
+	background-color: rgba(0, 0, 0, 0.15);
+	font-size:	2vmin;
 	
 	/*	gr: not working */
 	vertical-align:	middle;
-	xheight:		9vh;	/* need height to vertically align */
+	xheight: 9vh;	/* need height to vertically align */
+
 }
 
-#YearSlider
+#YearEnd
 {
-	-webkit-appearance: none;
-	display:	block;
-	flex-grow:	1;
-}
-
-#YearSlider:focus
-{
-	outline: none;
-}
-
-#YearSlider::-webkit-slider-runnable-track
-{
-	cursor: pointer;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: rgba(255, 255, 255, 0.44);
+	display: block;
+	position: absolute;
+	flex-grow: 0;
+	right: 7.6vw;
+	top: 91vh;
+	width: 4vw;
+	text-align:	center;
+	background-color: rgba(0, 0, 0, 0.15);
+	font-size:	2vmin;
 	
+	/*	gr: not working */
+	vertical-align:	middle;
+	xheight: 9vh;	/* need height to vertically align */
+
 }
 
-#YearSlider::-webkit-slider-thumb
-{
-	box-shadow: 3.4px 3.4px 0px #000000, 0px 0px 3.4px #0d0d0d;
-	border: 0px solid #000000;
-	height: 28px;
-	width: 33px;
-	border-radius: 43px;
-	background: #ffb81e;
-	cursor: pointer;
-	-webkit-appearance: none;
-	margin-top: -7.9px;
-}
 
-#YearSlider:focus::-webkit-slider-runnable-track
-{
-	background: rgba(255, 255, 255, 0.44);
+#YearSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 20.75px 0;
 }
-
-#YearSlider::-moz-range-track
-{
-	cursor: pointer;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: rgba(255, 255, 255, 0.44);
-	border-radius: 17.6px;
-	border: 2px solid rgba(169, 127, 37, 0.38);
+#YearSlider:focus {
+  outline: none;
 }
-
-#YearSlider::-moz-range-thumb
-{
-	box-shadow: 3.4px 3.4px 0px #000000, 0px 0px 3.4px #0d0d0d;
-	border: 0px solid #000000;
-	height: 28px;
-	width: 33px;
-	border-radius: 43px;
-	background: #ffb81e;
-	cursor: pointer;
+#YearSlider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+  background: #ffffff;
+  border-radius: 4.2px;
+  border: 0px solid #010101;
 }
-
-#YearSlider::-ms-track
-{
-	cursor: pointer;
-	background: transparent;
-	border-color: transparent;
-	color: transparent;
+#YearSlider::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #ffffff;
+  height: 15px;
+  width: 5px;
+  border-radius: 1px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7.75px;
 }
-
-#YearSlider::-ms-fill-lower
-{
-	background: rgba(255, 255, 255, 0.44);
-	border: 2px solid rgba(169, 127, 37, 0.38);
-	border-radius: 35.2px;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+#YearSlider::-webkit-slider-runnable-track {
+  background: #ffffff;
 }
-
-#YearSlider::-ms-fill-upper
-{
-	background: rgba(255, 255, 255, 0.44);
-	border: 2px solid rgba(169, 127, 37, 0.38);
-	border-radius: 35.2px;
-	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+#YearSlider::-moz-range-track {
+  width: 100%;
+  height: 0.5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+  background: #ffffff;
+  border-radius: 4.2px;
+  border: 0px solid #010101;
 }
-
-#YearSlider::-ms-thumb
-{
-	box-shadow: 3.4px 3.4px 0px #000000, 0px 0px 3.4px #0d0d0d;
-	border: 0px solid #000000;
-	height: 28px;
-	width: 33px;
-	border-radius: 43px;
-	background: #ffb81e;
-	cursor: pointer;
-	height: 16.2px;
+#YearSlider::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #ffffff;
+  height: 15px;
+  width: 5px;
+  border-radius: 1px;
+  background: #ffffff;
+  cursor: pointer;
 }
-
-#YearSlider:focus::-ms-fill-lower
-{
-	background: rgba(255, 255, 255, 0.44);
+#YearSlider::-ms-track {
+  width: 100%;
+  height: 0.5px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
 }
-
-#YearSlider:focus::-ms-fill-upper
-{
-	background: rgba(255, 255, 255, 0.44);
+#YearSlider::-ms-fill-lower {
+  background: #f2f2f2;
+  border: 0px solid #010101;
+  border-radius: 8.4px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+}
+#YearSlider::-ms-fill-upper {
+  background: #ffffff;
+  border: 0px solid #010101;
+  border-radius: 8.4px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
+}
+#YearSlider::-ms-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #ffffff;
+  height: 15px;
+  width: 5px;
+  border-radius: 1px;
+  background: #ffffff;
+  cursor: pointer;
+  height: 1.5px;
+}
+#YearSlider:focus::-ms-fill-lower {
+  background: #ffffff;
+}
+#YearSlider:focus::-ms-fill-upper {
+  background: #ffffff;
 }
 
