@@ -90,37 +90,124 @@
 	align-items:		center;
 	justify-content:	center;
 }
+
+#IconHeadphones
+{
+	display: block;
+	position: absolute;
+	left: 10vw;
+	top: 86vh;
+	width: 80vw;
+	height:	5vh;
+	font-size: 2vh;
+	text-align:	center;
+}
+/* This is for Mobile */
 #Hint_TapAnimal
 {
 	display:	block;
 	position:	absolute;
-	left:		10vw;
-	top:		1vw;
-	width:		80vw;
-	height:		90vh;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
 	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
 
-	text-align:	center;
-	
 	display:			flex;
 	align-items:		center;
-	justify-content:	center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
 }
-#Hint_DragTimeline
+/* This is for Desktop */
+#Hint_ClickAnimal
 {
 	display:	block;
 	position:	absolute;
-	left:		10vw;
-	top:		1vw;
-	width:		80vw;
-	height:		90vh;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
 	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
 
-	text-align:	center;
-	
 	display:			flex;
 	align-items:		center;
-	justify-content:	center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#Hint_DragTimeline_Mobile
+{
+	display:	block;
+	position:	absolute;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#Hint_DragTimeline_Desktop
+{
+	display:	block;
+	position:	absolute;
+	left:		45vw;
+	top:		45vh;
+	width:		10vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
+}
+#Hint_TouchToInteract
+{
+	display:	block;
+	position:	absolute;
+	left:		46vw;
+	top:		45vh;
+	width:		7vw;
+	height:		4vh;
+	font-size:	2vh;
+	background-color:	rgba(0, 0, 0, 0.65);
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	flex-end;
+	padding: 30px;
+	flex-wrap: wrap;
+	-webkit-flex-flow: row wrap;
+  	justify-content: space-around;
+
+  	border-radius: 25px;
 }
 #AnimalCard
 {
@@ -305,5 +392,4 @@
 #YearSlider:focus::-ms-fill-upper {
   background: #ffffff;
 }
-
 
