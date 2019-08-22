@@ -28,45 +28,60 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 
 	this.CurrentState = InitialState;
 	this.CurrentStateStartTime = false;		//	when false, it hasnt been called
+	this.LastUpdateTime = Pop.GetTimeNowMs();
+	
+	this.LoopIteration = function()
+	{
+		const Now = Pop.GetTimeNowMs();
+		const ElapsedMs = Now - this.LastUpdateTime;
+		let NextState = null;
+		try
+		{
+			//	get state to execute
+			const UpdateFuncName = StateMap[this.CurrentState];
+			const UpdateFunc = (typeof UpdateFuncName == 'function') ? UpdateFuncName : Pop.Global[UpdateFuncName];
+			const FirstUpdate = (this.CurrentStateStartTime===false);
+			const StateTime = FirstUpdate ? 0 : Now - this.CurrentStateStartTime;
+			this.LastUpdateTime = Pop.GetTimeNowMs();
+			
+			//	do update
+			NextState = UpdateFunc( FirstUpdate, ElapsedMs / 1000, StateTime / 1000 );
+			
+			if ( FirstUpdate )
+				this.CurrentStateStartTime = Now;
+			
+			//	change state
+			if ( typeof NextState == 'string' )
+			{
+				this.CurrentState = NextState;
+				this.CurrentStateStartTime = false;
+			}
+		}
+		catch(e)
+		{
+			Pop.Debug("State Machine Update error in " + this.CurrentState + ": "+ e);
+			this.CurrentState = ErrorState;
+			this.CurrentStateTime = false;
+		}
+	}
 	
 	this.LoopAsync = async function()
 	{
-		let LastUpdateTime = Pop.GetTimeNowMs();
 		while ( true )
 		{
 			await Pop.Yield( 1000/60 );
-			const Now = Pop.GetTimeNowMs();
-			const ElapsedMs = Now - LastUpdateTime;
-			let NextState = null;
-			try
-			{
-				//	get state to execute
-				const UpdateFuncName = StateMap[this.CurrentState];
-				const UpdateFunc = (typeof UpdateFuncName == 'function') ? UpdateFuncName : Pop.Global[UpdateFuncName];
-				const FirstUpdate = (this.CurrentStateStartTime===false);
-				const StateTime = FirstUpdate ? 0 : Now - this.CurrentStateStartTime;
-				LastUpdateTime = Pop.GetTimeNowMs();
-				
-				//	do update
-				NextState = UpdateFunc( FirstUpdate, ElapsedMs / 1000, StateTime / 1000 );
-				
-				if ( FirstUpdate )
-					this.CurrentStateStartTime = Now;
-				
-				//	change state
-				if ( typeof NextState == 'string' )
-				{
-					this.CurrentState = NextState;
-					this.CurrentStateStartTime = false;
-				}
-			}
-			catch(e)
-			{
-				Pop.Debug("State Machine Update error in " + this.CurrentState + ": "+ e);
-				this.CurrentState = ErrorState;
-				this.CurrentStateTime = false;
-			}
+			this.LoopIteration();
 		}
+	}
+	
+	this.LoopAnimation = function()
+	{
+		let Update = function()
+		{
+			this.LoopIteration();
+			window.requestAnimationFrame( Update );
+		}.bind(this)
+		window.requestAnimationFrame( Update );
 	}
 	
 	this.OnStateMachineFinished = function()
@@ -80,8 +95,15 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 	}
 
 	//	async or via animation...
-	//window.requestAnimationFrame( Render.bind(this) );
-	this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
+	const AysncUpdate = Pop.GetExeArguments().includes('AysncUpdate');
+	if ( AysncUpdate )
+	{
+		this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
+	}
+	else
+	{
+		this.LoopAnimation();
+	}
 }
 
 //	use a string if function not yet declared
