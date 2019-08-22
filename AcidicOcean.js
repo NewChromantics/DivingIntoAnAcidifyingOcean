@@ -55,6 +55,15 @@ function GetAutoTriangleIndexes(IndexCount)
 
 }
 
+
+//	seperate func so it can be profiled
+function LoadAssetJson(Filename)
+{
+	const Contents = Pop.LoadFileAsString( Filename );
+	const Asset = JSON.parse( Contents );
+	return Asset;
+}
+
 //	returns a "mesh asset"
 function ParseGeometryFromFile(Filename,VertexSkip)
 {
@@ -67,9 +76,7 @@ function ParseGeometryFromFile(Filename,VertexSkip)
 	
 	if ( Filename.endsWith(MeshAssetFileExtension) )
 	{
-		const Contents = Pop.LoadFileAsString( Filename );
-		const Asset = JSON.parse( Contents );
-		return Asset;
+		return LoadAssetJson( Filename );
 	}
 	
 	Pop.Debug("Loading " + Filename);
@@ -236,6 +243,7 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 	//	get bounds
 	if ( WorldPositions )
 	{
+		/*
 		let Min = WorldPositions[0];
 		let Max = WorldPositions[0];
 		let Update = function(xyz)
@@ -245,6 +253,7 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 		}
 		WorldPositions.forEach( Update );
 		Pop.Debug( Filename + " bounds == ", Min, Max );
+		*/
 	}
 	
 	if ( WorldPositionImage )
@@ -258,8 +267,14 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 			WorldPositions = NewPositions;
 		}
 		
-		let Unrolled = [];
-		WorldPositions.forEach( xyz => {	Unrolled.push(xyz[0]);	Unrolled.push(xyz[1]);	Unrolled.push(xyz[2]);}	);
+		let Unrolled = new Float32Array( 3 * WorldPositions.length );
+		let PushUnrolled = function(xyz,i)
+		{
+			Unrolled[(i*3)+0] = xyz[0];
+			Unrolled[(i*3)+1] = xyz[1];
+			Unrolled[(i*3)+2] = xyz[2];
+		}
+		WorldPositions.forEach(PushUnrolled);
 		WorldPositions = Unrolled;
 		
 		//let WorldPosTime = Pop.GetTimeNowMs();
