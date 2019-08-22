@@ -37,7 +37,7 @@
 	<div id="Hud">
 		<div id="AudioMusic">Music: <span id="AudioMusicLabel">Track</span></div>
 		<div id="AudioVoice">Voice: <span id="AudioVoiceLabel">Voice</span></div>
-		<div id="Subtitle"><span id="SubtitleLabel">Subtitles</span></div>
+		<div ><span id="SubtitleLabel">Subtitles</span></div>
 
 		<div id="Timeline"><input type=range id="YearSlider" /></div>
 		<div id="Year">Year: <span id="YearLabel">000</span></div>
@@ -75,69 +75,71 @@
 		
 		async function Bootup()
 		{
+			const HideHud = function(Name)
+			{
+				const Element = document.getElementById(Name);
+				Element.style.visibility = 'hidden';
+			}
+			const HiddenElements =
+			[
+			 'AudioMusic',
+			 'AudioVoice',
+			 'SubtitleLabel',
+			 'YearSlider',
+			 'Timeline',
+			 'Year',
+			 'Stats',
+			 'Hint_Start',
+			 'Hint_Headphones',
+			 'IconHeadphones',
+			 'Hint_TapAnimal',
+			 'Hint_ClickAnimal',
+			 'Hint_DragTimeline_Mobile',
+			 'Hint_DragTimeline_Desktop',
+			 'Hint_TouchToInteract',
+			 'AnimalCard'
+			];
+			HiddenElements.forEach( HideHud );
+			
 			const AsyncAssetLoads = Pop.GetExeArguments().includes('AsyncAssets');
 			
-			//	preload some assets that we don't load asynchronously
-			let AssetPromises = [];
-			let Load = async function(Filename)
+			
+			const PreloadAssets =
+			[
+				'bootup.js',
+				'Logo.js',
+			 
+			 	'Hud.js',
+				'PopEngineCommon/PopShaderCache.js',
+				'PopEngineCommon/PopFrameCounter.js',
+				'PopEngineCommon/PopMath.js',
+				'PopEngineCommon/ParamsWindow.js'
+			];
+			
+			//	queue up dependencies for bootup
+			if ( AsyncAssetLoads )
 			{
-				//	can either await each one, or accumulate
-				if ( AsyncAssetLoads )
+				//	trigger all then wait for them all to finish
+				const AssetPromises = [];
+				const Load = function(Filename)
 				{
-					let Promise = Pop.AsyncCacheAssetAsString(Filename);
+					const Promise = Pop.AsyncCacheAssetAsString(Filename);
 					AssetPromises.push( Promise );
 				}
-				else
+				PreloadAssets.forEach( Load );
+				await Promise.all( AssetPromises );
+			}
+			else
+			{
+				//	await one by one
+				for ( let i=0;	i<PreloadAssets.length;	i++ )
 				{
+					const Filename = PreloadAssets[i];
 					await Pop.AsyncCacheAssetAsString(Filename);
 				}
 			}
 			
-			//	gr: ideally, if we're async loading all these, we don't await each one...
-			//		make it a big array!
-			await Load('Timeline.json');
-			await Load('CameraSpline.dae.json');
-			
-			for ( let i=1;	i<=4;	i++ )
-			{
-				//Load('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
-			}
-			
-			let LoadOceanFrames = 96;
-			if ( Pop.GetExeArguments().includes('ShortOcean') )
-				LoadOceanFrames = 4;
-			for ( let i=1;	i<=LoadOceanFrames;	i++ )
-			{
-				await Load('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply.mesh.json');
-			}
-			
-			await Load('Shell/shellFromBlender.obj');
-			await Load('Quad.vert.glsl');
-			await Load('ParticleTriangles.vert.glsl');
-			await Load('ParticleColour.frag.glsl');
-			await Load('BlitCopy.frag.glsl');
-			await Load('Geo.vert.glsl');
-			await Load('Colour.frag.glsl');
-			await Load('Edge.frag.glsl');
-			await Load('PhysicsIteration_UpdateVelocity.frag.glsl');
-			await Load('PhysicsIteration_UpdatePosition.frag.glsl');
-
-			await Load('AssetManager.js');
-			await Load('AudioManager.js');
-			await Load('Hud.js');
-			await Load('PopEngineCommon/PopShaderCache.js');
-			await Load('PopEngineCommon/PopFrameCounter.js');
-			await Load('PopEngineCommon/PopCamera.js');
-			await Load('PopEngineCommon/PopMath.js');
-			await Load('PopEngineCommon/ParamsWindow.js');
-			await Load('PopEngineCommon/PopPly.js');
-			await Load('PopEngineCommon/PopObj.js');
-			await Load('PopEngineCommon/PopCollada.js');
-			await Load('PopEngineCommon/PopTexture.js');
-			await Load('Noise0.png');
-
-			console.log("AssetPromises:",AssetPromises);
-			await Promise.all( AssetPromises );
+			//	these need to finish for bootup
 			let Source = await Pop.LoadFileAsStringAsync('bootup.js');
 			Pop.CompileAndRun( Source, 'bootup.js' );
 		}
