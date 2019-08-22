@@ -1,6 +1,7 @@
 #Hud
 {
 	font-size:	3vmin;
+	color: #ffffff;
 }
 
 #TitleText
@@ -12,9 +13,9 @@
 	top:		1vw;
 	xbackground-color:	red;
 	width:		80vw;
-	height:		90vh;
-	font-size:	20vmin;
-	line-height:	18vh;
+	height:		80vh;
+	font-size:	30vmin;
+	line-height:	24vh;
 
 	text-align:	center;
 	
@@ -25,7 +26,7 @@
 
 #Subtitle
 {
-	background-color:	red;
+	background-color:	rgba(255, 0, 0, 0.34);
 
 	position:		absolute;
 	left:			10vw;
@@ -62,7 +63,7 @@
 	display:	block;
 	position:	absolute;
 	left:		10vw;
-	top:		30.35vh;
+	top:		29.35vh;
 	width:		80vw;
 	height:		90vh;
 	font-size:	3vh;
@@ -76,14 +77,13 @@
 
 #Hint_Headphones
 {
-display:	block;
-	position:	absolute;
-	left:		10vw;
-	top:		1vw;
-	width:		80vw;
-	height:		90vh;
-	font-size:	2vh;
-
+	display: block;
+	position: absolute;
+	left: 10vw;
+	top: 80vh;
+	width: 80vw;
+	height:	5vh;
+	font-size: 2vh;
 	text-align:	center;
 	
 	display:			flex;
@@ -126,7 +126,7 @@ display:	block;
 {
 	display:	block;
 	position:	absolute;
-	right:		5vw;
+	right:		13vw;
 	top:		1vw;
 	width:		40vw;
 	height:		90vh;
@@ -168,32 +168,54 @@ display:	block;
 	display:	flex;
 	position:	absolute;
 	/* crtq: don't think this is in the middle in every screen */
-	left:		7.35vw;
+	left:		10vw;
 	xxbottom:		5vh;
 	top:		88vh;
-	width:		85vw;
-	height:		5vh;
+	width:		80vw;
+	height:		3vh;
 
 	/* layout with flexbox https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 
-	flex-wrap:		nowrap;
+	flex-wrap:	wrap;
 	justify-content:	center;
 	align-items:	stretch;
 	overflow:		hidden;
 	
 }
 
-#YearStart, #YearEnd
+#YearStart
 {
-	display:	block;
-	flex-grow:	0;
-	top: 2vh;
-	width:		4vw;
-	text-align:			center;
-	background-color:	rgba(0, 0, 0, 0.05);
+	display: block;
+	position: absolute;
+	flex-grow: 0;
+	left: 8vw;
+	top: 91vh;
+	width: 4vw;
+	text-align:	center;
+	background-color: rgba(0, 0, 0, 0.15);
+	font-size:	2vmin;
 	
 	/*	gr: not working */
 	vertical-align:	middle;
+	xheight: 9vh;	/* need height to vertically align */
+
+}
+
+#YearEnd
+{
+	display: block;
+	position: absolute;
+	flex-grow: 0;
+	right: 7.6vw;
+	top: 91vh;
+	width: 4vw;
+	text-align:	center;
+	background-color: rgba(0, 0, 0, 0.15);
+	font-size:	2vmin;
+	
+	/*	gr: not working */
+	vertical-align:	middle;
+	xheight: 9vh;	/* need height to vertically align */
 
 }
 
