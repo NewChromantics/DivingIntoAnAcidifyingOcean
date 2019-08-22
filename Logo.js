@@ -122,6 +122,24 @@ function Update_Experience(FirstUpdate)
 			let Div = new Pop.Hud.Label(Name);
 			Div.SetVisible(true);
 		}
-		ShowHud('SubtitleLabel');
+		const ShowElements =
+		[
+		 'AudioMusic',
+		 'AudioVoice',
+		 'SubtitleLabel',
+		 'YearSlider',
+		 'Timeline',
+		 'Year',
+		 'Stats',
+		// 'Hint_Headphones',
+		 'IconHeadphones',
+		 'Hint_TapAnimal',
+		 'Hint_ClickAnimal',
+		 'Hint_DragTimeline_Mobile',
+		 'Hint_DragTimeline_Desktop',
+		 'Hint_TouchToInteract',
+		 'AnimalCard'
+		 ];
+		ShowElements.forEach( ShowHud );
 	}
 }
