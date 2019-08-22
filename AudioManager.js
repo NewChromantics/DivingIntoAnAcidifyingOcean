@@ -58,14 +58,10 @@ Pop.Audio.Sound = function(Filename,Loop=false,AutoPlay=true)
 		const OnLoaded = function(Event)
 		{
 			Pop.Debug("Audio on loaded",Event,"Volume is " + this.AudioPlayer.volume, this.AudioPlayer );
+			//	gr: this will be initially paused if user has to interact with webpage first
 			if ( this.AudioPlayer.paused )
-			{
 				Pop.Debug("Audio has loaded, initially paused",this);
-				//if ( AutoPlay )
-				//	this.AudioPlayer.play();
-			}
-		}
-		
+		}		
 		const OnError = function(Error)
 		{
 			Pop.Debug("On error: ",Error);
