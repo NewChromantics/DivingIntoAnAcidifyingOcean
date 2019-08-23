@@ -62,6 +62,8 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 			Pop.Debug("State Machine Update error in " + this.CurrentState + ": "+ e);
 			this.CurrentState = ErrorState;
 			this.CurrentStateTime = false;
+			//	re throw errors for now
+			throw e;
 		}
 	}
 	
