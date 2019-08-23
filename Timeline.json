@@ -1,74 +1,54 @@
 {
-	"1400":
+	"1820":
 	{
 		"Subtitle":"",
 		"VoiceAudio":""
 	},
 
-	"1401":
+	"1821":
 	{
-		"Subtitle":"Every second breath we take comes from the ocean...",
+		"Subtitle":"Every second breath we take...",
 		"VoiceAudio":"Audio/Voice_EverySecondBreath.mp3"
 	},
-	"1450":
+	"1824":
 	{
-		"Subtitle":"",
+		"Subtitle":"… comes from the ocean",
 		"VoiceAudio":""
 	},
 	
-	"1501":
+	"1827":
 	{
-		"Subtitle":"But this won't last much longer...",
+		"Subtitle":"But as had previously befallen,",
 		"VoiceAudio":"Audio/Voice_ButThisWontLast.mp3"
 	},
-	"1550":
+	"1830":
 	{
-		"Subtitle":"",
+		"Subtitle":"we’re killing over 96% of ocean life.",
 		"VoiceAudio":""
 	},
-	
 
-	"1601":
+	
+	"1840":
 	{
-		"Subtitle":"As we are killing 96% of the ocean's life.",
-		"VoiceAudio":"Audio/Voice_WeAreKilling.mp3"
-	},
-	"1650":
-	{
-		"Subtitle":"",
+		"Subtitle":"In a single lifetime…",
 		"VoiceAudio":""
 	},
 	
-	"1701":
+	"1843":
 	{
-		"Subtitle":"In one single lifetime we are acidifying the oceans and depleting their oxygen.",
+		"Subtitle":"we are acidifying the oceans faster than ever before",
 		"VoiceAudio":"Audio/Voice_InOneSinglelifetime.mp3"
-	},
-	"1750":
-	{
-		"Subtitle":"",
-		"VoiceAudio":""
-	},
-	
-	
-	"1801":
-	{
-		"Subtitle":"If we continue with this rhythm, what will inevitably happen to them... and us?",
-		"VoiceAudio":"Audio/Voice_IfWeContinue.mp3"
 	},
 	"1850":
 	{
-		"Subtitle":"",
+		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms at an incredible rate.",
 		"VoiceAudio":""
 	},
 	
-	
-
-	
-	
-	
 	"1860":
 	{
+		"Subtitle":"If we fail to act, what will happen to them…",
+		"VoiceAudio":"",
 		"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":30,
@@ -76,6 +56,14 @@
 		"Stats_Oxygen":50,
 		"Stats_Ph":60
 	},
+	
+	
+	"1864":
+	{
+		"Subtitle":"… and to us?",
+		"VoiceAudio":"Audio/Voice_IfWeContinue.mp3"
+	},
+	
 	"1900":
 	{
 		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3"
