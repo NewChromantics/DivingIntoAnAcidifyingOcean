@@ -19,4 +19,16 @@ Pop.Hud.Label = function()
 //	reference to a slider
 Pop.Hud.Slider = Pop.Gui.Slider;
 
+//	reference to a button
+Pop.Hud.Button = function()
+{
+	Pop.Gui.Button.apply( this, arguments );
+	
+	this.SetVisible = function(Visible)
+	{
+		//	initial overwrites css, we want to switch back to css :/
+		//this.Element.style.display = Visible ? 'initial' : 'none';
+		this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+	}
+}
 

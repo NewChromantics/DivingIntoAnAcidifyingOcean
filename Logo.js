@@ -61,6 +61,8 @@ const PreloadPromises =
 [
 ];
 let PreloadPromisesFinished = false;
+let StartButton = null;
+let StartButtonPressed = false;
 
 function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 {
@@ -85,8 +87,16 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	//	show button when preloads done
 	if ( PreloadPromisesFinished )
 	{
-		let StartButton = new Pop.Hud.Label('Hint_Start');
-		StartButton.SetVisible(true);
+		if ( !StartButton )
+		{
+			let OnClicked = function()
+			{
+				StartButtonPressed = true;
+			}
+			StartButton = new Pop.Hud.Button('Hint_Start');
+			StartButton.OnClicked = OnClicked;
+			StartButton.SetVisible(true);
+		}
 	}
 	
 	//	wait minimum of X secs
@@ -103,6 +113,10 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 		Pop.Debug("Waiting for preloads...");
 		return;
 	}
+	
+	//	wait for button to be pressed
+	if ( !StartButtonPressed )
+		return;
 	
 	HideLogo();
 	return 'Experience';
