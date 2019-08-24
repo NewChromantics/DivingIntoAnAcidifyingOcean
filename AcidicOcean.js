@@ -1565,7 +1565,8 @@ const Timeline = LoadTimeline('Timeline.json');
 
 
 
-const Window = new Pop.Opengl.Window("Tarqunder the sea");
+//	now in bootup
+//const Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = Render;
 
 Window.OnMouseDown = function(x,y,Button)

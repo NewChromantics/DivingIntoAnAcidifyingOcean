@@ -69,6 +69,8 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	//	setup preloads
 	if ( FirstUpdate )
 	{
+		LoadLogoScene();
+		
 		const Load = function(Filename)
 		{
 			if ( !Filename )
@@ -156,4 +158,15 @@ function Update_Experience(FirstUpdate)
 		 ];
 		ShowElements.forEach( ShowHud );
 	}
+}
+
+function LogoRender(RenderTarget)
+{
+	RenderTarget.ClearColour(0,1,0);
+}
+
+function LoadLogoScene()
+{
+	Window.OnRender = LogoRender;
+
 }

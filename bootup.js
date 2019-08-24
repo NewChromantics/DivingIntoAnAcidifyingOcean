@@ -116,3 +116,11 @@ let StateMap =
 };
 
 let StateMachine = new Pop.StateMachine( StateMap );
+
+function BootupRender(RenderTarget)
+{
+	RenderTarget.ClearColour(0,0,1);
+}
+
+const Window = new Pop.Opengl.Window("Tarqunder the sea");
+Window.OnRender = BootupRender;
