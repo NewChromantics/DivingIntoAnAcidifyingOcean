@@ -3,7 +3,21 @@ Pop.Include = function(Filename)
 	let Source = Pop.LoadFileAsString(Filename);
 	return Pop.CompileAndRun( Source, Filename );
 }
+/*
+Pop.Include('PopEngineCommon/PopCinema4d.js');
 
+const OnActor = function(Actor)
+{
+	Pop.Debug(Actor);
+}
+const OnSpline = function(Actor)
+{
+	Pop.Debug(Actor);
+}
+const Contents = Pop.LoadFileAsString('CameraSpline.c4d.xml.json');
+Pop.Cinema4d.Parse(Contents,OnActor,OnSpline);
+
+*/
 //Pop.Include('PopEngineCommon/PopShaderCache.js');
 //Pop.Include('PopEngineCommon/PopMath.js');
 //Pop.Include('PopEngineCommon/PopPly.js');
@@ -122,5 +136,10 @@ function BootupRender(RenderTarget)
 	RenderTarget.ClearColour(0,0,1);
 }
 
+//	window now shared from bootup
 const Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = BootupRender;
+
+const Params = {};
+Params.EnablePhysicsIteration = true;
+

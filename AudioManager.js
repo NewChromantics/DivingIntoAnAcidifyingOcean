@@ -5,13 +5,9 @@ Pop.Audio = {};
 //	fake audio stub
 let AudioFake = function()
 {
-	this.addEventListener = function()
-	{
-	}
-	this.play = function()
-	{
-	}
-	
+	this.addEventListener = function(){}
+	this.play = function(){}
+	this.pause = function(){};
 }
 
 //	make these params an object?
