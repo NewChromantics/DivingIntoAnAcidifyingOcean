@@ -2,6 +2,18 @@
 //	this needs to evolve into the proper pop API
 Pop.Audio = {};
 
+//	fake audio stub
+let AudioFake = function()
+{
+	this.addEventListener = function()
+	{
+	}
+	this.play = function()
+	{
+	}
+	
+}
+
 //	make these params an object?
 //	note: this is a player, not an asset
 Pop.Audio.Sound = function(Filename,Loop=false,AutoPlay=true)
@@ -50,7 +62,8 @@ Pop.Audio.Sound = function(Filename,Loop=false,AutoPlay=true)
 	
 	this.Create = function()
 	{
-		this.AudioPlayer = new Audio(Filename);
+		//this.AudioPlayer = new Audio(Filename);
+		this.AudioPlayer = new AudioFake();
 		this.AudioPlayer.loop = Loop;
 		this.AudioPlayer.autoplay = true;
 		
