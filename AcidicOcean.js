@@ -3,6 +3,7 @@ Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
 Pop.Include('PopEngineCommon/PopCollada.js');
+Pop.Include('PopEngineCommon/PopCinema4d.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
@@ -1158,8 +1159,6 @@ function LoadCameraSpline(Positions)
 
 function LoadCameraScene(Filename)
 {
-	const FileContents = Pop.LoadFileAsString(Filename);
-	
 	let Scene = [];
 	
 	let OnSpline = function(SplineNode)
@@ -1214,7 +1213,19 @@ function LoadCameraScene(Filename)
 		Scene.push( Actor );
 	}
 	
-	Pop.Collada.Parse( FileContents, OnActor, OnSpline );
+	if ( !Array.isArray(Filename) )
+		Filename = [Filename];
+	
+	//	load each one
+	let Load = function(Filename)
+	{
+		const FileContents = Pop.LoadFileAsString(Filename);
+		if ( Filename.endsWith('.c4d.xml.json') )
+			Pop.Cinema4d.Parse( FileContents, OnActor, OnSpline );
+		else
+			Pop.Collada.Parse( FileContents, OnActor, OnSpline );
+	}
+	Filename.forEach ( Load );
 	
 	return Scene;
 }
@@ -1546,7 +1557,9 @@ function SwitchToDebugCamera()
 }
 
 
+//CameraSpline.c4d.xml.json
 const CameraScene = LoadCameraScene('CameraSpline.dae.json');
+//const CameraScene = LoadCameraScene(['CameraSpline.c4d.xml.json','CameraSpline.dae.json']);
 
 const Timeline = LoadTimeline('Timeline.json');
 
