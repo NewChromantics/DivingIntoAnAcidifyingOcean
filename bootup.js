@@ -4,6 +4,14 @@ Pop.Include = function(Filename)
 	return Pop.CompileAndRun( Source, Filename );
 }
 
+//	auto setup global
+function SetGlobal()
+{
+	Pop.Global = this;
+	Pop.Debug(Pop.Global);
+}
+SetGlobal.call(this);
+
 //	testing anim
 /*
 Pop.Include('PopEngineCommon/PopCollada.js');
@@ -94,12 +102,14 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 	
 	this.LoopAnimation = function()
 	{
+		if ( !Pop.Global.requestAnimationFrame )
+			throw "requestAnimationFrame not supported";
 		let Update = function()
 		{
 			this.LoopIteration();
-			window.requestAnimationFrame( Update );
-		}.bind(this)
-		window.requestAnimationFrame( Update );
+			Pop.Global.requestAnimationFrame( Update );
+		}.bind(this);
+		Pop.Global.requestAnimationFrame( Update );
 	}
 	
 	this.OnStateMachineFinished = function()
@@ -113,7 +123,10 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 	}
 
 	//	async or via animation...
-	const AysncUpdate = Pop.GetExeArguments().includes('AysncUpdate');
+	let AysncUpdate = Pop.GetExeArguments().includes('AysncUpdate');
+	if ( !Pop.Global.requestAnimationFrame )
+		AysncUpdate = true;
+	
 	if ( AysncUpdate )
 	{
 		this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );

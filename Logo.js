@@ -137,6 +137,12 @@ function TLogoState()
 	{
 		if ( !Filename )
 			return;
+		
+		//	no need to cache (desktop)
+		//	support this maybe?
+		if ( !Pop.AsyncCacheAssetAsString )
+			return;
+		
 		const Promise = Pop.AsyncCacheAssetAsString(Filename);
 		this.PreloadPromises.push( Promise );
 	}
@@ -328,14 +334,15 @@ function LogoRender(RenderTarget)
 	let RenderSdf = function(RenderTarget)
 	{
 		RenderTarget.ClearColour(0,0,0);
-		RenderTarget.SetBlendModeMax();
+		if ( RenderTarget.SetBlendModeMax )
+			RenderTarget.SetBlendModeMax();
 		RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time, Viewport );
 	}
 	if ( !LogoState.LogoSdf )
 	{
 		const SdfSize = 1024;
 		LogoState.LogoSdf = new Pop.Image( [SdfSize,SdfSize] );
-		LogoState.LogoSdf.SetLinear(true);
+		LogoState.LogoSdf.SetLinearFilter(true);
 	}
 	RenderTarget.RenderToRenderTarget( LogoState.LogoSdf, RenderSdf );
 
