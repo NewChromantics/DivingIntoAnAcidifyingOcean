@@ -15,6 +15,7 @@ uniform float Damping;
 uniform float2 PushPositions[PushPositionCount];
 uniform float PushRadius;
 uniform float PushForce;
+uniform float PushForceMax;
 
 /*
  float3 fade(float3 t)
@@ -144,17 +145,23 @@ float3 GetPushForce(float2 uv)
 	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
 	vec3 Force = float3(0,0,0);
 	
-	for ( int p=0;	p<PushPositionCount;	p++ )
+	for ( int p=1;	p<PushPositionCount;	p++ )
 	{
-		vec3 Delta = LastPos - GetPushPos(PushPositions[p]);
-		float DeltaForce = length( Delta );
-		if ( DeltaForce > PushRadius )
+		float Distance = length(LastPos - GetPushPos(PushPositions[p]));
+		if ( Distance > PushRadius )
 			continue;
 		
-		DeltaForce /= PushRadius;
-		DeltaForce = 1.0 - DeltaForce;
-		DeltaForce *= PushForce;
-		Force += normalize(Delta) * PushForce;
+		float DistanceForce = 1.0 - (Distance / PushRadius);
+		
+		//	make delta the direction the mouse is moving
+		//	need to reduce this amount based on age of movement (mouse doesnt update every frame!)
+		vec3 Delta = GetPushPos(PushPositions[p]) - GetPushPos(PushPositions[p-1]);
+		if ( length(Delta) <= 0.001 )
+			continue;
+		Delta *= DistanceForce * PushForce;
+		float DeltaScale = length( Delta );
+		DeltaScale = min( DeltaScale, PushForceMax );
+		Force += normalize(Delta) * DeltaScale;
 	}
 	return Force;
 }

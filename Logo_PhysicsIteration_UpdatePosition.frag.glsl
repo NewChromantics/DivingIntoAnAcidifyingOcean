@@ -18,9 +18,12 @@ void main()
 	//	2d!
 	Pos.z = 0.0;
 	
+	//	init for testing
 	if ( Time < 0.0 )
-		Pos = float4(0,0,0,1);
-
+	{
+		//Pos = float4(0,0,0,1);
+	}
+	
 	gl_FragColor = Pos;
 }
 

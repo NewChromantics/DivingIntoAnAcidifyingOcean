@@ -27,12 +27,12 @@ function TLogoState()
 {
 	this.Time = false;
 	this.PushPositions = [[0,0]];
-	this.PushPositionsMax = 4;
+	this.PushPositionCount = 4;
 	
 	this.OnMouseMove = function(u,v)
 	{
 		this.PushPositions.push( [u,v] );
-		this.PushPositions = this.PushPositions.slice(-this.PushPositionsMax);
+		this.PushPositions = this.PushPositions.slice(-this.PushPositionCount);
 	}
 	
 	this.OnParamsChanged = function(AllParams,ChangedParam)
@@ -50,14 +50,16 @@ function TLogoState()
 	this.Params.LocalScale = 0.11;
 	this.Params.WorldScale = 1.0;
 	this.Params.PushRadius = 0.24;
-	this.Params.PushForce = 0.80;
+	this.Params.PushForce = 35.00;
+	this.Params.PushForceMax = 5.00;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
 	this.LogoParamsWindow.AddParam('SpringForce',0,10);
 	this.LogoParamsWindow.AddParam('Damping',0,1);
 	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
-	this.LogoParamsWindow.AddParam('PushForce',0,10);
+	this.LogoParamsWindow.AddParam('PushForce',0,50);
+	this.LogoParamsWindow.AddParam('PushForceMax',0,50);
 	this.LogoParamsWindow.AddParam('PushRadius',0,0.5);
 	this.LogoParamsWindow.AddParam('LocalScale',0,2);
 	this.LogoParamsWindow.AddParam('WorldScale',0,2);
@@ -189,7 +191,7 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	//	wait for preloads
 	if ( !LogoState.PreloadPromisesFinished )
 	{
-		Pop.Debug("Waiting for preloads...");
+		//Pop.Debug("Waiting for preloads...");
 		return;
 	}
 	
@@ -301,6 +303,7 @@ function LogoRender(RenderTarget)
 		Shader.SetUniform('PushRadius', Params.PushRadius );
 		Shader.SetUniform('PushPositions', LogoState.PushPositions );
 		Shader.SetUniform('PushForce', Params.PushForce );
+		Shader.SetUniform('PushForceMax', Params.PushForceMax );
 	}
 	LogoState.LogoActor.PhysicsIteration( DurationSecs, LogoState.Time, RenderTarget, UpdatePhysicsUniforms );
 	if ( LogoState.Params.EnablePhysicsIteration )
@@ -312,7 +315,7 @@ function LogoRender(RenderTarget)
 		Shader.SetUniform('WorldScale',LogoState.Params.WorldScale);
 	}
 	
-	RenderTarget.ClearColour(0,1,0);
+	RenderTarget.ClearColour(0,0,0);
 	RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time );
 	//Pop.Debug("Render logo");
 }
