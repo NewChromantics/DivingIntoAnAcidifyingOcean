@@ -355,7 +355,7 @@ Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
-Params.OceanAnimationFrameRate = 20;
+Params.OceanAnimationFrameRate = 60;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -463,42 +463,6 @@ function LoadCameraSpline(Positions)
 	const Keyframes = [];
 	const CameraPositionUniform = 'CameraPosition';
 
-	Pop.Debug("LoadCameraSpline",Positions);
-	/*
-	//	spline points are line strips from cinema 4D, which are more dense on curves.
-	//	we need a linear spline
-	const RunningDistances = [];
-	RunningDistances[0] = 0;
-	for ( let i=1;	i<Positions.length;	i++ )
-	{
-		const Prev = Positions[i-1];
-		const Next = Positions[i];
-		const Distance = Math.Distance3( Prev, Next );
-		const LastDistance = RunningDistances[i-1];
-		RunningDistances[i] = LastDistance + Distance;
-	}
-	const TotalDistance = RunningDistances[RunningDistances.length-1];
-	
-	const NormaliseSpline = !Pop.GetExeArguments().includes('RawCameraSpline');
-	const DistanceToYear = function(Distance,PositionIndex)
-	{
-		const DistanceNormalised = Distance / TotalDistance;
-		const IndexNormalised = PositionIndex / (Positions.length-1);
-		const Time = NormaliseSpline ? DistanceNormalised : IndexNormalised;
-		const Year = Math.Lerp( TimelineMinYear, TimelineMaxYear, Time );
-		return Year;
-	}
-	
-	//	now each pos can have a normalised time
-	for ( let i=0;	i<Positions.length;	i++ )
-	{
-		const Year = DistanceToYear( RunningDistances[i], i );
-		const Uniforms = [];
-		Uniforms[CameraPositionUniform] = Positions[i];
-		const Keyframe = new TKeyframe( Year, Uniforms );
-		Keyframes.push( Keyframe );
-	}
-	*/
 	const Times = Object.keys(Positions);
 	const PushKeyframe = function(Time)
 	{
@@ -560,7 +524,7 @@ function LoadCameraScene(Filename)
 			return;
 		}
 		
-		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
+		//Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
