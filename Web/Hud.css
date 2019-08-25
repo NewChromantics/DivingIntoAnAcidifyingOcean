@@ -110,14 +110,7 @@
 	justify-content:	center;
 }
 
-.svg_icon
-{
-	display: block;
-	width:1vw;
-	height:	1vh;
-	overflow: hidden;
-	justify-content:	flex-start;
-}
+
 
 #IconHeadphones
 {
@@ -136,7 +129,6 @@
 	left: 1vw;
 	top: 3vh;
 	width:1vw;
-	height:	1vh;
 }
 
 /* This is for Mobile */
@@ -146,18 +138,19 @@
 	position:	absolute;
 	left:		45vw;
 	top:		45vh;
-	width:		10vw;
+	width:		9.3vw;
 	height:		4vh;
 	font-size:	2vh;
-	background-color:	rgba(0, 0, 0, 0.65);
-
-	display:			flex;
-	align-items:		center;
 	justify-content:	flex-end;
-	padding: 30px;
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/Mobile_Animal.svg) no-repeat 8% 50%;
+	background-size: 3vh;
+
+	display: flex;
+	align-items: center;
+
+	padding: 32px;
 	flex-wrap: wrap;
 	-webkit-flex-flow: row wrap;
-  	justify-content: space-around;
 
   	border-radius: 25px;
 
@@ -169,18 +162,19 @@
 	position:	absolute;
 	left:		45vw;
 	top:		45vh;
-	width:		10vw;
+	width:		9.3vw;
 	height:		4vh;
 	font-size:	2vh;
-	background-color:	rgba(0, 0, 0, 0.65);
-
-	display:			flex;
-	align-items:		center;
 	justify-content:	flex-end;
-	padding: 30px;
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/Desktop_Animal.svg) no-repeat 8% 50%;
+	background-size: 3.8vh;
+
+	display: flex;
+	align-items: center;
+
+	padding: 32px;
 	flex-wrap: wrap;
 	-webkit-flex-flow: row wrap;
-  	justify-content: space-around;
 
   	border-radius: 25px;
 }
@@ -190,18 +184,19 @@
 	position:	absolute;
 	left:		45vw;
 	top:		45vh;
-	width:		10vw;
+	width:		9vw;
 	height:		4vh;
 	font-size:	2vh;
-	background-color:	rgba(0, 0, 0, 0.65);
-
-	display:			flex;
-	align-items:		center;
 	justify-content:	flex-end;
-	padding: 30px;
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/Mobile_Timeline.svg) no-repeat 8% 50%;
+	background-size: 3.8vh;
+
+	display: flex;
+	align-items: center;
+
+	padding: 32px;
 	flex-wrap: wrap;
 	-webkit-flex-flow: row wrap;
-  	justify-content: space-around;
 
   	border-radius: 25px;
 }
@@ -211,18 +206,19 @@
 	position:	absolute;
 	left:		45vw;
 	top:		45vh;
-	width:		10vw;
+	width:		9.3vw;
 	height:		4vh;
 	font-size:	2vh;
-	background-color:	rgba(0, 0, 0, 0.65);
-
-	display:			flex;
-	align-items:		center;
 	justify-content:	flex-end;
-	padding: 30px;
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/Desktop_Timeline.svg) no-repeat 8% 50%;
+	background-size: 5vh;
+
+	display: flex;
+	align-items: center;
+
+	padding: 32px;
 	flex-wrap: wrap;
 	-webkit-flex-flow: row wrap;
-  	justify-content: space-around;
 
   	border-radius: 25px;
 }
@@ -232,18 +228,19 @@
 	position:	absolute;
 	left:		46vw;
 	top:		45vh;
-	width:		7vw;
+	width:		6.5vw;
 	height:		4vh;
 	font-size:	2vh;
-	background-color:	rgba(0, 0, 0, 0.65);
-
-	display:			flex;
-	align-items:		center;
 	justify-content:	flex-end;
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/Mobile_Swirls.svg) no-repeat 10% 50%;
+	background-size: 6vh;
+
+	display: flex;
+	align-items: center;
+
 	padding: 30px;
 	flex-wrap: wrap;
 	-webkit-flex-flow: row wrap;
-  	justify-content: space-around;
 
   	border-radius: 25px;
 }
@@ -251,18 +248,20 @@
 {
 	display:	block;
 	position:	absolute;
-	right:		13vw;
-	top:		12vw;
-	width:		20vw;
-	height:		30vh;
-	font-size:	3vh;
+	left:		13vw;
+	top:		10vw;
+	width:		14vw;
+	height:		20vh;
+	font-size:	2vh;
 
-	text-align:	center;
+	text-align:	left;
 	
 	display:			flex;
-	align-items:		center;
+	flex-direction: column;
+	align-items:		left;
 	justify-content:	center;
 }
+
 
 #Hud #Music
 {
