@@ -7,6 +7,7 @@ const LogoParticleFrag = Pop.LoadFileAsString('LogoParticle.frag.glsl');
 const LogoParticleVert = Pop.LoadFileAsString('LogoParticle.vert.glsl');
 const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
 const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo_PhysicsIteration_UpdatePosition.frag.glsl');
+const LogoSdfFrag = Pop.LoadFileAsString('LogoSdf.frag.glsl');
 
 
 function HideLogo()
@@ -44,10 +45,11 @@ function TLogoState()
 	
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
+	this.Params.SdfMin = 0.854;
 	this.Params.SpringForce = 0.3;
 	this.Params.Damping = 0.22;
 	this.Params.NoiseForce = 0.1;
-	this.Params.LocalScale = 0.11;
+	this.Params.LocalScale = 0.8;
 	this.Params.WorldScale = 1.0;
 	this.Params.PushRadius = 0.24;
 	this.Params.PushForce = 35.00;
@@ -55,6 +57,7 @@ function TLogoState()
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
+	this.LogoParamsWindow.AddParam('SdfMin',0,1);
 	this.LogoParamsWindow.AddParam('SpringForce',0,10);
 	this.LogoParamsWindow.AddParam('Damping',0,1);
 	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
@@ -241,7 +244,7 @@ function Update_Experience(FirstUpdate)
 
 
 //	copy of the main scene version, but this will change
-function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time)
+function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time,Viewport)
 {
 	const Params = LogoState.Params;
 	
@@ -252,7 +255,6 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	const Shader = Pop.GetShader( RenderTarget, LogoParticleFrag, LogoParticleVert );
 	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
 	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
-	const Viewport = RenderTarget.GetScreenRect();
 	
 	let SetUniforms = function(Shader)
 	{
@@ -321,9 +323,35 @@ function LogoRender(RenderTarget)
 		Shader.SetUniform('WorldScale',LogoState.Params.WorldScale);
 	}
 	
-	RenderTarget.ClearColour(0,0,0);
-	RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time );
-	//Pop.Debug("Render logo");
+	const Viewport = RenderTarget.GetRenderTargetRect();
+
+	let RenderSdf = function(RenderTarget)
+	{
+		RenderTarget.ClearColour(0,0,0);
+		RenderTarget.SetBlendModeMax();
+		RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time, Viewport );
+	}
+	if ( !LogoState.LogoSdf )
+	{
+		const SdfSize = 1024;
+		LogoState.LogoSdf = new Pop.Image( [SdfSize,SdfSize] );
+		LogoState.LogoSdf.SetLinear(true);
+	}
+	RenderTarget.RenderToRenderTarget( LogoState.LogoSdf, RenderSdf );
+
+	//	draw sdf on screen
+	{
+		const BlitShader = Pop.GetShader( RenderTarget, LogoSdfFrag, QuadVertShader );
+		RenderTarget.ClearColour(0,1,0);
+		const Quad = GetQuadGeometry(RenderTarget);
+		const SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
+			Shader.SetUniform('Texture',LogoState.LogoSdf);
+			Shader.SetUniform('SdfMin',LogoState.Params.SdfMin);
+		};
+		RenderTarget.DrawGeometry( Quad, BlitShader, SetUniforms );
+	}
 }
 
 function LoadLogoScene()
