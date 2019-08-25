@@ -26,7 +26,7 @@ function HideLogo()
 function TLogoState()
 {
 	this.Time = false;
-	this.PushPositions = [[0,0]];
+	this.PushPositions = [];
 	this.PushPositionCount = 4;
 	
 	this.OnMouseMove = function(u,v)
@@ -304,6 +304,12 @@ function LogoRender(RenderTarget)
 		Shader.SetUniform('PushPositions', LogoState.PushPositions );
 		Shader.SetUniform('PushForce', Params.PushForce );
 		Shader.SetUniform('PushForceMax', Params.PushForceMax );
+
+		//	disable push until we have enough positions
+		if ( LogoState.PushPositions.length < LogoState.PushPositionCount )
+		{
+			Shader.SetUniform('PushForce', 0 );
+		}
 	}
 	LogoState.LogoActor.PhysicsIteration( DurationSecs, LogoState.Time, RenderTarget, UpdatePhysicsUniforms );
 	if ( LogoState.Params.EnablePhysicsIteration )
