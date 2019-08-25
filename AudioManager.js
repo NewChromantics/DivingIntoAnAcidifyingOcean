@@ -8,6 +8,7 @@ let AudioFake = function()
 	this.addEventListener = function(){}
 	this.play = function(){}
 	this.pause = function(){};
+	this.load = function(){};
 }
 
 //	make these params an object?

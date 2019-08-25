@@ -7,7 +7,7 @@ Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 
-Pop.Include('AssetManager.js');
+//Pop.Include('AssetManager.js');
 Pop.Include('AudioManager.js');
 
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
@@ -331,7 +331,7 @@ let Actor_Debris = new TPhysicsActor( DebrisMeta );
 
 
 
-const TimelineMinYear = 1400;
+const TimelineMinYear = 1820;
 const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
@@ -340,7 +340,7 @@ Params.TimelineYear = TimelineMinYear;
 Params.ExperiencePlaying = true;
 Params.ExperienceDurationSecs = 240;
 Params.UseDebugCamera = false;
-Params.DebugCameraPositionCount = 200;
+Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 24.45;
@@ -463,6 +463,8 @@ function LoadCameraSpline(Positions)
 	const Keyframes = [];
 	const CameraPositionUniform = 'CameraPosition';
 
+	Pop.Debug("LoadCameraSpline",Positions);
+	/*
 	//	spline points are line strips from cinema 4D, which are more dense on curves.
 	//	we need a linear spline
 	const RunningDistances = [];
@@ -496,7 +498,17 @@ function LoadCameraSpline(Positions)
 		const Keyframe = new TKeyframe( Year, Uniforms );
 		Keyframes.push( Keyframe );
 	}
-
+	*/
+	const Times = Object.keys(Positions);
+	const PushKeyframe = function(Time)
+	{
+		const Uniforms = [];
+		Uniforms[CameraPositionUniform] = Positions[Time];
+		const Keyframe = new TKeyframe( Time, Uniforms );
+		Keyframes.push( Keyframe );
+	}
+	Times.forEach( PushKeyframe );
+	
 	const Timeline = new TTimeline( Keyframes );
 	GetCameraTimelineAndUniform = function()
 	{
@@ -510,7 +522,7 @@ function LoadCameraScene(Filename)
 	
 	let OnSpline = function(SplineNode)
 	{
-		if ( SplineNode.Name == 'Camera_Spline' )
+		if ( SplineNode.Name == 'Camera' )
 		{
 			//	replace the global function
 			//	make a new timeline to replace the default camera timeline accessor
@@ -518,7 +530,7 @@ function LoadCameraScene(Filename)
 			LoadCameraSpline( CameraPath );
 			return;
 		}
-		Pop.Debug("Found spline ", SplineNode.Name);
+		Pop.Debug("Found unhandled spline ", SplineNode);
 	}
 	
 	let OnActor = function(ActorNode)
@@ -548,7 +560,7 @@ function LoadCameraScene(Filename)
 			return;
 		}
 		
-		Pop.Debug("Loading actor", ActorNode.Name);
+		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
@@ -904,9 +916,7 @@ function SwitchToDebugCamera()
 }
 
 
-//CameraSpline.c4d.xml.json
 const CameraScene = LoadCameraScene('CameraSpline.dae.json');
-//const CameraScene = LoadCameraScene(['CameraSpline.c4d.xml.json','CameraSpline.dae.json']);
 
 const Timeline = LoadTimeline('Timeline.json');
 

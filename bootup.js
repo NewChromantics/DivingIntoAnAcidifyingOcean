@@ -3,8 +3,10 @@ Pop.Include = function(Filename)
 	let Source = Pop.LoadFileAsString(Filename);
 	return Pop.CompileAndRun( Source, Filename );
 }
+
+//	testing anim
 /*
-Pop.Include('PopEngineCommon/PopCinema4d.js');
+Pop.Include('PopEngineCommon/PopCollada.js');
 
 const OnActor = function(Actor)
 {
@@ -14,10 +16,10 @@ const OnSpline = function(Actor)
 {
 	Pop.Debug(Actor);
 }
-const Contents = Pop.LoadFileAsString('CameraSpline.c4d.xml.json');
-Pop.Cinema4d.Parse(Contents,OnActor,OnSpline);
-
+const Contents = Pop.LoadFileAsString('CameraSpline.dae.json');
+Pop.Collada.Parse(Contents,OnActor,OnSpline);
 */
+ 
 //Pop.Include('PopEngineCommon/PopShaderCache.js');
 //Pop.Include('PopEngineCommon/PopMath.js');
 //Pop.Include('PopEngineCommon/PopPly.js');
