@@ -6,10 +6,15 @@ uniform sampler2D OrigPositions;
 uniform sampler2D LastPositions;
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
-uniform float NoiseScale;// = 0.1;
-uniform float Gravity;// = -0.1;
-uniform float SpringScale;
+uniform float NoiseForce;// = 0.1;
+uniform float GravityForce;// = -0.1;
+uniform float SpringForce;
 uniform float Damping;
+
+#define PushPositionCount	4
+uniform float2 PushPositions[PushPositionCount];
+uniform float PushRadius;
+uniform float PushForce;
 
 /*
  float3 fade(float3 t)
@@ -106,26 +111,52 @@ uniform float Damping;
  }
  */
 
-float3 GetNoise(float2 uv)
+float3 GetNoiseForce(float2 uv)
 {
 	vec4 Noise4 = texture2D( Noise, uv );
 	Noise4 -= 0.5;
 	Noise4 *= 2.0;
-	Noise4 *= NoiseScale;
+	Noise4 *= NoiseForce;
 	return Noise4.xyz;
 }
 
 
-float3 GetGravity(float2 uv)
+float3 GetGravityForce(float2 uv)
 {
-	return float3(0,Gravity,0);
+	return float3(0,GravityForce,0);
 }
 
-float3 GetSpring(float2 uv)
+float3 GetSpringForce(float2 uv)
 {
 	vec3 OrigPos = texture2D( OrigPositions, uv ).xyz;
 	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
-	return (OrigPos - LastPos) * SpringScale;
+	return (OrigPos - LastPos) * SpringForce;
+}
+
+//	convert uv to world space
+float3 GetPushPos(float2 Position)
+{
+	return float3( Position, 0 );
+}
+
+float3 GetPushForce(float2 uv)
+{
+	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
+	vec3 Force = float3(0,0,0);
+	
+	for ( int p=0;	p<PushPositionCount;	p++ )
+	{
+		vec3 Delta = LastPos - GetPushPos(PushPositions[p]);
+		float DeltaForce = length( Delta );
+		if ( DeltaForce > PushRadius )
+			continue;
+		
+		DeltaForce /= PushRadius;
+		DeltaForce = 1.0 - DeltaForce;
+		DeltaForce *= PushForce;
+		Force += normalize(Delta) * PushForce;
+	}
+	return Force;
 }
 
 void main()
@@ -133,9 +164,10 @@ void main()
 	//	gr: just a blit should be stable
 	vec4 Vel = texture( LastVelocitys, uv );
 	
-	Vel.xyz += GetNoise(uv) * PhysicsStep;
-	Vel.xyz += GetGravity(uv) ;//* PhysicsStep;
-	Vel.xyz += GetSpring(uv) ;//* PhysicsStep;
+	Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
+	Vel.xyz += GetGravityForce(uv) ;//* PhysicsStep;
+	Vel.xyz += GetSpringForce(uv) ;//* PhysicsStep;
+	Vel.xyz += GetPushForce(uv) ;//* PhysicsStep;
 
 	//	damping
 	Vel.xyz *= 1.0 - Damping;

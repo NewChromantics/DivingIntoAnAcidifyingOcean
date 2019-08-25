@@ -26,6 +26,14 @@ function HideLogo()
 function TLogoState()
 {
 	this.Time = false;
+	this.PushPositions = [[0,0]];
+	this.PushPositionsMax = 4;
+	
+	this.OnMouseMove = function(u,v)
+	{
+		this.PushPositions.push( [u,v] );
+		this.PushPositions = this.PushPositions.slice(-this.PushPositionsMax);
+	}
 	
 	this.OnParamsChanged = function(AllParams,ChangedParam)
 	{
@@ -36,17 +44,21 @@ function TLogoState()
 	
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
-	this.Params.SpringScale = 1;
-	this.Params.Damping = 0.1;
-	this.Params.NoiseScale = 1;
-	this.Params.LocalScale = 0.094;
-	this.Params.WorldScale = 0.210;
-	this.Params.DebugPhysicsTextures = true;
+	this.Params.SpringForce = 0.3;
+	this.Params.Damping = 0.22;
+	this.Params.NoiseForce = 0.1;
+	this.Params.LocalScale = 0.11;
+	this.Params.WorldScale = 1.0;
+	this.Params.PushRadius = 0.24;
+	this.Params.PushForce = 0.80;
+	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
-	this.LogoParamsWindow.AddParam('SpringScale',0,10);
+	this.LogoParamsWindow.AddParam('SpringForce',0,10);
 	this.LogoParamsWindow.AddParam('Damping',0,1);
-	this.LogoParamsWindow.AddParam('NoiseScale',0,10);
+	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
+	this.LogoParamsWindow.AddParam('PushForce',0,10);
+	this.LogoParamsWindow.AddParam('PushRadius',0,0.5);
 	this.LogoParamsWindow.AddParam('LocalScale',0,2);
 	this.LogoParamsWindow.AddParam('WorldScale',0,2);
 	this.LogoParamsWindow.AddParam('DebugPhysicsTextures');
@@ -55,7 +67,7 @@ function TLogoState()
 	const LogoMeta = {};
 	LogoMeta.Filename = 'Logo.dae.json';
 	LogoMeta.Position = [0,0,0];
-	LogoMeta.Scale = 0.9;
+	LogoMeta.Scale = 0.2;
 	LogoMeta.TriangleScale = 0.03;
 	LogoMeta.Colours = [ [1,1,1] ];
 	LogoMeta.VertexSkip = 0;
@@ -283,9 +295,12 @@ function LogoRender(RenderTarget)
 	const UpdatePhysicsUniforms = function(Shader)
 	{
 		Shader.SetUniform('Time', (LogoState.Time===false) ? -1 : LogoState.Time);
-		Shader.SetUniform('SpringScale', Params.SpringScale );
+		Shader.SetUniform('SpringForce', Params.SpringForce );
 		Shader.SetUniform('Damping', Params.Damping );
-		Shader.SetUniform('NoiseScale', Params.NoiseScale );		
+		Shader.SetUniform('NoiseForce', Params.NoiseForce );
+		Shader.SetUniform('PushRadius', Params.PushRadius );
+		Shader.SetUniform('PushPositions', LogoState.PushPositions );
+		Shader.SetUniform('PushForce', Params.PushForce );
 	}
 	LogoState.LogoActor.PhysicsIteration( DurationSecs, LogoState.Time, RenderTarget, UpdatePhysicsUniforms );
 	if ( LogoState.Params.EnablePhysicsIteration )
@@ -299,11 +314,28 @@ function LogoRender(RenderTarget)
 	
 	RenderTarget.ClearColour(0,1,0);
 	RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time );
-	Pop.Debug("Render logo");
+	//Pop.Debug("Render logo");
 }
 
 function LoadLogoScene()
 {
 	Window.OnRender = LogoRender;
-	Window.OnMouseMove = function(){};
+	Window.OnMouseMove = function(x,y,Button)
+	{
+		//	pixel space to uv
+		const WindowRect = Window.GetScreenRect();
+		x /= WindowRect[2];
+		y /= WindowRect[3];
+		
+		//	uv to model space
+		y = 1 - y;
+		x -= 0.5;
+		y -= 0.5;
+		x *= 2;
+		y *= 2;
+		//	undo projection (we render stretched, but data is 1:1)
+		const ProjectionAspectRatio = WindowRect[3] / WindowRect[2];
+		x /= ProjectionAspectRatio;
+		LogoState.OnMouseMove( x, y );
+	}
 }

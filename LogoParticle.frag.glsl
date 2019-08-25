@@ -7,6 +7,7 @@ void main()
 {
 	if ( length(TriangleUv) > ClipRadius )
 		discard;
-	gl_FragColor = float4(TriangleUv,1,1);
+	//gl_FragColor = float4(TriangleUv,0,1);
+	gl_FragColor = float4(1,1,1,1);
 }
 
