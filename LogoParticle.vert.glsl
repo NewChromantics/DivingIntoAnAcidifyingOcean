@@ -7,6 +7,7 @@ uniform int WorldPositionsHeight;
 
 uniform float LocalScale;
 uniform float WorldScale;
+uniform float ProjectionAspectRatio;
 
 uniform vec3 LocalPositions[3];/* = vec3[3](
 								vec3( -1,-1,0 ),
@@ -49,7 +50,7 @@ void main()
 	float3 WorldPos = GetTriangleWorldPos(TriangleIndex) * WorldScale;
 	WorldPos += LocalPos;
 	
-	float4 ProjectionPos = float4( WorldPos.x, WorldPos.y, 0, 1 );
+	float4 ProjectionPos = float4( WorldPos.x * ProjectionAspectRatio, WorldPos.y, 0, 1 );
 	gl_Position = ProjectionPos;
 	
 	TriangleUv = LocalPositions[VertexIndex].xy;

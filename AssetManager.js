@@ -167,6 +167,11 @@ function TPhysicsActor(Meta)
 	this.Colours = Meta.Colours;
 	this.Meta = Meta;
 	
+	if ( !this.Meta.UpdateVelocityShader )
+		this.Meta.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
+	if ( !this.Meta.UpdatePositionShader )
+		this.Meta.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
+	
 	this.IndexMap = null;
 	this.GetIndexMap = function(Positions)
 	{
@@ -196,13 +201,17 @@ function TPhysicsActor(Meta)
 		return this.IndexMap;
 	}
 	
-	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget)
+	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
 	{
 		//	need data initialised
 		this.GetTriangleBuffer(RenderTarget);
 		
 		//Pop.Debug("PhysicsIteration", JSON.stringify(this) );
-		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture );
+		//	pause/dont run
+		if ( DurationSecs == 0 )
+			return;
+
+		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
 	}
 	
 	this.ResetPhysicsTextures = function()
@@ -212,6 +221,8 @@ function TPhysicsActor(Meta)
 		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
 		this.VelocityTexture = new Pop.Image(Size,'Float3');
 		this.ScratchTexture = new Pop.Image(Size,'Float3');
+		this.PositionOrigTexture = new Pop.Image();
+		this.PositionOrigTexture.Copy( this.PositionTexture );
 	}
 	
 	this.GetPositionsTexture = function()
@@ -224,6 +235,12 @@ function TPhysicsActor(Meta)
 		return this.VelocityTexture;
 	}
 	
+	this.GetPositionOrigTexture = function()
+	{
+		return this.PositionOrigTexture;
+	}
+	
+
 	this.GetTriangleBuffer = function(RenderTarget)
 	{
 		if ( this.TriangleBuffer )
@@ -693,14 +710,16 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 }
 
 
-function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,ScratchTexture)
+function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,ScratchTexture,PositionOrigTexture,UpdateVelocityShader,UpdatePositionShader,SetPhysicsUniforms)
 {
 	if ( !Params.EnablePhysicsIteration )
 		return;
 	
+	SetPhysicsUniforms = SetPhysicsUniforms || function(){};
+	
 	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
-	let UpdateVelocityShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdateVelocity, QuadVertShader );
-	let UpdatePositionsShader = Pop.GetShader( RenderTarget, ParticlePhysicsIteration_UpdatePosition, QuadVertShader );
+	UpdateVelocityShader = Pop.GetShader( RenderTarget, UpdateVelocityShader, QuadVertShader );
+	UpdatePositionShader = Pop.GetShader( RenderTarget, UpdatePositionShader, QuadVertShader );
 	let Quad = GetQuadGeometry(RenderTarget);
 	
 	//	copy old velocitys
@@ -726,6 +745,8 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 			Shader.SetUniform('Gravity', -0.1);
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
+			Shader.SetUniform('OrigPositions',PositionOrigTexture);
+			SetPhysicsUniforms( Shader );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );
 	}
@@ -752,8 +773,9 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
 			Shader.SetUniform('Velocitys',VelocityTexture);
 			Shader.SetUniform('LastPositions',ScratchTexture);
+			SetPhysicsUniforms( Shader );
 		}
-		RenderTarget.DrawGeometry( Quad, UpdatePositionsShader, SetUniforms );
+		RenderTarget.DrawGeometry( Quad, UpdatePositionShader, SetUniforms );
 	}
 	RenderTarget.RenderToRenderTarget( PositionTexture, UpdatePositions );
 	

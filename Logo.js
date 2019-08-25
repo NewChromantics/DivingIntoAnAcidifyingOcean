@@ -5,6 +5,8 @@ Pop.Include('PopEngineCommon/PopMath.js');
 
 const LogoParticleFrag = Pop.LoadFileAsString('LogoParticle.frag.glsl');
 const LogoParticleVert = Pop.LoadFileAsString('LogoParticle.vert.glsl');
+const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
+const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo_PhysicsIteration_UpdatePosition.frag.glsl');
 
 
 function HideLogo()
@@ -28,10 +30,12 @@ function TLogoState()
 	this.Params.LocalScale = 0.094;
 	this.Params.WorldScale = 0.210;
 	this.Params.DebugPhysicsTextures = true;
+	this.Params.EnablePhysicsIteration = false;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, function(){}, ParamsWindowRect );
 	this.LogoParamsWindow.AddParam('LocalScale',0,2);
 	this.LogoParamsWindow.AddParam('WorldScale',0,2);
-	this.LogoParamsWindow.AddParam('DebugPhysicsTextures',0,2);
+	this.LogoParamsWindow.AddParam('DebugPhysicsTextures');
+	this.LogoParamsWindow.AddParam('EnablePhysicsIteration');
 
 	const LogoMeta = {};
 	LogoMeta.Filename = 'Logo.dae.json';
@@ -40,6 +44,9 @@ function TLogoState()
 	LogoMeta.TriangleScale = 0.03;
 	LogoMeta.Colours = [ [1,1,1] ];
 	LogoMeta.VertexSkip = 0;
+	LogoMeta.UpdateVelocityShader = LogoParticlePhysicsIteration_UpdateVelocity;
+	LogoMeta.UpdatePositionShader = LogoParticlePhysicsIteration_UpdatePosition;
+
 	
 	this.LogoActor = new TPhysicsActor(LogoMeta);
 	this.PreloadPromises = [];
@@ -204,20 +211,24 @@ function Update_Experience(FirstUpdate)
 }
 
 
+//	copy of the main scene version, but this will change
 function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time)
 {
 	const Params = LogoState.Params;
 	
 	const PositionsTexture = Actor.GetPositionsTexture();
+	const PositionOriginalTexture = Actor.GetPositionOrigTexture();
 	const VelocitysTexture = Actor.GetVelocitysTexture();
 	const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	const Shader = Pop.GetShader( RenderTarget, LogoParticleFrag, LogoParticleVert );
 	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
 	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
+	const Viewport = RenderTarget.GetScreenRect();
 	
 	let SetUniforms = function(Shader)
 	{
 		SetGlobalUniforms(Shader);
+		Shader.SetUniform('ProjectionAspectRatio', Viewport[3]/Viewport[2] );
 		Shader.SetUniform('LocalPositions', LocalPositions );
 		Shader.SetUniform('WorldPositions',PositionsTexture);
 		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
@@ -250,12 +261,20 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	}
 }
 
+let Time = false;
 function LogoRender(RenderTarget)
 {
-	const DurationSecs = 1 / 60;
-	const Time = 0;
-	LogoState.LogoActor.PhysicsIteration( DurationSecs, Time, RenderTarget );
-	
+	const DurationSecs = LogoState.Params.EnablePhysicsIteration ? (1 / 60) : 0;
+	const UpdatePhysicsUniforms = function(Shader)
+	{
+		if ( Time===false )
+			Pop.Debug("init physics");
+		Shader.SetUniform('Time', (Time===false) ? -1 : Time);
+	}
+	LogoState.LogoActor.PhysicsIteration( DurationSecs, Time, RenderTarget, UpdatePhysicsUniforms );
+	if ( LogoState.Params.EnablePhysicsIteration )
+		Time += DurationSecs;
+					   
 	let SetGlobalUniforms = function(Shader)
 	{
 		Shader.SetUniform('LocalScale',LogoState.Params.LocalScale);
