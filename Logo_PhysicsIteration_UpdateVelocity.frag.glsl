@@ -2,11 +2,14 @@ precision highp float;
 
 varying vec2 uv;
 uniform sampler2D LastVelocitys;
+uniform sampler2D OrigPositions;
+uniform sampler2D LastPositions;
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
 uniform float NoiseScale;// = 0.1;
 uniform float Gravity;// = -0.1;
-
+uniform float SpringScale;
+uniform float Damping;
 
 /*
  float3 fade(float3 t)
@@ -118,16 +121,27 @@ float3 GetGravity(float2 uv)
 	return float3(0,Gravity,0);
 }
 
+float3 GetSpring(float2 uv)
+{
+	vec3 OrigPos = texture2D( OrigPositions, uv ).xyz;
+	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
+	return (OrigPos - LastPos) * SpringScale;
+}
+
 void main()
 {
 	//	gr: just a blit should be stable
 	vec4 Vel = texture( LastVelocitys, uv );
 	
 	Vel.xyz += GetNoise(uv) * PhysicsStep;
-	Vel.xyz += GetGravity(uv) * PhysicsStep;
+	Vel.xyz += GetGravity(uv) ;//* PhysicsStep;
+	Vel.xyz += GetSpring(uv) ;//* PhysicsStep;
+
+	//	damping
+	Vel.xyz *= 1.0 - Damping;
 	
 	//Vel.xyz = float3(0,0,0);
-	
+		
 	Vel.w = 1.0;
 	gl_FragColor = Vel;
 }

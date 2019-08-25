@@ -746,6 +746,7 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
 			Shader.SetUniform('OrigPositions',PositionOrigTexture);
+			Shader.SetUniform('LastPositions', PositionTexture );
 			SetPhysicsUniforms( Shader );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );

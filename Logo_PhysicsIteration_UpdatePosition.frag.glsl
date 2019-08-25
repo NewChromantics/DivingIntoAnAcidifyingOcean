@@ -15,6 +15,9 @@ void main()
 	Pos += Vel * PhysicsStep;
 	Pos.w = 1.0;
 
+	//	2d!
+	Pos.z = 0.0;
+	
 	if ( Time < 0.0 )
 		Pos = float4(0,0,0,1);
 

@@ -25,13 +25,28 @@ function HideLogo()
 
 function TLogoState()
 {
+	this.Time = false;
+	
+	this.OnParamsChanged = function(AllParams,ChangedParam)
+	{
+		//	physics re-enabled, reset
+		if ( ChangedParam == 'EnablePhysicsIteration' && AllParams['EnablePhysicsIteration'] )
+			this.Time = false;
+	}
+	
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
+	this.Params.SpringScale = 1;
+	this.Params.Damping = 0.1;
+	this.Params.NoiseScale = 1;
 	this.Params.LocalScale = 0.094;
 	this.Params.WorldScale = 0.210;
 	this.Params.DebugPhysicsTextures = true;
-	this.Params.EnablePhysicsIteration = false;
-	this.LogoParamsWindow = new CreateParamsWindow( this.Params, function(){}, ParamsWindowRect );
+	this.Params.EnablePhysicsIteration = true;
+	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
+	this.LogoParamsWindow.AddParam('SpringScale',0,10);
+	this.LogoParamsWindow.AddParam('Damping',0,1);
+	this.LogoParamsWindow.AddParam('NoiseScale',0,10);
 	this.LogoParamsWindow.AddParam('LocalScale',0,2);
 	this.LogoParamsWindow.AddParam('WorldScale',0,2);
 	this.LogoParamsWindow.AddParam('DebugPhysicsTextures');
@@ -261,19 +276,20 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	}
 }
 
-let Time = false;
 function LogoRender(RenderTarget)
 {
+	const Params = LogoState.Params;
 	const DurationSecs = LogoState.Params.EnablePhysicsIteration ? (1 / 60) : 0;
 	const UpdatePhysicsUniforms = function(Shader)
 	{
-		if ( Time===false )
-			Pop.Debug("init physics");
-		Shader.SetUniform('Time', (Time===false) ? -1 : Time);
+		Shader.SetUniform('Time', (LogoState.Time===false) ? -1 : LogoState.Time);
+		Shader.SetUniform('SpringScale', Params.SpringScale );
+		Shader.SetUniform('Damping', Params.Damping );
+		Shader.SetUniform('NoiseScale', Params.NoiseScale );		
 	}
-	LogoState.LogoActor.PhysicsIteration( DurationSecs, Time, RenderTarget, UpdatePhysicsUniforms );
+	LogoState.LogoActor.PhysicsIteration( DurationSecs, LogoState.Time, RenderTarget, UpdatePhysicsUniforms );
 	if ( LogoState.Params.EnablePhysicsIteration )
-		Time += DurationSecs;
+		LogoState.Time += DurationSecs;
 					   
 	let SetGlobalUniforms = function(Shader)
 	{
@@ -282,7 +298,7 @@ function LogoRender(RenderTarget)
 	}
 	
 	RenderTarget.ClearColour(0,1,0);
-	RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, Time );
+	RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time );
 	Pop.Debug("Render logo");
 }
 
