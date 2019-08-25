@@ -68,6 +68,26 @@ function GetAutoTriangleIndexes(IndexCount)
 	
 }
 
+var Auto_auto_vt_Buffer = [];
+function GetAuto_AutoVtBuffer(TriangleCount)
+{
+	const VertexSize = 2;
+	const IndexCount = VertexSize * TriangleCount * 3;
+	while ( Auto_auto_vt_Buffer.length < IndexCount )
+	{
+		let t = Auto_auto_vt_Buffer.length / VertexSize / 3;
+		for ( let v=0;	v<3;	v++ )
+		{
+			let Index = t * 3;
+			Index += v;
+			Index *= VertexSize;
+			Auto_auto_vt_Buffer[Index+0] = v;
+			Auto_auto_vt_Buffer[Index+1] = t;
+		}
+	}
+	//Pop.Debug('Auto_auto_vt_Buffer',Auto_auto_vt_Buffer);
+	return new Float32Array( Auto_auto_vt_Buffer, 0, IndexCount );
+}
 
 function CreateCubeGeometry(RenderTarget)
 {
@@ -669,26 +689,14 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 	//	auto generated vertexes
 	if ( GeometryAsset.VertexBuffer == 'auto_vt' )
 	{
-		Pop.Debug("Auto generating vertex buffer ", GeometryAsset.VertexBuffer);
+		//Pop.Debug("Auto generating vertex buffer ", GeometryAsset.VertexBuffer);
 		if ( GeometryAsset.VertexSize != 2 )
 			throw "Expected vertex size of 2 (not " + GeometryAsset.VertexSize + ") for " + GeometryAsset.VertexBuffer;
 		
 		//	need to work out triangle count...
 		const TriangleCount = GeometryAsset.WorldPositions.length;
-		
-		//	gr: we can cache this like GetAutoTriangleIndexes
-		GeometryAsset.VertexBuffer = new Float32Array( GeometryAsset.VertexSize * TriangleCount * 3 );
-		for ( let t=0;	t<TriangleCount;	t++ )
-		{
-			for ( let v=0;	v<3;	v++ )
-			{
-				let Index = t * 3;
-				Index += v;
-				Index *= GeometryAsset.VertexSize;
-				GeometryAsset.VertexBuffer[Index+0] = v;
-				GeometryAsset.VertexBuffer[Index+1] = t;
-			}
-		}
+	
+		GeometryAsset.VertexBuffer = GetAuto_AutoVtBuffer(TriangleCount);
 	}
 	
 	//	auto generated triangles
