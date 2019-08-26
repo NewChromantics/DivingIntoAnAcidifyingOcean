@@ -34,7 +34,7 @@
 	line-height:	24vh;
 
 	text-align:	center;
-	
+	font-weight: bold;
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
@@ -128,7 +128,8 @@
 	position: absolute;
 	left: 1vw;
 	top: 3vh;
-	width:1vw;
+	width:1.5vw;
+	height: 1.5vh;
 }
 
 /* This is for Mobile */
@@ -253,15 +254,70 @@
 	width:		14vw;
 	height:		20vh;
 	font-size:	2vh;
-
 	text-align:	left;
-	
-	display:			flex;
+	display: flex;
 	flex-direction: column;
+	align-items:top;
+	justify-content:top;
+	
+}
+
+#AnimalCard_Title
+{
+	font-weight: bold;
+	font-size:	2.3vh;
+}
+
+#AnimalCard_Description
+{
+	font-size:	2vh;
+	font-weight: normal;
+	display:	flex;
 	align-items:		left;
 	justify-content:	center;
 }
 
+h1
+{
+	height: 0vh;
+	padding-top: 2vh;
+	align-items:top;
+	justify-content:top;
+}
+
+
+#AnimalCard_Line
+{
+	display: block;
+	position: absolute;
+	left:0vw;
+	top:4.8vh;
+	width:14vw;
+	height:	0.2vh;
+	background: white;
+}
+
+#Continue
+{
+	display: block;
+	position: absolute;
+	left: 11.5vw;
+	top: 26vh;
+	width:2.5vw;
+
+}
+
+#Next
+{
+	display: block;
+	position: absolute;
+	left: 12.3vw;
+	top: 26vh;
+	width:2vw;
+	align-items: right;
+	font-size:	1vh;
+
+}
 
 #Hud #Music
 {
