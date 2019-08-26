@@ -47,6 +47,29 @@ function LoadSceneFile(Filename)
 	return Scene;
 }
 
+
+function LoadGeometryFile(Filename)
+{
+	const OnVertex = function(x,y,z,d,r,g,b)
+	{
+		
+	}
+	
+	
+	const Contents = Pop.LoadFileAsString(Filename);
+	if ( Filename.endsWith('.ply') )
+		Pop.ParsePlyFile( Contents, OnActor, OnSpline );
+	else
+		throw "Unhandled scene file type " + Filename;
+	
+}
+
+
+
+
+
+
+
 function ConvertSceneFile(Filename)
 {
 	const CachedFilename = Filename.replace('.dae.json','.scene.json');
@@ -61,8 +84,32 @@ function ConvertSceneFile(Filename)
 }
 
 
+
+function ConvertGeometryFile(Filename)
+{
+	const CachedFilename = Filename.replace('.ply','.geometry.json');
+	if ( Pop.FileExists(CachedFilename) )
+	{
+		//return;
+	}
+	const Geo = LoadGeometryFile( Filename );
+	const GeoJson = JSON.stringify(Geo,null,'\t');
+	Pop.WriteStringToFile( CachedFilename, GeoJson );
+	Pop.ShowFileInFinder( CachedFilename );
+}
+
+
 //	convert some assets
-const SceneFiles = ['CameraSpline.dae.json'];
+const SceneFiles =
+[
+	'CameraSpline.dae.json'
+];
 SceneFiles.forEach( ConvertSceneFile );
+
+const GeoFiles =
+[
+	'Models/shell_v001.ply'
+];
+GeoFiles.forEach( ConvertGeometryFile );
 
 
