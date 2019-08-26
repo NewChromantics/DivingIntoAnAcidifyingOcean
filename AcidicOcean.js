@@ -16,7 +16,8 @@ const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
 const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 
-
+//	temp turning off and just having dummy actors
+const LoadWaterAsInstances = false;
 
 
 
@@ -255,7 +256,7 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
-		if ( ActorNode.Name.startsWith('Water_') && Actor_Debris )
+		if ( LoadWaterAsInstances && ActorNode.Name.startsWith('Water_') && Actor_Debris )
 		{
 			//	add an instance
 			if ( !Actor_Debris.Instances )
@@ -268,7 +269,7 @@ function LoadCameraScene(Filename)
 		}
 		
 		
-		if ( ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
+		if ( LoadWaterAsInstances && ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
 		{
 			//	add an instance
 			if ( !Actor_Ocean.Instances )

@@ -3,11 +3,11 @@ Pop.Include('AssetManager.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 
-const LogoParticleFrag = Pop.LoadFileAsString('LogoParticle.frag.glsl');
-const LogoParticleVert = Pop.LoadFileAsString('LogoParticle.vert.glsl');
-const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
-const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo_PhysicsIteration_UpdatePosition.frag.glsl');
-const LogoSdfFrag = Pop.LoadFileAsString('LogoSdf.frag.glsl');
+const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
+const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
+const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
+const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdatePosition.frag.glsl');
+const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
 
 
 function HideLogo()
@@ -70,7 +70,7 @@ function TLogoState()
 	this.LogoParamsWindow.AddParam('EnablePhysicsIteration');
 
 	const LogoMeta = {};
-	LogoMeta.Filename = 'Logo.dae.json';
+	LogoMeta.Filename = 'Logo/Logo.dae.json';
 	LogoMeta.Position = [0,0,0];
 	LogoMeta.Scale = 0.2;
 	LogoMeta.TriangleScale = 0.03;
