@@ -59,8 +59,11 @@ Pop.Audio.Sound = function(Filename,Loop=false,AutoPlay=true)
 	
 	this.Create = function()
 	{
-		//this.AudioPlayer = new Audio(Filename);
-		this.AudioPlayer = new AudioFake();
+		if ( Pop.GetExeArguments().includes('NoAudio') )
+			this.AudioPlayer = new AudioFake();
+		else
+			this.AudioPlayer = new Audio(Filename);
+		
 		this.AudioPlayer.loop = Loop;
 		this.AudioPlayer.autoplay = true;
 		
