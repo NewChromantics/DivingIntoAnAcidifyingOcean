@@ -12,6 +12,18 @@ function SetGlobal()
 }
 SetGlobal.call(this);
 
+
+try
+{
+	Pop.Include('ConvertAssets.js');
+}
+catch(e)
+{
+	Pop.Debug("Convert assets error: " + e);
+}
+
+
+
 //	testing anim
 /*
 Pop.Include('PopEngineCommon/PopCollada.js');

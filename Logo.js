@@ -87,8 +87,9 @@ function TLogoState()
 	this.StartButtonPressed = false;
 	this.PreloadFilenames =
 	[
+		//	assets
 		'Timeline.json',
-		'CameraSpline.dae.json',
+		'CameraSpline.scene.json',
 		'Shell/shellFromBlender.obj',
 		'Quad.vert.glsl',
 		'ParticleTriangles.vert.glsl',
@@ -100,9 +101,11 @@ function TLogoState()
 		'PhysicsIteration_UpdateVelocity.frag.glsl',
 		'PhysicsIteration_UpdatePosition.frag.glsl',
 
+		//	code
+	 	'Timeline.js',
 		'AcidicOcean.js',
-	 'AssetManager.js',
-	 'AudioManager.js',
+	 	'AssetManager.js',
+	 	'AudioManager.js',
 		'Hud.js',
 		'PopEngineCommon/PopShaderCache.js',
 		'PopEngineCommon/PopFrameCounter.js',
