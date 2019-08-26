@@ -89,7 +89,7 @@ function GetAuto_AutoVtBuffer(TriangleCount)
 	return new Float32Array( Auto_auto_vt_Buffer, 0, IndexCount );
 }
 
-function CreateCubeGeometry(RenderTarget)
+function CreateCubeGeometry(RenderTarget,Min=-1,Max=1)
 {
 	let VertexSize = 3;
 	let VertexData = [];
@@ -108,16 +108,14 @@ function CreateCubeGeometry(RenderTarget)
 		TriangleIndexes.push( FirstTriangleIndex+2 );
 	}
 	
-	let Size = 1.0;
-	
-	let tln = [-Size,-Size,-Size];
-	let trn = [ Size,-Size,-Size];
-	let brn = [ Size, Size,-Size];
-	let bln = [-Size, Size,-Size];
-	let tlf = [-Size,-Size, Size];
-	let trf = [ Size,-Size, Size];
-	let brf = [ Size, Size, Size];
-	let blf = [-Size, Size, Size];
+	let tln = [Min,Min,Min];
+	let trn = [Max,Min,Min];
+	let brn = [Max,Max,Min];
+	let bln = [Min,Max,Min];
+	let tlf = [Min,Min,Max];
+	let trf = [Max,Min,Max];
+	let brf = [Max,Max,Max];
+	let blf = [Min,Max,Max];
 	
 	
 	//	near
@@ -156,6 +154,8 @@ function CreateCubeGeometry(RenderTarget)
 var Assets = [];
 var AssetFetchFunctions = [];
 AssetFetchFunctions['Cube'] = CreateCubeGeometry;
+AssetFetchFunctions['SmallCube'] = function(rt)	{	return CreateCubeGeometry(rt,-0.1,0.1);	};
+AssetFetchFunctions['Cube01'] = function(rt)	{	return CreateCubeGeometry(rt,0,1);	};
 
 
 function GetAsset(Name,RenderContext)
