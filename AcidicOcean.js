@@ -148,6 +148,7 @@ Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
 Params.DrawBoundingBoxes = true;
+Params.ScrollFlySpeed = 30;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -185,6 +186,7 @@ ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 ParamsWindow.AddParam('CameraFaceForward');
 ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
 ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
+ParamsWindow.AddParam('ScrollFlySpeed',1,100);
 
 
 
@@ -212,7 +214,7 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	{
 		SetGlobalUniforms( Shader );
 
-		Shader.SetUniform('LocalToWorldTransform', Actor.GetTransformMatrix() );
+		Shader.SetUniform('LocalToWorldTransform', Actor.GetLocalToWorldTransform() );
 		Shader.SetUniform('LocalPositions', LocalPositions );
 		Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
 		Shader.SetUniform('WorldPositions',PositionsTexture);
@@ -401,7 +403,7 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms.bind(this) );
 	}
 	
-	this.GetTransformMatrix = function()
+	this.GetLocalToWorldTransform = function()
 	{
 		return this.LocalToWorldTransform;
 	}
@@ -441,7 +443,7 @@ function GetRenderScene(Time)
 		const BoundsCenter = Math.Lerp3( BoundingBox.Min, BoundingBox.Max, 0.5 );
 		let BoundsMatrix = Math.CreateTranslationMatrix(...BoundsCenter);
 		BoundsMatrix = Math.MatrixMultiply4x4( BoundsMatrix, Math.CreateScaleMatrix(...BoundsSize) );
-		BoundsMatrix = Math.MatrixMultiply4x4( Actor.GetTransformMatrix(), BoundsMatrix );
+		BoundsMatrix = Math.MatrixMultiply4x4( Actor.GetLocalToWorldTransform(), BoundsMatrix );
 
 		const BoundsActor = new TActor();
 		const BoundsLocalScale = []
@@ -728,6 +730,6 @@ Window.OnMouseScroll = function(x,y,Button,Delta)
 {
 	SwitchToDebugCamera();
 	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
-	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * -10, false );
+	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * -Params.ScrollFlySpeed, false );
 }
 
