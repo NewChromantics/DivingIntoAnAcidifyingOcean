@@ -55,10 +55,12 @@ function TLogoState()
 	this.Params.PushRadius = 0.24;
 	this.Params.PushForce = 20.00;
 	this.Params.PushForceMax = 1.00;
+	this.Params.SampleDelta = 0.005;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
 	this.LogoParamsWindow.AddParam('SdfMin',0,1);
+	this.LogoParamsWindow.AddParam('SampleDelta',0,0.01);
 	this.LogoParamsWindow.AddParam('SpringForce',0,10);
 	this.LogoParamsWindow.AddParam('Damping',0,1);
 	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
@@ -128,7 +130,10 @@ function TLogoState()
 			LoadOceanFrames = 4;
 		for ( let i=1;	i<=LoadOceanFrames;	i++ )
 		{
-			let Filename = 'Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply.mesh.json';
+			let Filename = 'Ocean/ocean_pts.' + (''+i).padStart(4,'0');
+			Filename += '.ply';
+			//Filename += '.geometry.json';
+			//Filename += '.ply';
 			this.PreloadFilenames.push(Filename);
 		}
 	}
@@ -354,6 +359,7 @@ function LogoRender(RenderTarget)
 
 	//	draw sdf on screen
 	{
+		const ProjectionAspectRatio = Viewport[3] / Viewport[2];
 		const BlitShader = Pop.GetShader( RenderTarget, LogoSdfFrag, QuadVertShader );
 		RenderTarget.ClearColour(0,1,0);
 		const Quad = GetQuadGeometry(RenderTarget);
@@ -362,6 +368,8 @@ function LogoRender(RenderTarget)
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('Texture',LogoState.LogoSdf);
 			Shader.SetUniform('SdfMin',LogoState.Params.SdfMin);
+			Shader.SetUniform('ProjectionAspectRatio',ProjectionAspectRatio);
+			Shader.SetUniform('SampleDelta', LogoState.Params.SampleDelta );
 		};
 		RenderTarget.DrawGeometry( Quad, BlitShader, SetUniforms );
 	}
