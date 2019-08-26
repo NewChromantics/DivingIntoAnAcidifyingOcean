@@ -46,11 +46,12 @@ for ( let i=1;	i<=96;	i++ )
 	Filename += '.ply';
 	GeoFiles.push(Filename);
 }
-GeoFiles.forEach( ConvertGeometryFile );
 
 const SceneFiles =
 [
 	'CameraSpline.dae.json'
 ];
+
 SceneFiles.forEach( ConvertSceneFile );
+GeoFiles.forEach( ConvertGeometryFile );
 
