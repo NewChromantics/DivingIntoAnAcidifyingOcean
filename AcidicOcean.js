@@ -146,6 +146,7 @@ Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
+Params.DrawBoundingBoxes = true;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -164,6 +165,7 @@ let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRec
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
+ParamsWindow.AddParam('DrawBoundingBoxes');
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
@@ -282,11 +284,13 @@ function LoadCameraScene(Filename)
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
-		let LocalScale = Math.CreateScaleMatrix(0.1);
+		//let LocalScale = Math.CreateScaleMatrix(0.1);
 		let WorldPos = Math.CreateTranslationMatrix( ...ActorNode.Position );
-		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPos, LocalScale );
+		//Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPos, LocalScale );
+		Actor.LocalToWorldTransform = WorldPos;
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = ColourFragShader;
+		Actor.BoundingBox = ActorNode.BoundingBox;
 		Scene.push( Actor );
 	}
 	
@@ -401,6 +405,43 @@ function GetRenderScene(Time)
 {
 	let Scene = [];
 	
+	let PushActorBoundingBox = function(Actor)
+	{
+		if ( !Params.DrawBoundingBoxes )
+			return;
+		
+		//	has no bounds!
+		if ( !Actor.BoundingBox )
+		{
+			Pop.Debug("Actor has no bounds",Actor);
+			return;
+		}
+		
+		//	bounding box to matrix...
+		const BoundsSize = Math.Subtract3( Actor.BoundingBox.Max, Actor.BoundingBox.Min );
+	
+		//	cube is currently -1..1 so compensate. Need to change shader if we change this
+		BoundsSize[0] /= 2;
+		BoundsSize[1] /= 2;
+		BoundsSize[2] /= 2;
+
+		const BoundsCenter = Math.Lerp3( Actor.BoundingBox.Min, Actor.BoundingBox.Max, 0.5 );
+		let BoundsMatrix = Math.CreateTranslationMatrix(...BoundsCenter);
+		BoundsMatrix = Math.MatrixMultiply4x4( BoundsMatrix, Math.CreateScaleMatrix(...BoundsSize) );
+		BoundsMatrix = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, BoundsMatrix );
+
+		const BoundsActor = new TActor();
+		const BoundsLocalScale = []
+		BoundsActor.LocalToWorldTransform = BoundsMatrix;
+		BoundsActor.Geometry = 'Cube';
+		BoundsActor.VertShader = GeoVertShader;
+		BoundsActor.FragShader = EdgeFragShader;
+		BoundsActor.Uniforms['GridFrontAndBack'] = false;
+		BoundsActor.Uniforms['LineWidth'] = 0.05;
+		
+		Scene.push( BoundsActor );
+	}
+	
 	let PushDebugCameraActor = function()
 	{
 		let Camera = GetTimelineCamera(Time);
@@ -410,6 +451,9 @@ function GetRenderScene(Time)
 		Actor.Geometry = 'Cube';
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = EdgeFragShader;
+		Actor.Uniforms['GridFrontAndBack'] = true;
+		Actor.Uniforms['LineWidth'] = 0.01;
+		
 		Scene.push( Actor );
 	}
 	
@@ -461,6 +505,7 @@ function GetRenderScene(Time)
 	CameraPositions.forEach( PushCameraPosActor );
 	
 	CameraScene.forEach( a => Scene.push(a) );
+	CameraScene.forEach( a => PushActorBoundingBox(a) );
 	
 	if ( Params.UseDebugCamera )
 	{

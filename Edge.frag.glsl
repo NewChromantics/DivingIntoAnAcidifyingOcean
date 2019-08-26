@@ -1,8 +1,10 @@
 precision highp float;
 
 in float3 FragLocalPosition;
-const float LineWidth = 0.01;
+uniform float LineWidth;
 const bool DrawAllEdges = true;
+uniform bool GridFrontAndBack;
+
 
 float Range(float Min,float Max,float Value)
 {
@@ -67,13 +69,16 @@ void main()
 	//	chequerboard near near & far planes
 	if ( EdgeZ || FarEdgeZ )
 	{
-		float SquareCount = 20.0;
-		bool x = mod( LocalPos.x*SquareCount, 1.0 ) > 0.5;
-		bool y = mod( LocalPos.y*SquareCount, 1.0 ) > 0.5;
-		if ( x == y )
-			discard;
-		gl_FragColor = float4( Axis,1 );
-		return;
+		if ( GridFrontAndBack )
+		{
+			float SquareCount = 20.0;
+			bool x = mod( LocalPos.x*SquareCount, 1.0 ) > 0.5;
+			bool y = mod( LocalPos.y*SquareCount, 1.0 ) > 0.5;
+			if ( x == y )
+				discard;
+			gl_FragColor = float4( Axis,1 );
+			return;
+		}
 	}
 	
 	//	only interested when on the edge of two sides
