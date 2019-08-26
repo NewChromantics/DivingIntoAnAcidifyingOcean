@@ -82,7 +82,7 @@ function LoadTimeline(Filename)
 //	scene!
 
 let ShellMeta = {};
-ShellMeta.Filename = 'Shell/shellFromBlender.obj';
+ShellMeta.Filename = 'Models/shell_v001.ply';
 ShellMeta.Position = [0,0,-2];
 ShellMeta.Scale = 0.9;
 ShellMeta.TriangleScale = 0.03;
@@ -297,8 +297,10 @@ function LoadCameraScene(Filename)
 		Scene.push( Actor );
 	}
 	
-	const FileContents = Pop.LoadFileAsString(Filename);
-	const FileScene = JSON.parse(FileContents);
+	const CachedFilename = GetCachedFilename(Filename,'scene');
+	if ( Pop.FileExists(CachedFilename) )
+		Filename = CachedFilename;
+	const FileScene = LoadSceneFile(Filename);
 	
 	FileScene.Actors.forEach( OnActor );
 	
@@ -692,7 +694,7 @@ function SwitchToDebugCamera()
 }
 
 
-const CameraScene = LoadCameraScene('CameraSpline.scene.json');
+const CameraScene = LoadCameraScene('CameraSpline.dae.json');
 
 const Timeline = LoadTimeline('Timeline.json');
 

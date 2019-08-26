@@ -92,8 +92,7 @@ function TLogoState()
 	[
 		//	assets
 		'Timeline.json',
-		'CameraSpline.scene.json',
-		'Shell/shellFromBlender.obj',
+	 
 		'Quad.vert.glsl',
 		'ParticleTriangles.vert.glsl',
 		'ParticleColour.frag.glsl',
@@ -122,8 +121,15 @@ function TLogoState()
 		'Noise0.png',
 	 	null
 	];
-	
-	function PreloadOceanFilenames()
+	this.PreloadSceneFilenames =
+	[
+	 'CameraSpline.dae.json'
+	];
+	this.PreloadGeoFilenames =
+	[
+	 'Models/shell_v001.ply'
+	];
+
 	{
 		let LoadOceanFrames = 96;
 		if ( Pop.GetExeArguments().includes('ShortOcean') )
@@ -132,12 +138,10 @@ function TLogoState()
 		{
 			let Filename = 'Ocean/ocean_pts.' + (''+i).padStart(4,'0');
 			Filename += '.ply';
-			//Filename += '.geometry.json';
-			//Filename += '.ply';
-			this.PreloadFilenames.push(Filename);
+			this.PreloadGeoFilenames.push(Filename);
 		}
 	}
-	PreloadOceanFilenames.call(this);
+	//PreloadOceanFilenames.call(this);
 	
 	
 	
@@ -156,6 +160,18 @@ function TLogoState()
 		this.PreloadPromises.push( Promise );
 	}
 	this.PreloadFilenames.forEach( Load.bind(this) );
+	
+	const LoadAsset = function(Filename,Type)
+	{
+		const CachedFilename = GetCachedFilename(Filename,Type);
+		Load.call( this, CachedFilename );
+	
+		if ( Pop.GetExeArguments().includes('LoadRawAssets') )
+			Load.call( this, Filename );
+	}
+	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'geometry' ) );
+	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, 'scene' ) );
+
 	
 	const OnPreloadFinished = function()
 	{

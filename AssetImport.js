@@ -4,6 +4,20 @@ Pop.Include('PopEngineCommon/PopObj.js');
 Pop.Include('Timeline.js');
 
 
+function GetCachedFilename(Filename,Type)
+{
+	if ( !Filename )
+		return Filename;
+	if ( !Type )
+		throw "GetCachedFilename("+Filename+") with no type (" + Type + ")";
+	const TypeExtension = '.' + Type + '.json';
+	let CachedFilename = Filename;
+	CachedFilename = CachedFilename.replace('.dae.json',TypeExtension);
+	CachedFilename = CachedFilename.replace('.ply',TypeExtension);
+	CachedFilename = CachedFilename.replace('.obj',TypeExtension);
+	return CachedFilename;
+}
+
 
 function GenerateRandomVertexes(Contents,OnVertex,OnMeta)
 {
@@ -124,9 +138,18 @@ function SplineToKeyframes(Positions,CameraPositionUniform)
 
 function LoadSceneFile(Filename)
 {
+	const Contents = Pop.LoadFileAsString(Filename);
+
+	if ( Filename.endsWith('.scene.json') )
+	{
+		const Scene = JSON.parse(Contents);
+		return Scene;
+	}
+
 	const Scene = {};
 	Scene.Actors = [];
 	Scene.Keyframes = null;
+	
 	
 	const OnActor = function(Actor)
 	{
@@ -141,7 +164,6 @@ function LoadSceneFile(Filename)
 		Scene.Keyframes = SplineToKeyframes( Spline.PathPositions, 'CameraPosition' );
 	}
 	
-	const Contents = Pop.LoadFileAsString(Filename);
 	if ( Filename.endsWith('.dae.json') )
 		Pop.Collada.Parse( Contents, OnActor, OnSpline );
 	else
@@ -201,20 +223,21 @@ function ParseGeometryFile(Contents,ParseFunc)
 	return Geo;
 }
 
-function ParseGeometryJsonFile(Json)
+function ParseGeometryJsonFile(Filename)
 {
-	const Geo = JSON.Parse(Json);
+	const Json = Pop.LoadFileAsString(Filename);
+	const Geo = JSON.parse(Json);
 	return Geo;
 }
 
 function LoadGeometryFile(Filename)
 {
-	Pop.Debug("LoadGeometryFile(",Filename);
+	Pop.Debug("LoadGeometryFile("+Filename+")");
 	
 	let Geo = null;
 	if ( Filename.endsWith('.geometry.json') )
 	{
-		Geo = ParseGeometryJsonFile( Contents );
+		Geo = ParseGeometryJsonFile( Filename );
 		return Geo;
 	}
 	

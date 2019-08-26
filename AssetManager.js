@@ -347,6 +347,10 @@ function VerifyGeometryAsset(Asset)
 
 function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 {
+	const CachedFilename = GetCachedFilename(Filename,'geometry');
+	if ( Pop.FileExists(CachedFilename) )
+		Filename = CachedFilename;
+	
 	//	load positions, colours
 	const Geo = LoadGeometryFile( Filename );
 	
