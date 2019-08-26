@@ -69,6 +69,19 @@
 	background-color:	blue;
 }
 
+#About
+{
+	font-size:		2vh;
+	line-height:	3vh;
+	position:		absolute;
+	right:			1.5vw;
+	top:			5vh;
+	width:			23vh;
+	height:			15vh;
+	text-align: right;
+
+}
+
 #Stats div
 {
 	overflow:	hidden;

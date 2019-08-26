@@ -51,10 +51,10 @@
 		"VoiceAudio":"",
 		"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",
 		"Timeline_CameraPosition":[0,5, -10],
-		"Stats_Temp":30,
-		"Stats_Co2":40,
-		"Stats_Oxygen":50,
-		"Stats_Ph":60
+		"Stats_Temp":0,
+		"Stats_Co2":0,
+		"Stats_Oxygen":0,
+		"Stats_Ph":0
 	},
 	
 	
@@ -70,16 +70,20 @@
 	},
 	"2019":
 	{
-		"FogColour":[0,0,0]
+		"FogColour":[0,0,0],
+		"Stats_Temp":0.8,
+		"Stats_Co2":36,
+		"Stats_Oxygen":1.36,
+		"Stats_Ph":30
 		
 	},
 	"2100":
 	{
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
-		"Stats_Temp":999,
-		"Stats_Co2":777,
-		"Stats_Oxygen":888,
-		"Stats_Ph":4
+		"Stats_Temp":4,
+		"Stats_Co2":90,
+		"Stats_Oxygen":27,
+		"Stats_Ph":170
 	}
 }
