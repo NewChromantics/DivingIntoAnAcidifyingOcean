@@ -1,4 +1,5 @@
 Pop.Include('PopEngineCommon/PopCollada.js');
+Pop.Include('Actors.js');
 Pop.Include('AssetManager.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');

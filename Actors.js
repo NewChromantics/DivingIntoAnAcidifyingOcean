@@ -95,14 +95,10 @@ function TPhysicsActor(Meta)
 		if ( this.TriangleBuffer )
 			return this.TriangleBuffer;
 		
-		Pop.Debug("Load geo");
-		let OnBoundingBox = function(BoundingBox)
-		{
-			this.BoundingBox = BoundingBox;
-		}
-		
-		this.PositionTexture = new Pop.Image();
-		this.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Meta.Filename, this.PositionTexture, Meta.Scale, Meta.VertexSkip, this.GetIndexMap.bind(this), OnBoundingBox.bind(this) );
+		this.TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Meta.Filename, this.GetIndexMap.bind(this) );
+		this.PositionTexture = this.TriangleBuffer.PositionTexture;
+		this.ColourTexture = this.TriangleBuffer.ColourTexture;
+		this.BoundingBox = this.TriangleBuffer.BoundingBox;
 		this.ResetPhysicsTextures();
 		
 		return this.TriangleBuffer;
@@ -151,14 +147,17 @@ function TAnimationBuffer(Filenames,Scale)
 			{
 				return Index / Params.OceanAnimationFrameRate;
 			};
-			Frame.PositionTexture = new Pop.Image();
+
 			//	gr: load as many as we can (so we can control which ones are availible at the preload time)
 			//	todo: change this so it loads async but on demand so doesn't fall over if stuff is missing
 			try
 			{
-				const VertexSkip = 0;
 				const GetIndexMap = undefined;
-				Frame.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Filename, Frame.PositionTexture, Scale, VertexSkip, GetIndexMap, OnBoundingBox );
+				Frame.TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Filename, GetIndexMap );
+				Frame.PositionTexture = this.TriangleBuffer.PositionTexture;
+				Frame.ColourTexture = this.TriangleBuffer.ColourTexture;
+				Frame.BoundingBox = this.TriangleBuffer.BoundingBox;
+
 				this.Frames.push(Frame);
 			}
 			catch(e)

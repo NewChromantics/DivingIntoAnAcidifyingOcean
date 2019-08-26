@@ -1,3 +1,4 @@
+Pop.Include('AssetImport.js');
 Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 
@@ -344,152 +345,94 @@ function VerifyGeometryAsset(Asset)
 	
 }
 
-function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null,OnBoundingBox)
+function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 {
-	const GeometryAsset = ParseGeometryFromFile( Filename, VertexSkip );
-	VerifyGeometryAsset( GeometryAsset );
+	//	load positions, colours
+	const Geo = LoadGeometryFile( Filename );
 	
-	//	auto cache some!
-	if ( Filename.endsWith('.ply') )
+	//	mesh stuff
+	let PositionSize = Geo.PositionSize;
+	let Positions = Geo.Positions;
+	let Colours = Geo.Colours;
+	let ColourSize = Colours ? 3 : null;
+	
+	//	vertex stuff
+	//	we should get these from geo for assets WITH a vertex buffer
+	let VertexBuffer = 'auto_vt';
+	let VertexSize = 2;
+	let VertexAttributeName = 'Vertex';
+	let TriangleIndexes = 'auto';
+	
+	//	sort, but consistently
+	//	we used to sort for depth, but dont need to any more
+	if ( GetIndexMap )
 	{
-		const CachedFilename = Filename+MeshAssetFileExtension;
-		if ( Pop.FileExists && !Pop.FileExists(CachedFilename) )
-		{
-			try
-			{
-				const GeoAssetJson = JSON.stringify( GeometryAsset );
-				Pop.WriteStringToFile( Filename + MeshAssetFileExtension, GeoAssetJson );
-			}
-			catch(e)
-			{
-				Pop.Debug(e);
-			}
-		}
+		/*
+		let Map = GetIndexMap(Positions);
+		let NewPositions = [];
+		Map.forEach( i => NewPositions.push(Positions[i]) );
+		Positions = NewPositions;
+		*/
 	}
 	
-	//Pop.Debug("Loading took", Pop.GetTimeNowMs()-LoadTime);
-	let WorldPositionSize = GeometryAsset.WorldPositionSize;
-	let WorldPositions = GeometryAsset.WorldPositions;
-	
-	//	get bounds
-	if ( WorldPositions && OnBoundingBox )
+	let PositionImage = new Pop.Image();
+	if ( PositionImage )
 	{
-		let Min = WorldPositions[0];
-		let Max = WorldPositions[0];
-		let Update = function(xyz)
-		{
-			Min = Math.Min3( Min, xyz );
-			Max = Math.Max3( Max, xyz );
-		}
-		WorldPositions.forEach( Update );
-		let BoundingBox = {'Min':Min,'Max':Max};
-		OnBoundingBox( BoundingBox );
-	}
-	
-	if ( WorldPositionImage )
-	{
-		//	sort, but consistently
-		if ( GetIndexMap )
-		{
-			let Map = GetIndexMap(WorldPositions);
-			let NewPositions = [];
-			Map.forEach( i => NewPositions.push(WorldPositions[i]) );
-			WorldPositions = NewPositions;
-		}
-		
-		let Unrolled = new Float32Array( 3 * WorldPositions.length );
-		let PushUnrolled = function(xyz,i)
-		{
-			Unrolled[(i*3)+0] = xyz[0];
-			Unrolled[(i*3)+1] = xyz[1];
-			Unrolled[(i*3)+2] = xyz[2];
-		}
-		WorldPositions.forEach(PushUnrolled);
-		WorldPositions = Unrolled;
-		
-		//let WorldPosTime = Pop.GetTimeNowMs();
-		
-		Scale = Scale||1;
-		let Channels = 3;
-		let Quantisise = false;
-		
-		let NormaliseCoordf = function(x,Index)
-		{
-			x *= Scale;
-			return x;
-		}
-		
+		//	pad to square
 		const Width = 1024;
-		const Height = Math.ceil( WorldPositions.length / WorldPositionSize / Width );
-		let WorldPixels = new Float32Array( Channels * Width*Height );
-		//WorldPositions.copyWithin( WorldPixels );
+		const Height = Math.ceil( Positions.length / Width );
+		const Channels = PositionSize;
 		
-		let ModifyXyz = function(Index)
-		{
-			Index *= Channels;
-			let x = WorldPixels[Index+0];
-			let y = WorldPixels[Index+1];
-			let z = WorldPixels[Index+2];
-			//	normalize and turn into 0-255
-			x = Quantisise ? Math.Range( WorldMin[0], WorldMax[0], x ) : x;
-			y = Quantisise ? Math.Range( WorldMin[1], WorldMax[1], y ) : y;
-			z = Quantisise ? Math.Range( WorldMin[2], WorldMax[2], z ) : z;
-			x = NormaliseCoordf(x);
-			y = NormaliseCoordf(y);
-			z = NormaliseCoordf(z);
-			//Pop.Debug(WorldMin,WorldMax,x,y,z);
-			WorldPixels[Index+0] = x;
-			WorldPixels[Index+1] = y;
-			WorldPixels[Index+2] = z;
-		}
+		const Pixels = new Float32Array( Positions, 0, Channels * Width * Height );
+		const PixelFormat = 'Float'+Channels;
+		PositionImage.WritePixels( Width, Height, Pixels, PixelFormat );
+	}
+	
+	let ColourImage = null;
+	if ( ColourImage && Colours )
+	{
+		if ( Colours.length != Positions.length )
+			throw "Expecting Colours.length ("+Colours.length+") to match Positions.length ("+Positions.length+")";
+		//	pad to square
+		const Width = 1024;
+		const Height = Math.ceil( Colours.length / Width );
+		const Channels = ColourSize;
 		
-		let PushPixel = function(xyz,Index)
-		{
-			WorldPixels[Index*Channels+0] = xyz[0];
-			WorldPixels[Index*Channels+1] = xyz[1];
-			WorldPixels[Index*Channels+2] = xyz[2];
-			ModifyXyz( Index );
-		}
-		for ( let i=0;	i<WorldPositions.length;	i+=WorldPositionSize )
-		{
-			PushPixel( WorldPositions.slice(i,i+WorldPositionSize), i/WorldPositionSize );
-			//	ModifyXyz( WorldPositions.slice(i,i+WorldPositionSize), i/WorldPositionSize );
-		}
-		
-		//Pop.Debug("Making world positions took", Pop.GetTimeNowMs()-WorldPosTime);
-		
-		//let WriteTime = Pop.GetTimeNowMs();
-		WorldPositionImage.WritePixels( Width, Height, WorldPixels, 'Float'+Channels );
-		//Pop.Debug("Making world texture took", Pop.GetTimeNowMs()-WriteTime);
+		const Pixels = new Float32Array( Colours, 0, Channels * Width * Height );
+		const PixelFormat = 'Float'+Channels;
+		ColourImage.WritePixels( Width, Height, Pixels, PixelFormat );
 	}
 	
 	//	auto generated vertexes
-	if ( GeometryAsset.VertexBuffer == 'auto_vt' )
+	if ( VertexBuffer == 'auto_vt' )
 	{
 		//Pop.Debug("Auto generating vertex buffer ", GeometryAsset.VertexBuffer);
-		if ( GeometryAsset.VertexSize != 2 )
-			throw "Expected vertex size of 2 (not " + GeometryAsset.VertexSize + ") for " + GeometryAsset.VertexBuffer;
+		if ( VertexSize != 2 )
+			throw "Expected vertex size of 2 (not " + VertexSize + ") for " + VertexBuffer;
 		
 		//	need to work out triangle count...
-		const TriangleCount = GeometryAsset.WorldPositions.length;
-	
-		GeometryAsset.VertexBuffer = GetAuto_AutoVtBuffer(TriangleCount);
+		const TriangleCount = Positions.length;
+		VertexBuffer = GetAuto_AutoVtBuffer(TriangleCount);
 	}
 	
 	//	auto generated triangles
-	if ( GeometryAsset.TriangleIndexes == 'auto' )
+	if ( TriangleIndexes == 'auto' )
 	{
-		const TriangleCount = GeometryAsset.VertexBuffer.length / GeometryAsset.VertexSize;
-		GeometryAsset.TriangleIndexes = GetAutoTriangleIndexes( TriangleCount );
+		const TriangleCount = VertexBuffer.length / VertexSize;
+		TriangleIndexes = GetAutoTriangleIndexes( TriangleCount );
 	}
 	
 	//	loads much faster as a typed array
-	GeometryAsset.VertexBuffer = new Float32Array( GeometryAsset.VertexBuffer );
-	GeometryAsset.TriangleIndexes = new Int32Array( GeometryAsset.TriangleIndexes );
+	VertexBuffer = new Float32Array( VertexBuffer );
+	TriangleIndexes = new Int32Array( TriangleIndexes );
 	
 	//let CreateBufferTime = Pop.GetTimeNowMs();
 	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, GeometryAsset.VertexAttributeName, GeometryAsset.VertexBuffer, GeometryAsset.VertexSize, GeometryAsset.TriangleIndexes );
 	//Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
+	
+	TriangleBuffer.BoundingBox = Geo.BoundingBox;
+	TriangleBuffer.PositionImage = PositionImage;
+	TriangleBuffer.ColourImage = ColourImage;
 	
 	return TriangleBuffer;
 }
