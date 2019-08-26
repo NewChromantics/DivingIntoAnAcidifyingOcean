@@ -183,6 +183,7 @@ function GetAsset(Name,RenderContext)
 function TPhysicsActor(Meta)
 {
 	this.Position = Meta.Position;
+	this.BoundingBox = null;
 	this.TriangleBuffer = null;
 	this.Colours = Meta.Colours;
 	this.Meta = Meta;
@@ -266,8 +267,14 @@ function TPhysicsActor(Meta)
 		if ( this.TriangleBuffer )
 			return this.TriangleBuffer;
 		
+		Pop.Debug("Load geo");
+		let OnBoundingBox = function(BoundingBox)
+		{
+			this.BoundingBox = BoundingBox;
+		}
+		
 		this.PositionTexture = new Pop.Image();
-		this.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Meta.Filename, this.PositionTexture, Meta.Scale, Meta.VertexSkip, this.GetIndexMap.bind(this) );
+		this.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Meta.Filename, this.PositionTexture, Meta.Scale, Meta.VertexSkip, this.GetIndexMap.bind(this), OnBoundingBox.bind(this) );
 		this.ResetPhysicsTextures();
 		
 		return this.TriangleBuffer;
@@ -278,16 +285,27 @@ function TPhysicsActor(Meta)
 		//Pop.Debug("physics pos", JSON.stringify(this));
 		return Math.CreateTranslationMatrix( ...this.Position );
 	}
+	
+	this.GetBoundingBox = function()
+	{
+		return this.BoundingBox;
+	}
 }
 
 function TAnimationBuffer(Filenames,Scale)
 {
 	this.Frames = null;
+	this.BoundingBox = null;
 	
 	this.Init = function(RenderTarget)
 	{
 		if ( this.Frames )
 			return;
+		
+		let OnBoundingBox = function(BoundingBox)
+		{
+			this.BoundingBox = BoundingBox;
+		}.bind(this);
 		
 		let LoadFrame = function(Filename,Index)
 		{
@@ -302,7 +320,9 @@ function TAnimationBuffer(Filenames,Scale)
 			//	todo: change this so it loads async but on demand so doesn't fall over if stuff is missing
 			try
 			{
-				Frame.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Filename, Frame.PositionTexture, Scale );
+				const VertexSkip = 0;
+				const GetIndexMap = undefined;
+				Frame.TriangleBuffer = LoadGeometryFromFile( RenderTarget, Filename, Frame.PositionTexture, Scale, VertexSkip, GetIndexMap, OnBoundingBox );
 				this.Frames.push(Frame);
 			}
 			catch(e)
@@ -358,6 +378,8 @@ function TAnimationBuffer(Filenames,Scale)
 function TAnimatedActor(Meta)
 {
 	this.Position = Meta.Position;
+	this.LocalToWorldTransform = Math.CreateTranslationMatrix(...this.Position);
+
 	this.Animation = new TAnimationBuffer(Meta.Filename,Meta.Scale);
 	this.TriangleBuffer = null;
 	this.Colours = Meta.Colours;
@@ -390,6 +412,11 @@ function TAnimatedActor(Meta)
 	this.GetTransformMatrix = function()
 	{
 		return Math.CreateTranslationMatrix( ...this.Position );
+	}
+	
+	this.GetBoundingBox = function()
+	{
+		return this.Animation.BoundingBox;
 	}
 }
 
@@ -566,7 +593,7 @@ function VerifyGeometryAsset(Asset)
 	
 }
 
-function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null)
+function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,VertexSkip=0,GetIndexMap=null,OnBoundingBox)
 {
 	const GeometryAsset = ParseGeometryFromFile( Filename, VertexSkip );
 	VerifyGeometryAsset( GeometryAsset );
@@ -594,19 +621,18 @@ function LoadGeometryFromFile(RenderTarget,Filename,WorldPositionImage,Scale,Ver
 	let WorldPositions = GeometryAsset.WorldPositions;
 	
 	//	get bounds
-	if ( WorldPositions )
+	if ( WorldPositions && OnBoundingBox )
 	{
-		/*
-		 let Min = WorldPositions[0];
-		 let Max = WorldPositions[0];
-		 let Update = function(xyz)
-		 {
-		 Min = Math.Min3( Min, xyz );
-		 Max = Math.Max3( Max, xyz );
-		 }
-		 WorldPositions.forEach( Update );
-		 Pop.Debug( Filename + " bounds == ", Min, Max );
-		 */
+		let Min = WorldPositions[0];
+		let Max = WorldPositions[0];
+		let Update = function(xyz)
+		{
+			Min = Math.Min3( Min, xyz );
+			Max = Math.Max3( Max, xyz );
+		}
+		WorldPositions.forEach( Update );
+		let BoundingBox = {'Min':Min,'Max':Max};
+		OnBoundingBox( BoundingBox );
 	}
 	
 	if ( WorldPositionImage )

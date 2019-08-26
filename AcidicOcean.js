@@ -384,6 +384,7 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	this.VertShader = VertShader;
 	this.FragShader = FragShader;
 	this.Uniforms = Uniforms || [];
+	this.BoundingBox = null;
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
@@ -398,6 +399,16 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 		
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms.bind(this) );
 	}
+	
+	this.GetTransformMatrix = function()
+	{
+		return this.LocalToWorldTransform;
+	}
+	
+	this.GetBoundingBox = function()
+	{
+		return this.BoundingBox;
+	}
 }
 
 //	get scene graph
@@ -411,24 +422,25 @@ function GetRenderScene(Time)
 			return;
 		
 		//	has no bounds!
-		if ( !Actor.BoundingBox )
+		const BoundingBox = Actor.GetBoundingBox();
+		if ( !BoundingBox )
 		{
 			Pop.Debug("Actor has no bounds",Actor);
 			return;
 		}
 		
 		//	bounding box to matrix...
-		const BoundsSize = Math.Subtract3( Actor.BoundingBox.Max, Actor.BoundingBox.Min );
+		const BoundsSize = Math.Subtract3( BoundingBox.Max, BoundingBox.Min );
 	
 		//	cube is currently -1..1 so compensate. Need to change shader if we change this
 		BoundsSize[0] /= 2;
 		BoundsSize[1] /= 2;
 		BoundsSize[2] /= 2;
 
-		const BoundsCenter = Math.Lerp3( Actor.BoundingBox.Min, Actor.BoundingBox.Max, 0.5 );
+		const BoundsCenter = Math.Lerp3( BoundingBox.Min, BoundingBox.Max, 0.5 );
 		let BoundsMatrix = Math.CreateTranslationMatrix(...BoundsCenter);
 		BoundsMatrix = Math.MatrixMultiply4x4( BoundsMatrix, Math.CreateScaleMatrix(...BoundsSize) );
-		BoundsMatrix = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, BoundsMatrix );
+		BoundsMatrix = Math.MatrixMultiply4x4( Actor.GetTransformMatrix(), BoundsMatrix );
 
 		const BoundsActor = new TActor();
 		const BoundsLocalScale = []
@@ -478,6 +490,7 @@ function GetRenderScene(Time)
 		Actor.Uniforms['Colours']= Actor.Colours;
 		Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
 		//let a = new TActor( )
+		PushActorBoundingBox( Actor );
 		Scene.push( Actor );
 	}
 	/*
