@@ -382,8 +382,15 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 		const Width = 1024;
 		const Height = Math.ceil( Positions.length / Width );
 		const Channels = PositionSize;
+		const PixelDataSize = Channels * Width * Height;
 		
-		const Pixels = new Float32Array( Positions, 0, Channels * Width * Height );
+		const PixelValues = Positions.slice();
+		PixelValues.length = PixelDataSize;
+		
+		const Pixels = new Float32Array( PixelValues );
+		if ( Pixels.length != PixelDataSize )
+			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+		
 		const PixelFormat = 'Float'+Channels;
 		PositionImage.WritePixels( Width, Height, Pixels, PixelFormat );
 	}
@@ -427,12 +434,12 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 	TriangleIndexes = new Int32Array( TriangleIndexes );
 	
 	//let CreateBufferTime = Pop.GetTimeNowMs();
-	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, GeometryAsset.VertexAttributeName, GeometryAsset.VertexBuffer, GeometryAsset.VertexSize, GeometryAsset.TriangleIndexes );
+	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexBuffer, VertexSize, TriangleIndexes );
 	//Pop.Debug("Making triangle buffer took", Pop.GetTimeNowMs()-CreateBufferTime);
 	
 	TriangleBuffer.BoundingBox = Geo.BoundingBox;
-	TriangleBuffer.PositionImage = PositionImage;
-	TriangleBuffer.ColourImage = ColourImage;
+	TriangleBuffer.PositionTexture = PositionImage;
+	TriangleBuffer.ColourTexture = ColourImage;
 	
 	return TriangleBuffer;
 }

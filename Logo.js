@@ -50,11 +50,11 @@ function TLogoState()
 	this.Params.SpringForce = 0.3;
 	this.Params.Damping = 0.22;
 	this.Params.NoiseForce = 0.1;
-	this.Params.LocalScale = 0.8;
-	this.Params.WorldScale = 1.0;
+	this.Params.LocalScale = 0.45;
+	this.Params.WorldScale = 0.2;
 	this.Params.PushRadius = 0.24;
-	this.Params.PushForce = 35.00;
-	this.Params.PushForceMax = 5.00;
+	this.Params.PushForce = 20.00;
+	this.Params.PushForceMax = 1.00;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
@@ -312,11 +312,13 @@ function LogoRender(RenderTarget)
 		Shader.SetUniform('SpringForce', Params.SpringForce );
 		Shader.SetUniform('Damping', Params.Damping );
 		Shader.SetUniform('NoiseForce', Params.NoiseForce );
-		Shader.SetUniform('PushRadius', Params.PushRadius );
+		Shader.SetUniform('PushRadius', Params.PushRadius / Params.WorldScale);
 		Shader.SetUniform('PushPositions', LogoState.PushPositions );
-		Shader.SetUniform('PushForce', Params.PushForce );
-		Shader.SetUniform('PushForceMax', Params.PushForceMax );
-
+		Shader.SetUniform('PushForce', Params.PushForce / Params.WorldScale);
+		Shader.SetUniform('PushForceMax', Params.PushForceMax / Params.WorldScale );
+		Shader.SetUniform('WorldScale', Params.WorldScale );
+	
+		
 		//	disable push until we have enough positions
 		if ( LogoState.PushPositions.length < LogoState.PushPositionCount )
 		{
@@ -384,6 +386,8 @@ function LoadLogoScene()
 		//	undo projection (we render stretched, but data is 1:1)
 		const ProjectionAspectRatio = WindowRect[3] / WindowRect[2];
 		x /= ProjectionAspectRatio;
+		x /= LogoState.Params.WorldScale;
+		y /= LogoState.Params.WorldScale;
 		LogoState.OnMouseMove( x, y );
 	}
 }

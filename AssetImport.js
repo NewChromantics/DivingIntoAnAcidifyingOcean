@@ -1,4 +1,6 @@
 Pop.Include('PopEngineCommon/PopCollada.js');
+Pop.Include('PopEngineCommon/PopPly.js');
+Pop.Include('PopEngineCommon/PopObj.js');
 Pop.Include('Timeline.js');
 
 
@@ -207,6 +209,8 @@ function ParseGeometryJsonFile(Json)
 
 function LoadGeometryFile(Filename)
 {
+	Pop.Debug("LoadGeometryFile(",Filename);
+	
 	let Geo = null;
 	if ( Filename.endsWith('.geometry.json') )
 	{

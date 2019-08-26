@@ -104,10 +104,16 @@ function TPhysicsActor(Meta)
 		return this.TriangleBuffer;
 	}
 	
-	this.GetTransformMatrix = function()
+	this.GetLocalToWorldTransform = function()
 	{
 		//Pop.Debug("physics pos", JSON.stringify(this));
-		return Math.CreateTranslationMatrix( ...this.Position );
+		if ( !this.LocalToWorldTransform )
+		{
+			let Trans = Math.CreateTranslationMatrix( ...this.Position );
+			let Scale = Math.CreateScaleMatrix( this.Meta.Scale );
+			this.LocalToWorldTransform = Math.MatrixMultiply4x4Multiple( Scale, Trans );
+		}
+		return this.LocalToWorldTransform;
 	}
 	
 	this.GetBoundingBox = function()
@@ -134,11 +140,6 @@ function TAnimationBuffer(Filenames,Scale)
 		if ( this.Frames )
 			return;
 		
-		let OnBoundingBox = function(BoundingBox)
-		{
-			this.BoundingBox = BoundingBox;
-		}.bind(this);
-		
 		let LoadFrame = function(Filename,Index)
 		{
 			//	gr: making frame duration dynamic now, so time here is always 1
@@ -153,10 +154,13 @@ function TAnimationBuffer(Filenames,Scale)
 			try
 			{
 				const GetIndexMap = undefined;
-				Frame.TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Filename, GetIndexMap );
-				Frame.PositionTexture = this.TriangleBuffer.PositionTexture;
-				Frame.ColourTexture = this.TriangleBuffer.ColourTexture;
-				Frame.BoundingBox = this.TriangleBuffer.BoundingBox;
+				const TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Filename, GetIndexMap );
+				Frame.TriangleBuffer = TriangleBuffer;
+				Frame.PositionTexture = TriangleBuffer.PositionTexture;
+				Frame.ColourTexture = TriangleBuffer.ColourTexture;
+				
+				//	should grab biggest, but lets just overwrite
+				this.BoundingBox = TriangleBuffer.BoundingBox;
 
 				this.Frames.push(Frame);
 			}
@@ -249,7 +253,7 @@ function TAnimatedActor(Meta)
 		return null;
 	}
 	
-	this.GetTransformMatrix = function()
+	this.GetLocalToWorldTransform = function()
 	{
 		return Math.CreateTranslationMatrix( ...this.Position );
 	}
