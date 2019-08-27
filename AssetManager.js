@@ -369,6 +369,30 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 	let VertexAttributeName = 'Vertex';
 	let TriangleIndexes = 'auto';
 	
+	const AlphaIsPositionW = true;
+	if ( AlphaIsPositionW && Alphas && PositionSize < 4 )
+	{
+		Pop.Debug(Filename,"Pushing position W as alpha");
+		let NewPositions = [];
+		for ( let i=0;	i<Positions.length/PositionSize;	i++ )
+		{
+			let p = i * PositionSize;
+			for ( let c=0;	c<PositionSize;	c++ )
+			{
+				let x = Positions[p+c];
+				NewPositions.push(x);
+			}
+			let a = Alphas[i];
+			NewPositions.push(a);
+		}
+		
+		//	positions now 4!
+		Positions = NewPositions;
+		PositionSize++;
+		Alphas = null;
+		AlphaSize = null;
+	}
+	
 	//	sort, but consistently
 	//	we used to sort for depth, but dont need to any more
 	if ( GetIndexMap )
