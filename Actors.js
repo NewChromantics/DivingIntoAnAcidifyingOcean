@@ -98,6 +98,7 @@ function TPhysicsActor(Meta)
 		this.TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Meta.Filename, this.GetIndexMap.bind(this) );
 		this.PositionTexture = this.TriangleBuffer.PositionTexture;
 		this.ColourTexture = this.TriangleBuffer.ColourTexture;
+		this.AlphaTexture = this.TriangleBuffer.AlphaTexture;
 		this.BoundingBox = this.TriangleBuffer.BoundingBox;
 		this.ResetPhysicsTextures();
 		
@@ -158,6 +159,7 @@ function TAnimationBuffer(Filenames,Scale)
 				Frame.TriangleBuffer = TriangleBuffer;
 				Frame.PositionTexture = TriangleBuffer.PositionTexture;
 				Frame.ColourTexture = TriangleBuffer.ColourTexture;
+				Frame.AlphaTexture = TriangleBuffer.AlphaTexture;
 				
 				//	should grab biggest, but lets just overwrite
 				this.BoundingBox = TriangleBuffer.BoundingBox;

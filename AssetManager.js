@@ -359,7 +359,9 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 	let Positions = Geo.Positions;
 	let Colours = Geo.Colours;
 	let ColourSize = Colours ? 3 : null;
-	
+	let Alphas = Geo.Alphas;
+	let AlphaSize = Alphas ? 1 : null;
+
 	//	vertex stuff
 	//	we should get these from geo for assets WITH a vertex buffer
 	let VertexBuffer = 'auto_vt';
@@ -400,20 +402,53 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 	}
 	
 	let ColourImage = null;
-	if ( ColourImage && Colours )
+	if ( Colours )
 	{
+		ColourImage = new Pop.Image();
+		
 		if ( Colours.length != Positions.length )
 			throw "Expecting Colours.length ("+Colours.length+") to match Positions.length ("+Positions.length+")";
 		//	pad to square
 		const Width = 1024;
 		const Height = Math.ceil( Colours.length / Width );
 		const Channels = ColourSize;
+		const PixelDataSize = Channels * Width * Height;
+
+		const PixelValues = Colours.slice();
+		PixelValues.length = PixelDataSize;
 		
-		const Pixels = new Float32Array( Colours, 0, Channels * Width * Height );
+		const Pixels = new Float32Array( PixelValues );
+		if ( Pixels.length != PixelDataSize )
+			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+
 		const PixelFormat = 'Float'+Channels;
 		ColourImage.WritePixels( Width, Height, Pixels, PixelFormat );
 	}
 	
+	let AlphaImage = null;
+	if ( Alphas )
+	{
+		AlphaImage = new Pop.Image();
+		
+		if ( Alphas.length/AlphaSize != Positions.length/PositionSize )
+			throw "Expecting Alphas.length ("+Alphas.length+") to match Positions.length ("+Positions.length+")";
+		//	pad to square
+		const Width = 1024;
+		const Height = Math.ceil( Alphas.length / Width );
+		const Channels = AlphaSize;
+		const PixelDataSize = Channels * Width * Height;
+		
+		const PixelValues = Alphas.slice();
+		PixelValues.length = PixelDataSize;
+		
+		const Pixels = new Float32Array( PixelValues );
+		if ( Pixels.length != PixelDataSize )
+			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+
+		const PixelFormat = 'Float'+Channels;
+		AlphaImage.WritePixels( Width, Height, Pixels, PixelFormat );
+	}
+
 	//	auto generated vertexes
 	if ( VertexBuffer == 'auto_vt' )
 	{
@@ -444,7 +479,8 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 	TriangleBuffer.BoundingBox = Geo.BoundingBox;
 	TriangleBuffer.PositionTexture = PositionImage;
 	TriangleBuffer.ColourTexture = ColourImage;
-	
+	TriangleBuffer.AlphaTexture = AlphaImage;
+
 	return TriangleBuffer;
 }
 
