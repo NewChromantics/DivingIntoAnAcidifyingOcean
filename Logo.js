@@ -46,15 +46,15 @@ function TLogoState()
 	
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
-	this.Params.SdfMin = 0.854;
-	this.Params.SpringForce = 0.3;
-	this.Params.Damping = 0.22;
-	this.Params.NoiseForce = 0.1;
-	this.Params.LocalScale = 0.45;
-	this.Params.WorldScale = 1;
-	this.Params.PushRadius = 0.24;
-	this.Params.PushForce = 20.00;
-	this.Params.PushForceMax = 1.00;
+	this.Params.SdfMin = 0.87;
+	this.Params.SpringForce = 0.62;
+	this.Params.Damping = 0.50;
+	this.Params.NoiseForce = 0.05;
+	this.Params.LocalScale = 0.29;
+	this.Params.WorldScale = 0.8;
+	this.Params.PushRadius = 0.32;
+	this.Params.PushForce = 40.00;
+	this.Params.PushForceMax = 40.00;
 	this.Params.SampleDelta = 0.005;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
@@ -208,6 +208,12 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	{
 		LogoState = new TLogoState();
 		LoadLogoScene();
+		
+		//	hide title as we replace it with our own!
+		{
+			let Div = new Pop.Hud.Label('TitleText');
+			Div.SetVisible(false);
+		}
 	}
 	
 	
