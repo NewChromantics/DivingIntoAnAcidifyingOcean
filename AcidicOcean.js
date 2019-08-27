@@ -147,7 +147,8 @@ Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
-Params.DrawBoundingBoxes = true;
+Params.DrawBoundingBoxes = false;
+Params.ActorPlaceholdersScale = 0.1;
 Params.ScrollFlySpeed = 30;
 
 let OnParamsChanged = function(Params,ChangedParamName)
@@ -168,6 +169,7 @@ ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 ParamsWindow.AddParam('DrawBoundingBoxes');
+ParamsWindow.AddParam('ActorPlaceholdersScale',0,1);
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
@@ -258,26 +260,32 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
-		if ( LoadWaterAsInstances && ActorNode.Name.startsWith('Water_') && Actor_Debris )
+		if ( ActorNode.Name.startsWith('Water_') && Actor_Debris )
 		{
-			//	add an instance
-			if ( !Actor_Debris.Instances )
-				Actor_Debris.Instances = [];
+			if ( LoadWaterAsInstances )
+			{
+				//	add an instance
+				if ( !Actor_Debris.Instances )
+					Actor_Debris.Instances = [];
 			
-			Actor_Debris.Instances.push( ActorNode.Position );
+				Actor_Debris.Instances.push( ActorNode.Position );
+			}
 			//	temp until we do instances
 			Actor_Debris.Position = ActorNode.Position;
 			return;
 		}
 		
 		
-		if ( LoadWaterAsInstances && ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
+		if ( ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
 		{
-			//	add an instance
-			if ( !Actor_Ocean.Instances )
-				Actor_Ocean.Instances = [];
+			if ( LoadWaterAsInstances )
+			{
+				//	add an instance
+				if ( !Actor_Ocean.Instances )
+					Actor_Ocean.Instances = [];
 
-			Actor_Ocean.Instances.push( ActorNode.Position );
+				Actor_Ocean.Instances.push( ActorNode.Position );
+			}
 			//	temp until we do instances
 			Actor_Ocean.Position = ActorNode.Position;
 			return;
@@ -287,10 +295,11 @@ function LoadCameraScene(Filename)
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
-		//let LocalScale = Math.CreateScaleMatrix(0.1);
+		
+		let LocalScale = Math.CreateScaleMatrix( Params.ActorPlaceholdersScale );
 		let WorldPos = Math.CreateTranslationMatrix( ...ActorNode.Position );
-		//Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPos, LocalScale );
-		Actor.LocalToWorldTransform = WorldPos;
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPos, LocalScale );
+		
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = ColourFragShader;
 		Actor.BoundingBox = ActorNode.BoundingBox;
