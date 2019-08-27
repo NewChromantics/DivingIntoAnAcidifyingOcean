@@ -1,6 +1,7 @@
 Pop.Include('PopEngineCommon/PopCollada.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
+Pop.Include('PopEngineCommon/PopSvg.js');
 Pop.Include('Timeline.js');
 
 
@@ -259,6 +260,10 @@ function LoadGeometryFile(Filename)
 	else if ( Filename.endsWith('.dae.json') )
 	{
 		Geo = ParseGeometryFile( Contents, ParseColladaSceneAsModel );
+	}
+	else if ( Filename.endsWith('.svg.json') )
+	{
+		Geo = ParseGeometryFile( Contents, Pop.Svg.Parse );
 	}
 	else
 		throw "Don't know how to load " + Filename;

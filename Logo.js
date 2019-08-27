@@ -51,7 +51,7 @@ function TLogoState()
 	this.Params.Damping = 0.22;
 	this.Params.NoiseForce = 0.1;
 	this.Params.LocalScale = 0.45;
-	this.Params.WorldScale = 0.2;
+	this.Params.WorldScale = 1;
 	this.Params.PushRadius = 0.24;
 	this.Params.PushForce = 20.00;
 	this.Params.PushForceMax = 1.00;
@@ -73,7 +73,7 @@ function TLogoState()
 	this.LogoParamsWindow.AddParam('EnablePhysicsIteration');
 
 	const LogoMeta = {};
-	LogoMeta.Filename = 'Logo/Logo.dae.json';
+	LogoMeta.Filename = 'Logo/Logo.svg.json';
 	LogoMeta.Position = [0,0,0];
 	LogoMeta.Scale = 0.2;
 	LogoMeta.TriangleScale = 0.03;
