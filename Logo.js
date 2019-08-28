@@ -56,11 +56,13 @@ function TLogoState()
 	this.Params.PushForce = 40.00;
 	this.Params.PushForceMax = 40.00;
 	this.Params.SampleDelta = 0.005;
+	this.Params.SampleWeightSigma = 4;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
 	this.LogoParamsWindow.AddParam('SdfMin',0,1);
 	this.LogoParamsWindow.AddParam('SampleDelta',0,0.01);
+	this.LogoParamsWindow.AddParam('SampleWeightSigma',0,5,Math.floor);
 	this.LogoParamsWindow.AddParam('SpringForce',0,10);
 	this.LogoParamsWindow.AddParam('Damping',0,1);
 	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
@@ -392,6 +394,7 @@ function LogoRender(RenderTarget)
 			Shader.SetUniform('SdfMin',LogoState.Params.SdfMin);
 			Shader.SetUniform('ProjectionAspectRatio',ProjectionAspectRatio);
 			Shader.SetUniform('SampleDelta', LogoState.Params.SampleDelta );
+			Shader.SetUniform('SampleWeightSigma',LogoState.Params.SampleWeightSigma);
 		};
 		RenderTarget.DrawGeometry( Quad, BlitShader, SetUniforms );
 	}
