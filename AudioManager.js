@@ -13,48 +13,47 @@ let AudioFake = function()
 
 //	make these params an object?
 //	note: this is a player, not an asset
-Pop.Audio.Sound = function(Filename,Loop,AutoPlay=true)
+Pop.Audio.Sound = function(Filename,Loop)
 {
 	this.Filename = Filename;
 	this.AudioPlayer = null;
-	this.StartedPlaying = false;	//	to detect browser rejection we keep track if we're still trying to play
-	
-	this.OnStartedPlaying = function()
-	{
-		this.StartedPlaying = true;
-	}
-	
-	this.OnDidntPlay = function(Error)
-	{
-		Pop.Debug("play rejected",Error);
-	}
+	this.PlayPromise = null;	//	non-null if still waiting
+
 	
 	this.SetVolume = function(Volume)
 	{
 		this.AudioPlayer.volume = Volume;
 		
-		//	attempt to play
-		if ( !this.StartedPlaying && AutoPlay )
+		//	check is playing
+		if ( !this.AudioPlayer.paused )
+			return;
+		//	audio has stopped (paused will be true)
+		if ( this.AudioPlayer.ended )
 		{
-			Pop.Debug("trying to play audio");
-			try
-			{
-				let PlayPromise = this.AudioPlayer.play();
-				Pop.Debug("typeof PlayPromise", typeof PlayPromise );
-				if ( PlayPromise )
-				{
-					PlayPromise.then( this.OnStartedPlaying.bind(this) ).catch( this.OnDidntPlay.bind(this) );
-				}
-				else
-				{
-					this.OnStartedPlaying();
-				}
-			}
-			catch(e)
-			{
-				this.OnDidntPlay(e);
-			}
+			if ( !Loop )
+				return;
 		}
+		
+		//	already tried to start
+		if ( this.PlayPromise )
+		{
+			Pop.Debug(Filename,"Audio still waiting for promise");
+			return;
+		}
+
+		let OnPlaying = function(Event)
+		{
+			Pop.Debug(Filename,"Now playing",Event);
+			this.PlayPromise = null;
+		}
+		let OnErrorPlaying = function(Error)
+		{
+			Pop.Debug(Filename,"Error playing",Error);
+			this.PlayPromise = null;
+		}
+		
+		this.PlayPromise = this.AudioPlayer.play();
+		this.PlayPromise.then( OnPlaying.bind(this) ).catch( OnErrorPlaying.bind(this) );
 	}
 	
 	this.Create = function()
@@ -74,6 +73,7 @@ Pop.Audio.Sound = function(Filename,Loop,AutoPlay=true)
 			//	gr: this will be initially paused if user has to interact with webpage first
 			if ( this.AudioPlayer.paused )
 				Pop.Debug("Audio has loaded, initially paused",this);
+			
 		}		
 		const OnError = function(Error)
 		{
@@ -105,7 +105,7 @@ Pop.Audio.Sound = function(Filename,Loop,AutoPlay=true)
 }
 
 
-const TQueuedAudio = function(Filename,Loop,StartQuiet,AutoPlay=true)
+const TQueuedAudio = function(Filename,Loop,StartQuiet)
 {
 	//	fades are 0..1. null if not yet invoked
 	this.Filename = Filename;
@@ -168,7 +168,7 @@ const TQueuedAudio = function(Filename,Loop,StartQuiet,AutoPlay=true)
 	//	init volume
 	if ( Filename !== null )
 	{
-		this.Audio = new Pop.Audio.Sound( Filename, Loop, AutoPlay );
+		this.Audio = new Pop.Audio.Sound( Filename, Loop );
 		this.Audio.SetVolume( this.GetVolume() );
 	}
 }
