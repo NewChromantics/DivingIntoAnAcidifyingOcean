@@ -46,21 +46,23 @@ function TLogoState()
 	
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
-	this.Params.SdfMin = 0.854;
-	this.Params.SpringForce = 0.3;
-	this.Params.Damping = 0.22;
-	this.Params.NoiseForce = 0.1;
-	this.Params.LocalScale = 0.45;
-	this.Params.WorldScale = 0.2;
-	this.Params.PushRadius = 0.24;
-	this.Params.PushForce = 20.00;
-	this.Params.PushForceMax = 1.00;
+	this.Params.SdfMin = 0.87;
+	this.Params.SpringForce = 0.62;
+	this.Params.Damping = 0.50;
+	this.Params.NoiseForce = 0.05;
+	this.Params.LocalScale = 0.29;
+	this.Params.WorldScale = 0.8;
+	this.Params.PushRadius = 0.32;
+	this.Params.PushForce = 40.00;
+	this.Params.PushForceMax = 40.00;
 	this.Params.SampleDelta = 0.005;
+	this.Params.SampleWeightSigma = 4;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
 	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
 	this.LogoParamsWindow.AddParam('SdfMin',0,1);
 	this.LogoParamsWindow.AddParam('SampleDelta',0,0.01);
+	this.LogoParamsWindow.AddParam('SampleWeightSigma',0,5,Math.floor);
 	this.LogoParamsWindow.AddParam('SpringForce',0,10);
 	this.LogoParamsWindow.AddParam('Damping',0,1);
 	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
@@ -73,7 +75,7 @@ function TLogoState()
 	this.LogoParamsWindow.AddParam('EnablePhysicsIteration');
 
 	const LogoMeta = {};
-	LogoMeta.Filename = 'Logo/Logo.dae.json';
+	LogoMeta.Filename = 'Logo/Logo.svg.json';
 	LogoMeta.Position = [0,0,0];
 	LogoMeta.Scale = 0.2;
 	LogoMeta.TriangleScale = 0.03;
@@ -208,6 +210,12 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	{
 		LogoState = new TLogoState();
 		LoadLogoScene();
+		
+		//	hide title as we replace it with our own!
+		{
+			let Div = new Pop.Hud.Label('TitleText');
+			Div.SetVisible(false);
+		}
 	}
 	
 	
@@ -386,6 +394,7 @@ function LogoRender(RenderTarget)
 			Shader.SetUniform('SdfMin',LogoState.Params.SdfMin);
 			Shader.SetUniform('ProjectionAspectRatio',ProjectionAspectRatio);
 			Shader.SetUniform('SampleDelta', LogoState.Params.SampleDelta );
+			Shader.SetUniform('SampleWeightSigma',LogoState.Params.SampleWeightSigma);
 		};
 		RenderTarget.DrawGeometry( Quad, BlitShader, SetUniforms );
 	}

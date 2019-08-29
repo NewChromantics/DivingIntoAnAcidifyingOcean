@@ -38,13 +38,32 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 	return xyz;
 }
 
+float GetTriangleLocalScale(int TriangleIndex)
+{
+	float2 uv = GetTriangleUv( TriangleIndex );
+	float Lod = 0.0;
+	//	gr: this is wierdly always 1
+	float Radius = textureLod( WorldPositions, uv, Lod ).w;
+
+	//	bad texture?
+	if ( Radius == 0.0 )
+	{
+		//Radius = 1.0;
+	}
+	
+	//Radius *= 100.0;
+
+	Radius *= LocalScale;
+	return Radius;
+}
+
 
 void main()
 {
 	int VertexIndex = int(Vertex.x);
 	int TriangleIndex = int(Vertex.y);
 	
-	float3 VertexPos = LocalPositions[VertexIndex] * LocalScale;
+	float3 VertexPos = LocalPositions[VertexIndex] * GetTriangleLocalScale(VertexIndex);
 	float3 LocalPos = VertexPos;
 	
 	float3 WorldPos = GetTriangleWorldPos(TriangleIndex) * WorldScale;
