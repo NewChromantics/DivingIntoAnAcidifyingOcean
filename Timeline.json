@@ -8,47 +8,41 @@
 	"1821":
 	{
 		"Subtitle":"Every second breath we take...",
-		"VoiceAudio":"Audio/Voice_EverySecondBreath.mp3"
+		"VoiceAudio":"Audio/AcidicOcean_Voice_EverySecondBreath.mp3"
 	},
 	"1824":
 	{
-		"Subtitle":"… comes from the ocean",
-		"VoiceAudio":""
+		"Subtitle":"... comes from the ocean"
 	},
 	
 	"1827":
 	{
-		"Subtitle":"But as had previously befallen,",
-		"VoiceAudio":"Audio/Voice_ButThisWontLast.mp3"
+		"Subtitle":"But as had previously befallen,"
 	},
 	"1830":
 	{
-		"Subtitle":"we’re killing over 96% of ocean life.",
-		"VoiceAudio":""
+		"Subtitle":"we’re killing over 96% of ocean life."
 	},
 
 	
 	"1840":
 	{
 		"Subtitle":"In a single lifetime…",
-		"VoiceAudio":""
+		"VoiceAudio":"Audio/AcidicOcean_Voice_InASingleLifetime.mp3"
 	},
 	
 	"1843":
 	{
-		"Subtitle":"we are acidifying the oceans faster than ever before",
-		"VoiceAudio":"Audio/Voice_InOneSinglelifetime.mp3"
+		"Subtitle":"we are acidifying the oceans faster than ever before"
 	},
 	"1850":
 	{
-		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms at an incredible rate.",
-		"VoiceAudio":""
+		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms at an incredible rate."
 	},
 	
 	"1860":
 	{
 		"Subtitle":"If we fail to act, what will happen to them…",
-		"VoiceAudio":"",
 		"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
@@ -60,14 +54,20 @@
 	
 	"1864":
 	{
-		"Subtitle":"… and to us?",
-		"VoiceAudio":"Audio/Voice_IfWeContinue.mp3"
+		"Subtitle":"... and to us?"
+	},
+	
+	"1870":
+	{
+		"Subtitle":"",
+		"VoiceAudio":""
 	},
 	
 	"1900":
 	{
 		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3"
 	},
+	
 	"2019":
 	{
 		"FogColour":[0,0,0],
