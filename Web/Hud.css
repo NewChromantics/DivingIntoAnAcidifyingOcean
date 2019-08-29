@@ -94,17 +94,21 @@
 
 	display:	block;
 	position:	absolute;
-	left:		10vw;
+	left:		48.5vw;
 	top:		79.35vh;
-	width:		80vw;
-	height:		10vh;
-	font-size:	3vh;
+	width:		2.8vw;
+	height:		4vh;
+	font-size:	1.5vh;
+	
 
 	text-align:	center;
 	
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
+
+	border-radius: 9px;
+  	border: 0.1em solid white;
 }
 
 #Hint_Headphones
@@ -139,10 +143,36 @@
 {
 	display: block;
 	position: absolute;
-	left: 1vw;
+	left: 0.8vw;
 	top: 3vh;
-	width:1.5vw;
-	height: 1.5vh;
+	width:1vw;
+	height: 1vh;
+	align-items:		left;
+	justify-content:	left;
+}
+
+#IconSubtitles_Enable
+{
+	display: block;
+	position: absolute;
+	left: 0.85vw;
+	top: 3vh;
+	width:4vw;
+	height: 1vh;
+	align-items:		left;
+	justify-content:	left;
+}
+
+#IconSubtitles_Disable
+{
+	display: block;
+	position: absolute;
+	left: 0.85vw;
+	top: 3vh;
+	width:4vw;
+	height: 1vh;
+	align-items:		left;
+	justify-content:	left;
 }
 
 /* This is for Mobile */
@@ -264,14 +294,15 @@
 	position:	absolute;
 	left:		13vw;
 	top:		10vw;
-	width:		14vw;
+	width:		16.5vw;
 	height:		20vh;
-	font-size:	2vh;
+	letter-spacing: 0.07vw;
 	text-align:	left;
 	display: flex;
 	flex-direction: column;
-	align-items:top;
-	justify-content:top;
+	padding-bottom: 10vh;
+
+
 	
 }
 
@@ -283,19 +314,27 @@
 
 #AnimalCard_Description
 {
-	font-size:	2vh;
-	font-weight: normal;
+	font-size:	1.8vh;
+	font-weight: 300;
 	display:	flex;
-	align-items:		left;
-	justify-content:	center;
+	align-items:	left;
+
 }
 
 h1
 {
-	height: 0vh;
-	padding-top: 2vh;
-	align-items:top;
-	justify-content:top;
+	top:0vh;
+	vertical-align:top;
+	margin-block-start:5vh;
+	margin-block-end: 0px;
+}
+
+h2
+{
+	top:0vh;
+	vertical-align:top;
+	margin-block-start:2.5vh;
+	margin-block-end: 0px;
 }
 
 
@@ -305,7 +344,7 @@ h1
 	position: absolute;
 	left:0vw;
 	top:4.8vh;
-	width:14vw;
+	width:16vw;
 	height:	0.2vh;
 	background: white;
 }
@@ -314,9 +353,10 @@ h1
 {
 	display: block;
 	position: absolute;
-	left: 11.5vw;
+	left: 12vw;
 	top: 26vh;
-	width:2.5vw;
+	width:4vw;
+
 
 }
 
@@ -324,11 +364,13 @@ h1
 {
 	display: block;
 	position: absolute;
-	left: 12.3vw;
-	top: 26vh;
+	left: 12.8vw;
+	top: 25.8vh;
 	width:2vw;
 	align-items: right;
-	font-size:	1vh;
+	font-size:	1.5vh;
+	letter-spacing: 0.07vw;
+
 
 }
 
