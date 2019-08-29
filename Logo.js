@@ -52,7 +52,7 @@ function TLogoState()
 	this.Params.NoiseForce = 0.05;
 	this.Params.LocalScale = 0.29;
 	this.Params.WorldScale = 0.8;
-	this.Params.PushRadius = 0.32;
+	this.Params.PushRadius = 0.18;
 	this.Params.PushForce = 40.00;
 	this.Params.PushForceMax = 40.00;
 	this.Params.SampleDelta = 0.0069;
