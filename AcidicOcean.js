@@ -129,8 +129,9 @@ const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
 Params.ExperiencePlaying = true;
-Params.ExperienceDurationSecs = 240;
 Params.UseDebugCamera = false;
+Params.ExperienceDurationSecs = 240;
+Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 11.37;
@@ -163,14 +164,16 @@ let OnParamsChanged = function(Params,ChangedParamName)
 		OnSwitchedToDebugCamera();
 }
 
+
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 ParamsWindow.AddParam('ExperiencePlaying');
+ParamsWindow.AddParam('UseDebugCamera');
+ParamsWindow.AddParam('EnableMusic');
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 ParamsWindow.AddParam('DrawBoundingBoxes');
 ParamsWindow.AddParam('ActorPlaceholdersScale',0,1);
-ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
 ParamsWindow.AddParam('FogColour','Colour');
@@ -594,7 +597,7 @@ function Update(FrameDurationSecs)
 	
 	//	update audio
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
-	AudioManager.SetMusic( CurrentMusic );
+	AudioManager.SetMusic( Params.EnableMusic ? CurrentMusic : null );
 	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
 	AudioManager.PlayVoice( CurrentVoice );
 	AudioManager.Update( FrameDurationSecs );
