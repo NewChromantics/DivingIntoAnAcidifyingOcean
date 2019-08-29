@@ -46,7 +46,7 @@ function TLogoState()
 	
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
-	this.Params.SdfMin = 0.87;
+	this.Params.SdfMin = 0.90;
 	this.Params.SpringForce = 0.62;
 	this.Params.Damping = 0.50;
 	this.Params.NoiseForce = 0.05;
@@ -55,7 +55,7 @@ function TLogoState()
 	this.Params.PushRadius = 0.32;
 	this.Params.PushForce = 40.00;
 	this.Params.PushForceMax = 40.00;
-	this.Params.SampleDelta = 0.005;
+	this.Params.SampleDelta = 0.0069;
 	this.Params.SampleWeightSigma = 4;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
