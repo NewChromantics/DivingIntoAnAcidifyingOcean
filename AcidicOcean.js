@@ -595,9 +595,10 @@ function Update(FrameDurationSecs)
 	//	update audio
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
 	AudioManager.SetMusic( CurrentMusic );
+	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
+	AudioManager.PlayVoice( CurrentVoice );
 	AudioManager.Update( FrameDurationSecs );
-	
-	
+
 	//	update some stuff from timeline
 	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
 	ParamsWindow.OnParamChanged('FogColour');
@@ -606,10 +607,10 @@ function Update(FrameDurationSecs)
 	Hud.YearLabel.SetValue( Math.floor(Params.TimelineYear) );
 	Hud.YearSlider.SetValue( Params.TimelineYear );
 	const MusicDebug = AudioManager.GetMusicQueueDebug();
-	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
+	const VoiceDebug = AudioManager.GetVoiceQueueDebug();
 	const Subtitle = Timeline.GetUniform( Time, 'Subtitle' );
 	Hud.MusicLabel.SetValue( MusicDebug );
-	Hud.VoiceLabel.SetValue( CurrentVoice );
+	Hud.VoiceLabel.SetValue( VoiceDebug );
 	Hud.SubtitleLabel.SetValue( Subtitle );
 
 	const DecimalPlaces = 2;

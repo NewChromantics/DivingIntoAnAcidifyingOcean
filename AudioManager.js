@@ -13,7 +13,7 @@ let AudioFake = function()
 
 //	make these params an object?
 //	note: this is a player, not an asset
-Pop.Audio.Sound = function(Filename,Loop=false,AutoPlay=true)
+Pop.Audio.Sound = function(Filename,Loop,AutoPlay=true)
 {
 	this.Filename = Filename;
 	this.AudioPlayer = null;
@@ -105,11 +105,11 @@ Pop.Audio.Sound = function(Filename,Loop=false,AutoPlay=true)
 }
 
 
-const TQueuedAudio = function(Filename,Loop=false,AutoPlay=true)
+const TQueuedAudio = function(Filename,Loop,StartQuiet,AutoPlay=true)
 {
 	//	fades are 0..1. null if not yet invoked
 	this.Filename = Filename;
-	this.FadeInElapsed = 0;
+	this.FadeInElapsed = StartQuiet ? 0 : 1;
 	this.FadeOutElapsed = null;
 	this.Audio = null;
 	
@@ -166,8 +166,11 @@ const TQueuedAudio = function(Filename,Loop=false,AutoPlay=true)
 	}
 	
 	//	init volume
-	this.Audio = new Pop.Audio.Sound( Filename, Loop, AutoPlay );
-	this.Audio.SetVolume( this.GetVolume() );
+	if ( Filename !== null )
+	{
+		this.Audio = new Pop.Audio.Sound( Filename, Loop, AutoPlay );
+		this.Audio.SetVolume( this.GetVolume() );
+	}
 }
 
 const TAudioManager = function(GetCrossFadeDuration)
@@ -175,29 +178,37 @@ const TAudioManager = function(GetCrossFadeDuration)
 	//	array of TQueuedAudio
 	//	the last element in the queue is NOT fading out, every other one is
 	this.MusicQueue = [];
+	this.VoiceQueue = [];
 
-	this.Update = function(Timestep)
+	
+	this.UpdateAudioQueue = function(Queue,FadeStep)
 	{
 		//	make sure any item not at the end of the queue is fading off
-		for ( let i=0;	i<this.MusicQueue.length-1;	i++ )
-			this.MusicQueue[i].StartFadeOut();
+		for ( let i=0;	i<Queue.length-1;	i++ )
+			Queue[i].StartFadeOut();
 		
+		//	update them all
+		for ( let i=0;	i<Queue.length;	i++ )
+			Queue[i].Update( FadeStep );
+		
+		//	remove any dead audio
+		for ( let i=Queue.length-1;	i>=0;	i-- )
+		{
+			if ( !Queue[i].IsActive() )
+			{
+				Queue[i].Destroy();
+				Queue.splice( i, 1 );
+			}
+		}
+	}
+	
+	this.Update = function(Timestep)
+	{
 		const FadeSecs = GetCrossFadeDuration();
 		const FadeStep = Timestep / FadeSecs;
 		
-		//	update them all
-		for ( let i=0;	i<this.MusicQueue.length;	i++ )
-			this.MusicQueue[i].Update( FadeStep );
-		
-		//	remove any dead audio
-		for ( let i=this.MusicQueue.length-1;	i>=0;	i-- )
-		{
-			if ( !this.MusicQueue[i].IsActive() )
-			{
-				this.MusicQueue[i].Destroy();
-				this.MusicQueue.splice( i, 1 );
-			}
-		}
+		this.UpdateAudioQueue( this.MusicQueue, FadeStep );
+		this.UpdateAudioQueue( this.VoiceQueue, FadeStep );
 	}
 	
 	this.SetMusic = function(Filename)
@@ -210,15 +221,38 @@ const TAudioManager = function(GetCrossFadeDuration)
 				return;
 		}
 		
-		let NewSound = new TQueuedAudio( Filename );
+		let Loop = true;
+		let StartQuiet = false;
+		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet );
 		this.MusicQueue.push( NewSound );
 	}
 	
-	
-	this.GetMusicQueueDebug = function()
+	this.PlayVoice = function(Filename)
 	{
-		if ( this.MusicQueue.length == 0 )
-			return "No music queued";
+		//	empty string is a blank audio
+		if ( !Filename.length )
+			Filename = null;
+		
+		//	see if this is at the end of the queue
+		//	gr: change to see if it's in the queue at all?
+		if ( this.VoiceQueue.length > 0 )
+		{
+			let Last = this.VoiceQueue[this.VoiceQueue.length-1];
+			if ( Last.Filename == Filename )
+				return;
+		}
+		
+		let Loop = false;
+		let StartQuiet = false;
+		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet );
+		this.VoiceQueue.push( NewSound );
+	}
+	
+
+	this.GetQueueDebug = function(Queue)
+	{
+		if ( Queue.length == 0 )
+			return "No audio queued";
 		
 		let Metas = [];
 		let PushMeta = function(AudioQueueItem)
@@ -228,7 +262,17 @@ const TAudioManager = function(GetCrossFadeDuration)
 			let Debug = AudioQueueItem.Filename + "@" + Volume + "%";
 			Metas.push( Debug );
 		}
-		this.MusicQueue.forEach( PushMeta );
+		Queue.forEach( PushMeta );
 		return Metas.join(", ");
+	}
+	
+	this.GetMusicQueueDebug = function()
+	{
+		return this.GetQueueDebug(this.MusicQueue);
+	}
+
+	this.GetVoiceQueueDebug = function()
+	{
+		return this.GetQueueDebug(this.VoiceQueue);
 	}
 }
