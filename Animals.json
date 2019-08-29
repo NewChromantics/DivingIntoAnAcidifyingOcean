@@ -1,20 +1,394 @@
 {
-	"Cat":
+	"PTEROPOD":
 	{
-		"Name":		"A cat",
-		"Description":	"cats have legs and like to eat chicken",
-		"Model":	"Models/cat.dae",
-		"AfterYear":	1800,
-		"BigBang",	true
+		"Name":		"PTEROPOD",
+		"Description":	"<h1> When scientists placed pteropods in water with levels of pH and CO2 projected for the year 2100, their shells started decaying within 48h and nearly completely dissolved within 45 days. </h1> <h2>pH is a very important thing. In humans, a small change of 0.2 to 0.3 pH in blood can cause seizures, comas, and even death.</h2>",
+		"Model":	"Models/pteropod_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
 	},
 	
-	"SanitryPad":
+	"JELLYFISH":
 	{
-		"Name":		"Sanitry Pad",
-		"Description":	"Shouldn't be in the ocean",
-		"Model":	"Models/SanitryPad.dae",
-		"AfterYear":	1980,
-		"BigBang",	false
+		"Name":		"JELLYFISH",
+		"Description":	"<h1> Acidification is will shift the competitive advantage among ocean species. </h1> <h2>Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years.</h2>",
+		"Model":	"Models/jellyfish_v1.ply",
+		"AfterYear":	1950,
+		"category" : [ "animal"]
 
 	},
+
+	"SALMON":
+	{
+		"Name":		"SALMON",
+		"Description":	"<h1> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h1> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. A 10% reduction in pteropod numbers could cause salmon to lose up to 20% of their mass.</h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+
+	"SEAGRASS":
+	{
+		"Name":		"SEAGRASS",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+
+	"OYSTERS":
+	{
+		"Name":		"OYSTERS",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+
+	"SEA ANEMONE":
+	{
+		"Name":		"SEA ANEMONE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal"]
+
+	},
+	"FISH LARVAE":
+	{
+		"Name":		"FISH LARVAE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal"]
+
+	},
+	"SEA URCHIN":
+	{
+		"Name":		"SEA URCHIN",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"COCKLE":
+	{
+		"Name":		"COCKLE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cockle_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+	"ALGAL BLOOM":
+	{
+		"Name":		"ALGAL BLOOM",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	2040,
+		"category" : [ "animal"]
+
+	},
+	"POLLOCK":
+	{
+		"Name":		"POLLOCK",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"ANTARCTIC KRILL":
+	{
+		"Name":		"ANTARCTIC KRILL",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+	"CORALLINE ALGAE":
+	{
+		"Name":		"CORALLINE ALGAE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal"]
+
+	},
+	"NODULARIA SPUMIGENA":
+	{
+		"Name":		"NODULARIA SPUMIGENA",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"KELP FOREST":
+	{
+		"Name":		"KELP FOREST",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"DEEP SEA CRAB":
+	{
+		"Name":		"DEEP SEA CRAB",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"SHARK":
+	{
+		"Name":		"SHARK",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/shark_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+	"CEPHALOPODS":
+	{
+		"Name":		"CEPHALOPODS",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+	"DEEP SEA CORAL":
+	{
+		"Name":		"DEEP SEA CORAL",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"BUBBLE GUM CORAL":
+	{
+		"Name":		"BUBBLE GUM CORAL",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"LOBSTER":
+	{
+		"Name":		"LOBSTER",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"JUVENILE BIVALVE":
+	{
+		"Name":		"JUVENILE BIVALVE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"BLUE KING CRAB":
+	{
+		"Name":		"BLUE KING CRAB",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"SEA TURTLE":
+	{
+		"Name":		"SEA TURTLE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/seaturtle_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+	"YELLOWFIN TUNA":
+	{
+		"Name":		"YELLOWFIN TUNA",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"COBIA":
+	{
+		"Name":		"COBIA",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"PHYTOPLANKTON":
+	{
+		"Name":		"PHYTOPLANKTON",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"MUSSELS":
+	{
+		"Name":		"MUSSELS",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"MENIDIA MENIDIA":
+	{
+		"Name":		"MENIDIA MENIDIA",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+	"BRACHYURAN CRAB":
+	{
+		"Name":		"BRACHYURAN CRAB",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+		"BRITTLE STAR":
+	{
+		"Name":		"BRITTLE STAR",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal" ]
+
+	},
+		"CORAL":
+	{
+		"Name":		"CORAL",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/coral.dae",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+		"CLOWNFISH":
+	{
+		"Name":		"CLOWNFISH",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/clownfish_v1.ply",
+		"AfterYear":	1860,
+		"category" : [ "animal", "bigbang" ]
+
+	},
+		"PLASTIC BOTTLE":
+	{
+		"Name":		"PLASTIC BOTTLE",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"CAN":
+	{
+		"Name":		"CAN",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"PLASTIC STRAW":
+	{
+		"Name":		"PLASTIC STRAW",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"PLASTIC BAG":
+	{
+		"Name":		"PLASTIC BAG",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/Plastic_Bag.dae",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"SANITARY PAD":
+	{
+		"Name":		"SANITARY PAD",
+		"Description":	"<h1> As many as 10 000 disposable period products are used in a woman's reproductive lifetime, which corresponds to a carbon footprint of 5,3kg of CO2 per year. Average carbon footprint? </h1> <h2> Every year, UK women produce the equivalent of 200 000 tonnes of menstrual waste. That’s 27 Eiffel Towers. </h2> <h2> Forty pads, panty liners and backing strips are found for every kilometre of UK beach, along with 12 used tampons and applicators. </h2>",
+		"Model":	"Models/SanitaryPad.dae",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"PIECE OF PLASTIC":
+	{
+		"Name":		"PIECE OF PLASTIC",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"FOOD CONTAINER":
+	{
+		"Name":		"FOOD CONTAINER",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"CIGARETTE STUB":
+	{
+		"Name":		"CIGARETTE STUB",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+		"GHOST NET":
+	{
+		"Name":		"GHOST NET",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+	"MICROPLASTIC":
+	{
+		"Name":		"MICROPLASTIC",
+		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
+		"Model":	"Models/cephalopod_v1.ply",
+		"AfterYear":	1956,
+		"category" : [ "nasty animal" ]
+
+	},
+
 }
