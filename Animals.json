@@ -1,0 +1,20 @@
+{
+	"Cat":
+	{
+		"Name":		"A cat",
+		"Description":	"cats have legs and like to eat chicken",
+		"Model":	"Models/cat.dae",
+		"AfterYear":	1800,
+		"BigBang",	true
+	},
+	
+	"SanitryPad":
+	{
+		"Name":		"Sanitry Pad",
+		"Description":	"Shouldn't be in the ocean",
+		"Model":	"Models/SanitryPad.dae",
+		"AfterYear":	1980,
+		"BigBang",	false
+
+	},
+}
