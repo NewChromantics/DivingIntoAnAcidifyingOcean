@@ -723,7 +723,7 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 	if ( Button == 0 )
 	{
 		SwitchToDebugCamera();
-		DebugCamera.OnCameraPanLocal( x, 0, y, FirstClick );
+		DebugCamera.OnCameraPanLocal( x, 0, -y, FirstClick );
 	}
 	if ( Button == 2 )
 	{
@@ -741,6 +741,6 @@ Window.OnMouseScroll = function(x,y,Button,Delta)
 {
 	SwitchToDebugCamera();
 	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
-	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * -Params.ScrollFlySpeed, false );
+	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * Params.ScrollFlySpeed, false );
 }
 
