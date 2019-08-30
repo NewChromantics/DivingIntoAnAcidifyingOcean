@@ -149,8 +149,9 @@ Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
 Params.DrawBoundingBoxes = false;
+Params.DrawBoundingBoxesFilled = false;
 Params.ActorPlaceholdersScale = 0.1;
-Params.ScrollFlySpeed = 30;
+Params.ScrollFlySpeed = 100;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -173,6 +174,7 @@ ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('EnableMusic');
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 ParamsWindow.AddParam('DrawBoundingBoxes');
+ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 ParamsWindow.AddParam('ActorPlaceholdersScale',0,1);
 ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
@@ -191,7 +193,7 @@ ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 ParamsWindow.AddParam('CameraFaceForward');
 ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
 ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
-ParamsWindow.AddParam('ScrollFlySpeed',1,100);
+ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 
 
 
@@ -275,7 +277,7 @@ function LoadCameraScene(Filename)
 			}
 			//	temp until we do instances
 			Actor_Debris.Position = ActorNode.Position;
-			return;
+			//return;
 		}
 		
 		
@@ -291,7 +293,7 @@ function LoadCameraScene(Filename)
 			}
 			//	temp until we do instances
 			Actor_Ocean.Position = ActorNode.Position;
-			return;
+			//return;
 		}
 		
 		//Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
@@ -435,7 +437,7 @@ function GetRenderScene(Time)
 	
 	let PushActorBoundingBox = function(Actor)
 	{
-		if ( !Params.DrawBoundingBoxes )
+		if ( !Params.DrawBoundingBoxes && !Params.DrawBoundingBoxesFilled )
 			return;
 		
 		//	has no bounds!
@@ -465,7 +467,8 @@ function GetRenderScene(Time)
 		BoundsActor.Geometry = 'Cube';
 		BoundsActor.VertShader = GeoVertShader;
 		BoundsActor.FragShader = EdgeFragShader;
-		BoundsActor.Uniforms['GridFrontAndBack'] = false;
+		BoundsActor.Uniforms['ChequerFrontAndBack'] = Params.DrawBoundingBoxesFilled;
+		BoundsActor.Uniforms['ChequerSides'] = Params.DrawBoundingBoxesFilled;
 		BoundsActor.Uniforms['LineWidth'] = 0.05;
 		
 		Scene.push( BoundsActor );
@@ -480,7 +483,8 @@ function GetRenderScene(Time)
 		Actor.Geometry = 'Cube';
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = EdgeFragShader;
-		Actor.Uniforms['GridFrontAndBack'] = true;
+		Actor.Uniforms['ChequerFrontAndBack'] = true;
+		Actor.Uniforms['ChequerSides'] = false;
 		Actor.Uniforms['LineWidth'] = 0.01;
 		
 		Scene.push( Actor );
@@ -726,11 +730,15 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 {
 	if ( Button == 0 )
 	{
+		x *= Params.ScrollFlySpeed;
+		y *= Params.ScrollFlySpeed;
 		SwitchToDebugCamera();
 		DebugCamera.OnCameraPanLocal( x, 0, -y, FirstClick );
 	}
 	if ( Button == 2 )
 	{
+		x *= Params.ScrollFlySpeed;
+		y *= Params.ScrollFlySpeed;
 		SwitchToDebugCamera();
 		DebugCamera.OnCameraPanLocal( x, y, 0, FirstClick );
 	}
@@ -743,8 +751,11 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 
 Window.OnMouseScroll = function(x,y,Button,Delta)
 {
+	let Fly = Delta[1] * 10;
+	Fly *= Params.ScrollFlySpeed;
+	
 	SwitchToDebugCamera();
 	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
-	DebugCamera.OnCameraPanLocal( 0, 0, Delta[1] * Params.ScrollFlySpeed, false );
+	DebugCamera.OnCameraPanLocal( 0, 0, Fly, false );
 }
 

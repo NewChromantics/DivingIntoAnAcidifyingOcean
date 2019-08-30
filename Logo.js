@@ -168,7 +168,7 @@ function TLogoState()
 		const CachedFilename = GetCachedFilename(Filename,Type);
 		Load.call( this, CachedFilename );
 	
-		if ( Pop.GetExeArguments().includes('LoadRawAssets') )
+		//if ( Pop.GetExeArguments().includes('LoadRawAssets') )
 			Load.call( this, Filename );
 	}
 	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'geometry' ) );
