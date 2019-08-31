@@ -182,7 +182,7 @@
 	position: absolute;
 	left:2vw;
 	top:6vh;
-	width:2vw;
+	width:4vw;
 	height:	0.1em;
 	background: white;
 }
@@ -192,11 +192,11 @@
 	font-size:		1.5vh;
 	line-height:	3vh;
 	position:		absolute;
-	left:			2.3vw;
+	left:			2.5vw;
 	top:			3.8vh;
-	width:			2vh;
+	width:			30vh;
 	height:			15vh;
-	text-align: center;
+	text-align: left;
 
 }
 
