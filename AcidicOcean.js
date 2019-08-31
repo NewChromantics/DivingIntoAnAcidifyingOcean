@@ -134,13 +134,10 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxPosition,BoxMin,
 		let tx1 = ( BoxPosition[dim] + BoxMin[dim] - RayStart[dim] ) / AxisDir;
 		let tx2 = ( BoxPosition[dim] + BoxMax[dim] - RayStart[dim] ) / AxisDir;
 		
-		//tmin = max(tmin, min(tx1, tx2));
-		//tmax = min(tmax, max(tx1, tx2));
-		
 		let min = Math.min( tx1, tx2 );
 		let max = Math.max( tx1, tx2 );
-		tmin = (tmin === null) ? min : Math.max( tmin, min );
-		tmax = (tmax === null) ? max : Math.min( tmax, max );
+		tmin = Math.max( tmin, min ) || min;
+		tmax = Math.min( tmax, max ) || max;
 	}
 	
 	//	invalid input ray (dir = 000)
@@ -165,20 +162,35 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxPosition,BoxMin,
 	return Intersection;
 }
 
+function IsActorSelectable(Actor)
+{
+	if ( !Actor.Name )
+		return false;
+	
+	const SelectableNames = ['Animal','Bigbang'];
+	const Match = SelectableNames.some( MatchName => Actor.Name.includes(MatchName) );
+	if ( !Match )
+		return false;
+
+	return true;
+}
+
 function GetIntersectingActors(Ray,Scene)
 {
 	const Intersections = [];
 	
 	function TestIntersecting(Actor)
 	{
-		if ( !Actor.Name || !Actor.Name.startsWith('Animal') )
+		if ( !IsActorSelectable(Actor) )
 			return;
+		
 		const BoundingBox = Actor.GetBoundingBox();
 		const LocalTransform = Actor.GetLocalToWorldTransform();
 		const WorldPos = Math.GetMatrixTranslation( LocalTransform );
 		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, WorldPos, BoundingBox.Min, BoundingBox.Max );
 		if ( !IntersectionPos )
 			return;
+		
 		let Intersection = {};
 		Intersection.Position = IntersectionPos;
 		Intersection.Actor = Actor;
