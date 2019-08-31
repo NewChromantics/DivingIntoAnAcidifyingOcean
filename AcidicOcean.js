@@ -181,33 +181,34 @@ function GetMouseRay(uv)
 {
 	let ScreenRect = Window.GetScreenRect();
 	let Aspect = ScreenRect[2] / ScreenRect[3];
-	//let x = Math.lerp( Aspect, -Aspect, uv[0] );
-	//let y = Math.lerp( 1, -1, uv[1] );
-	//let x = uv[0];
-	//let y = 1-uv[1];
-	let x = 1;
-	let y = 1;
+	let x = Math.lerp( -Aspect, Aspect, uv[0] );
+	//let x = Math.lerp( -1, 1, uv[0] );
+	let y = Math.lerp( 1, -1, uv[1] );
+	const ViewRect = [-1,-1,1,1];
+	//const ViewRect = ScreenRect;
 	Pop.Debug(x,y);
-	const FrustumViewRect = [-1,-1,1,1];
-	
 	let Time = Params.TimelineYear;
 	//	get ray
-	const Camera = GetTimelineCamera( Time );
+	const Camera = Params.MouseRayOnTimelineCamera ? GetTimelineCamera( Time ) : GetRenderCamera( Time );
 	const RayDistance = Params.TestRayDistance;
-	const ScreenToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix( FrustumViewRect );
-	//ScreenToWorldTransform[15] = 1;
 	
-	//let ScreenToWorldTransform = Camera.GetProjectionMatrix( FrustumViewRect );
-	//ScreenToWorldTransform = Math.MatrixInverse4x4( ScreenToWorldTransform );
+	let ScreenToCameraTransform = Camera.GetProjectionMatrix( ViewRect );
+	ScreenToCameraTransform = Math.MatrixInverse4x4( ScreenToCameraTransform );
 	
-	
-	let StartMatrix = Math.CreateTranslationMatrix( x, y, 0 );
+	let StartMatrix = Math.CreateTranslationMatrix( x, y, 0.1 );
 	let EndMatrix = Math.CreateTranslationMatrix( x, y, RayDistance );
-	StartMatrix = Math.MatrixMultiply4x4( StartMatrix, ScreenToWorldTransform );
-	EndMatrix = Math.MatrixMultiply4x4( EndMatrix, ScreenToWorldTransform );
+	StartMatrix = Math.MatrixMultiply4x4( ScreenToCameraTransform, StartMatrix );
+	EndMatrix = Math.MatrixMultiply4x4( ScreenToCameraTransform, EndMatrix );
+	
+	///let
+	StartMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), StartMatrix );
+	EndMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), EndMatrix );
+
 	const Ray = {};
 	Ray.Start = Math.GetMatrixTranslation( StartMatrix, Params.TestRayDivW );
 	Ray.End = Math.GetMatrixTranslation( EndMatrix, Params.TestRayDivW );
+	//Ray.Start = Math.Add3( Ray.Start, Camera.Position );
+	//Ray.End = Math.Add3( Ray.End, Camera.Position );
 	Ray.Direction = Math.Normalise3( Math.Subtract3( Ray.End, Ray.Start ) );
 	
 	//Pop.Debug(Ray);
@@ -216,7 +217,7 @@ function GetMouseRay(uv)
 
 function UpdateMouseMove(CameraScreenUv)
 {
-	Pop.Debug(CameraScreenUv);
+	//Pop.Debug(CameraScreenUv);
 	let Time = Params.TimelineYear;
 	LastMouseRayUv = CameraScreenUv;
 	
@@ -227,7 +228,7 @@ function UpdateMouseMove(CameraScreenUv)
 	//	find actor
 	let Scene = GetActorScene( Time );
 	SelectedActors = GetIntersectingActors( Ray, Scene );
-	Pop.Debug("SelectedActors x" + SelectedActors.length);
+	//Pop.Debug("SelectedActors x" + SelectedActors.length);
 }
 
 
@@ -239,8 +240,9 @@ const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
-Params.TestRaySize = 0.5;
-Params.TestRayDistance = -1;
+Params.MouseRayOnTimelineCamera = false;
+Params.TestRaySize = 0.39;
+Params.TestRayDistance = 0.82;
 Params.TestRayDivW = true;
 Params.ExperiencePlaying = true;
 Params.UseDebugCamera = false;
@@ -283,6 +285,7 @@ let OnParamsChanged = function(Params,ChangedParamName)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
+ParamsWindow.AddParam('MouseRayOnTimelineCamera');
 ParamsWindow.AddParam('TestRayDistance',-1,1);
 ParamsWindow.AddParam('TestRaySize',0,10);
 ParamsWindow.AddParam('TestRayDivW');
@@ -712,8 +715,8 @@ function GetRenderScene(Time)
 		const Ray = GetMouseRay( LastMouseRayUv );
 		let RayEnd = Math.CreateTranslationMatrix( ...Ray.End );
 		let TestSize = Params.TestRaySize / 2;
-		let Min = Math.Add3( RayEnd, [-TestSize,-TestSize,-TestSize] );
-		let Max = Math.Add3( RayEnd, [TestSize,TestSize,TestSize] );
+		let Min = [-TestSize,-TestSize,-TestSize];
+		let Max = [TestSize,TestSize,TestSize];
 		PushActorBox( RayEnd, Min, Max, true );
 	}
 	
