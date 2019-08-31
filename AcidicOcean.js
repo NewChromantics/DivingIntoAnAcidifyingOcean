@@ -150,17 +150,21 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
 	//	ray inside box... maybe change this return so its the exit intersection?
 	if ( tmin < 0 )
 	{
-		return RayStart;
+		//return RayStart;
+		return false;
 	}
 	
-	if ( tmax > tmin && tmax > 0.0 )
-	{
-		let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
-		Intersection = Math.Add3( RayStart, Intersection );
-		
-		return Intersection;
-	}
-	return false;
+	//	ray miss
+	if ( tmax < tmin )
+		return;
+	//	from inside?
+	if ( tmax < 0.0 )
+		return false;
+	
+	let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
+	Intersection = Math.Add3( RayStart, Intersection );
+	
+	return Intersection;
 }
 
 function IsActorSelectable(Actor)
@@ -267,6 +271,13 @@ function UpdateMouseMove(CameraScreenUv)
 	//	find actor
 	let Scene = GetActorScene( Time );
 	SelectedActors = GetIntersectingActors( Ray, Scene );
+	
+	if ( SelectedActors.length )
+	{
+		let Names = SelectedActors.map( a => a.Actor.Name );
+		Pop.Debug("Selected actors;", Names );
+	}
+	
 	//Pop.Debug("SelectedActors x" + SelectedActors.length);
 }
 
@@ -766,7 +777,7 @@ function GetRenderScene(Time)
 	let DrawIntersection = function(Intersection)
 	{
 		PushActorBoundingBox( Intersection.Actor, true );
-		Pop.Debug("Selected",Intersection.Actor.Name);
+		//Pop.Debug("Selected",Intersection.Actor.Name);
 		let Pos = Math.CreateTranslationMatrix( ...Intersection.Position );
 		let TestSize = Params.TestRaySize / 2;
 		let Min = [-TestSize,-TestSize,-TestSize];
