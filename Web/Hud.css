@@ -71,7 +71,7 @@
 
 #About
 {
-	font-size:		2vh;
+	font-size:		1.5vh;
 	line-height:	3vh;
 	position:		absolute;
 	right:			1.5vw;
@@ -99,6 +99,7 @@
 	width:		2.8vw;
 	height:		4vh;
 	font-size:	1.5vh;
+	padding: 0.3em;
 	
 
 	text-align:	center;
@@ -107,7 +108,7 @@
 	align-items:		center;
 	justify-content:	center;
 
-	border-radius: 9px;
+	border-radius: 0.7em;
   	border: 0.1em solid white;
 }
 
@@ -157,7 +158,7 @@
 	position: absolute;
 	left: 0.85vw;
 	top: 3vh;
-	width:4vw;
+	width:1vw;
 	height: 1vh;
 	align-items:		left;
 	justify-content:	left;
@@ -169,10 +170,34 @@
 	position: absolute;
 	left: 0.85vw;
 	top: 3vh;
-	width:4vw;
+	width:1vw;
 	height: 1vh;
 	align-items:		left;
 	justify-content:	left;
+}
+
+#Subtitle_Line
+{
+	display: block;
+	position: absolute;
+	left:2vw;
+	top:6vh;
+	width:4vw;
+	height:	0.1em;
+	background: white;
+}
+
+#SubIconText
+{
+	font-size:		1.5vh;
+	line-height:	3vh;
+	position:		absolute;
+	left:			2.5vw;
+	top:			3.8vh;
+	width:			30vh;
+	height:			15vh;
+	text-align: left;
+
 }
 
 /* This is for Mobile */
@@ -294,7 +319,7 @@
 	position:	absolute;
 	left:		13vw;
 	top:		10vw;
-	width:		16.5vw;
+	width:		16vw;
 	height:		20vh;
 	letter-spacing: 0.07vw;
 	text-align:	left;
@@ -327,6 +352,11 @@ h1
 	vertical-align:top;
 	margin-block-start:5vh;
 	margin-block-end: 0px;
+
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/bullet.svg) no-repeat 0% 20%;
+	background-size: 0.5vh;
+	padding-left: 10px;
+    margin-left: -10px;
 }
 
 h2
@@ -336,6 +366,11 @@ h2
 	margin-block-start:2.5vh;
 	margin-block-end: 0px;
 	list-style-type: circle;
+
+	background: rgba(0, 0, 0, 0.65) url(/Web/icons/bullet.svg) no-repeat 0% 25%;
+	background-size: 0.5vh;
+	padding-left: 10px;
+    margin-left: -10px;
 }
 
 
@@ -343,10 +378,10 @@ h2
 {
 	display: block;
 	position: absolute;
-	left:0vw;
+	left:-0.7em;
 	top:4.8vh;
 	width:16vw;
-	height:	0.2vh;
+	height:	0.1em;
 	background: white;
 }
 
@@ -354,9 +389,10 @@ h2
 {
 	display: block;
 	position: absolute;
-	left: 12vw;
+	left: 11.7vw;
 	top: 26vh;
 	width:4vw;
+	font-weight: 300;
 
 
 }
@@ -365,7 +401,7 @@ h2
 {
 	display: block;
 	position: absolute;
-	left: 12.8vw;
+	left: 12.5vw;
 	top: 25.8vh;
 	width:2vw;
 	align-items: right;
