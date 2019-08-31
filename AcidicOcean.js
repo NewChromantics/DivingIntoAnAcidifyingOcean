@@ -111,8 +111,8 @@ OceanMeta.Colours = OceanColours;
 
 //let Actor_Shell = new TPhysicsActor( ShellMeta );
 var Actor_Shell = null;
-var Actor_Ocean = new TAnimatedActor( OceanMeta );
-var Actor_Debris = new TPhysicsActor( DebrisMeta );
+var OceanActors = [];
+var DebrisActors = [];
 
 var AppTime = null;
 var Hud = {};
@@ -258,6 +258,11 @@ function GetMouseRay(uv)
 	return Ray;
 }
 
+function TimelineCameraVisible(Actor)
+{
+	return true;
+}
+
 function UpdateMouseMove(CameraScreenUv)
 {
 	//Pop.Debug(CameraScreenUv);
@@ -268,14 +273,24 @@ function UpdateMouseMove(CameraScreenUv)
 	
 	LastMouseRay = Ray;
 	
+	const FilterActor = function(Actor)
+	{
+		if ( !IsActorSelectable(Actor) )
+			return false;
+		if ( !TimelineCameraVisible(Actor) )
+			return false;
+		return true;
+	}
+	
 	//	find actor
-	let Scene = GetActorScene( Time );
+	let Scene = GetActorScene( Time, FilterActor );
 	SelectedActors = GetIntersectingActors( Ray, Scene );
 	
 	if ( SelectedActors.length )
 	{
 		let Names = SelectedActors.map( a => a.Actor.Name );
 		Pop.Debug("Selected actors;", Names );
+		SelectedActors = GetIntersectingActors( Ray, Scene );
 	}
 	
 	//Pop.Debug("SelectedActors x" + SelectedActors.length);
@@ -322,12 +337,9 @@ Params.ScrollFlySpeed = 100;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
-	if ( Actor_Ocean )
-		Actor_Ocean.Meta.TriangleScale = Params.Ocean_TriangleScale;
-	
-	if ( Actor_Debris )
-		Actor_Debris.Meta.TriangleScale = Params.Debris_TriangleScale;
-	
+	OceanActors.forEach( a => a.Meta.TriangleScale = Params.Ocean_TriangleScale );
+	DebrisActors.forEach( a => a.Meta.TriangleScale = Params.Debris_TriangleScale );
+
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
 		OnSwitchedToDebugCamera();
 }
@@ -436,35 +448,25 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
-		if ( ActorNode.Name.startsWith('Water_') && Actor_Debris )
+		if ( LoadWaterAsInstances )
 		{
-			if ( LoadWaterAsInstances )
+			if ( ActorNode.Name.startsWith('Ocean_surface_0') )
 			{
-				//	add an instance
-				if ( !Actor_Debris.Instances )
-					Actor_Debris.Instances = [];
+				let Actor = new TAnimatedActor( OceanMeta );
+				Actor.Position = ActorNode.Position;
+				OceanActors.push( Actor );
+				//Scene.push( Actor );
+				return;
+			}
 			
-				Actor_Debris.Instances.push( ActorNode.Position );
-			}
-			//	temp until we do instances
-			Actor_Debris.Position = ActorNode.Position;
-			//return;
-		}
-		
-		
-		if ( ActorNode.Name.startsWith('Ocean_surface_0') && Actor_Ocean )
-		{
-			if ( LoadWaterAsInstances )
+			if ( ActorNode.Name.startsWith('Water_') )
 			{
-				//	add an instance
-				if ( !Actor_Ocean.Instances )
-					Actor_Ocean.Instances = [];
-
-				Actor_Ocean.Instances.push( ActorNode.Position );
+				let Actor = new TPhysicsActor( DebrisMeta );
+				Actor.Position = ActorNode.Position;
+				DebrisActors.push( Actor );
+				//Scene.push( Actor );
+				return;
 			}
-			//	temp until we do instances
-			Actor_Ocean.Position = ActorNode.Position;
-			//return;
 		}
 		
 		//Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
@@ -603,17 +605,16 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 
 
 
-function GetActorScene(Time)
+//	filter for culling
+function GetActorScene(Time,Filter)
 {
 	let Scene = [];
-	
+	Filter = Filter || function(Actor)	{	return true;	};
 
 	let PushPositionBufferActor = function(Actor)
 	{
-		if ( Actor.Instances )
-		{
-			//	turn below into a proper TActor and then draw multiple cases with different transforms
-		}
+		if ( !Filter(Actor) )
+			return;
 		
 		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 		{
@@ -632,11 +633,19 @@ function GetActorScene(Time)
 		Scene.push( Actor );
 	}
 
-	if ( Actor_Debris )	PushPositionBufferActor( Actor_Debris );
+	let PushCameraSceneActor = function(Actor)
+	{
+		if ( !Filter(Actor) )
+			return;
+		Scene.push(Actor)
+	}
+
+	//OceanActors.forEach( a => PushPositionBufferActor( a ) );
+	//DebrisActors.forEach( a => PushPositionBufferActor( a ) );
 	
-	if ( Actor_Ocean )	PushPositionBufferActor( Actor_Ocean );
+	CameraScene.forEach( PushCameraSceneActor );
 	
-	CameraScene.forEach( a => Scene.push(a) );
+	//Pop.Debug("Scene has x" + Scene.length + " actors");
 	
 	return Scene;
 }
@@ -751,7 +760,7 @@ function GetRenderScene(Time)
 	}
 	
 	
-	const ActorScene = GetActorScene(Time);
+	const ActorScene = GetActorScene( Time, TimelineCameraVisible );
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
@@ -878,14 +887,18 @@ function Render(RenderTarget)
 	//let Time = Math.Range( TimelineMinYear, TimelineMaxYear, Params.TimelineYear );
 	let Time = Params.TimelineYear;
 	
+	let UpdateActorPhysics = function(Actor)
+	{
+		//	only update actors visible
+		//	gr: maybe do this with the actors in scene from GetRenderScene?
+		if ( !TimelineCameraVisible(Actor) )
+			return;
+		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
+	}
 	//	update physics
-	if ( Actor_Shell )
-		Actor_Shell.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
-	if ( Actor_Ocean )
-		Actor_Ocean.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
-	if ( Actor_Debris )
-		Actor_Debris.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
-
+	OceanActors.forEach( UpdateActorPhysics );
+	DebrisActors.forEach( UpdateActorPhysics );
+	
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
 	const RenderCamera = GetRenderCamera( Time );
