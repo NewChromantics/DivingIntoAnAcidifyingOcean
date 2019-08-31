@@ -121,23 +121,23 @@ var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 var SelectedActors = [];
 
-Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxPosition,BoxMin,BoxMax)
+Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
 {
-	let tmin = null;
-	let tmax = null;
+	let tmin = -Infinity;
+	let tmax = Infinity;
 	
 	for ( let dim=0;	dim<3;	dim++ )
 	{
 		let AxisDir = RayDirection[dim];
 		if ( AxisDir == 0 )
 			continue;
-		let tx1 = ( BoxPosition[dim] + BoxMin[dim] - RayStart[dim] ) / AxisDir;
-		let tx2 = ( BoxPosition[dim] + BoxMax[dim] - RayStart[dim] ) / AxisDir;
+		let tx1 = ( BoxMin[dim] - RayStart[dim] ) / AxisDir;
+		let tx2 = ( BoxMax[dim] - RayStart[dim] ) / AxisDir;
 		
 		let min = Math.min( tx1, tx2 );
 		let max = Math.max( tx1, tx2 );
-		tmin = Math.max( tmin, min ) || min;
-		tmax = Math.min( tmax, max ) || max;
+		tmin = Math.max( tmin, min );
+		tmax = Math.min( tmax, max );
 	}
 	
 	//	invalid input ray (dir = 000)
@@ -147,19 +147,20 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxPosition,BoxMin,
 		return false;
 	}
 	
+	//	ray inside box... maybe change this return so its the exit intersection?
 	if ( tmin < 0 )
 	{
-		//	ray inside box... maybe change this return so its the exit intersection?
-		//return RayStart;
+		return RayStart;
 	}
 	
-	if ( tmax < tmin )
-		return false;
-	
-	let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
-	Intersection = Math.Add3( RayStart, Intersection );
-	
-	return Intersection;
+	if ( tmax > tmin && tmax > 0.0 )
+	{
+		let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
+		Intersection = Math.Add3( RayStart, Intersection );
+		
+		return Intersection;
+	}
+	return false;
 }
 
 function IsActorSelectable(Actor)
@@ -175,6 +176,25 @@ function IsActorSelectable(Actor)
 	return true;
 }
 
+//	move this to TActor once everything derives from it
+function GetActorWorldBoundingBox(Actor)
+{
+	const LocalTransform = Actor.GetLocalToWorldTransform();
+	const Scale = Math.GetMatrixScale( LocalTransform );
+	const BoundingBoxLocal = Actor.GetBoundingBox();
+	const Position = Math.GetMatrixTranslation( LocalTransform );
+	
+	//	todo: we should mult without rotating, or rotate and then get new min/max
+	const BoundingBoxWorld = {};
+	BoundingBoxWorld.Min = Math.Multiply3( BoundingBoxLocal.Min, Scale );
+	BoundingBoxWorld.Max = Math.Multiply3( BoundingBoxLocal.Max, Scale );
+
+	BoundingBoxWorld.Min = Math.Add3( BoundingBoxWorld.Min, Position );
+	BoundingBoxWorld.Max = Math.Add3( BoundingBoxWorld.Max, Position );
+
+	return BoundingBoxWorld;
+}
+
 function GetIntersectingActors(Ray,Scene)
 {
 	const Intersections = [];
@@ -184,10 +204,8 @@ function GetIntersectingActors(Ray,Scene)
 		if ( !IsActorSelectable(Actor) )
 			return;
 		
-		const BoundingBox = Actor.GetBoundingBox();
-		const LocalTransform = Actor.GetLocalToWorldTransform();
-		const WorldPos = Math.GetMatrixTranslation( LocalTransform );
-		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, WorldPos, BoundingBox.Min, BoundingBox.Max );
+		const BoundingBox = GetActorWorldBoundingBox( Actor );
+		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, BoundingBox.Min, BoundingBox.Max );
 		if ( !IntersectionPos )
 			return;
 		
@@ -249,7 +267,7 @@ function UpdateMouseMove(CameraScreenUv)
 	//	find actor
 	let Scene = GetActorScene( Time );
 	SelectedActors = GetIntersectingActors( Ray, Scene );
-	Pop.Debug("SelectedActors x" + SelectedActors.length);
+	//Pop.Debug("SelectedActors x" + SelectedActors.length);
 }
 
 
