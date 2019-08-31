@@ -121,7 +121,7 @@ var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 var SelectedActors = [];
 
-Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
+Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxPosition,BoxMin,BoxMax)
 {
 	let tmin = null;
 	let tmax = null;
@@ -131,12 +131,16 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
 		let AxisDir = RayDirection[dim];
 		if ( AxisDir == 0 )
 			continue;
-		let tx1 = ( BoxMin[dim] - RayStart[dim] ) / AxisDir;
-		let tx2 = ( BoxMax[dim] - RayStart[dim] ) / AxisDir;
+		let tx1 = ( BoxPosition[dim] + BoxMin[dim] - RayStart[dim] ) / AxisDir;
+		let tx2 = ( BoxPosition[dim] + BoxMax[dim] - RayStart[dim] ) / AxisDir;
+		
+		//tmin = max(tmin, min(tx1, tx2));
+		//tmax = min(tmax, max(tx1, tx2));
+		
 		let min = Math.min( tx1, tx2 );
 		let max = Math.max( tx1, tx2 );
-		tmin = (tmin === null) ? min : Math.min( tmin, min );
-		tmax = (tmax === null) ? max : Math.max( tmax, max );
+		tmin = (tmin === null) ? min : Math.max( tmin, min );
+		tmax = (tmax === null) ? max : Math.min( tmax, max );
 	}
 	
 	//	invalid input ray (dir = 000)
@@ -149,7 +153,7 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
 	if ( tmin < 0 )
 	{
 		//	ray inside box... maybe change this return so its the exit intersection?
-		return RayStart;
+		//return RayStart;
 	}
 	
 	if ( tmax < tmin )
@@ -158,19 +162,31 @@ Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
 	let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
 	Intersection = Math.Add3( RayStart, Intersection );
 	
-	return tmax >= tmin;
+	return Intersection;
 }
 
 function GetIntersectingActors(Ray,Scene)
 {
-	function IsIntersecting(Actor)
+	const Intersections = [];
+	
+	function TestIntersecting(Actor)
 	{
+		if ( !Actor.Name || !Actor.Name.startsWith('Animal') )
+			return;
 		const BoundingBox = Actor.GetBoundingBox();
-		const Intersection = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, BoundingBox.Min, BoundingBox.Max );
-		return Intersection !== false;
+		const LocalTransform = Actor.GetLocalToWorldTransform();
+		const WorldPos = Math.GetMatrixTranslation( LocalTransform );
+		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, WorldPos, BoundingBox.Min, BoundingBox.Max );
+		if ( !IntersectionPos )
+			return;
+		let Intersection = {};
+		Intersection.Position = IntersectionPos;
+		Intersection.Actor = Actor;
+		Intersections.push( Intersection );
 	}
-	const IntersectingActors = Scene.filter( IsIntersecting );
-	return IntersectingActors;
+	Scene.forEach( TestIntersecting );
+	
+	return Intersections;
 }
 
 
@@ -182,11 +198,8 @@ function GetMouseRay(uv)
 	let ScreenRect = Window.GetScreenRect();
 	let Aspect = ScreenRect[2] / ScreenRect[3];
 	let x = Math.lerp( -Aspect, Aspect, uv[0] );
-	//let x = Math.lerp( -1, 1, uv[0] );
 	let y = Math.lerp( 1, -1, uv[1] );
 	const ViewRect = [-1,-1,1,1];
-	//const ViewRect = ScreenRect;
-	Pop.Debug(x,y);
 	let Time = Params.TimelineYear;
 	//	get ray
 	const Camera = Params.MouseRayOnTimelineCamera ? GetTimelineCamera( Time ) : GetRenderCamera( Time );
@@ -200,18 +213,14 @@ function GetMouseRay(uv)
 	StartMatrix = Math.MatrixMultiply4x4( ScreenToCameraTransform, StartMatrix );
 	EndMatrix = Math.MatrixMultiply4x4( ScreenToCameraTransform, EndMatrix );
 	
-	///let
 	StartMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), StartMatrix );
 	EndMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), EndMatrix );
 
 	const Ray = {};
 	Ray.Start = Math.GetMatrixTranslation( StartMatrix, Params.TestRayDivW );
 	Ray.End = Math.GetMatrixTranslation( EndMatrix, Params.TestRayDivW );
-	//Ray.Start = Math.Add3( Ray.Start, Camera.Position );
-	//Ray.End = Math.Add3( Ray.End, Camera.Position );
 	Ray.Direction = Math.Normalise3( Math.Subtract3( Ray.End, Ray.Start ) );
 	
-	//Pop.Debug(Ray);
 	return Ray;
 }
 
@@ -228,7 +237,7 @@ function UpdateMouseMove(CameraScreenUv)
 	//	find actor
 	let Scene = GetActorScene( Time );
 	SelectedActors = GetIntersectingActors( Ray, Scene );
-	//Pop.Debug("SelectedActors x" + SelectedActors.length);
+	Pop.Debug("SelectedActors x" + SelectedActors.length);
 }
 
 
@@ -242,6 +251,7 @@ const TimelineMaxInteractiveYear = 2100;
 Params.TimelineYear = TimelineMinYear;
 Params.MouseRayOnTimelineCamera = false;
 Params.TestRaySize = 0.39;
+Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
 Params.TestRayDivW = true;
 Params.ExperiencePlaying = true;
@@ -288,6 +298,7 @@ ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no
 ParamsWindow.AddParam('MouseRayOnTimelineCamera');
 ParamsWindow.AddParam('TestRayDistance',-1,1);
 ParamsWindow.AddParam('TestRaySize',0,10);
+ParamsWindow.AddParam('DrawTestRay');
 ParamsWindow.AddParam('TestRayDivW');
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('UseDebugCamera');
@@ -623,10 +634,11 @@ function GetRenderScene(Time)
 		Scene.push( BoundsActor );
 	}
 	
-	let PushActorBoundingBox = function(Actor)
+	let PushActorBoundingBox = function(Actor,ForceDraw)
 	{
-		if ( !Params.DrawBoundingBoxes && !Params.DrawBoundingBoxesFilled )
-			return;
+		if ( !ForceDraw )
+			if ( !Params.DrawBoundingBoxes && !Params.DrawBoundingBoxesFilled )
+				return;
 		
 		//	has no bounds!
 		const BoundingBox = Actor.GetBoundingBox();
@@ -710,7 +722,7 @@ function GetRenderScene(Time)
 		PushDebugCameraActor();
 	}
 	
-	if ( LastMouseRayUv )
+	if ( LastMouseRayUv && Params.DrawTestRay )
 	{
 		const Ray = GetMouseRay( LastMouseRayUv );
 		let RayEnd = Math.CreateTranslationMatrix( ...Ray.End );
@@ -719,6 +731,19 @@ function GetRenderScene(Time)
 		let Max = [TestSize,TestSize,TestSize];
 		PushActorBox( RayEnd, Min, Max, true );
 	}
+	
+	//	draw intersections
+	let DrawIntersection = function(Intersection)
+	{
+		PushActorBoundingBox( Intersection.Actor, true );
+		Pop.Debug("Selected",Intersection.Actor.Name);
+		let Pos = Math.CreateTranslationMatrix( ...Intersection.Position );
+		let TestSize = Params.TestRaySize / 2;
+		let Min = [-TestSize,-TestSize,-TestSize];
+		let Max = [TestSize,TestSize,TestSize];
+		PushActorBox( Pos, Min, Max, true );
+	}
+	SelectedActors.forEach( DrawIntersection );
 	
 	return Scene;
 }
