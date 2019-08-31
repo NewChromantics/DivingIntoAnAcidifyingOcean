@@ -110,14 +110,125 @@ OceanMeta.TriangleScale = 0.0148;
 OceanMeta.Colours = OceanColours;
 
 //let Actor_Shell = new TPhysicsActor( ShellMeta );
-let Actor_Shell = null;
-let Actor_Ocean = new TAnimatedActor( OceanMeta );
-let Actor_Debris = new TPhysicsActor( DebrisMeta );
+var Actor_Shell = null;
+var Actor_Ocean = new TAnimatedActor( OceanMeta );
+var Actor_Debris = new TPhysicsActor( DebrisMeta );
+
+var AppTime = null;
+var Hud = {};
+var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 
+var SelectedActors = [];
+
+Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
+{
+	let tmin = null;
+	let tmax = null;
+	
+	for ( let dim=0;	dim<3;	dim++ )
+	{
+		let AxisDir = RayDirection[dim];
+		if ( AxisDir == 0 )
+			continue;
+		let tx1 = ( BoxMin[dim] - RayStart[dim] ) / AxisDir;
+		let tx2 = ( BoxMax[dim] - RayStart[dim] ) / AxisDir;
+		let min = Math.min( tx1, tx2 );
+		let max = Math.max( tx1, tx2 );
+		tmin = (tmin === null) ? min : Math.min( tmin, min );
+		tmax = (tmax === null) ? max : Math.max( tmax, max );
+	}
+	
+	//	invalid input ray (dir = 000)
+	if ( tmin === null )
+	{
+		Pop.Debug("GetIntersectionRayBox3 invalid ray", RayStart, RayDirection );
+		return false;
+	}
+	
+	if ( tmin < 0 )
+	{
+		//	ray inside box... maybe change this return so its the exit intersection?
+		return RayStart;
+	}
+	
+	if ( tmax < tmin )
+		return false;
+	
+	let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
+	Intersection = Math.Add3( RayStart, Intersection );
+	
+	return tmax >= tmin;
+}
+
+function GetIntersectingActors(Ray,Scene)
+{
+	function IsIntersecting(Actor)
+	{
+		const BoundingBox = Actor.GetBoundingBox();
+		const Intersection = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, BoundingBox.Min, BoundingBox.Max );
+		return Intersection !== false;
+	}
+	const IntersectingActors = Scene.filter( IsIntersecting );
+	return IntersectingActors;
+}
 
 
+let LastMouseRay = null;
+let LastMouseRayUv = null;
 
+function GetMouseRay(uv)
+{
+	let ScreenRect = Window.GetScreenRect();
+	let Aspect = ScreenRect[2] / ScreenRect[3];
+	//let x = Math.lerp( Aspect, -Aspect, uv[0] );
+	//let y = Math.lerp( 1, -1, uv[1] );
+	//let x = uv[0];
+	//let y = 1-uv[1];
+	let x = 1;
+	let y = 1;
+	Pop.Debug(x,y);
+	const FrustumViewRect = [-1,-1,1,1];
+	
+	let Time = Params.TimelineYear;
+	//	get ray
+	const Camera = GetTimelineCamera( Time );
+	const RayDistance = Params.TestRayDistance;
+	const ScreenToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix( FrustumViewRect );
+	//ScreenToWorldTransform[15] = 1;
+	
+	//let ScreenToWorldTransform = Camera.GetProjectionMatrix( FrustumViewRect );
+	//ScreenToWorldTransform = Math.MatrixInverse4x4( ScreenToWorldTransform );
+	
+	
+	let StartMatrix = Math.CreateTranslationMatrix( x, y, 0 );
+	let EndMatrix = Math.CreateTranslationMatrix( x, y, RayDistance );
+	StartMatrix = Math.MatrixMultiply4x4( StartMatrix, ScreenToWorldTransform );
+	EndMatrix = Math.MatrixMultiply4x4( EndMatrix, ScreenToWorldTransform );
+	const Ray = {};
+	Ray.Start = Math.GetMatrixTranslation( StartMatrix, Params.TestRayDivW );
+	Ray.End = Math.GetMatrixTranslation( EndMatrix, Params.TestRayDivW );
+	Ray.Direction = Math.Normalise3( Math.Subtract3( Ray.End, Ray.Start ) );
+	
+	//Pop.Debug(Ray);
+	return Ray;
+}
+
+function UpdateMouseMove(CameraScreenUv)
+{
+	Pop.Debug(CameraScreenUv);
+	let Time = Params.TimelineYear;
+	LastMouseRayUv = CameraScreenUv;
+	
+	const Ray = GetMouseRay( CameraScreenUv );
+	
+	LastMouseRay = Ray;
+	
+	//	find actor
+	let Scene = GetActorScene( Time );
+	SelectedActors = GetIntersectingActors( Ray, Scene );
+	Pop.Debug("SelectedActors x" + SelectedActors.length);
+}
 
 
 
@@ -128,6 +239,9 @@ const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
+Params.TestRaySize = 0.5;
+Params.TestRayDistance = -1;
+Params.TestRayDivW = true;
 Params.ExperiencePlaying = true;
 Params.UseDebugCamera = false;
 Params.ExperienceDurationSecs = 240;
@@ -169,6 +283,9 @@ let OnParamsChanged = function(Params,ChangedParamName)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
+ParamsWindow.AddParam('TestRayDistance',-1,1);
+ParamsWindow.AddParam('TestRaySize',0,10);
+ParamsWindow.AddParam('TestRayDivW');
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('EnableMusic');
@@ -196,8 +313,7 @@ ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 
 
-
-
+let SelectedActor = null;
 
 
 
@@ -430,10 +546,79 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	}
 }
 
+
+
+function GetActorScene(Time)
+{
+	let Scene = [];
+	
+
+	let PushPositionBufferActor = function(Actor)
+	{
+		if ( Actor.Instances )
+		{
+			//	turn below into a proper TActor and then draw multiple cases with different transforms
+		}
+		
+		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
+		{
+			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
+		}
+		
+		const PositionsTexture = Actor.GetPositionsTexture();
+		Actor.Uniforms = [];
+		Actor.Uniforms['WorldPositions'] = PositionsTexture;
+		Actor.Uniforms['WorldPositionsWidth'] = PositionsTexture.GetWidth();
+		Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
+		Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
+		Actor.Uniforms['Colours']= Actor.Colours;
+		Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
+		//let a = new TActor( )
+		Scene.push( Actor );
+	}
+
+	if ( Actor_Debris )	PushPositionBufferActor( Actor_Debris );
+	
+	if ( Actor_Ocean )	PushPositionBufferActor( Actor_Ocean );
+	
+	CameraScene.forEach( a => Scene.push(a) );
+	
+	return Scene;
+}
+
+
 //	get scene graph
 function GetRenderScene(Time)
 {
 	let Scene = [];
+	
+	let PushActorBox = function(LocalToWorldTransform,BoundsMin,BoundsMax,Filled=Params.DrawBoundingBoxesFilled)
+	{
+		//	bounding box to matrix...
+		const BoundsSize = Math.Subtract3( BoundsMax, BoundsMin );
+		
+		//	cube is currently -1..1 so compensate. Need to change shader if we change this
+		BoundsSize[0] /= 2;
+		BoundsSize[1] /= 2;
+		BoundsSize[2] /= 2;
+		
+		const BoundsCenter = Math.Lerp3( BoundsMin, BoundsMax, 0.5 );
+		let BoundsMatrix = Math.CreateTranslationMatrix(...BoundsCenter);
+		BoundsMatrix = Math.MatrixMultiply4x4( BoundsMatrix, Math.CreateScaleMatrix(...BoundsSize) );
+		BoundsMatrix = Math.MatrixMultiply4x4( LocalToWorldTransform, BoundsMatrix );
+		
+		const BoundsActor = new TActor();
+		const BoundsLocalScale = []
+		BoundsActor.LocalToWorldTransform = BoundsMatrix;
+		BoundsActor.Geometry = 'Cube';
+		BoundsActor.VertShader = GeoVertShader;
+		BoundsActor.FragShader = EdgeFragShader;
+		BoundsActor.Uniforms['ChequerFrontAndBack'] = Filled;
+		BoundsActor.Uniforms['ChequerSides'] = Filled;
+		BoundsActor.Uniforms['LineWidth'] = 0.05;
+		
+		Scene.push( BoundsActor );
+	}
 	
 	let PushActorBoundingBox = function(Actor)
 	{
@@ -448,30 +633,7 @@ function GetRenderScene(Time)
 			return;
 		}
 		
-		//	bounding box to matrix...
-		const BoundsSize = Math.Subtract3( BoundingBox.Max, BoundingBox.Min );
-	
-		//	cube is currently -1..1 so compensate. Need to change shader if we change this
-		BoundsSize[0] /= 2;
-		BoundsSize[1] /= 2;
-		BoundsSize[2] /= 2;
-
-		const BoundsCenter = Math.Lerp3( BoundingBox.Min, BoundingBox.Max, 0.5 );
-		let BoundsMatrix = Math.CreateTranslationMatrix(...BoundsCenter);
-		BoundsMatrix = Math.MatrixMultiply4x4( BoundsMatrix, Math.CreateScaleMatrix(...BoundsSize) );
-		BoundsMatrix = Math.MatrixMultiply4x4( Actor.GetLocalToWorldTransform(), BoundsMatrix );
-
-		const BoundsActor = new TActor();
-		const BoundsLocalScale = []
-		BoundsActor.LocalToWorldTransform = BoundsMatrix;
-		BoundsActor.Geometry = 'Cube';
-		BoundsActor.VertShader = GeoVertShader;
-		BoundsActor.FragShader = EdgeFragShader;
-		BoundsActor.Uniforms['ChequerFrontAndBack'] = Params.DrawBoundingBoxesFilled;
-		BoundsActor.Uniforms['ChequerSides'] = Params.DrawBoundingBoxesFilled;
-		BoundsActor.Uniforms['LineWidth'] = 0.05;
-		
-		Scene.push( BoundsActor );
+		PushActorBox( Actor.GetLocalToWorldTransform(), BoundingBox.Min, BoundingBox.Max );
 	}
 	
 	let PushDebugCameraActor = function()
@@ -519,10 +681,6 @@ function GetRenderScene(Time)
 	if ( ShellAlpha > 0.5 )
 		PushPositionBufferActor( Actor_Shell );
 	*/
-	if ( Actor_Debris )	PushPositionBufferActor( Actor_Debris );
-
-	if ( Actor_Ocean )	PushPositionBufferActor( Actor_Ocean );
-
 	
 	let PushCameraPosActor = function(Position)
 	{
@@ -535,15 +693,28 @@ function GetRenderScene(Time)
 		Actor.FragShader = ColourFragShader;
 		Scene.push( Actor );
 	}
+	
+	
+	const ActorScene = GetActorScene(Time);
+	ActorScene.forEach( a => PushActorBoundingBox(a) );
+	ActorScene.forEach( a => Scene.push(a) );
+	
 	const CameraPositions = GetCameraPath();
 	CameraPositions.forEach( PushCameraPosActor );
-	
-	CameraScene.forEach( a => Scene.push(a) );
-	CameraScene.forEach( a => PushActorBoundingBox(a) );
 	
 	if ( Params.UseDebugCamera )
 	{
 		PushDebugCameraActor();
+	}
+	
+	if ( LastMouseRayUv )
+	{
+		const Ray = GetMouseRay( LastMouseRayUv );
+		let RayEnd = Math.CreateTranslationMatrix( ...Ray.End );
+		let TestSize = Params.TestRaySize / 2;
+		let Min = Math.Add3( RayEnd, [-TestSize,-TestSize,-TestSize] );
+		let Max = Math.Add3( RayEnd, [TestSize,TestSize,TestSize] );
+		PushActorBox( RayEnd, Min, Max, true );
 	}
 	
 	return Scene;
@@ -555,9 +726,6 @@ function GetAudioGetCrossFadeDuration()
 	return Params.AudioCrossFadeDurationSecs;
 }
 
-var AppTime = null;
-var Hud = {};
-var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 //	need a better place for this, app state!
 function Init()
@@ -728,6 +896,11 @@ Window.OnMouseDown = function(x,y,Button)
 
 Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 {
+	let Rect = Window.GetScreenRect();
+	let u = x / Rect[2];
+	let v = y / Rect[3];
+	UpdateMouseMove( [u,v] );
+
 	if ( Button == 0 )
 	{
 		x *= Params.ScrollFlySpeed;
