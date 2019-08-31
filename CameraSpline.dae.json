@@ -4,8 +4,8 @@
     "-version": "1.4.1",
     "asset": {
       "contributor": { "authoring_tool": "CINEMA4D 16.050 COLLADA Exporter" },
-      "created": "2019-08-30T14:23:38Z",
-      "modified": "2019-08-30T14:23:38Z",
+      "created": "2019-08-31T09:04:37Z",
+      "modified": "2019-08-31T09:04:37Z",
       "unit": {
         "-meter": "0.01",
         "-name": "centimeter"
@@ -17895,7 +17895,7 @@
             "-name": "Nasty_Animal_6",
             "translate": {
               "-sid": "translate",
-              "#text": "80.5323 -840.549 -37114.7"
+              "#text": "80.5323 -1021.28 -40063.1"
             },
             "rotate": [
               {
@@ -17922,7 +17922,7 @@
             "-name": "Nasty_Animal_5",
             "translate": {
               "-sid": "translate",
-              "#text": "205.649 -1574.2 -36863.2"
+              "#text": "205.649 -1754.94 -40449.2"
             },
             "rotate": [
               {
@@ -18084,7 +18084,7 @@
             "-name": "Animal_40",
             "translate": {
               "-sid": "translate",
-              "#text": "-999.158 -1522.97 -38076.9"
+              "#text": "-999.158 -1703.71 -41025.3"
             },
             "rotate": [
               {
@@ -19488,7 +19488,7 @@
             "-name": "Camera",
             "translate": {
               "-sid": "translate",
-              "#text": "0 -2954.44 -74431.3"
+              "#text": "0 -1531.77 -38602.8"
             },
             "rotate": [
               {

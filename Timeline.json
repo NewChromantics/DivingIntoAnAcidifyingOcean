@@ -1,6 +1,7 @@
 {
 	"1820":
 	{
+		"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",
 		"Subtitle":"",
 		"VoiceAudio":""
 	},
@@ -17,11 +18,12 @@
 	
 	"1827":
 	{
-		"Subtitle":"But as had previously befallen,"
+		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3",
+		"Subtitle":" "
 	},
 	"1830":
 	{
-		"Subtitle":"we’re killing over 96% of ocean life."
+		"Subtitle":"But we’re killing over 96% of ocean life."
 	},
 
 	
@@ -42,8 +44,9 @@
 	
 	"1860":
 	{
-		"Subtitle":"If we fail to act, what will happen to them…",
-		"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",
+		"Subtitle":"If we fail to act, what will happen to them… and to us?",
+		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3",
+		"Music": "Audio/AcidicOcean_Sonification.mp3",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
 		"Stats_Co2":0,
@@ -54,7 +57,7 @@
 	
 	"1864":
 	{
-		"Subtitle":"... and to us?"
+		"Subtitle":""
 	},
 	
 	"1870":
@@ -65,7 +68,7 @@
 	
 	"1900":
 	{
-		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3"
+		"Music": ""
 	},
 	
 	"2019":
