@@ -21,7 +21,7 @@
 		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3",
 		"Subtitle":" "
 	},
-	"1830":
+	"1835":
 	{
 		"Subtitle":"But we’re killing over 96% of ocean life."
 	},
@@ -39,7 +39,7 @@
 	},
 	"1850":
 	{
-		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms at an incredible rate."
+		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms."
 	},
 	
 	"1860":
@@ -55,21 +55,12 @@
 	},
 	
 	
-	"1864":
+	"1865":
 	{
-		"Subtitle":""
+		"Subtitle":"THIS IS A PTEROPOD BLA BLA "
 	},
 	
-	"1870":
-	{
-		"Subtitle":"",
-		"VoiceAudio":""
-	},
-	
-	"1900":
-	{
-		"Music": ""
-	},
+
 	
 	"2019":
 	{
@@ -80,6 +71,18 @@
 		"Stats_Ph":30
 		
 	},
+
+	"2035":
+	{
+		"Subtitle":"We are now passing a Dead zones, areas with low or no oxygen are drastically increasing all around the world.",
+		"VoiceAudio":"Audio/AcidicOcean_Voice_EverySecondBreath.mp3"
+	},
+
+	"2045":
+	{
+		"Subtitle":"Also caused by excessive nutrient pollution from human activities, they deplete the oxygen required to support most marine life."
+	},
+
 	"2100":
 	{
 		"FogColour":[0.09,0.06,0.02],
@@ -88,5 +91,11 @@
 		"Stats_Co2":90,
 		"Stats_Oxygen":27,
 		"Stats_Ph":170
-	}
+	},
+
+	"2102":
+	{
+		"Subtitle":"",
+		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3"
+	},
 }
