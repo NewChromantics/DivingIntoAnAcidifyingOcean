@@ -22,7 +22,7 @@ function GetCachedFilename(Filename,Type)
 
 function GenerateRandomVertexes(Contents,OnVertex,OnMeta)
 {
-	for ( let i=0;	i<5000;	i++ )
+	for ( let i=0;	i<2000;	i++ )
 	{
 		let x = Math.random();
 		let y = Math.random();

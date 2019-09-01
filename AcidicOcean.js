@@ -552,7 +552,7 @@ Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
 Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
-Params.ScrollFlySpeed = 100;
+Params.ScrollFlySpeed = 50;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
