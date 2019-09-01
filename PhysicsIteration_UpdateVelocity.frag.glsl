@@ -6,6 +6,7 @@ uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
 uniform float NoiseScale;// = 0.1;
 uniform float Gravity;// = -0.1;
+uniform float Damping;
 
 
 /*
@@ -126,8 +127,9 @@ void main()
 	Vel.xyz += GetNoise(uv) * PhysicsStep;
 	Vel.xyz += GetGravity(uv) * PhysicsStep;
 	
-	//Vel.xyz = float3(0,0,0);
-	
+	//	damping
+	Vel.xyz *= 1.0 - Damping;
+
 	Vel.w = 1.0;
 	gl_FragColor = Vel;
 }

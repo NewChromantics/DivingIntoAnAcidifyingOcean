@@ -314,7 +314,6 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
-			Shader.SetUniform('NoiseScale', 0.1 );
 			Shader.SetUniform('Gravity', 0 );
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);

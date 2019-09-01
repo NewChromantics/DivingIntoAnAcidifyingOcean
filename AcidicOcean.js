@@ -359,8 +359,8 @@ function GetMouseRay(uv)
 	EndMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), EndMatrix );
 
 	const Ray = {};
-	Ray.Start = Math.GetMatrixTranslation( StartMatrix, Params.TestRayDivW );
-	Ray.End = Math.GetMatrixTranslation( EndMatrix, Params.TestRayDivW );
+	Ray.Start = Math.GetMatrixTranslation( StartMatrix, true );
+	Ray.End = Math.GetMatrixTranslation( EndMatrix, true );
 	Ray.Direction = Math.Normalise3( Math.Subtract3( Ray.End, Ray.Start ) );
 	
 	return Ray;
@@ -527,9 +527,10 @@ Params.FrustumCullTestY = false;	//	re-enable when we cull on bounding box
 Params.FrustumCullTestZ = true;
 Params.MouseRayOnTimelineCamera = false;
 Params.TestRaySize = 0.39;
+Params.DebrisPhysicsNoiseScale = 0.9;
+Params.DebrisPhysicsDamping = 0.04;
 Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
-Params.TestRayDivW = true;
 Params.ExperiencePlaying = true;
 Params.UseDebugCamera = false;
 Params.EnableMusic = true;
@@ -568,6 +569,26 @@ const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
+ParamsWindow.AddParam('DebrisPhysicsNoiseScale',0,1);
+ParamsWindow.AddParam('DebrisPhysicsDamping',0,1);
+ParamsWindow.AddParam('ExperiencePlaying');
+ParamsWindow.AddParam('UseDebugCamera');
+ParamsWindow.AddParam('FogColour','Colour');
+ParamsWindow.AddParam('LightColour','Colour');
+ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
+ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
+ParamsWindow.AddParam('FogMinDistance',0,30);
+ParamsWindow.AddParam('FogMaxDistance',0,500);
+ParamsWindow.AddParam('EnableMusic');
+ParamsWindow.AddParam('DrawBoundingBoxes');
+ParamsWindow.AddParam('DrawBoundingBoxesFilled');
+ParamsWindow.AddParam('CameraFaceForward');
+ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
+ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
+
+ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
+ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
+
 ParamsWindow.AddParam('DebugCullTimelineCamera');
 ParamsWindow.AddParam('FrustumCullTestX');
 ParamsWindow.AddParam('FrustumCullTestY');
@@ -576,30 +597,13 @@ ParamsWindow.AddParam('MouseRayOnTimelineCamera');
 ParamsWindow.AddParam('TestRayDistance',-1,1);
 ParamsWindow.AddParam('TestRaySize',0,10);
 ParamsWindow.AddParam('DrawTestRay');
-ParamsWindow.AddParam('TestRayDivW');
-ParamsWindow.AddParam('ExperiencePlaying');
-ParamsWindow.AddParam('UseDebugCamera');
-ParamsWindow.AddParam('EnableMusic');
-ParamsWindow.AddParam('DrawBoundingBoxes');
-ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 ParamsWindow.AddParam('ActorPlaceholdersScale',0,1);
-ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
-ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
-ParamsWindow.AddParam('FogColour','Colour');
-ParamsWindow.AddParam('LightColour','Colour');
-ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
-ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
-ParamsWindow.AddParam('FogMinDistance',0,30);
-ParamsWindow.AddParam('FogMaxDistance',0,500);
 ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
 ParamsWindow.AddParam('ShowClippedParticle');
 ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 ParamsWindow.AddParam('CameraFarDistance', 1, 100);
-ParamsWindow.AddParam('CameraFaceForward');
-ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
-ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 
 
@@ -1134,7 +1138,12 @@ function Render(RenderTarget)
 		//	gr: maybe do this with the actors in scene from GetRenderScene?
 		if ( !IsActorVisible(Actor) )
 			return;
-		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
+		const UpdatePhysicsUniforms = function(Shader)
+		{
+			Shader.SetUniform('NoiseScale', Params.DebrisPhysicsNoiseScale );
+			Shader.SetUniform('Damping', Params.DebrisPhysicsDamping );
+		}
+		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
 	//	update physics
 	OceanActors.forEach( UpdateActorPhysics );
