@@ -2,7 +2,6 @@ Pop.Include('AssetImport.js');
 Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 
-const MeshAssetFileExtension = '.mesh.json';
 
 const RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
@@ -170,29 +169,6 @@ function GetAsset(Name,RenderContext)
 	
 	ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
 	return ContextAssets[Name];
-}
-
-
-function ParseColladaSceneAsModel(Filename,OnVertex,OnMeta)
-{
-	const Contents = Pop.LoadFileAsString( Filename );
-	let OnActor = function(Actor)
-	{
-		OnVertex( ...Actor.Position );
-	}
-	let OnSpline = function()
-	{
-	}
-	Pop.Collada.Parse( Contents, OnActor, OnSpline );
-}
-
-
-//	seperate func so it can be profiled
-function LoadAssetJson(Filename)
-{
-	const Contents = Pop.LoadFileAsString( Filename );
-	const Asset = JSON.parse( Contents );
-	return Asset;
 }
 
 
