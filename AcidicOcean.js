@@ -375,9 +375,10 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 	{
 		//	gr: this works, but not testing bounding box
 		const ActorTransform = Actor.GetLocalToWorldTransform();
-		const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
-		const ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
-		const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
+		//const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
+		//const ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
+		//const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
+		const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorTransform );
 		const ActorInFrustumPos = Math.GetMatrixTranslation( ActorInFrustumMtx, true );
 		/*
 		let ActorInCameraMtx = Math.MatrixMultiply4x4( WorldToCamera, ActorInWorldMtx );
