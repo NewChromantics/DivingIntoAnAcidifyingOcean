@@ -284,7 +284,7 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 	{
 		ColourImage = new Pop.Image();
 		
-		if ( Colours.length != Positions.length )
+		if ( Colours.length / ColourSize != Positions.length / PositionSize )
 			throw "Expecting Colours.length ("+Colours.length+") to match Positions.length ("+Positions.length+")";
 		//	pad to square
 		const Channels = ColourSize;
