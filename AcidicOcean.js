@@ -343,7 +343,8 @@ function GetMouseRay(uv)
 Math.GetDistanceToPlane = function(Plane4,Position3)
 {
 	//	plane should be normalised
-	return Math.Dot3( Position3, Plane4 ) + Plane4[3];
+	const Distance = Math.Dot3( Position3, Plane4 ) + Plane4[3];
+	return Distance;
 	/*
 	// n must be normalized
 	return dot(p,n.xyz) + n.w;
@@ -360,33 +361,35 @@ Math.GetDistanceToPlane = function(Plane4,Position3)
 	*/
 }
 
+Math.InsideMinusOneToOne = function(f)
+{
+	return ( f>=-1 && f<= 1 );
+}
+
 //	return the filter function
 function GetCameraActorCullingFilter(Camera,Viewport)
 {
 	//	get a matrix to convert world space to camera frustum space (-1..1)
-	let CameraToFrustum = Camera.GetProjectionMatrix( Viewport );
-	let WorldToCamera = Camera.GetWorldToCameraMatrix();
-	let WorldToFrustum = Math.MatrixMultiply4x4( CameraToFrustum, WorldToCamera );
+	const WorldToFrustum = Camera.GetWorldToFrustumTransform(Viewport);
 	
-	let IsVisibleFunction = function(Actor)
+	const IsVisibleFunction = function(Actor)
 	{
+		//	gr: this works, but not testing bounding box
 		const ActorTransform = Actor.GetLocalToWorldTransform();
-		let WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
-		let ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
-		let ActorInFrustum1Mtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
+		const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
+		const ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
+		const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
+		const ActorInFrustumPos = Math.GetMatrixTranslation( ActorInFrustumMtx, true );
+		/*
 		let ActorInCameraMtx = Math.MatrixMultiply4x4( WorldToCamera, ActorInWorldMtx );
 		let ActorInCameraPos = Math.GetMatrixTranslation( ActorInCameraMtx, true );
-		let ActorInFrustum1Pos = Math.GetMatrixTranslation( ActorInFrustum1Mtx, true );
 		let ActorInFrustum2Mtx = Math.MatrixMultiply4x4( CameraToFrustum, ActorInCameraMtx );
 		let ActorInFrustum2Pos = Math.GetMatrixTranslation( ActorInFrustum2Mtx, true );
+		*/
 		
-		let InsideMinusOneToOne = function(f)
-		{
-			return ( f>=-1 && f<= 1 );
-		}
-		if ( !InsideMinusOneToOne( ActorInFrustum1Pos[0] ) )	return false;
-		if ( !InsideMinusOneToOne( ActorInFrustum1Pos[1] ) )	return false;
-		if ( !InsideMinusOneToOne( ActorInFrustum1Pos[2] ) )	return false;
+		if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( ActorInFrustumPos[0] ) )	return false;
+		if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( ActorInFrustumPos[1] ) )	return false;
+		if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( ActorInFrustumPos[2] ) )	return false;
 		
 		return true;
 	}
@@ -481,29 +484,22 @@ const TimelineMaxInteractiveYear = 2100;
 Params.TimelineYear = TimelineMinYear;
 Params.FrustumTestNegative = true;
 Params.TransposeFrustumPlanes = false;
-Params.CullZMax = 1;
-Params.CullZMin = -1;
-Params.CullTestSubtractCameraPos = false;
-Params.CullTestInvertProjectionMatrix = false;
-Params.CullTestNear = true;
-Params.CullTestFar = true;
-Params.CullTestLeft = true;
-Params.CullTestRight = true;
-Params.CullTestTop = true;
-Params.CullTestBottom = true;
+Params.FrustumCullTestX = false;	//	re-enable when we cull on bounding box
+Params.FrustumCullTestY = false;	//	re-enable when we cull on bounding box
+Params.FrustumCullTestZ = true;
 Params.MouseRayOnTimelineCamera = false;
 Params.TestRaySize = 0.39;
 Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
 Params.TestRayDivW = true;
-Params.ExperiencePlaying = false;
+Params.ExperiencePlaying = true;
 Params.UseDebugCamera = false;
 Params.ExperienceDurationSecs = 240;
 Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 11.37;
-Params.FogMaxDistance = 24.45;
+Params.FogMaxDistance = 999.45;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
@@ -516,7 +512,7 @@ Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
-Params.DrawBoundingBoxes = true;
+Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
 Params.ActorPlaceholdersScale = 0.1;
 Params.ScrollFlySpeed = 100;
@@ -534,18 +530,9 @@ let OnParamsChanged = function(Params,ChangedParamName)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
-ParamsWindow.AddParam('FrustumTestNegative');
-ParamsWindow.AddParam('TransposeFrustumPlanes');
-ParamsWindow.AddParam('CullZMax',-10,100);
-ParamsWindow.AddParam('CullZMin',-10,10);
-ParamsWindow.AddParam('CullTestSubtractCameraPos');
-ParamsWindow.AddParam('CullTestInvertProjectionMatrix');
-ParamsWindow.AddParam('CullTestNear');
-ParamsWindow.AddParam('CullTestFar');
-ParamsWindow.AddParam('CullTestLeft');
-ParamsWindow.AddParam('CullTestRight');
-ParamsWindow.AddParam('CullTestTop');
-ParamsWindow.AddParam('CullTestBottom');
+ParamsWindow.AddParam('FrustumCullTestX');
+ParamsWindow.AddParam('FrustumCullTestY');
+ParamsWindow.AddParam('FrustumCullTestZ');
 ParamsWindow.AddParam('MouseRayOnTimelineCamera');
 ParamsWindow.AddParam('TestRayDistance',-1,1);
 ParamsWindow.AddParam('TestRaySize',0,10);
@@ -565,7 +552,7 @@ ParamsWindow.AddParam('LightColour','Colour');
 ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
 ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
-ParamsWindow.AddParam('FogMaxDistance',0,100);
+ParamsWindow.AddParam('FogMaxDistance',0,500);
 ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
