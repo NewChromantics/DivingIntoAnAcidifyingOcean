@@ -6,6 +6,7 @@ const MeshAssetFileExtension = '.mesh.json';
 
 const RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
+const DataTextureWidth = 128;
 
 //	todo: tie with render target!
 let QuadGeometry = null;
@@ -435,10 +436,11 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 	if ( PositionImage )
 	{
 		//	pad to square
-		const Width = 1024;
-		const Height = Math.ceil( Positions.length / Width );
 		const Channels = PositionSize;
+		const Width = DataTextureWidth;
+		const Height = Math.GetNextPowerOf2( Positions.length / Width / Channels );
 		const PixelDataSize = Channels * Width * Height;
+		Pop.Debug("Position texture",Width,Height,Channels,"Total",PixelDataSize);
 		
 		const PixelValues = Positions.slice();
 		PixelValues.length = PixelDataSize;
@@ -459,10 +461,11 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 		if ( Colours.length != Positions.length )
 			throw "Expecting Colours.length ("+Colours.length+") to match Positions.length ("+Positions.length+")";
 		//	pad to square
-		const Width = 1024;
-		const Height = Math.ceil( Colours.length / Width );
 		const Channels = ColourSize;
+		const Width = DataTextureWidth;
+		const Height = Math.GetNextPowerOf2( Colours.length / Width / Channels );
 		const PixelDataSize = Channels * Width * Height;
+		Pop.Debug("Colours texture",Width,Height,Channels,"Total",PixelDataSize);
 
 		const PixelValues = Colours.slice();
 		PixelValues.length = PixelDataSize;
@@ -483,11 +486,12 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 		if ( Alphas.length/AlphaSize != Positions.length/PositionSize )
 			throw "Expecting Alphas.length ("+Alphas.length+") to match Positions.length ("+Positions.length+")";
 		//	pad to square
-		const Width = 1024;
-		const Height = Math.ceil( Alphas.length / Width );
 		const Channels = AlphaSize;
+		const Width = DataTextureWidth;
+		const Height = Math.GetNextPowerOf2( Alphas.length / Width / Channels );
 		const PixelDataSize = Channels * Width * Height;
-		
+		Pop.Debug("Alphas texture",Width,Height,Channels,"Total",PixelDataSize);
+
 		const PixelValues = Alphas.slice();
 		PixelValues.length = PixelDataSize;
 		
