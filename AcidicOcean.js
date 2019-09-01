@@ -121,6 +121,87 @@ var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 var SelectedActors = [];
 
+
+Math.GetNormalisedPlane = function(Plane4)
+{
+	let Length = Math.Length3( Plane4 );
+	Plane4 = Plane4.slice();
+	Plane4[0] /= Length;
+	Plane4[1] /= Length;
+	Plane4[2] /= Length;
+	Plane4[3] /= Length;
+	return Plane4;
+}
+
+
+Math.NormalisePlane = function(Plane4)
+{
+	let Length = Math.Length3( Plane4 );
+	Plane4[0] /= Length;
+	Plane4[1] /= Length;
+	Plane4[2] /= Length;
+	Plane4[3] /= Length;
+}
+
+
+
+
+//	from https://stackoverflow.com/a/34960913/355753
+Math.GetFrustumPlanes = function(FrustumMatrix4x4,Normalised=true)
+{
+	let left = [];
+	let right = [];
+	let bottom = [];
+	let top = [];
+	let near = [];
+	let far = [];
+	
+	let mat;
+	if ( Params.TransposeFrustumPlanes )
+	{
+		mat = function(row,col)
+		{
+			return FrustumMatrix4x4[ (row*4) + col ];
+		}
+	}
+	else
+	{
+		mat = function(col,row)
+		{
+			return FrustumMatrix4x4[ (row*4) + col ];
+		}
+	}
+	
+	for ( let i=0;	i<4;	i++ )
+	{
+		left[i]		= mat(i,3) + mat(i,0);
+		right[i]	= mat(i,3) - mat(i,0);
+		bottom[i]	= mat(i,3) + mat(i,1);
+		top[i]		= mat(i,3) - mat(i,1);
+		near[i]		= mat(i,3) + mat(i,2);
+		far[i]		= mat(i,3) - mat(i,2);
+	}
+	
+	if ( Normalised )
+	{
+		Math.NormalisePlane( left );
+		Math.NormalisePlane( right );
+		Math.NormalisePlane( top );
+		Math.NormalisePlane( bottom );
+		Math.NormalisePlane( near );
+		Math.NormalisePlane( far );
+	}
+
+	const Planes = {};
+	Planes.Left = left;
+	Planes.Right = right;
+	Planes.Top = top;
+	Planes.Bottom = bottom;
+	Planes.Near = near;
+	Planes.Far = far;
+	return Planes;
+}
+
 Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
 {
 	let tmin = -Infinity;
@@ -258,26 +339,141 @@ function GetMouseRay(uv)
 	return Ray;
 }
 
-function TimelineCameraVisible(Actor)
+//	returns signed distance, so if negative, point is behind plane.
+Math.GetDistanceToPlane = function(Plane4,Position3)
 {
-	return true;
+	//	plane should be normalised
+	return Math.Dot3( Position3, Plane4 ) + Plane4[3];
+	/*
+	// n must be normalized
+	return dot(p,n.xyz) + n.w;
+	
+	const a = Plane4[0];
+	const b = Plane4[1];
+	const c = Plane4[2];
+	const d = Plane4[3];
+	const x = Position3[0];
+	const y = Position3[1];
+	const z = Position3[2];
+	const Distance = (a * x + b * y + c * z + d);
+	return Distance;
+	*/
 }
 
-function UpdateMouseMove(CameraScreenUv)
+//	return the filter function
+function GetCameraActorCullingFilter(Camera,Viewport)
 {
-	//Pop.Debug(CameraScreenUv);
-	let Time = Params.TimelineYear;
+	//	get a matrix to convert world space to camera frustum space (-1..1)
+	let CameraToFrustum = Camera.GetProjectionMatrix( Viewport );
+	CameraToFrustum[15]=1;
+	if ( Params.CullTestInvertProjectionMatrix )
+		CameraToFrustum = Math.MatrixInverse4x4( CameraToFrustum );
+	let WorldToCamera = Camera.GetWorldToCameraMatrix();
+	let WorldToFrustum = Math.MatrixMultiply4x4( CameraToFrustum, WorldToCamera );
+	
+	let IsVisibleFunction = function(Actor)
+	{
+		const ActorTransform = Actor.GetLocalToWorldTransform();
+		let WorldPosition = Math.GetMatrixTranslation( ActorTransform );
+		let ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
+		let ActorInFrustum1Mtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
+		let ActorInCameraMtx = Math.MatrixMultiply4x4( WorldToCamera, ActorInWorldMtx );
+		let ActorInCameraPos = Math.GetMatrixTranslation( ActorInCameraMtx );
+		let ActorInFrustum1Pos = Math.GetMatrixTranslation( ActorInFrustum1Mtx );
+		let ActorInFrustum2Mtx = Math.MatrixMultiply4x4( CameraToFrustum, ActorInCameraMtx );
+		let ActorInFrustum2Pos = Math.GetMatrixTranslation( ActorInFrustum2Mtx );
+		
+		//Pop.Debug("Actor pos",ActorInFrustum);
+		if ( Params.FrustumTestNegative )
+		{
+			if ( ActorInCameraPos[2] < 0 )
+				return false;
+		}
+		else
+		{
+			if ( ActorInCameraPos[2] > 0 )
+				return false;
+			if ( ActorInFrustum1Pos[2] < 1 )
+				return false;
+		}
+		if ( ActorInFrustum1Pos[2] > 1 )
+		{
+			Pop.Debug("Actor in front of camera, but too far",ActorInFrustum1Pos);
+			return false;
+		}
+		/*
+		let InsideMinusOneToOne = function(f)
+		{
+			return ( f>=-1 && f<= 1 );
+		}
+		//if ( !InsideMinusOneToOne( ActorInFrustum[0] ) )	return false;
+		//if ( !InsideMinusOneToOne( ActorInFrustum[1] ) )	return false;
+		if ( !InsideMinusOneToOne( ActorInFrustum[2] ) )	return false;
+		*/
+		return true;
+	}
+	
+/*
+	//	calc the frustum planes
+	Viewport = [-1,-1,1,1];
+	let FrustumMatrix = Camera.GetLocalToWorldFrustumTransformMatrix( Viewport );
+	//FrustumMatrix = Math.MatrixInverse4x4( FrustumMatrix );
+	//FrustumMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), FrustumMatrix );
+	const Planes = Math.GetFrustumPlanes( FrustumMatrix, true );
+	
+	let IsVisibleFunction = function(Actor)
+	{
+		const ActorTransform = Actor.GetLocalToWorldTransform();
+		let Position = Math.GetMatrixTranslation( ActorTransform );
+		if ( Params.CullTestSubtractCameraPos )
+			Position = Math.Subtract3( Position, Camera.Position );
+		
+		let TestPlane = function(Plane)
+		{
+			let Distance = Math.GetDistanceToPlane( Plane, Position );
+			if ( Params.FrustumTestNegative )
+				return Distance < 0;
+			return Distance>0;
+		}
+		
+		
+		
+		if ( Params.CullTestNear && !TestPlane(Planes.Near) )	return false;
+		if ( Params.CullTestFar && !TestPlane(Planes.Far) )	return false;
+		if ( Params.CullTestTop && !TestPlane(Planes.Top) )	return false;
+		if ( Params.CullTestBottom && !TestPlane(Planes.Bottom) )	return false;
+		if ( Params.CullTestLeft && !TestPlane(Planes.Left) )	return false;
+		if ( Params.CullTestRight && !TestPlane(Planes.Right) )	return false;
+		return true;
+	}
+ */
+	return IsVisibleFunction;
+}
+
+function UpdateMouseMove(x,y)
+{
+	const Rect = Window.GetScreenRect();
+	const u = x / Rect[2];
+	const v = y / Rect[3];
+
+	const CameraScreenUv = [u,v];
 	LastMouseRayUv = CameraScreenUv;
+
+	//Pop.Debug(CameraScreenUv);
+	const Time = Params.TimelineYear;
+	const Viewport = [0,0,Rect[2],Rect[3]];
+	const Camera = GetTimelineCamera(Time);
 	
 	const Ray = GetMouseRay( CameraScreenUv );
 	
 	LastMouseRay = Ray;
 	
+	const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
 	const FilterActor = function(Actor)
 	{
 		if ( !IsActorSelectable(Actor) )
 			return false;
-		if ( !TimelineCameraVisible(Actor) )
+		if ( !IsActorVisible(Actor) )
 			return false;
 		return true;
 	}
@@ -305,12 +501,22 @@ const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
+Params.FrustumTestNegative = true;
+Params.TransposeFrustumPlanes = false;
+Params.CullTestSubtractCameraPos = false;
+Params.CullTestInvertProjectionMatrix = true;
+Params.CullTestNear = true;
+Params.CullTestFar = true;
+Params.CullTestLeft = true;
+Params.CullTestRight = true;
+Params.CullTestTop = true;
+Params.CullTestBottom = true;
 Params.MouseRayOnTimelineCamera = false;
 Params.TestRaySize = 0.39;
 Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
 Params.TestRayDivW = true;
-Params.ExperiencePlaying = true;
+Params.ExperiencePlaying = false;
 Params.UseDebugCamera = false;
 Params.ExperienceDurationSecs = 240;
 Params.EnableMusic = true;
@@ -330,7 +536,7 @@ Params.CameraFarDistance = 50;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
-Params.DrawBoundingBoxes = false;
+Params.DrawBoundingBoxes = true;
 Params.DrawBoundingBoxesFilled = false;
 Params.ActorPlaceholdersScale = 0.1;
 Params.ScrollFlySpeed = 100;
@@ -348,6 +554,16 @@ let OnParamsChanged = function(Params,ChangedParamName)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
+ParamsWindow.AddParam('FrustumTestNegative');
+ParamsWindow.AddParam('TransposeFrustumPlanes');
+ParamsWindow.AddParam('CullTestSubtractCameraPos');
+ParamsWindow.AddParam('CullTestInvertProjectionMatrix');
+ParamsWindow.AddParam('CullTestNear');
+ParamsWindow.AddParam('CullTestFar');
+ParamsWindow.AddParam('CullTestLeft');
+ParamsWindow.AddParam('CullTestRight');
+ParamsWindow.AddParam('CullTestTop');
+ParamsWindow.AddParam('CullTestBottom');
 ParamsWindow.AddParam('MouseRayOnTimelineCamera');
 ParamsWindow.AddParam('TestRayDistance',-1,1);
 ParamsWindow.AddParam('TestRaySize',0,10);
@@ -652,7 +868,7 @@ function GetActorScene(Time,Filter)
 
 
 //	get scene graph
-function GetRenderScene(Time)
+function GetRenderScene(Time,VisibleFilter)
 {
 	let Scene = [];
 	
@@ -759,8 +975,7 @@ function GetRenderScene(Time)
 		Scene.push( Actor );
 	}
 	
-	
-	const ActorScene = GetActorScene( Time, TimelineCameraVisible );
+	const ActorScene = GetActorScene( Time, VisibleFilter );
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
@@ -884,14 +1099,18 @@ function Render(RenderTarget)
 	const DurationSecs = 1 / 60;
 	Update( DurationSecs );
 	
-	//let Time = Math.Range( TimelineMinYear, TimelineMaxYear, Params.TimelineYear );
-	let Time = Params.TimelineYear;
-	
+	const Time = Params.TimelineYear;
+
+	const RenderCamera = GetRenderCamera( Time );
+	const CullingCamera = GetTimelineCamera( Time );
+	const Viewport = RenderTarget.GetRenderTargetRect();
+	const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
+
 	let UpdateActorPhysics = function(Actor)
 	{
 		//	only update actors visible
 		//	gr: maybe do this with the actors in scene from GetRenderScene?
-		if ( !TimelineCameraVisible(Actor) )
+		if ( !IsActorVisible(Actor) )
 			return;
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget );
 	}
@@ -901,13 +1120,13 @@ function Render(RenderTarget)
 	
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
-	const RenderCamera = GetRenderCamera( Time );
-	const Viewport = RenderTarget.GetRenderTargetRect();
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
-
-	const Scene = GetRenderScene(Time);
+	
+	
+	const Scene = GetRenderScene( Time, IsActorVisible );
+	
 	let RenderSceneActor = function(Actor,ActorIndex)
 	{
 		const SetGlobalUniforms = function(Shader)
@@ -936,7 +1155,6 @@ function Render(RenderTarget)
 		Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
 	}
 	Scene.forEach( RenderSceneActor );
-	
 }
 
 
@@ -978,10 +1196,7 @@ Window.OnMouseDown = function(x,y,Button)
 
 Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 {
-	let Rect = Window.GetScreenRect();
-	let u = x / Rect[2];
-	let v = y / Rect[3];
-	UpdateMouseMove( [u,v] );
+	UpdateMouseMove( x, y );
 
 	if ( Button == 0 )
 	{
