@@ -552,7 +552,6 @@ Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
 Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
-Params.ActorPlaceholdersScale = 0.1;
 Params.ScrollFlySpeed = 100;
 
 let OnParamsChanged = function(Params,ChangedParamName)
@@ -597,7 +596,6 @@ ParamsWindow.AddParam('MouseRayOnTimelineCamera');
 ParamsWindow.AddParam('TestRayDistance',-1,1);
 ParamsWindow.AddParam('TestRaySize',0,10);
 ParamsWindow.AddParam('DrawTestRay');
-ParamsWindow.AddParam('ActorPlaceholdersScale',0,1);
 ParamsWindow.AddParam('EnablePhysicsIteration');
 ParamsWindow.AddParam('DebugPhysicsTextures');
 ParamsWindow.AddParam('BillboardTriangles');
@@ -714,11 +712,30 @@ function LoadCameraScene(Filename)
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
-		Actor.Geometry = 'Cube';
+		Actor.Geometry = 'Cube01';
+
+		let LocalScale = ActorNode.Scale;
+		let WorldPos = ActorNode.Position;
 		
-		let LocalScale = Math.CreateScaleMatrix( Params.ActorPlaceholdersScale );
-		let WorldPos = Math.CreateTranslationMatrix( ...ActorNode.Position );
-		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPos, LocalScale );
+		const RenderAsBounds = true;
+		if ( RenderAsBounds )
+		{
+			//	undo the bounds scale and render the cube at the bounds scale
+			//	but that'll scale bounds too, so undo that (just to 0..1)
+			let BoundsCenter = Math.Lerp3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min, 0.5 );
+			let BoundsScale = Math.Subtract3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min );
+			
+			LocalScale = BoundsScale;
+			WorldPos = Math.Add3( WorldPos, BoundsCenter );
+			ActorNode.BoundingBox.Max = [1,1,1];
+			ActorNode.BoundingBox.Min = [0,0,0];
+			Pop.Debug( ActorNode.Name, "BoundsScale", BoundsScale, "ActorNode.Scale", ActorNode.Scale );
+		}
+		
+		let LocalScaleMtx = Math.CreateScaleMatrix( ...LocalScale );
+		let WorldPosMtx = Math.CreateTranslationMatrix( ...WorldPos );
+		
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPosMtx, LocalScaleMtx );
 		
 		Actor.VertShader = GeoVertShader;
 		Actor.FragShader = ColourFragShader;
@@ -1183,7 +1200,14 @@ function Render(RenderTarget)
 			Object.keys( Actor.Uniforms ).forEach( SetUniform );
 		}
 		
-		Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
+		try
+		{
+			Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
+		}
+		catch(e)
+		{
+			//Pop.Debug("Error rendering actor", Actor.Name,e);
+		}
 	}
 	Scene.forEach( RenderSceneActor );
 }
