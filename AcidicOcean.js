@@ -412,8 +412,8 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 			
 			if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( ActorInFrustumPos[0] ) )	return false;
 			if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( ActorInFrustumPos[1] ) )	return false;
-		if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( ActorInFrustumPos[2] ) )	return false;
-		
+			if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( ActorInFrustumPos[2] ) )	return false;
+			
 			return true;
 		}
 		
@@ -536,7 +536,7 @@ Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 11.37;
-Params.FogMaxDistance = 60.45;
+Params.FogMaxDistance = 75.45;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
