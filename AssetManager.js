@@ -345,7 +345,7 @@ function VerifyGeometryAsset(Asset)
 	
 }
 
-function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
+function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 {
 	const CachedFilename = GetCachedFilename(Filename,'geometry');
 	if ( Pop.FileExists(CachedFilename) )
@@ -368,6 +368,32 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap)
 	let VertexSize = 2;
 	let VertexAttributeName = 'Vertex';
 	let TriangleIndexes = 'auto';
+	
+	//	scale positions
+	if ( ScaleToBounds && Positions )
+	{
+		Pop.Debug("Scaling to ",ScaleToBounds);
+		const PositionCount = Positions.length / PositionSize;
+		for ( let p=0;	p<PositionCount;	p++ )
+		{
+			for ( let v=0;	v<PositionSize;	v++ )
+			{
+				let i = (p * PositionSize)+v;
+				let f = Positions[i];
+				f = Math.lerp( ScaleToBounds.Min[v], ScaleToBounds.Max[v], f );
+				Positions[i] = f;
+			}
+		}
+		
+		//	scale up the geo bounding box
+		Geo.BoundingBox.Min = Geo.BoundingBox.Min.slice();
+		Geo.BoundingBox.Max = Geo.BoundingBox.Max.slice();
+		for ( let i=0;	i<3;	i++ )
+		{
+			Geo.BoundingBox.Min[i] = Math.lerp( ScaleToBounds.Min[i], ScaleToBounds.Max[i], Geo.BoundingBox.Min[i] );
+			Geo.BoundingBox.Max[i] = Math.lerp( ScaleToBounds.Min[i], ScaleToBounds.Max[i], Geo.BoundingBox.Max[i] );
+		}
+	}
 	
 	const AlphaIsPositionW = true;
 	if ( AlphaIsPositionW && Alphas && PositionSize < 4 )

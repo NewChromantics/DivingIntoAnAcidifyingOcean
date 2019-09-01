@@ -22,11 +22,11 @@ function GetCachedFilename(Filename,Type)
 
 function GenerateRandomVertexes(Contents,OnVertex,OnMeta)
 {
-	for ( let i=0;	i<10000;	i++ )
+	for ( let i=0;	i<5000;	i++ )
 	{
-		let x = Math.random() - 0.5;
-		let y = Math.random() - 0.5;
-		let z = Math.random() - 0.5;
+		let x = Math.random();
+		let y = Math.random();
+		let z = Math.random();
 		OnVertex(x,y,z);
 	}
 }

@@ -18,7 +18,7 @@ const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 
 //	temp turning off and just having dummy actors
 const LoadWaterAsInstances = true;
-
+const LoadDebrisAsInstances = true;
 
 
 function UnrollHexToRgb(Hexs)
@@ -91,12 +91,11 @@ ShellMeta.VertexSkip = 0;
 
 let DebrisMeta = {};
 DebrisMeta.Filename = '.random';
-DebrisMeta.Position = [0,-17,0];
-DebrisMeta.Scale = 30;
+DebrisMeta.Position = [0,0,0];
+DebrisMeta.Scale = 1;
 DebrisMeta.TriangleScale = 0.052015;	//	0.0398
 DebrisMeta.Colours = DebrisColours;
 DebrisMeta.VertexSkip = 0;
-
 
 let OceanFilenames = [];
 for ( let i=1;	i<=96;	i++ )
@@ -482,7 +481,8 @@ const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
-Params.FrustumTestNegative = true;
+Params.ExperienceDurationSecs = 240;
+Params.DebugCullTimelineCamera = true;
 Params.TransposeFrustumPlanes = false;
 Params.FrustumCullTestX = false;	//	re-enable when we cull on bounding box
 Params.FrustumCullTestY = false;	//	re-enable when we cull on bounding box
@@ -494,12 +494,11 @@ Params.TestRayDistance = 0.82;
 Params.TestRayDivW = true;
 Params.ExperiencePlaying = true;
 Params.UseDebugCamera = false;
-Params.ExperienceDurationSecs = 240;
 Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 11.37;
-Params.FogMaxDistance = 999.45;
+Params.FogMaxDistance = 60.45;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
@@ -508,7 +507,7 @@ Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
-Params.CameraFarDistance = 50;
+Params.CameraFarDistance = 60;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
@@ -530,6 +529,8 @@ let OnParamsChanged = function(Params,ChangedParamName)
 const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
+ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
+ParamsWindow.AddParam('DebugCullTimelineCamera');
 ParamsWindow.AddParam('FrustumCullTestX');
 ParamsWindow.AddParam('FrustumCullTestY');
 ParamsWindow.AddParam('FrustumCullTestZ');
@@ -541,7 +542,6 @@ ParamsWindow.AddParam('TestRayDivW');
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('EnableMusic');
-ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 ParamsWindow.AddParam('DrawBoundingBoxes');
 ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 ParamsWindow.AddParam('ActorPlaceholdersScale',0,1);
@@ -637,17 +637,32 @@ function LoadCameraScene(Filename)
 		{
 			if ( ActorNode.Name.startsWith('Ocean_surface_') )
 			{
+				let Meta = Object.assign({}, OceanMeta );
+				Meta.PhysicsUpdateEnabled = true;
+				Meta.Position = ActorNode.Position;
+				//Meta.ScaleMeshToBounds = ActorNode.BoundingBox;
+				
 				let Actor = new TAnimatedActor( OceanMeta );
+				Actor.BoundingBox = ActorNode.BoundingBox;
+				//	gr: why isn't this loading in meta for animated actor
 				Actor.Position = ActorNode.Position;
 				OceanActors.push( Actor );
 				//Scene.push( Actor );
 				return;
 			}
-			
+		}
+		
+		if ( LoadDebrisAsInstances )
+		{
 			if ( ActorNode.Name.startsWith('Water_') )
 			{
-				let Actor = new TPhysicsActor( DebrisMeta );
-				Actor.Position = ActorNode.Position;
+				let Meta = Object.assign({}, DebrisMeta );
+				Meta.PhysicsUpdateEnabled = true;
+				Meta.Position = ActorNode.Position;
+				Meta.ScaleMeshToBounds = ActorNode.BoundingBox;
+				
+				let Actor = new TPhysicsActor( Meta );
+				Actor.BoundingBox = ActorNode.BoundingBox;
 				DebrisActors.push( Actor );
 				//Scene.push( Actor );
 				return;
@@ -1071,7 +1086,7 @@ function Render(RenderTarget)
 	const Time = Params.TimelineYear;
 
 	const RenderCamera = GetRenderCamera( Time );
-	const CullingCamera = GetTimelineCamera( Time );
+	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera( Time ) : RenderCamera;
 	const Viewport = RenderTarget.GetRenderTargetRect();
 	const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
 

@@ -60,7 +60,8 @@ function TPhysicsActor(Meta)
 		if ( DurationSecs == 0 )
 			return;
 
-		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
+		if ( this.Meta.PhysicsUpdateEnabled !== false )
+			PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
 	}
 	
 	this.ResetPhysicsTextures = function()
@@ -95,11 +96,12 @@ function TPhysicsActor(Meta)
 		if ( this.TriangleBuffer )
 			return this.TriangleBuffer;
 		
-		this.TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Meta.Filename, this.GetIndexMap.bind(this) );
+		this.TriangleBuffer = LoadPointMeshFromFile( RenderTarget, Meta.Filename, this.GetIndexMap.bind(this), Meta.ScaleMeshToBounds );
 		this.PositionTexture = this.TriangleBuffer.PositionTexture;
 		this.ColourTexture = this.TriangleBuffer.ColourTexture;
 		this.AlphaTexture = this.TriangleBuffer.AlphaTexture;
-		this.BoundingBox = this.TriangleBuffer.BoundingBox;
+		if ( !this.BoundingBox )
+			this.BoundingBox = this.TriangleBuffer.BoundingBox;
 		this.ResetPhysicsTextures();
 		
 		return this.TriangleBuffer;
@@ -162,7 +164,8 @@ function TAnimationBuffer(Filenames,Scale)
 				Frame.AlphaTexture = TriangleBuffer.AlphaTexture;
 				
 				//	should grab biggest, but lets just overwrite
-				this.BoundingBox = TriangleBuffer.BoundingBox;
+				if ( !this.BoundingBox )
+					this.BoundingBox = TriangleBuffer.BoundingBox;
 
 				this.Frames.push(Frame);
 			}
@@ -262,6 +265,8 @@ function TAnimatedActor(Meta)
 	
 	this.GetBoundingBox = function()
 	{
+		if ( this.BoundingBox )
+			return this.BoundingBox;
 		return this.Animation.BoundingBox;
 	}
 }
@@ -309,8 +314,8 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
-			Shader.SetUniform('NoiseScale', 0.1 );
-			Shader.SetUniform('Gravity', -0.1);
+			Shader.SetUniform('NoiseScale', 0 );
+			Shader.SetUniform('Gravity', 0 );
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
 			Shader.SetUniform('OrigPositions',PositionOrigTexture);
