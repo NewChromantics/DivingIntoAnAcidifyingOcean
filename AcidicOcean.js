@@ -279,6 +279,34 @@ function GetActorWorldBoundingBox(Actor)
 	return BoundingBoxWorld;
 }
 
+function GetActorWorldBoundingBoxCorners(Actor,IncludeBothX=true,IncludeBothY=true,IncludeBothZ=true)
+{
+	const BoundingBoxWorld = GetActorWorldBoundingBox(Actor);
+	const Corners = [];
+	const Min = BoundingBoxWorld.Min;
+	const Max = BoundingBoxWorld.Max;
+	
+	//	save some processing time by only including things we need
+	if ( IncludeBothZ && !IncludeBothX && !IncludeBothY )
+	{
+		const Mid = Math.Lerp3( Min, Max, 0.5 );
+		Corners.push( [Mid[0], Mid[1], Min[2]] );
+		Corners.push( [Mid[0], Mid[1], Max[2]] );
+		return Corners;
+	}
+	
+	Corners.push( [Min[0], Min[1], Min[2]] );
+	Corners.push( [Max[0], Min[1], Min[2]] );
+	Corners.push( [Max[0], Max[1], Min[2]] );
+	Corners.push( [Min[0], Max[1], Min[2]] );
+	Corners.push( [Min[0], Min[1], Max[2]] );
+	Corners.push( [Max[0], Min[1], Max[2]] );
+	Corners.push( [Max[0], Max[1], Max[2]] );
+	Corners.push( [Min[0], Max[1], Max[2]] );
+	
+	return Corners;
+}
+
 function GetIntersectingActors(Ray,Scene)
 {
 	const Intersections = [];
@@ -373,25 +401,34 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 	
 	const IsVisibleFunction = function(Actor)
 	{
-		//	gr: this works, but not testing bounding box
-		const ActorTransform = Actor.GetLocalToWorldTransform();
-		//const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
-		//const ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
-		//const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
-		const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorTransform );
-		const ActorInFrustumPos = Math.GetMatrixTranslation( ActorInFrustumMtx, true );
-		/*
-		let ActorInCameraMtx = Math.MatrixMultiply4x4( WorldToCamera, ActorInWorldMtx );
-		let ActorInCameraPos = Math.GetMatrixTranslation( ActorInCameraMtx, true );
-		let ActorInFrustum2Mtx = Math.MatrixMultiply4x4( CameraToFrustum, ActorInCameraMtx );
-		let ActorInFrustum2Pos = Math.GetMatrixTranslation( ActorInFrustum2Mtx, true );
-		*/
+		const TestBounds = true;
 		
-		if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( ActorInFrustumPos[0] ) )	return false;
-		if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( ActorInFrustumPos[1] ) )	return false;
+		const IsWorldPositionVisible = function(WorldPosition)
+		{
+			//const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
+			const ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
+			const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
+			const ActorInFrustumPos = Math.GetMatrixTranslation( ActorInFrustumMtx, true );
+			
+			if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( ActorInFrustumPos[0] ) )	return false;
+			if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( ActorInFrustumPos[1] ) )	return false;
 		if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( ActorInFrustumPos[2] ) )	return false;
 		
-		return true;
+			return true;
+		}
+		
+		if ( TestBounds )
+		{
+			const WorldBoundsCorners = GetActorWorldBoundingBoxCorners( Actor, Params.FrustumCullTestX, Params.FrustumCullTestY, Params.FrustumCullTestZ );
+			return WorldBoundsCorners.some( IsWorldPositionVisible );
+		}
+		else
+		{
+			const ActorTransform = Actor.GetLocalToWorldTransform();
+			const ActorPosition = Math.GetMatrixTranslation( ActorTransform );
+			return IsWorldPositionVisible( ActorPosition );
+		}
+		
 	}
 	
 /*
