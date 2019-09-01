@@ -129,7 +129,8 @@ function TLogoState()
 	];
 	this.PreloadGeoFilenames =
 	[
-	 'Models/shell_v001.ply'
+	 'Models/shell_v001.ply',
+	 'Models/clownfish_v1.ply'
 	];
 
 	{

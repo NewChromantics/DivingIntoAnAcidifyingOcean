@@ -22,6 +22,31 @@ const LoadWaterAsInstances = true;
 const LoadDebrisAsInstances = true;
 
 
+
+
+function SetupFileAssets()
+{
+	const AnimalFilenames =
+	[
+	'Models/clownfish_v1.ply'
+	];
+	
+	function SetupAssetLoader(Filename)
+	{
+		const LoadFunc = function(RenderTarget)
+		{
+			Pop.Debug("Loading asset",Filename);
+			return LoadPointMeshFromFile( RenderTarget, Filename );
+		}
+		AssetFetchFunctions[Filename] = LoadFunc;
+	}
+	AnimalFilenames.forEach( SetupAssetLoader );
+}
+SetupFileAssets();
+
+
+
+
 function UnrollHexToRgb(Hexs)
 {
 	let Rgbs = [];
@@ -905,6 +930,7 @@ function GetActorScene(Time,Filter)
 	{
 		if ( !Filter(Actor) )
 			return;
+		
 		Scene.push(Actor)
 	}
 
@@ -1141,6 +1167,8 @@ function UpdateSceneVisibility(Time)
 		Actor.IsVisible = IsVisible(Actor);
 		if ( !WasVisible && Actor.IsVisible )
 		{
+			Actor.Geometry = 'Models/clownfish_v1.ply';
+			
 			Pop.Debug("Actor " + Actor.Name + " now visible");
 		}
 		else if ( WasVisible && !Actor.IsVisible )
