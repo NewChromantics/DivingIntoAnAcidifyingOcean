@@ -17,7 +17,7 @@ const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
 const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 
 //	temp turning off and just having dummy actors
-const LoadWaterAsInstances = false;
+const LoadWaterAsInstances = true;
 
 
 
@@ -635,7 +635,7 @@ function LoadCameraScene(Filename)
 	{
 		if ( LoadWaterAsInstances )
 		{
-			if ( ActorNode.Name.startsWith('Ocean_surface_0') )
+			if ( ActorNode.Name.startsWith('Ocean_surface_') )
 			{
 				let Actor = new TAnimatedActor( OceanMeta );
 				Actor.Position = ActorNode.Position;
@@ -654,7 +654,7 @@ function LoadCameraScene(Filename)
 			}
 		}
 		
-		//Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
+		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		Actor.Geometry = 'Cube';
@@ -825,8 +825,8 @@ function GetActorScene(Time,Filter)
 		Scene.push(Actor)
 	}
 
-	//OceanActors.forEach( a => PushPositionBufferActor( a ) );
-	//DebrisActors.forEach( a => PushPositionBufferActor( a ) );
+	OceanActors.forEach( a => PushPositionBufferActor( a ) );
+	DebrisActors.forEach( a => PushPositionBufferActor( a ) );
 	
 	CameraScene.forEach( PushCameraSceneActor );
 	
