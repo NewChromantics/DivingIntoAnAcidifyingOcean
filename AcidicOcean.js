@@ -365,51 +365,29 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 {
 	//	get a matrix to convert world space to camera frustum space (-1..1)
 	let CameraToFrustum = Camera.GetProjectionMatrix( Viewport );
-	CameraToFrustum[15]=1;
-	if ( Params.CullTestInvertProjectionMatrix )
-		CameraToFrustum = Math.MatrixInverse4x4( CameraToFrustum );
 	let WorldToCamera = Camera.GetWorldToCameraMatrix();
 	let WorldToFrustum = Math.MatrixMultiply4x4( CameraToFrustum, WorldToCamera );
 	
 	let IsVisibleFunction = function(Actor)
 	{
 		const ActorTransform = Actor.GetLocalToWorldTransform();
-		let WorldPosition = Math.GetMatrixTranslation( ActorTransform );
+		let WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
 		let ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
 		let ActorInFrustum1Mtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
 		let ActorInCameraMtx = Math.MatrixMultiply4x4( WorldToCamera, ActorInWorldMtx );
-		let ActorInCameraPos = Math.GetMatrixTranslation( ActorInCameraMtx );
-		let ActorInFrustum1Pos = Math.GetMatrixTranslation( ActorInFrustum1Mtx );
+		let ActorInCameraPos = Math.GetMatrixTranslation( ActorInCameraMtx, true );
+		let ActorInFrustum1Pos = Math.GetMatrixTranslation( ActorInFrustum1Mtx, true );
 		let ActorInFrustum2Mtx = Math.MatrixMultiply4x4( CameraToFrustum, ActorInCameraMtx );
-		let ActorInFrustum2Pos = Math.GetMatrixTranslation( ActorInFrustum2Mtx );
+		let ActorInFrustum2Pos = Math.GetMatrixTranslation( ActorInFrustum2Mtx, true );
 		
-		//Pop.Debug("Actor pos",ActorInFrustum);
-		if ( Params.FrustumTestNegative )
-		{
-			if ( ActorInCameraPos[2] < 0 )
-				return false;
-		}
-		else
-		{
-			if ( ActorInCameraPos[2] > 0 )
-				return false;
-			if ( ActorInFrustum1Pos[2] < 1 )
-				return false;
-		}
-		if ( ActorInFrustum1Pos[2] > 1 )
-		{
-			Pop.Debug("Actor in front of camera, but too far",ActorInFrustum1Pos);
-			return false;
-		}
-		/*
 		let InsideMinusOneToOne = function(f)
 		{
 			return ( f>=-1 && f<= 1 );
 		}
-		//if ( !InsideMinusOneToOne( ActorInFrustum[0] ) )	return false;
-		//if ( !InsideMinusOneToOne( ActorInFrustum[1] ) )	return false;
-		if ( !InsideMinusOneToOne( ActorInFrustum[2] ) )	return false;
-		*/
+		if ( !InsideMinusOneToOne( ActorInFrustum1Pos[0] ) )	return false;
+		if ( !InsideMinusOneToOne( ActorInFrustum1Pos[1] ) )	return false;
+		if ( !InsideMinusOneToOne( ActorInFrustum1Pos[2] ) )	return false;
+		
 		return true;
 	}
 	
@@ -503,8 +481,10 @@ const TimelineMaxInteractiveYear = 2100;
 Params.TimelineYear = TimelineMinYear;
 Params.FrustumTestNegative = true;
 Params.TransposeFrustumPlanes = false;
+Params.CullZMax = 1;
+Params.CullZMin = -1;
 Params.CullTestSubtractCameraPos = false;
-Params.CullTestInvertProjectionMatrix = true;
+Params.CullTestInvertProjectionMatrix = false;
 Params.CullTestNear = true;
 Params.CullTestFar = true;
 Params.CullTestLeft = true;
@@ -556,6 +536,8 @@ let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRec
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 ParamsWindow.AddParam('FrustumTestNegative');
 ParamsWindow.AddParam('TransposeFrustumPlanes');
+ParamsWindow.AddParam('CullZMax',-10,100);
+ParamsWindow.AddParam('CullZMin',-10,10);
 ParamsWindow.AddParam('CullTestSubtractCameraPos');
 ParamsWindow.AddParam('CullTestInvertProjectionMatrix');
 ParamsWindow.AddParam('CullTestNear');
