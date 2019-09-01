@@ -6,6 +6,7 @@ Pop.Include('PopEngineCommon/PopCinema4d.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
+Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //Pop.Include('AssetManager.js');
 Pop.Include('AudioManager.js');
@@ -486,7 +487,13 @@ function UpdateMouseMove(x,y)
 	
 	LastMouseRay = Ray;
 	
-	const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
+	//const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
+	const IsActorVisible = function(Actor)
+	{
+		if ( Actor.IsVisible === undefined )
+			return true;
+		return Actor.IsVisible === true;
+	}
 	const FilterActor = function(Actor)
 	{
 		if ( !IsActorSelectable(Actor) )
@@ -877,17 +884,19 @@ function GetActorScene(Time,Filter)
 		
 		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 		{
+			let Actor = this;
+			const PositionsTexture = Actor.GetPositionsTexture(RenderTarget);
+			Actor.Uniforms = [];
+			Actor.Uniforms['WorldPositions'] = PositionsTexture;
+			Actor.Uniforms['WorldPositionsWidth'] = PositionsTexture.GetWidth();
+			Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
+			Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
+			Actor.Uniforms['Colours']= Actor.Colours;
+			Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
+			
 			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
 		}
 		
-		const PositionsTexture = Actor.GetPositionsTexture();
-		Actor.Uniforms = [];
-		Actor.Uniforms['WorldPositions'] = PositionsTexture;
-		Actor.Uniforms['WorldPositionsWidth'] = PositionsTexture.GetWidth();
-		Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
-		Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
-		Actor.Uniforms['Colours']= Actor.Colours;
-		Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
 		//let a = new TActor( )
 		Scene.push( Actor );
 	}
@@ -976,35 +985,6 @@ function GetRenderScene(Time,VisibleFilter)
 		Scene.push( Actor );
 	}
 	
-	let PushPositionBufferActor = function(Actor)
-	{
-		if ( Actor.Instances )
-		{
-			//	turn below into a proper TActor and then draw multiple cases with different transforms
-		}
-		
-		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
-		{
-			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
-		}
-		
-		const PositionsTexture = Actor.GetPositionsTexture();
-		Actor.Uniforms = [];
-		Actor.Uniforms['WorldPositions'] = PositionsTexture;
-		Actor.Uniforms['WorldPositionsWidth'] = PositionsTexture.GetWidth();
-		Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
-		Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
-		Actor.Uniforms['Colours']= Actor.Colours;
-		Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
-		//let a = new TActor( )
-		PushActorBoundingBox( Actor );
-		Scene.push( Actor );
-	}
-	/*
-	let ShellAlpha = Timeline.GetUniform(Time,'ShellAlpha');
-	if ( ShellAlpha > 0.5 )
-		PushPositionBufferActor( Actor_Shell );
-	*/
 	
 	let PushCameraPosActor = function(Position)
 	{
@@ -1062,6 +1042,7 @@ function GetAudioGetCrossFadeDuration()
 	return Params.AudioCrossFadeDurationSecs;
 }
 
+var RenderFrameCounter = new Pop.FrameCounter();
 
 //	need a better place for this, app state!
 function Init()
@@ -1079,6 +1060,14 @@ function Init()
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
 	Hud.Stats_Ph = new Pop.Hud.Label('Stats_Ph_Label');
+	
+	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
+	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
+	
+	RenderFrameCounter.Report = function(CountPerSec)
+	{
+		Hud.Debug_FrameRate.SetValue( CountPerSec.toFixed(2) + " fps" );
+	}
 }
 
 
@@ -1100,7 +1089,7 @@ function Update(FrameDurationSecs)
 		ParamsWindow.OnParamChanged('TimelineYear');
 	}
 
-	let Time = Params.TimelineYear;
+	const Time = Params.TimelineYear;
 
 	
 	//	update audio
@@ -1133,9 +1122,39 @@ function Update(FrameDurationSecs)
 	Hud.Stats_Co2.SetValue( Stats_Co2 );
 	Hud.Stats_Oxygen.SetValue( Stats_Oxygen );
 	Hud.Stats_Ph.SetValue( Stats_Ph );
+	
+	UpdateSceneVisibility(Time);
 }
 
-
+//	set the actor visibility for this frame
+//	setup new animal actors where neccessary
+function UpdateSceneVisibility(Time)
+{
+	const CullingCamera = GetTimelineCamera(Time);
+	const Rect = Window.GetScreenRect();
+	const Viewport = [0,0,Rect[2],Rect[3]];
+	const IsVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
+	let VisibleActorCount = 0;
+	const UpdateActorVisibility = function(Actor)
+	{
+		const WasVisible = Actor.IsVisible || false;
+		Actor.IsVisible = IsVisible(Actor);
+		if ( !WasVisible && Actor.IsVisible )
+		{
+			Pop.Debug("Actor " + Actor.Name + " now visible");
+		}
+		else if ( WasVisible && !Actor.IsVisible )
+		{
+			Pop.Debug("Actor " + Actor.Name + " now hidden");
+		}
+		if ( Actor.IsVisible )
+			VisibleActorCount++;
+	}
+	const Actors = GetActorScene( Time, function(){return true;} );
+	Actors.forEach( UpdateActorVisibility );
+	
+	Hud.Debug_VisibleActors.SetValue("Visible Actors: " + VisibleActorCount + "/" + Actors.length );
+}
 
 function Render(RenderTarget)
 {
@@ -1147,7 +1166,14 @@ function Render(RenderTarget)
 	const RenderCamera = GetRenderCamera( Time );
 	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera( Time ) : RenderCamera;
 	const Viewport = RenderTarget.GetRenderTargetRect();
-	const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
+	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
+	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
+	const IsActorVisible = function(Actor)
+	{
+		if ( Actor.IsVisible === undefined )
+			return true;
+		return Actor.IsVisible === true;
+	}
 
 	let UpdateActorPhysics = function(Actor)
 	{
@@ -1210,6 +1236,8 @@ function Render(RenderTarget)
 		}
 	}
 	Scene.forEach( RenderSceneActor );
+	
+	RenderFrameCounter.Add();
 }
 
 
