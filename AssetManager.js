@@ -181,6 +181,52 @@ function GetAsset(Name,RenderContext)
 }
 
 
+
+var Auto_auto_vt_Buffer = [];
+function GetAuto_AutoVtBuffer(TriangleCount)
+{
+	const VertexSize = 2;
+	const IndexCount = VertexSize * TriangleCount * 3;
+	while ( Auto_auto_vt_Buffer.length < IndexCount )
+	{
+		let t = Auto_auto_vt_Buffer.length / VertexSize / 3;
+		for ( let v=0;	v<3;	v++ )
+		{
+			let Index = t * 3;
+			Index += v;
+			Index *= VertexSize;
+			Auto_auto_vt_Buffer[Index+0] = v;
+			Auto_auto_vt_Buffer[Index+1] = t;
+		}
+	}
+	//Pop.Debug('Auto_auto_vt_Buffer',Auto_auto_vt_Buffer);
+	return new Float32Array( Auto_auto_vt_Buffer, 0, IndexCount );
+}
+
+
+
+function GetAutoTriangleMesh(RenderTarget,TriangleCount=256*256)
+{
+	//	vertex stuff
+	//	we should get these from geo for assets WITH a vertex buffer
+	let VertexSize = 2;
+	let VertexAttributeName = 'Vertex';
+
+	let VertexBuffer = GetAuto_AutoVtBuffer(TriangleCount);
+	
+	const IndexCount = TriangleCount * 3;
+	let TriangleIndexes = GetAutoTriangleIndexes( IndexCount );
+	
+	//	loads much faster as a typed array
+	VertexBuffer = new Float32Array( VertexBuffer );
+	TriangleIndexes = new Int32Array( TriangleIndexes );
+	
+	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexBuffer, VertexSize, TriangleIndexes );
+	
+	return TriangleBuffer;
+}
+
+
 function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 {
 	const CachedFilename = GetCachedFilename(Filename,'geometry');
@@ -353,8 +399,8 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 	//	auto generated triangles
 	if ( TriangleIndexes == 'auto' )
 	{
-		const TriangleCount = VertexBuffer.length / VertexSize;
-		TriangleIndexes = GetAutoTriangleIndexes( TriangleCount );
+		const IndexCount = VertexBuffer.length / VertexSize;
+		TriangleIndexes = GetAutoTriangleIndexes( IndexCount );
 	}
 	
 	//	loads much faster as a typed array
@@ -373,5 +419,166 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 	return TriangleBuffer;
 }
 
+
+
+function LoadGeometryToTextureBuffers(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
+{
+	const CachedFilename = GetCachedFilename(Filename,'geometry');
+	if ( Pop.FileExists(CachedFilename) )
+		Filename = CachedFilename;
+	
+	//	load positions, colours
+	const Geo = LoadGeometryFile( Filename );
+	
+	//	mesh stuff
+	let PositionSize = Geo.PositionSize;
+	let Positions = Geo.Positions;
+	let Colours = Geo.Colours;
+	let ColourSize = Colours ? 3 : null;
+	let Alphas = Geo.Alphas;
+	let AlphaSize = Alphas ? 1 : null;
+	
+	//	scale positions
+	if ( ScaleToBounds && Positions )
+	{
+		Pop.Debug("Scaling to ",ScaleToBounds);
+		const PositionCount = Positions.length / PositionSize;
+		for ( let p=0;	p<PositionCount;	p++ )
+		{
+			for ( let v=0;	v<PositionSize;	v++ )
+			{
+				let i = (p * PositionSize)+v;
+				let f = Positions[i];
+				f = Math.lerp( ScaleToBounds.Min[v], ScaleToBounds.Max[v], f );
+				Positions[i] = f;
+			}
+		}
+		
+		//	scale up the geo bounding box
+		Geo.BoundingBox.Min = Geo.BoundingBox.Min.slice();
+		Geo.BoundingBox.Max = Geo.BoundingBox.Max.slice();
+		for ( let i=0;	i<3;	i++ )
+		{
+			Geo.BoundingBox.Min[i] = Math.lerp( ScaleToBounds.Min[i], ScaleToBounds.Max[i], Geo.BoundingBox.Min[i] );
+			Geo.BoundingBox.Max[i] = Math.lerp( ScaleToBounds.Min[i], ScaleToBounds.Max[i], Geo.BoundingBox.Max[i] );
+		}
+	}
+	
+	const AlphaIsPositionW = true;
+	if ( AlphaIsPositionW && Alphas && PositionSize < 4 )
+	{
+		Pop.Debug(Filename,"Pushing position W as alpha");
+		let NewPositions = [];
+		for ( let i=0;	i<Positions.length/PositionSize;	i++ )
+		{
+			let p = i * PositionSize;
+			for ( let c=0;	c<PositionSize;	c++ )
+			{
+				let x = Positions[p+c];
+				NewPositions.push(x);
+			}
+			let a = Alphas[i];
+			NewPositions.push(a);
+		}
+		
+		//	positions now 4!
+		Positions = NewPositions;
+		PositionSize++;
+		Alphas = null;
+		AlphaSize = null;
+	}
+	
+	//	sort, but consistently
+	//	we used to sort for depth, but dont need to any more
+	if ( GetIndexMap )
+	{
+		/*
+		 let Map = GetIndexMap(Positions);
+		 let NewPositions = [];
+		 Map.forEach( i => NewPositions.push(Positions[i]) );
+		 Positions = NewPositions;
+		 */
+	}
+	
+	let PositionImage = new Pop.Image();
+	if ( PositionImage )
+	{
+		//	pad to square
+		const Channels = PositionSize;
+		const Width = DataTextureWidth;
+		const Height = Math.GetNextPowerOf2( Positions.length / Width / Channels );
+		const PixelDataSize = Channels * Width * Height;
+		Pop.Debug("Position texture",Width,Height,Channels,"Total",PixelDataSize);
+		
+		const PixelValues = Positions.slice();
+		PixelValues.length = PixelDataSize;
+		
+		const Pixels = new Float32Array( PixelValues );
+		if ( Pixels.length != PixelDataSize )
+			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+		
+		const PixelFormat = 'Float'+Channels;
+		PositionImage.WritePixels( Width, Height, Pixels, PixelFormat );
+	}
+	
+	let ColourImage = null;
+	if ( Colours )
+	{
+		ColourImage = new Pop.Image();
+		
+		if ( Colours.length / ColourSize != Positions.length / PositionSize )
+			throw "Expecting Colours.length ("+Colours.length+") to match Positions.length ("+Positions.length+")";
+		//	pad to square
+		const Channels = ColourSize;
+		const Width = DataTextureWidth;
+		const Height = Math.GetNextPowerOf2( Colours.length / Width / Channels );
+		const PixelDataSize = Channels * Width * Height;
+		Pop.Debug("Colours texture",Width,Height,Channels,"Total",PixelDataSize);
+		
+		const PixelValues = Colours.slice();
+		PixelValues.length = PixelDataSize;
+		
+		const Pixels = new Float32Array( PixelValues );
+		if ( Pixels.length != PixelDataSize )
+			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+		
+		const PixelFormat = 'Float'+Channels;
+		ColourImage.WritePixels( Width, Height, Pixels, PixelFormat );
+	}
+	
+	let AlphaImage = null;
+	if ( Alphas )
+	{
+		AlphaImage = new Pop.Image();
+		
+		if ( Alphas.length/AlphaSize != Positions.length/PositionSize )
+			throw "Expecting Alphas.length ("+Alphas.length+") to match Positions.length ("+Positions.length+")";
+		//	pad to square
+		const Channels = AlphaSize;
+		const Width = DataTextureWidth;
+		const Height = Math.GetNextPowerOf2( Alphas.length / Width / Channels );
+		const PixelDataSize = Channels * Width * Height;
+		Pop.Debug("Alphas texture",Width,Height,Channels,"Total",PixelDataSize);
+		
+		const PixelValues = Alphas.slice();
+		PixelValues.length = PixelDataSize;
+		
+		const Pixels = new Float32Array( PixelValues );
+		if ( Pixels.length != PixelDataSize )
+			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+		
+		const PixelFormat = 'Float'+Channels;
+		AlphaImage.WritePixels( Width, Height, Pixels, PixelFormat );
+	}
+	
+	const Buffers = {};
+	Buffers.BoundingBox = Geo.BoundingBox;
+	Buffers.PositionTexture = PositionImage;
+	Buffers.ColourTexture = ColourImage;
+	Buffers.AlphaTexture = AlphaImage;
+	Buffers.TriangleCount = Positions.length;
+	
+	return Buffers;
+}
 
 

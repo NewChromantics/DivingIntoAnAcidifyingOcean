@@ -52,27 +52,6 @@ function GetAutoTriangleIndexes(IndexCount)
 	
 }
 
-var Auto_auto_vt_Buffer = [];
-function GetAuto_AutoVtBuffer(TriangleCount)
-{
-	const VertexSize = 2;
-	const IndexCount = VertexSize * TriangleCount * 3;
-	while ( Auto_auto_vt_Buffer.length < IndexCount )
-	{
-		let t = Auto_auto_vt_Buffer.length / VertexSize / 3;
-		for ( let v=0;	v<3;	v++ )
-		{
-			let Index = t * 3;
-			Index += v;
-			Index *= VertexSize;
-			Auto_auto_vt_Buffer[Index+0] = v;
-			Auto_auto_vt_Buffer[Index+1] = t;
-		}
-	}
-	//Pop.Debug('Auto_auto_vt_Buffer',Auto_auto_vt_Buffer);
-	return new Float32Array( Auto_auto_vt_Buffer, 0, IndexCount );
-}
-
 
 function ParseColladaSceneAsModel(Contents,OnVertex,OnMeta)
 {

@@ -26,21 +26,7 @@ const LoadDebrisAsInstances = true;
 
 function SetupFileAssets()
 {
-	const AnimalFilenames =
-	[
-	'Models/clownfish_v1.ply'
-	];
-	
-	function SetupAssetLoader(Filename)
-	{
-		const LoadFunc = function(RenderTarget)
-		{
-			Pop.Debug("Loading asset",Filename);
-			return LoadPointMeshFromFile( RenderTarget, Filename );
-		}
-		AssetFetchFunctions[Filename] = LoadFunc;
-	}
-	AnimalFilenames.forEach( SetupAssetLoader );
+	AssetFetchFunctions['AutoTriangleMesh'] = GetAutoTriangleMesh;
 }
 SetupFileAssets();
 
@@ -66,8 +52,6 @@ const OceanColoursHex = ['#c9e7f2','#4eb3d3','#2b8cbe','#0868ac','#084081','#023
 const DebrisColoursHex = ['#084081','#0868ac'];
 //const OceanColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
 const OceanColours = UnrollHexToRgb(OceanColoursHex);
-const ShellColoursHex = [0xF2BF5E,0xF28705,0xBF5B04,0x730c02,0xc2ae8f,0x9A7F5F,0xbfb39b,0x5B3920,0x755E47,0x7F6854,0x8B7361,0xBF612A,0xD99873,0x591902,0xA62103];
-const ShellColours = UnrollHexToRgb(ShellColoursHex);
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
 const LightColour = [0.86,0.95,0.94];
 
@@ -107,13 +91,6 @@ function LoadTimeline(Filename)
 
 //	scene!
 
-let ShellMeta = {};
-ShellMeta.Filename = 'Models/shell_v001.ply';
-ShellMeta.Position = [0,0,-2];
-ShellMeta.Scale = 0.9;
-ShellMeta.TriangleScale = 0.03;
-ShellMeta.Colours = ShellColours;
-ShellMeta.VertexSkip = 0;
 
 let DebrisMeta = {};
 DebrisMeta.Filename = '.random';
@@ -134,8 +111,6 @@ OceanMeta.Scale = 1.0;
 OceanMeta.TriangleScale = 0.0148;
 OceanMeta.Colours = OceanColours;
 
-//let Actor_Shell = new TPhysicsActor( ShellMeta );
-var Actor_Shell = null;
 var OceanActors = [];
 var DebrisActors = [];
 
@@ -572,6 +547,7 @@ Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 75.45;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
+Params.Animal_TriangleScale = 0.1;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
 Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 Params.DebugPhysicsTextures = false;
@@ -606,6 +582,7 @@ ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('FogColour','Colour');
 ParamsWindow.AddParam('LightColour','Colour');
+ParamsWindow.AddParam('Animal_TriangleScale',0,1.2);
 ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
 ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
@@ -698,6 +675,58 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	}
 }
 
+let GlobalTextureBuffer = null;
+
+function SetupTextureBufferActor(Actor,Filename,BoundingBox)
+{
+	Actor.Geometry = 'AutoTriangleMesh';
+	Actor.VertShader = ParticleTrianglesVertShader;
+	Actor.FragShader = ParticleColorShader;
+	
+	Actor.TextureBuffers = null;
+	Actor.Colours = [0,1,0];
+	Actor.BoundingBox = BoundingBox;
+	
+	Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
+	{
+		const Actor = this;
+		//Pop.Debug("render texture buffer acotr");
+		//if ( !Actor.TextureBuffers )
+		//	Actor.TextureBuffers = LoadGeometryToTextureBuffers( RenderTarget, Filename );
+		if ( !GlobalTextureBuffer )
+			GlobalTextureBuffer = LoadGeometryToTextureBuffers( RenderTarget, Filename );
+		Actor.TextureBuffers =GlobalTextureBuffer;
+		
+		const Geo = GetAsset( this.Geometry, RenderTarget );
+		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
+		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
+		const PositionTexture = this.TextureBuffers.PositionTexture;
+		const ColourTexture = this.TextureBuffers.ColourTexture;
+		const AlphaTexture = this.TextureBuffers.AlphaTexture;
+		const LocalToWorldTransform = this.LocalToWorldTransform;
+		
+		
+		const SetUniforms = function(Shader)
+		{
+			SetGlobalUniforms( Shader );
+			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
+			Shader.SetUniform('LocalPositions', LocalPositions );
+			Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
+			Shader.SetUniform('WorldPositions',PositionTexture);
+			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
+			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
+			Shader.SetUniform('TriangleScale', Params.Animal_TriangleScale );
+			Shader.SetUniform('Colours', Actor.Colours );
+			Shader.SetUniform('ColourCount', Actor.Colours.length/3 );
+		}
+		
+		//Pop.Debug("Render triangles x",Actor.TextureBuffers.TriangleCount);
+		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, Actor.TextureBuffers.TriangleCount );
+	}
+
+}
+
+
 
 function LoadCameraScene(Filename)
 {
@@ -744,34 +773,45 @@ function LoadCameraScene(Filename)
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
-		Actor.Geometry = 'Cube01';
-
-		let LocalScale = ActorNode.Scale;
-		let WorldPos = ActorNode.Position;
 		
-		const RenderAsBounds = true;
-		if ( RenderAsBounds )
+		let LoadBufferActor = true;
+		if ( LoadBufferActor )
 		{
-			//	undo the bounds scale and render the cube at the bounds scale
-			//	but that'll scale bounds too, so undo that (just to 0..1)
-			let BoundsCenter = Math.Lerp3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min, 0.5 );
-			let BoundsScale = Math.Subtract3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min );
-			
-			LocalScale = BoundsScale;
-			WorldPos = Math.Add3( WorldPos, BoundsCenter );
-			ActorNode.BoundingBox.Max = [1,1,1];
-			ActorNode.BoundingBox.Min = [0,0,0];
-			Pop.Debug( ActorNode.Name, "BoundsScale", BoundsScale, "ActorNode.Scale", ActorNode.Scale );
+			//let LocalScale = ActorNode.Scale;
+			let WorldPos = ActorNode.Position;
+			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
+			Actor.BoundingBox = ActorNode.BoundingBox;
+			SetupTextureBufferActor( Actor, 'Models/clownfish_v1.ply', ActorNode.BoundingBox );
 		}
-		
-		let LocalScaleMtx = Math.CreateScaleMatrix( ...LocalScale );
-		let WorldPosMtx = Math.CreateTranslationMatrix( ...WorldPos );
-		
-		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPosMtx, LocalScaleMtx );
-		
-		Actor.VertShader = GeoVertShader;
-		Actor.FragShader = ColourFragShader;
-		Actor.BoundingBox = ActorNode.BoundingBox;
+		else
+		{
+			let LocalScale = ActorNode.Scale;
+			let WorldPos = ActorNode.Position;
+			
+			const RenderAsBounds = true;
+			if ( RenderAsBounds )
+			{
+				//	undo the bounds scale and render the cube at the bounds scale
+				//	but that'll scale bounds too, so undo that (just to 0..1)
+				let BoundsCenter = Math.Lerp3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min, 0.5 );
+				let BoundsScale = Math.Subtract3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min );
+				
+				LocalScale = BoundsScale;
+				WorldPos = Math.Add3( WorldPos, BoundsCenter );
+				ActorNode.BoundingBox.Max = [1,1,1];
+				ActorNode.BoundingBox.Min = [0,0,0];
+				Pop.Debug( ActorNode.Name, "BoundsScale", BoundsScale, "ActorNode.Scale", ActorNode.Scale );
+			}
+			
+			let LocalScaleMtx = Math.CreateScaleMatrix( ...LocalScale );
+			let WorldPosMtx = Math.CreateTranslationMatrix( ...WorldPos );
+			
+			Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPosMtx, LocalScaleMtx );
+			
+			Actor.VertShader = GeoVertShader;
+			Actor.FragShader = ColourFragShader;
+			Actor.BoundingBox = ActorNode.BoundingBox;
+		}
 		Scene.push( Actor );
 	}
 	
@@ -1167,8 +1207,6 @@ function UpdateSceneVisibility(Time)
 		Actor.IsVisible = IsVisible(Actor);
 		if ( !WasVisible && Actor.IsVisible )
 		{
-			Actor.Geometry = 'Models/clownfish_v1.ply';
-			
 			Pop.Debug("Actor " + Actor.Name + " now visible");
 		}
 		else if ( WasVisible && !Actor.IsVisible )
@@ -1260,7 +1298,7 @@ function Render(RenderTarget)
 		}
 		catch(e)
 		{
-			//Pop.Debug("Error rendering actor", Actor.Name,e);
+			Pop.Debug("Error rendering actor", Actor.Name,e);
 		}
 	}
 	Scene.forEach( RenderSceneActor );
