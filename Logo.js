@@ -284,7 +284,7 @@ function Update_Experience(FirstUpdate)
 
 
 //	copy of the main scene version, but this will change
-function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time,Viewport)
+function LogoRenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time,Viewport)
 {
 	const Params = LogoState.Params;
 	
@@ -372,7 +372,7 @@ function LogoRender(RenderTarget)
 		RenderTarget.ClearColour(0,0,0);
 		if ( RenderTarget.SetBlendModeMax )
 			RenderTarget.SetBlendModeMax();
-		RenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time, Viewport );
+		LogoRenderTriangleBufferActor( RenderTarget, LogoState.LogoActor, 0, SetGlobalUniforms, LogoState.Time, Viewport );
 	}
 	if ( !LogoState.LogoSdf )
 	{
