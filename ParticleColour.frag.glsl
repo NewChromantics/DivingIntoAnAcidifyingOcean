@@ -164,6 +164,8 @@ float4 GetLightColour(float3 Normal,float3 WorldPos)
 
 void main()
 {
+	gl_FragColor = Rgba;
+	
 	//	do 3D test
 	float3 Normal;
 	float3 HitPos;
@@ -177,6 +179,7 @@ void main()
 		}
 		discard;
 	}
+	/*
 	//	normal in visible range
 	Normal = Range3( float3(-1,-1,-1), float3(1,1,1), Normal );
 	
@@ -191,10 +194,10 @@ void main()
 	
 	//	fog
 	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, FragWorldPos );
-	
+	*/
 	gl_FragColor.w = 1.0;
 
-	//gl_FragColor = Rgba;
+	
 /*
 	
 	float2 uv = TriangleUv;

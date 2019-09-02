@@ -26,7 +26,8 @@ const LoadDebrisAsInstances = true;
 
 function SetupFileAssets()
 {
-	AssetFetchFunctions['AutoTriangleMesh'] = GetAutoTriangleMesh;
+	const AutoTriangleMeshCount = 100000;//512*512;
+	AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAutoTriangleMesh( RenderTarget, AutoTriangleMeshCount );	};
 }
 SetupFileAssets();
 
@@ -527,6 +528,7 @@ const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
 Params.ExperienceDurationSecs = 240;
+Params.AnimalBufferLod = 0.3;
 Params.DebugCullTimelineCamera = true;
 Params.TransposeFrustumPlanes = false;
 Params.FrustumCullTestX = false;	//	re-enable when we cull on bounding box
@@ -547,7 +549,7 @@ Params.FogMinDistance = 11.37;
 Params.FogMaxDistance = 75.45;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
-Params.Animal_TriangleScale = 0.1;
+Params.Animal_TriangleScale = 0.01;
 Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
 Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 Params.DebugPhysicsTextures = false;
@@ -576,15 +578,16 @@ const ParamsWindowRect = [800,20,350,200];
 let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
+ParamsWindow.AddParam('AnimalBufferLod',0,1);
 ParamsWindow.AddParam('DebrisPhysicsNoiseScale',0,1);
 ParamsWindow.AddParam('DebrisPhysicsDamping',0,1);
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('FogColour','Colour');
 ParamsWindow.AddParam('LightColour','Colour');
-ParamsWindow.AddParam('Animal_TriangleScale',0,1.2);
-ParamsWindow.AddParam('Ocean_TriangleScale',0,1.2);
-ParamsWindow.AddParam('Debris_TriangleScale',0,1.2);
+ParamsWindow.AddParam('Animal_TriangleScale',0,0.2);
+ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
+ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
 ParamsWindow.AddParam('FogMinDistance',0,30);
 ParamsWindow.AddParam('FogMaxDistance',0,500);
 ParamsWindow.AddParam('EnableMusic');
@@ -709,6 +712,7 @@ function SetupTextureBufferActor(Actor,Filename,BoundingBox)
 		const SetUniforms = function(Shader)
 		{
 			SetGlobalUniforms( Shader );
+			Shader.SetUniform('ShowClippedParticle', Params.ShowClippedParticle );
 			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
 			Shader.SetUniform('LocalPositions', LocalPositions );
 			Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
@@ -716,12 +720,22 @@ function SetupTextureBufferActor(Actor,Filename,BoundingBox)
 			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
 			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
 			Shader.SetUniform('TriangleScale', Params.Animal_TriangleScale );
-			Shader.SetUniform('Colours', Actor.Colours );
-			Shader.SetUniform('ColourCount', Actor.Colours.length/3 );
+			if ( ColourTexture )
+			{
+				Shader.SetUniform('ColourImage',ColourTexture);
+				Shader.SetUniform('ColourCount', 0 );
+			}
+			else
+			{
+				Shader.SetUniform('Colours', Actor.Colours );
+				Shader.SetUniform('ColourCount', Actor.Colours.length/3 );
+			}
 		}
 		
-		//Pop.Debug("Render triangles x",Actor.TextureBuffers.TriangleCount);
-		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, Actor.TextureBuffers.TriangleCount );
+		//	limit number of triangles
+		let TriangleCount = Actor.TextureBuffers.TriangleCount;
+		TriangleCount *= Params.AnimalBufferLod;
+		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
 	}
 
 }

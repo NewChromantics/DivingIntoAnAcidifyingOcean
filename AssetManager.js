@@ -205,7 +205,7 @@ function GetAuto_AutoVtBuffer(TriangleCount)
 
 
 
-function GetAutoTriangleMesh(RenderTarget,TriangleCount=256*256)
+function GetAutoTriangleMesh(RenderTarget,TriangleCount)
 {
 	//	vertex stuff
 	//	we should get these from geo for assets WITH a vertex buffer
