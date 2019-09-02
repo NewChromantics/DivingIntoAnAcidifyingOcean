@@ -104,6 +104,10 @@ function TLogoState()
 		'Edge.frag.glsl',
 		'PhysicsIteration_UpdateVelocity.frag.glsl',
 		'PhysicsIteration_UpdatePosition.frag.glsl',
+	 
+	 	'AnimalParticle.frag.glsl',
+		'AnimalParticle.vert.glsl',
+
 
 		//	code
 	 	'Timeline.js',

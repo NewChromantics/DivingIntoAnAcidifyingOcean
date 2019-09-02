@@ -17,6 +17,9 @@ const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
 const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 
+const AnimalParticleVertShader = Pop.LoadFileAsString('AnimalParticle.vert.glsl');
+const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl');
+
 //	temp turning off and just having dummy actors
 const LoadWaterAsInstances = true;
 const LoadDebrisAsInstances = true;
@@ -683,8 +686,8 @@ let GlobalTextureBuffer = null;
 function SetupTextureBufferActor(Actor,Filename,BoundingBox)
 {
 	Actor.Geometry = 'AutoTriangleMesh';
-	Actor.VertShader = ParticleTrianglesVertShader;
-	Actor.FragShader = ParticleColorShader;
+	Actor.VertShader = AnimalParticleVertShader;
+	Actor.FragShader = AnimalParticleFragShader;
 	
 	Actor.TextureBuffers = null;
 	Actor.Colours = [0,1,0];
