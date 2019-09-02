@@ -166,16 +166,7 @@ function GetAsset(Name,RenderContext)
 	if ( !AssetFetchFunctions.hasOwnProperty(Name) )
 		throw "No known asset named "+ Name;
 	
-	try
-	{
-		ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
-	}
-	catch(e)
-	{
-		//	on error, put up a cube
-		Pop.Debug("Error loading asset",Name,e);
-		ContextAssets[Name] = CreateCubeGeometry(RenderContext);
-	}
+	ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
 	return ContextAssets[Name];
 }
 
