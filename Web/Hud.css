@@ -580,3 +580,12 @@ h2
 #YearSlider:focus::-ms-fill-upper {
   background: #ffffff;
 }
+
+#Debug_VisibleActors, #Debug_RenderedActors, #Debug_FrameRate, #Debug_RenderStats
+{
+	z-index: 999;
+	background: black;
+	font-size: 30pt;
+	opacity:0.6;
+}
+

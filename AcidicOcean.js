@@ -1145,6 +1145,8 @@ function Init()
 	Hud.Stats_Ph = new Pop.Hud.Label('Stats_Ph_Label');
 	
 	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
+	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
+	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
 	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
 	
 	RenderFrameCounter.Report = function(CountPerSec)
@@ -1320,7 +1322,14 @@ function Render(RenderTarget)
 	}
 	Scene.forEach( RenderSceneActor );
 	
+	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
 	RenderFrameCounter.Add();
+
+	const Stats = "Batches: " + Pop.Opengl.BatchesDrawn + " Triangles: " + Pop.Opengl.TrianglesDrawn;
+	Hud.Debug_RenderStats.SetValue(Stats);
+	Pop.Opengl.BatchesDrawn = 0;
+	Pop.Opengl.TrianglesDrawn = 0;
+	
 }
 
 
