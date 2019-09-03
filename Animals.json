@@ -22,7 +22,7 @@
 	{
 		"Name":		"SALMON",
 		"Description":	"<h1> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h1> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. A 10% reduction in pteropod numbers could cause salmon to lose up to 20% of their mass.</h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal", "bigbang" ]
 
@@ -32,7 +32,7 @@
 	{
 		"Name":		"SEAGRASS",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -42,7 +42,7 @@
 	{
 		"Name":		"OYSTERS",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -52,7 +52,7 @@
 	{
 		"Name":		"SEA ANEMONE",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal"]
 
@@ -61,7 +61,7 @@
 	{
 		"Name":		"FISH LARVAE",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal"]
 
@@ -70,7 +70,7 @@
 	{
 		"Name":		"SEA URCHIN",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -88,7 +88,7 @@
 	{
 		"Name":		"ALGAL BLOOM",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	2040,
 		"category" : [ "animal"]
 
@@ -97,7 +97,7 @@
 	{
 		"Name":		"POLLOCK",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -106,7 +106,7 @@
 	{
 		"Name":		"ANTARCTIC KRILL",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal", "bigbang" ]
 
@@ -115,7 +115,7 @@
 	{
 		"Name":		"CORALLINE ALGAE",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal"]
 
@@ -124,7 +124,7 @@
 	{
 		"Name":		"NODULARIA SPUMIGENA",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -133,7 +133,7 @@
 	{
 		"Name":		"KELP FOREST",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -142,7 +142,7 @@
 	{
 		"Name":		"DEEP SEA CRAB",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -169,7 +169,7 @@
 	{
 		"Name":		"DEEP SEA CORAL",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -178,7 +178,7 @@
 	{
 		"Name":		"BUBBLE GUM CORAL",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -187,7 +187,7 @@
 	{
 		"Name":		"LOBSTER",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -196,7 +196,7 @@
 	{
 		"Name":		"JUVENILE BIVALVE",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -205,7 +205,7 @@
 	{
 		"Name":		"BLUE KING CRAB",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -223,7 +223,7 @@
 	{
 		"Name":		"YELLOWFIN TUNA",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -232,7 +232,7 @@
 	{
 		"Name":		"COBIA",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -241,7 +241,7 @@
 	{
 		"Name":		"PHYTOPLANKTON",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -250,7 +250,7 @@
 	{
 		"Name":		"MUSSELS",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -259,7 +259,7 @@
 	{
 		"Name":		"MENIDIA MENIDIA",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -268,7 +268,7 @@
 	{
 		"Name":		"BRACHYURAN CRAB",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/SanitryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal" ]
 
@@ -286,7 +286,7 @@
 	{
 		"Name":		"CORAL",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/coral.dae",
+		"Model":	"Models/BeerCan.obj",
 		"AfterYear":	1860,
 		"category" : [ "animal", "bigbang" ]
 
@@ -331,7 +331,7 @@
 	{
 		"Name":		"PLASTIC BAG",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/Plastic_Bag.dae",
+		"Model":	"Models/Plastic_Bag.obj",
 		"AfterYear":	1956,
 		"category" : [ "nasty animal" ]
 
@@ -340,7 +340,7 @@
 	{
 		"Name":		"SANITARY PAD",
 		"Description":	"<h1> As many as 10 000 disposable period products are used in a woman's reproductive lifetime, which corresponds to a carbon footprint of 5,3kg of CO2 per year. Average carbon footprint? </h1> <h2> Every year, UK women produce the equivalent of 200 000 tonnes of menstrual waste. That’s 27 Eiffel Towers. </h2> <h2> Forty pads, panty liners and backing strips are found for every kilometre of UK beach, along with 12 used tampons and applicators. </h2>",
-		"Model":	"Models/SanitaryPad.dae",
+		"Model":	"Models/SanitaryPad.obj",
 		"AfterYear":	1956,
 		"category" : [ "nasty animal" ]
 
