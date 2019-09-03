@@ -585,7 +585,8 @@ h2
 {
 	z-index: 999;
 	background: black;
-	font-size: 30pt;
+	font-size: 20pt;
 	opacity:0.6;
+	width:	22vw;
 }
 
