@@ -94,6 +94,7 @@ function TLogoState()
 	[
 		//	assets
 		'Timeline.json',
+		 'Animals.json',
 	 
 		'Quad.vert.glsl',
 		'ParticleTriangles.vert.glsl',

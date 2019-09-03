@@ -36,6 +36,19 @@ function SetupFileAssets()
 SetupFileAssets();
 
 
+function LoadAnimalDatabase(Filename)
+{
+	const DatabaseContents = Pop.LoadFileAsString(Filename);
+	const DatabaseJson = JSON.parse( DatabaseContents );
+	return DatabaseJson;
+}
+
+const AnimalDatabase = LoadAnimalDatabase('Animals.json');
+
+function GetRandomAnimal()
+{
+	
+}
 
 
 function UnrollHexToRgb(Hexs)
@@ -551,8 +564,10 @@ Params.FrustumCullTestY = false;	//	re-enable when we cull on bounding box
 Params.FrustumCullTestZ = true;
 Params.MouseRayOnTimelineCamera = false;
 Params.TestRaySize = 0.39;
-Params.DebrisPhysicsNoiseScale = 0.9;
-Params.DebrisPhysicsDamping = 0.04;
+Params.PhysicsAnimalNoiseScale = 9.9;
+Params.PhysicsAnimalDamping = 0.01;
+Params.PhysicsDebrisNoiseScale = 0.9;
+Params.PhysicsDebrisDamping = 0.04;
 Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
 Params.ExperiencePlaying = true;
@@ -595,8 +610,10 @@ let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRec
 ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 ParamsWindow.AddParam('AnimalBufferLod',0,1);
-ParamsWindow.AddParam('DebrisPhysicsNoiseScale',0,1);
-ParamsWindow.AddParam('DebrisPhysicsDamping',0,1);
+ParamsWindow.AddParam('PhysicsAnimalNoiseScale',0,10);
+ParamsWindow.AddParam('PhysicsAnimalDamping',0,1);
+ParamsWindow.AddParam('PhysicsDebrisNoiseScale',0,10);
+ParamsWindow.AddParam('PhysicsDebrisDamping',0,1);
 ParamsWindow.AddParam('ExperiencePlaying');
 ParamsWindow.AddParam('AutoGrabDebugCamera');
 ParamsWindow.AddParam('UseDebugCamera');
@@ -700,7 +717,7 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 }
 
 
-function SetupTextureBufferActor(Filename,BoundingBox)
+function SetupAnimalTextureBufferActor(Filename,BoundingBox)
 {
 	this.Geometry = 'AutoTriangleMesh';
 	this.VertShader = AnimalParticleVertShader;
@@ -738,7 +755,15 @@ function SetupTextureBufferActor(Filename,BoundingBox)
 		{
 			this.ResetPhysicsTextures();
 		}
-		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetPhysicsUniforms );
+		
+		const SetAnimalPhysicsUniforms = function(Shader)
+		{
+			SetPhysicsUniforms(Shader);
+			Shader.SetUniform('NoiseScale', Params.PhysicsAnimalNoiseScale );
+			Shader.SetUniform('Damping', Params.PhysicsAnimalDamping );
+		}
+		
+		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
 	}
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
@@ -848,7 +873,7 @@ function LoadCameraScene(Filename)
 			let WorldPos = ActorNode.Position;
 			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 			Actor.BoundingBox = ActorNode.BoundingBox;
-			SetupTextureBufferActor.call( Actor, 'Models/clownfish_v1.ply', ActorNode.BoundingBox );
+			SetupAnimalTextureBufferActor.call( Actor, 'Models/clownfish_v1.ply', ActorNode.BoundingBox );
 		}
 		else
 		{
@@ -1343,8 +1368,8 @@ function Render(RenderTarget)
 			return;
 		const UpdatePhysicsUniforms = function(Shader)
 		{
-			Shader.SetUniform('NoiseScale', Params.DebrisPhysicsNoiseScale );
-			Shader.SetUniform('Damping', Params.DebrisPhysicsDamping );
+			Shader.SetUniform('NoiseScale', Params.PhysicsDebrisNoiseScale );
+			Shader.SetUniform('Damping', Params.PhysicsDebrisDamping );
 		}
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
