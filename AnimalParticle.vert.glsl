@@ -4,6 +4,7 @@
 attribute vec2 Vertex;
 varying vec4 Rgba;
 varying vec2 TriangleUv;
+varying float3 FragWorldPos;
 
 uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
@@ -80,6 +81,7 @@ void main()
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
 
+	FragWorldPos = WorldPos.xyz;
 	TriangleUv = LocalPositions[VertexIndex].xy;
 	Rgba = GetTriangleColour(TriangleIndex);
 }

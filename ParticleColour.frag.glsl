@@ -9,6 +9,7 @@ uniform float Fog_MinDistance;
 uniform float Fog_MaxDistance;
 uniform float3 Fog_Colour;
 uniform float3 Light_Colour;
+uniform float3 Fog_WorldPosition;
 uniform float Light_MinPower;
 uniform float Light_MaxPower;
 
@@ -19,10 +20,6 @@ uniform mat4 CameraProjectionTransform;
 uniform bool ShowClippedParticle;
 uniform bool DebugFogCenter;
 
-float3 GetFogWorldPos()
-{
-	return -WorldToCameraTransform[3].xyz;
-}
 
 float Range(float Min,float Max,float Value)
 {
@@ -109,9 +106,7 @@ float3 NormalToRedGreen(float Normal)
 
 float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 {
-	float3 CameraPos = (WorldToCameraTransform * float4(WorldPos,1.0) ).xyz;
-	//float FogDistance = length( GetFogWorldPos() - WorldPos );
-	float FogDistance = length( CameraPos );
+	float FogDistance = length( Fog_WorldPosition - WorldPos );
 	
 	if ( DebugFogCenter )
 		if ( FogDistance < 10.0 )

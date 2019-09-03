@@ -565,8 +565,8 @@ Params.UseDebugCamera = false;
 Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
-Params.FogMinDistance = 11.37;
-Params.FogMaxDistance = 75.45;
+Params.FogMinDistance = 8.0;
+Params.FogMaxDistance = 20.0;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.Animal_TriangleScale = 0.01;
@@ -611,8 +611,8 @@ ParamsWindow.AddParam('LightColour','Colour');
 ParamsWindow.AddParam('Animal_TriangleScale',0,0.2);
 ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
 ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
-ParamsWindow.AddParam('FogMinDistance',0,30);
-ParamsWindow.AddParam('FogMaxDistance',0,500);
+ParamsWindow.AddParam('FogMinDistance',0,50);
+ParamsWindow.AddParam('FogMaxDistance',0,50);
 ParamsWindow.AddParam('EnableMusic');
 ParamsWindow.AddParam('DrawBoundingBoxes');
 ParamsWindow.AddParam('DrawBoundingBoxesFilled');
@@ -1225,6 +1225,10 @@ function Init()
 	}
 }
 
+function OnClickActor_Fly(Actor,ClickPosition)
+{
+	Actor.UpdatePhysics = true;
+}
 
 function UpdateState_Fly(FrameDurationSecs)
 {
@@ -1233,7 +1237,7 @@ function UpdateState_Fly(FrameDurationSecs)
 	{
 		//	gr: should reuse selected list?
 		const IntersectedActors = GetActorIntersections(uv);
-		IntersectedActors.forEach( i => i.Actor.UpdatePhysics=true );
+		IntersectedActors.forEach( function(i)	{	OnClickActor_Fly( i.Actor, i.Position );	} );
 		
 		if ( IntersectedActors.length )
 		{
@@ -1383,6 +1387,8 @@ function Render(RenderTarget)
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 	
+	let FogWorldPos = RenderCamera.Position;
+	
 	
 	let RenderSceneActor = function(Actor,ActorIndex)
 	{
@@ -1394,6 +1400,7 @@ function Render(RenderTarget)
 			Shader.SetUniform('Fog_MinDistance',Params.FogMinDistance);
 			Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
 			Shader.SetUniform('Fog_Colour',Params.FogColour);
+			Shader.SetUniform('Fog_WorldPosition', FogWorldPos );
 			Shader.SetUniform('Light_Colour', Params.LightColour );
 			Shader.SetUniform('Light_MinPower', 0.1 );
 			Shader.SetUniform('Light_MaxPower', 1.0 );

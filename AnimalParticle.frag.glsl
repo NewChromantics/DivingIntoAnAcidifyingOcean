@@ -1,10 +1,49 @@
 precision highp float;
 varying vec4 Rgba;
 varying vec2 TriangleUv;
+varying vec3 FragWorldPos;
 
 const float CircleRadius = 0.5;
 
 uniform bool ColourImageValid;
+
+
+uniform float Fog_MinDistance;
+uniform float Fog_MaxDistance;
+uniform float3 Fog_Colour;
+uniform float3 Fog_WorldPosition;
+uniform bool DebugFogCenter;
+
+
+float Range(float Min,float Max,float Value)
+{
+	return (Value-Min) / (Max-Min);
+}
+
+float RangeClamped01(float Min,float Max,float Value)
+{
+	float t = Range( Min, Max, Value );
+	t = clamp( t, 0.0, 1.0 );
+	return t;
+}
+
+
+float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
+{
+	float FogDistance = length( Fog_WorldPosition - WorldPos );
+	
+	if ( DebugFogCenter )
+		if ( FogDistance < 10.0 )
+			return float3(1,0,0);
+	
+	float FogStrength = RangeClamped01( Fog_MinDistance, Fog_MaxDistance, FogDistance );
+	Rgb = mix( Rgb, Fog_Colour, FogStrength );
+	//Rgb = NormalToRedGreen(FogStrength);
+	
+	
+	return Rgb;
+}
+
 
 void main()
 {
@@ -16,5 +55,7 @@ void main()
 
 	if ( !ColourImageValid )
 		gl_FragColor = float4(0,1,0,1);
+	
+	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, FragWorldPos );
 }
 
