@@ -23,7 +23,7 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 //	temp turning off and just having dummy actors
 const LoadWaterAsInstances = true;
 const LoadDebrisAsInstances = true;
-const PhysicsEnabled = false;
+const PhysicsEnabled = true;
 let PhsyicsUpdateCount = 0;	//	gotta do one
 
 
@@ -532,7 +532,7 @@ const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
 Params.ExperienceDurationSecs = 240;
-Params.AnimalBufferLod = 0.3;
+Params.AnimalBufferLod = 1.0;
 Params.DebugCullTimelineCamera = true;
 Params.TransposeFrustumPlanes = false;
 Params.FrustumCullTestX = false;	//	re-enable when we cull on bounding box
@@ -545,6 +545,7 @@ Params.DebrisPhysicsDamping = 0.04;
 Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
 Params.ExperiencePlaying = true;
+Params.AutoGrabDebugCamera = false;
 Params.UseDebugCamera = false;
 Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
@@ -560,7 +561,7 @@ Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
-Params.CameraFarDistance = 60;
+Params.CameraFarDistance = 20;
 Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
@@ -586,6 +587,7 @@ ParamsWindow.AddParam('AnimalBufferLod',0,1);
 ParamsWindow.AddParam('DebrisPhysicsNoiseScale',0,1);
 ParamsWindow.AddParam('DebrisPhysicsDamping',0,1);
 ParamsWindow.AddParam('ExperiencePlaying');
+ParamsWindow.AddParam('AutoGrabDebugCamera');
 ParamsWindow.AddParam('UseDebugCamera');
 ParamsWindow.AddParam('FogColour','Colour');
 ParamsWindow.AddParam('LightColour','Colour');
@@ -688,17 +690,41 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 
 let GlobalTextureBuffer = null;
 
-function SetupTextureBufferActor(Actor,Filename,BoundingBox)
+function SetupTextureBufferActor(Filename,BoundingBox)
 {
-	Actor.Geometry = 'AutoTriangleMesh';
-	Actor.VertShader = AnimalParticleVertShader;
-	Actor.FragShader = AnimalParticleFragShader;
+	this.Geometry = 'AutoTriangleMesh';
+	this.VertShader = AnimalParticleVertShader;
+	this.FragShader = AnimalParticleFragShader;
 	
-	Actor.TextureBuffers = null;
-	Actor.Colours = [0,1,0];
-	Actor.BoundingBox = BoundingBox;
+	this.TextureBuffers = null;
+	this.Colours = [0,1,0];
+	this.BoundingBox = BoundingBox;
 	
-	Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
+	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
+	this.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
+	this.UpdatePhysics = false;
+
+	this.ResetPhysicsTextures = function()
+	{
+		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
+		//	need to init these to zero?
+		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
+		this.VelocityTexture = new Pop.Image(Size,'Float3');
+		this.ScratchTexture = new Pop.Image(Size,'Float3');
+		this.PositionOrigTexture = new Pop.Image();
+		this.PositionOrigTexture.Copy( this.PositionTexture );
+	}
+	
+	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
+	{
+		if ( !this.UpdatePhysics )
+			return;
+		Pop.Debug("Updating physics on ",this.Name);
+		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
+		//this.ResetPhysicsTextures();
+	}
+	
+	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
 		const GetIndexMap = undefined;
 		const ScaleBounds = undefined;
@@ -808,7 +834,7 @@ function LoadCameraScene(Filename)
 			let WorldPos = ActorNode.Position;
 			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 			Actor.BoundingBox = ActorNode.BoundingBox;
-			SetupTextureBufferActor( Actor, 'Models/clownfish_v1.ply', ActorNode.BoundingBox );
+			SetupTextureBufferActor.call( Actor, 'Models/clownfish_v1.ply', ActorNode.BoundingBox );
 		}
 		else
 		{
@@ -935,6 +961,10 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	this.FragShader = FragShader;
 	this.Uniforms = Uniforms || [];
 	this.BoundingBox = null;
+	
+	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
+	{
+	}
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
@@ -1270,7 +1300,11 @@ function Render(RenderTarget)
 		return Actor.IsVisible === true;
 	}
 
-	let UpdateActorPhysics = function(Actor)
+	//	grab scene first, we're only going to update physics on visible items
+	//	todo: just do them all?
+	const Scene = GetRenderScene( Time, IsActorVisible );
+
+	const UpdateActorPhysics = function(Actor)
 	{
 		//	only update actors visible
 		//	gr: maybe do this with the actors in scene from GetRenderScene?
@@ -1287,8 +1321,7 @@ function Render(RenderTarget)
 	//	update physics
 	if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
 	{
-		OceanActors.forEach( UpdateActorPhysics );
-		DebrisActors.forEach( UpdateActorPhysics );
+		Scene.forEach( UpdateActorPhysics );
 		PhsyicsUpdateCount++;
 	}
 	RenderTarget.ClearColour( ...Params.FogColour );
@@ -1297,8 +1330,6 @@ function Render(RenderTarget)
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 	
-	
-	const Scene = GetRenderScene( Time, IsActorVisible );
 	
 	let RenderSceneActor = function(Actor,ActorIndex)
 	{
@@ -1361,6 +1392,9 @@ function OnSwitchedToDebugCamera()
 function SwitchToDebugCamera()
 {
 	if ( Params.UseDebugCamera )
+		return;
+	
+	if ( !Params.AutoGrabDebugCamera )
 		return;
 	
 	Params.UseDebugCamera = true;
