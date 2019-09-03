@@ -27,9 +27,10 @@ const LoadDebrisAsInstances = true;
 
 
 
+const AutoTriangleMeshCount = 100000;//512*512;
+
 function SetupFileAssets()
 {
-	const AutoTriangleMeshCount = 100000;//512*512;
 	AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAutoTriangleMesh( RenderTarget, AutoTriangleMeshCount );	};
 }
 SetupFileAssets();
@@ -695,12 +696,16 @@ function SetupTextureBufferActor(Actor,Filename,BoundingBox)
 	
 	Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
+		const GetIndexMap = undefined;
+		const ScaleBounds = undefined;
+		const MaxPositions = AutoTriangleMeshCount;
+		
 		const Actor = this;
 		//Pop.Debug("render texture buffer acotr");
 		//if ( !Actor.TextureBuffers )
 		//	Actor.TextureBuffers = LoadGeometryToTextureBuffers( RenderTarget, Filename );
 		if ( !GlobalTextureBuffer )
-			GlobalTextureBuffer = LoadGeometryToTextureBuffers( RenderTarget, Filename );
+			GlobalTextureBuffer = LoadGeometryToTextureBuffers( RenderTarget, Filename, GetIndexMap, ScaleBounds, MaxPositions );
 		Actor.TextureBuffers =GlobalTextureBuffer;
 		
 		const Geo = GetAsset( this.Geometry, RenderTarget );
@@ -736,7 +741,8 @@ function SetupTextureBufferActor(Actor,Filename,BoundingBox)
 		}
 		
 		//	limit number of triangles
-		let TriangleCount = Actor.TextureBuffers.TriangleCount;
+		//	gr: why is this triangle count so much bigger than the buffer?
+		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount );
 		TriangleCount *= Params.AnimalBufferLod;
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
 	}
