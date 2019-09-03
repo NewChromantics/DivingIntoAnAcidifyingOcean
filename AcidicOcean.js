@@ -800,12 +800,11 @@ function SetupAnimalTextureBufferActor(Filename,BoundingBox)
 			if ( ColourTexture )
 			{
 				Shader.SetUniform('ColourImage',ColourTexture);
-				Shader.SetUniform('ColourCount', 0 );
+				Shader.SetUniform('ColourImageValid', true );
 			}
 			else
 			{
-				Shader.SetUniform('Colours', Actor.Colours );
-				Shader.SetUniform('ColourCount', Actor.Colours.length/3 );
+				Shader.SetUniform('ColourImageValid', false );
 			}
 		}
 		
