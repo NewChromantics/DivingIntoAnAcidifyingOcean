@@ -699,7 +699,6 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	}
 }
 
-let GlobalTextureBuffer = null;
 
 function SetupTextureBufferActor(Filename,BoundingBox)
 {
@@ -717,6 +716,10 @@ function SetupTextureBufferActor(Filename,BoundingBox)
 
 	this.ResetPhysicsTextures = function()
 	{
+		if ( !this.TextureBuffers )
+			throw "Not ready to setup physics yet, no texture buffers";
+		
+		this.PositionTexture = this.TextureBuffers.PositionTexture;
 		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
 		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
@@ -730,9 +733,12 @@ function SetupTextureBufferActor(Filename,BoundingBox)
 	{
 		if ( !this.UpdatePhysics )
 			return;
-		Pop.Debug("Updating physics on ",this.Name);
-		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
-		//this.ResetPhysicsTextures();
+
+		if ( !this.VelocityTexture )
+		{
+			this.ResetPhysicsTextures();
+		}
+		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetPhysicsUniforms );
 	}
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
@@ -742,12 +748,9 @@ function SetupTextureBufferActor(Filename,BoundingBox)
 		const MaxPositions = AutoTriangleMeshCount;
 		
 		const Actor = this;
-		//Pop.Debug("render texture buffer acotr");
-		//if ( !Actor.TextureBuffers )
-		//	Actor.TextureBuffers = LoadGeometryToTextureBuffers( RenderTarget, Filename );
-		if ( !GlobalTextureBuffer )
-			GlobalTextureBuffer = LoadGeometryToTextureBuffers( RenderTarget, Filename, GetIndexMap, ScaleBounds, MaxPositions );
-		Actor.TextureBuffers =GlobalTextureBuffer;
+		//	gr: does this NEED to be in rendertarget area?
+		if ( !Actor.TextureBuffers )
+			Actor.TextureBuffers = LoadGeometryToTextureBuffers( RenderTarget, Filename, GetIndexMap, ScaleBounds, MaxPositions );
 		
 		const Geo = GetAsset( this.Geometry, RenderTarget );
 		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
@@ -1343,7 +1346,6 @@ function Render(RenderTarget)
 			Shader.SetUniform('NoiseScale', Params.DebrisPhysicsNoiseScale );
 			Shader.SetUniform('Damping', Params.DebrisPhysicsDamping );
 		}
-		Pop.Debug("Update actor physics");
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
 	
