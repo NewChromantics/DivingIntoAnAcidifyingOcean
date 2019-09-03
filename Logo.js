@@ -48,9 +48,9 @@ function TLogoState()
 	const ParamsWindowRect = [1000,100,350,200];
 	this.Params = {};
 	this.Params.SdfMin = 0.90;
-	this.Params.SpringForce = 0.62;
-	this.Params.Damping = 0.50;
-	this.Params.NoiseForce = 0.05;
+	this.Params.SpringForce = 0.32;
+	this.Params.Damping = 0.25;
+	this.Params.NoiseForce = 0.35;
 	this.Params.LocalScale = 0.29;
 	this.Params.WorldScale = 0.8;
 	this.Params.PushRadius = 0.40;

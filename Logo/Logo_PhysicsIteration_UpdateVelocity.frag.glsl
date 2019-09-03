@@ -122,6 +122,14 @@ float3 GetNoiseForce(float2 uv)
 }
 
 
+float3 GetNoiseForce01(float2 uv)
+{
+	vec4 Noise4 = texture2D( Noise, uv );
+	Noise4 *= NoiseForce;
+	return Noise4.xyz;
+}
+
+
 float3 GetGravityForce(float2 uv)
 {
 	return float3(0,GravityForce,0);
@@ -158,10 +166,12 @@ float3 GetPushForce(float2 uv)
 		vec3 Delta = GetPushPos(PushPositions[p]) - GetPushPos(PushPositions[p-1]);
 		if ( length(Delta) <= 0.001 )
 			continue;
+		
 		Delta *= DistanceForce * PushForce;
 		float DeltaScale = length( Delta );
 		DeltaScale = min( DeltaScale, PushForceMax );
 		Force += normalize(Delta) * DeltaScale;
+		Force += normalize(Delta) * DistanceForce * GetNoiseForce01(uv);
 	}
 	return Force;
 }
@@ -171,7 +181,7 @@ void main()
 	//	gr: just a blit should be stable
 	vec4 Vel = texture( LastVelocitys, uv );
 	
-	Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
+	//Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
 	Vel.xyz += GetGravityForce(uv) ;//* PhysicsStep;
 	Vel.xyz += GetSpringForce(uv) ;//* PhysicsStep;
 	Vel.xyz += GetPushForce(uv) ;//* PhysicsStep;
