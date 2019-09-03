@@ -186,10 +186,10 @@ void main()
 	float4 Light = GetLightColour(Normal,HitPos);
 	gl_FragColor.xyz = mix( gl_FragColor.xyz, Light.xyz, Light.w );
 	//gl_FragColor.xyz *= Light.w;
-	
+	*/
 	//	fog
 	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, FragWorldPos );
-	*/
+
 	gl_FragColor.w = 1.0;
 
 	
