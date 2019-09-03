@@ -22,7 +22,12 @@ catch(e)
 	Pop.Debug("Convert assets error: " + e);
 }
 
-
+function IsDebugEnabled()
+{
+	const Args = Pop.GetExeArguments();
+	const HasDebug = Args.includes('Debug');
+	return HasDebug;
+}
 
 //	testing anim
 /*
@@ -55,6 +60,12 @@ Pop.Include('Hud.js');
 
 Pop.Include('Logo.js');
 
+
+if ( !IsDebugEnabled() )
+{
+	const DebugHud = new Pop.Hud.Label('Debug');
+	DebugHud.SetVisible(false);
+}
 
 Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 {

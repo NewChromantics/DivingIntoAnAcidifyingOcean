@@ -593,51 +593,56 @@ let OnParamsChanged = function(Params,ChangedParamName)
 		OnSwitchedToDebugCamera();
 }
 
+let ParamsWindow = {};
+ParamsWindow.OnParamChanged = function(){};
 
-const ParamsWindowRect = [800,20,350,200];
-let ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
-ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
-ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
-ParamsWindow.AddParam('AnimalBufferLod',0,1);
-ParamsWindow.AddParam('PhysicsAnimalNoiseScale',0,10);
-ParamsWindow.AddParam('PhysicsAnimalDamping',0,1);
-ParamsWindow.AddParam('PhysicsDebrisNoiseScale',0,10);
-ParamsWindow.AddParam('PhysicsDebrisDamping',0,1);
-ParamsWindow.AddParam('ExperiencePlaying');
-ParamsWindow.AddParam('AutoGrabDebugCamera');
-ParamsWindow.AddParam('UseDebugCamera');
-ParamsWindow.AddParam('FogColour','Colour');
-ParamsWindow.AddParam('LightColour','Colour');
-ParamsWindow.AddParam('Animal_TriangleScale',0,0.2);
-ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
-ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
-ParamsWindow.AddParam('FogMinDistance',0,50);
-ParamsWindow.AddParam('FogMaxDistance',0,50);
-ParamsWindow.AddParam('EnableMusic');
-ParamsWindow.AddParam('DrawBoundingBoxes');
-ParamsWindow.AddParam('DrawBoundingBoxesFilled');
-ParamsWindow.AddParam('CameraFaceForward');
-ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
-ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
+if ( IsDebugEnabled() )
+{
+	const ParamsWindowRect = [800,20,350,200];
+	ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
+	ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
+	ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
+	ParamsWindow.AddParam('AnimalBufferLod',0,1);
+	ParamsWindow.AddParam('PhysicsAnimalNoiseScale',0,10);
+	ParamsWindow.AddParam('PhysicsAnimalDamping',0,1);
+	ParamsWindow.AddParam('PhysicsDebrisNoiseScale',0,10);
+	ParamsWindow.AddParam('PhysicsDebrisDamping',0,1);
+	ParamsWindow.AddParam('ExperiencePlaying');
+	ParamsWindow.AddParam('AutoGrabDebugCamera');
+	ParamsWindow.AddParam('UseDebugCamera');
+	ParamsWindow.AddParam('FogColour','Colour');
+	ParamsWindow.AddParam('LightColour','Colour');
+	ParamsWindow.AddParam('Animal_TriangleScale',0,0.2);
+	ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
+	ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
+	ParamsWindow.AddParam('FogMinDistance',0,50);
+	ParamsWindow.AddParam('FogMaxDistance',0,50);
+	ParamsWindow.AddParam('EnableMusic');
+	ParamsWindow.AddParam('DrawBoundingBoxes');
+	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
+	ParamsWindow.AddParam('CameraFaceForward');
+	ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
+	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 
-ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
-ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
+	ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
+	ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
 
-ParamsWindow.AddParam('DebugCullTimelineCamera');
-ParamsWindow.AddParam('FrustumCullTestX');
-ParamsWindow.AddParam('FrustumCullTestY');
-ParamsWindow.AddParam('FrustumCullTestZ');
-ParamsWindow.AddParam('MouseRayOnTimelineCamera');
-ParamsWindow.AddParam('TestRayDistance',-1,1);
-ParamsWindow.AddParam('TestRaySize',0,10);
-ParamsWindow.AddParam('DrawTestRay');
-ParamsWindow.AddParam('EnablePhysicsIteration');
-ParamsWindow.AddParam('DebugPhysicsTextures');
-ParamsWindow.AddParam('BillboardTriangles');
-ParamsWindow.AddParam('ShowClippedParticle');
-ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
-ParamsWindow.AddParam('CameraFarDistance', 1, 100);
-ParamsWindow.AddParam('ScrollFlySpeed',1,300);
+	ParamsWindow.AddParam('DebugCullTimelineCamera');
+	ParamsWindow.AddParam('FrustumCullTestX');
+	ParamsWindow.AddParam('FrustumCullTestY');
+	ParamsWindow.AddParam('FrustumCullTestZ');
+	ParamsWindow.AddParam('MouseRayOnTimelineCamera');
+	ParamsWindow.AddParam('TestRayDistance',-1,1);
+	ParamsWindow.AddParam('TestRaySize',0,10);
+	ParamsWindow.AddParam('DrawTestRay');
+	ParamsWindow.AddParam('EnablePhysicsIteration');
+	ParamsWindow.AddParam('DebugPhysicsTextures');
+	ParamsWindow.AddParam('BillboardTriangles');
+	ParamsWindow.AddParam('ShowClippedParticle');
+	ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
+	ParamsWindow.AddParam('CameraFarDistance', 1, 100);
+	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
+}
 
 
 let SelectedActor = null;
@@ -1268,7 +1273,8 @@ function Update(FrameDurationSecs)
 		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
 		const YearsPerFrame = FrameDurationSecs * YearsPerSec;
 		Params.TimelineYear += YearsPerFrame;
-		ParamsWindow.OnParamChanged('TimelineYear');
+		if ( ParamsWindow )
+			ParamsWindow.OnParamChanged('TimelineYear');
 	}
 
 	const Time = Params.TimelineYear;
@@ -1283,7 +1289,8 @@ function Update(FrameDurationSecs)
 
 	//	update some stuff from timeline
 	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
-	ParamsWindow.OnParamChanged('FogColour');
+	if ( ParamsWindow )
+		ParamsWindow.OnParamChanged('FogColour');
 	
 	//	update hud
 	Hud.YearLabel.SetValue( Math.floor(Params.TimelineYear) );

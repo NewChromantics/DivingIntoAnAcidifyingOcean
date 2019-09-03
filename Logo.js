@@ -60,21 +60,24 @@ function TLogoState()
 	this.Params.SampleWeightSigma = 4;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
-	this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
-	this.LogoParamsWindow.AddParam('SdfMin',0,1);
-	this.LogoParamsWindow.AddParam('SampleDelta',0,0.01);
-	this.LogoParamsWindow.AddParam('SampleWeightSigma',0,5,Math.floor);
-	this.LogoParamsWindow.AddParam('SpringForce',0,10);
-	this.LogoParamsWindow.AddParam('Damping',0,1);
-	this.LogoParamsWindow.AddParam('NoiseForce',0,10);
-	this.LogoParamsWindow.AddParam('PushForce',0,50);
-	this.LogoParamsWindow.AddParam('PushForceMax',0,50);
-	this.LogoParamsWindow.AddParam('PushRadius',0,0.5);
-	this.LogoParamsWindow.AddParam('LocalScale',0,2);
-	this.LogoParamsWindow.AddParam('WorldScale',0,2);
-	this.LogoParamsWindow.AddParam('DebugPhysicsTextures');
-	this.LogoParamsWindow.AddParam('EnablePhysicsIteration');
-
+	if ( IsDebugEnabled() )
+	{
+		this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
+		this.LogoParamsWindow.AddParam('SdfMin',0,1);
+		this.LogoParamsWindow.AddParam('SampleDelta',0,0.01);
+		this.LogoParamsWindow.AddParam('SampleWeightSigma',0,5,Math.floor);
+		this.LogoParamsWindow.AddParam('SpringForce',0,10);
+		this.LogoParamsWindow.AddParam('Damping',0,1);
+		this.LogoParamsWindow.AddParam('NoiseForce',0,10);
+		this.LogoParamsWindow.AddParam('PushForce',0,50);
+		this.LogoParamsWindow.AddParam('PushForceMax',0,50);
+		this.LogoParamsWindow.AddParam('PushRadius',0,0.5);
+		this.LogoParamsWindow.AddParam('LocalScale',0,2);
+		this.LogoParamsWindow.AddParam('WorldScale',0,2);
+		this.LogoParamsWindow.AddParam('DebugPhysicsTextures');
+		this.LogoParamsWindow.AddParam('EnablePhysicsIteration');
+	}
+	
 	const LogoMeta = {};
 	LogoMeta.Filename = 'Logo/Logo.svg.json';
 	LogoMeta.Position = [0,0,0];
