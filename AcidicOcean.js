@@ -665,10 +665,6 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	//let Shader = Pop.GetShader( RenderTarget, Actor.FragShader, Actor.VertShader );
 	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
 
-	//	pad for speed
-	while ( Actor.Colours.length < 48 )
-		Actor.Colours.push(0);
-	
 	let SetUniforms = function(Shader)
 	{
 		SetGlobalUniforms( Shader );
