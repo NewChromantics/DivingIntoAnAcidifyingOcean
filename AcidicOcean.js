@@ -538,7 +538,7 @@ function GetActorIntersections(CameraScreenUv)
 
 
 
-const TimelineMinYear = 1820;
+const TimelineMinYear = 1800;
 const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
