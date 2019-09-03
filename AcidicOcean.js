@@ -10,7 +10,9 @@ Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //Pop.Include('AssetManager.js');
 Pop.Include('AudioManager.js');
-Pop.Include('Timeline.js');
+//	already included
+//Pop.Include('Timeline.js');
+//Pop.Include('Animals.js');
 
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
@@ -36,19 +38,6 @@ function SetupFileAssets()
 SetupFileAssets();
 
 
-function LoadAnimalDatabase(Filename)
-{
-	const DatabaseContents = Pop.LoadFileAsString(Filename);
-	const DatabaseJson = JSON.parse( DatabaseContents );
-	return DatabaseJson;
-}
-
-const AnimalDatabase = LoadAnimalDatabase('Animals.json');
-
-function GetRandomAnimal()
-{
-	
-}
 
 
 function UnrollHexToRgb(Hexs)
@@ -508,7 +497,7 @@ function UpdateMouseMove(x,y)
 	if ( SelectedActors.length )
 	{
 		const Names = SelectedActors.map( a => a.Actor.Name );
-		Pop.Debug("Selected actors;", Names );
+		//Pop.Debug("Selected actors;", Names );
 	}
 }
 
@@ -872,7 +861,10 @@ function LoadCameraScene(Filename)
 			let WorldPos = ActorNode.Position;
 			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 			Actor.BoundingBox = ActorNode.BoundingBox;
-			SetupAnimalTextureBufferActor.call( Actor, 'Models/clownfish_v1.ply', ActorNode.BoundingBox );
+			const Animal = GetRandomAnimal();
+			Actor.Animal = Animal;
+			Actor.Name += " " + Animal.Name;
+			SetupAnimalTextureBufferActor.call( Actor, Animal.Model, ActorNode.BoundingBox );
 		}
 		else
 		{
@@ -1242,6 +1234,12 @@ function UpdateState_Fly(FrameDurationSecs)
 		//	gr: should reuse selected list?
 		const IntersectedActors = GetActorIntersections(uv);
 		IntersectedActors.forEach( i => i.Actor.UpdatePhysics=true );
+		
+		if ( IntersectedActors.length )
+		{
+			const Names = IntersectedActors.map( a => a.Actor.Name );
+			Pop.Debug("Selected actors;", Names, IntersectedActors );
+		}
 	}
 	LastMouseClicks.forEach( ProcessClick );
 	LastMouseClicks.length = 0;

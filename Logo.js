@@ -3,6 +3,7 @@ Pop.Include('Actors.js');
 Pop.Include('AssetManager.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
+Pop.Include('Animals.js');
 
 const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
 const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
@@ -134,10 +135,9 @@ function TLogoState()
 	];
 	this.PreloadGeoFilenames =
 	[
-	 'Models/shell_v001.ply',
-	 'Models/clownfish_v1.ply'
 	];
 
+	//	autogen ocean asset filenames
 	{
 		let LoadOceanFrames = 96;
 		if ( Pop.GetExeArguments().includes('ShortOcean') )
@@ -149,9 +149,10 @@ function TLogoState()
 			this.PreloadGeoFilenames.push(Filename);
 		}
 	}
-	//PreloadOceanFilenames.call(this);
-	
-	
+
+	//	autogen model asset filenames
+	this.PreloadGeoFilenames.push( ...GetAnimalAssetFilenames() );
+
 	
 	
 	const Load = function(Filename)
