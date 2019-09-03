@@ -521,6 +521,7 @@ function LoadGeometryToTextureBuffers(RenderTarget,Filename,GetIndexMap,ScaleToB
 		PositionImage.WritePixels( Width, Height, Pixels, PixelFormat );
 	}
 	
+	const ColoursAs8Bit = true;
 	let ColourImage = null;
 	if ( Colours )
 	{
@@ -538,11 +539,20 @@ function LoadGeometryToTextureBuffers(RenderTarget,Filename,GetIndexMap,ScaleToB
 		const PixelValues = Colours.slice();
 		PixelValues.length = PixelDataSize;
 		
-		const Pixels = new Float32Array( PixelValues );
+		let Pixels,PixelFormat;
+		if ( ColoursAs8Bit )
+		{
+			Pixels = new Uint8Array( PixelValues );
+			PixelFormat = Channels == 3 ? 'RGB' : 'RGBA';
+		}
+		else
+		{
+			Pixels = new Float32Array( PixelValues );
+			PixelFormat = 'Float'+Channels;
+		}
 		if ( Pixels.length != PixelDataSize )
 			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
 		
-		const PixelFormat = 'Float'+Channels;
 		ColourImage.WritePixels( Width, Height, Pixels, PixelFormat );
 	}
 	
