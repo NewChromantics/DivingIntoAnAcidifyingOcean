@@ -8,10 +8,9 @@ uniform bool ColourImageValid;
 
 void main()
 {
-	/*
 	if ( length(TriangleUv) > CircleRadius )
 		discard;
-	*/
+
 	//	gr: for some reason, this is faster than using a constant!
 	gl_FragColor = Rgba;
 
