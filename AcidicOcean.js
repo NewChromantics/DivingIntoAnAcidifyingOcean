@@ -23,8 +23,8 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 //	temp turning off and just having dummy actors
 const LoadWaterAsInstances = true;
 const LoadDebrisAsInstances = true;
-
-
+const PhysicsEnabled = false;
+let PhsyicsUpdateCount = 0;	//	gotta do one
 
 
 const AutoTriangleMeshCount = 100000;//512*512;
@@ -641,6 +641,10 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	//let Shader = Pop.GetShader( RenderTarget, Actor.FragShader, Actor.VertShader );
 	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
 
+	//	pad for speed
+	while ( Actor.Colours.length < 48 )
+		Actor.Colours.push(0);
+	
 	let SetUniforms = function(Shader)
 	{
 		SetGlobalUniforms( Shader );
@@ -1279,10 +1283,14 @@ function Render(RenderTarget)
 		}
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
-	//	update physics
-	OceanActors.forEach( UpdateActorPhysics );
-	DebrisActors.forEach( UpdateActorPhysics );
 	
+	//	update physics
+	if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
+	{
+		OceanActors.forEach( UpdateActorPhysics );
+		DebrisActors.forEach( UpdateActorPhysics );
+		PhsyicsUpdateCount++;
+	}
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
