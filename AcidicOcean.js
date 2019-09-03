@@ -338,8 +338,9 @@ function GetIntersectingActors(Ray,Scene)
 }
 
 
-let LastMouseRay = null;
+let LastMouseRay = null;	//	gr: this isn't getting updated any more
 let LastMouseRayUv = null;
+let LastMouseClicks = [];	//	array of queued uvs
 
 function GetMouseRay(uv)
 {
@@ -474,23 +475,41 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 	return IsVisibleFunction;
 }
 
+function QueueSceneClick(x,y)
+{
+	const Rect = Window.GetScreenRect();
+	const u = x / Rect[2];
+	const v = y / Rect[3];
+	LastMouseClicks.push( [u,v] );
+}
+
 function UpdateMouseMove(x,y)
 {
 	const Rect = Window.GetScreenRect();
 	const u = x / Rect[2];
 	const v = y / Rect[3];
-
 	const CameraScreenUv = [u,v];
 	LastMouseRayUv = CameraScreenUv;
+	
+	SelectedActors = GetActorIntersections(CameraScreenUv);
+	if ( SelectedActors.length )
+	{
+		const Names = SelectedActors.map( a => a.Actor.Name );
+		Pop.Debug("Selected actors;", Names );
+	}
+}
 
+
+function GetActorIntersections(CameraScreenUv)
+{
+	const Rect = Window.GetScreenRect();
+	
 	//Pop.Debug(CameraScreenUv);
 	const Time = Params.TimelineYear;
 	const Viewport = [0,0,Rect[2],Rect[3]];
 	const Camera = GetTimelineCamera(Time);
 	
 	const Ray = GetMouseRay( CameraScreenUv );
-	
-	LastMouseRay = Ray;
 	
 	//const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
 	const IsActorVisible = function(Actor)
@@ -509,19 +528,11 @@ function UpdateMouseMove(x,y)
 	}
 	
 	//	find actor
-	let Scene = GetActorScene( Time, FilterActor );
-	SelectedActors = GetIntersectingActors( Ray, Scene );
+	const Scene = GetActorScene( Time, FilterActor );
+	const SelectedActors = GetIntersectingActors( Ray, Scene );
 	
-	if ( SelectedActors.length )
-	{
-		let Names = SelectedActors.map( a => a.Actor.Name );
-		Pop.Debug("Selected actors;", Names );
-		SelectedActors = GetIntersectingActors( Ray, Scene );
-	}
-	
-	//Pop.Debug("SelectedActors x" + SelectedActors.length);
+	return SelectedActors;
 }
-
 
 
 
@@ -1196,6 +1207,20 @@ function Init()
 }
 
 
+function UpdateState_Fly(FrameDurationSecs)
+{
+	//	process clicks
+	const ProcessClick = function(uv)
+	{
+		//	gr: should reuse selected list?
+		const IntersectedActors = GetActorIntersections(uv);
+		IntersectedActors.forEach( i => i.Actor.UpdatePhysics=true );
+	}
+	LastMouseClicks.forEach( ProcessClick );
+	LastMouseClicks.length = 0;
+
+}
+
 //	todo: proper app loop, currently triggered from render
 function Update(FrameDurationSecs)
 {
@@ -1204,6 +1229,9 @@ function Update(FrameDurationSecs)
 	
 	AppTime += FrameDurationSecs;
 
+	//	state update
+	UpdateState_Fly(FrameDurationSecs);
+	
 	//	auto increment year
 	if ( Params.ExperiencePlaying )
 	{
@@ -1315,6 +1343,7 @@ function Render(RenderTarget)
 			Shader.SetUniform('NoiseScale', Params.DebrisPhysicsNoiseScale );
 			Shader.SetUniform('Damping', Params.DebrisPhysicsDamping );
 		}
+		Pop.Debug("Update actor physics");
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
 	
@@ -1414,6 +1443,11 @@ Window.OnRender = Render;
 
 Window.OnMouseDown = function(x,y,Button)
 {
+	if ( Button == 0 )
+	{
+		QueueSceneClick( x, y );
+	}
+
 	Window.OnMouseMove( x, y, Button, true );
 }
 
