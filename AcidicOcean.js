@@ -31,6 +31,7 @@ let PhsyicsUpdateCount = 0;	//	gotta do one
 
 const AutoTriangleMeshCount = 100000;//512*512;
 
+
 function SetupFileAssets()
 {
 	AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAutoTriangleMesh( RenderTarget, AutoTriangleMeshCount );	};
@@ -99,7 +100,7 @@ function LoadTimeline(Filename)
 //	scene!
 
 
-let DebrisMeta = {};
+var DebrisMeta = {};
 DebrisMeta.Filename = '.random';
 DebrisMeta.Position = [0,0,0];
 DebrisMeta.Scale = 1;
@@ -107,11 +108,11 @@ DebrisMeta.TriangleScale = 0.052015;	//	0.0398
 DebrisMeta.Colours = DebrisColours;
 DebrisMeta.VertexSkip = 0;
 
-let OceanFilenames = [];
+var OceanFilenames = [];
 for ( let i=1;	i<=96;	i++ )
 	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
-let OceanMeta = {};
+var OceanMeta = {};
 OceanMeta.Filename = OceanFilenames;
 OceanMeta.Position = [0,0,0];
 OceanMeta.Scale = 1.0;
@@ -127,133 +128,18 @@ var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 
 var SelectedActors = [];
+var SelectedActor = null;
+
+var LastMouseRay = null;	//	gr: this isn't getting updated any more
+var LastMouseRayUv = null;
+var LastMouseClicks = [];	//	array of queued uvs
 
 
-Math.GetNormalisedPlane = function(Plane4)
-{
-	let Length = Math.Length3( Plane4 );
-	Plane4 = Plane4.slice();
-	Plane4[0] /= Length;
-	Plane4[1] /= Length;
-	Plane4[2] /= Length;
-	Plane4[3] /= Length;
-	return Plane4;
-}
-
-
-Math.NormalisePlane = function(Plane4)
-{
-	let Length = Math.Length3( Plane4 );
-	Plane4[0] /= Length;
-	Plane4[1] /= Length;
-	Plane4[2] /= Length;
-	Plane4[3] /= Length;
-}
+var RenderFrameCounter = new Pop.FrameCounter();
 
 
 
 
-//	from https://stackoverflow.com/a/34960913/355753
-Math.GetFrustumPlanes = function(FrustumMatrix4x4,Normalised=true)
-{
-	let left = [];
-	let right = [];
-	let bottom = [];
-	let top = [];
-	let near = [];
-	let far = [];
-	
-	let mat;
-	if ( Params.TransposeFrustumPlanes )
-	{
-		mat = function(row,col)
-		{
-			return FrustumMatrix4x4[ (row*4) + col ];
-		}
-	}
-	else
-	{
-		mat = function(col,row)
-		{
-			return FrustumMatrix4x4[ (row*4) + col ];
-		}
-	}
-	
-	for ( let i=0;	i<4;	i++ )
-	{
-		left[i]		= mat(i,3) + mat(i,0);
-		right[i]	= mat(i,3) - mat(i,0);
-		bottom[i]	= mat(i,3) + mat(i,1);
-		top[i]		= mat(i,3) - mat(i,1);
-		near[i]		= mat(i,3) + mat(i,2);
-		far[i]		= mat(i,3) - mat(i,2);
-	}
-	
-	if ( Normalised )
-	{
-		Math.NormalisePlane( left );
-		Math.NormalisePlane( right );
-		Math.NormalisePlane( top );
-		Math.NormalisePlane( bottom );
-		Math.NormalisePlane( near );
-		Math.NormalisePlane( far );
-	}
-
-	const Planes = {};
-	Planes.Left = left;
-	Planes.Right = right;
-	Planes.Top = top;
-	Planes.Bottom = bottom;
-	Planes.Near = near;
-	Planes.Far = far;
-	return Planes;
-}
-
-Math.GetIntersectionRayBox3 = function(RayStart,RayDirection,BoxMin,BoxMax)
-{
-	let tmin = -Infinity;
-	let tmax = Infinity;
-	
-	for ( let dim=0;	dim<3;	dim++ )
-	{
-		let AxisDir = RayDirection[dim];
-		if ( AxisDir == 0 )
-			continue;
-		let tx1 = ( BoxMin[dim] - RayStart[dim] ) / AxisDir;
-		let tx2 = ( BoxMax[dim] - RayStart[dim] ) / AxisDir;
-		
-		let min = Math.min( tx1, tx2 );
-		let max = Math.max( tx1, tx2 );
-		tmin = Math.max( tmin, min );
-		tmax = Math.min( tmax, max );
-	}
-	
-	//	invalid input ray (dir = 000)
-	if ( tmin === null )
-	{
-		Pop.Debug("GetIntersectionRayBox3 invalid ray", RayStart, RayDirection );
-		return false;
-	}
-	
-	//	ray inside box... maybe change this return so its the exit intersection?
-	if ( tmin < 0 )
-	{
-		//return RayStart;
-		return false;
-	}
-	
-	//	ray miss
-	if ( tmax < tmin )
-		return;
-	//	from inside?
-	if ( tmax < 0.0 )
-		return false;
-	
-	let Intersection = Math.Multiply3( RayDirection, [tmin,tmin,tmin] );
-	Intersection = Math.Add3( RayStart, Intersection );
-	
-	return Intersection;
-}
 
 function IsActorSelectable(Actor)
 {
@@ -339,10 +225,6 @@ function GetIntersectingActors(Ray,Scene)
 	return Intersections;
 }
 
-
-let LastMouseRay = null;	//	gr: this isn't getting updated any more
-let LastMouseRayUv = null;
-let LastMouseClicks = [];	//	array of queued uvs
 
 function GetMouseRay(uv)
 {
@@ -439,41 +321,7 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 		}
 		
 	}
-	
-/*
-	//	calc the frustum planes
-	Viewport = [-1,-1,1,1];
-	let FrustumMatrix = Camera.GetLocalToWorldFrustumTransformMatrix( Viewport );
-	//FrustumMatrix = Math.MatrixInverse4x4( FrustumMatrix );
-	//FrustumMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), FrustumMatrix );
-	const Planes = Math.GetFrustumPlanes( FrustumMatrix, true );
-	
-	let IsVisibleFunction = function(Actor)
-	{
-		const ActorTransform = Actor.GetLocalToWorldTransform();
-		let Position = Math.GetMatrixTranslation( ActorTransform );
-		if ( Params.CullTestSubtractCameraPos )
-			Position = Math.Subtract3( Position, Camera.Position );
-		
-		let TestPlane = function(Plane)
-		{
-			let Distance = Math.GetDistanceToPlane( Plane, Position );
-			if ( Params.FrustumTestNegative )
-				return Distance < 0;
-			return Distance>0;
-		}
-		
-		
-		
-		if ( Params.CullTestNear && !TestPlane(Planes.Near) )	return false;
-		if ( Params.CullTestFar && !TestPlane(Planes.Far) )	return false;
-		if ( Params.CullTestTop && !TestPlane(Planes.Top) )	return false;
-		if ( Params.CullTestBottom && !TestPlane(Planes.Bottom) )	return false;
-		if ( Params.CullTestLeft && !TestPlane(Planes.Left) )	return false;
-		if ( Params.CullTestRight && !TestPlane(Planes.Right) )	return false;
-		return true;
-	}
- */
+
 	return IsVisibleFunction;
 }
 
@@ -644,8 +492,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 }
 
-
-let SelectedActor = null;
 
 
 
@@ -1206,8 +1052,6 @@ function GetAudioGetCrossFadeDuration()
 {
 	return Params.AudioCrossFadeDurationSecs;
 }
-
-var RenderFrameCounter = new Pop.FrameCounter();
 
 //	need a better place for this, app state!
 function Init()
