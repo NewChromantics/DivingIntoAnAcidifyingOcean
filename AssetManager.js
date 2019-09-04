@@ -423,14 +423,10 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 
 
 
-function LoadGeometryToTextureBuffers(Filename,GetIndexMap,ScaleToBounds,MaxPositions)
+function LoadGeometryToTextureBuffers(Geo,MaxPositions)
 {
-	const CachedFilename = GetCachedFilename(Filename,'geometry');
-	if ( Pop.FileExists(CachedFilename) )
-		Filename = CachedFilename;
-	
-	//	load positions, colours
-	const Geo = LoadGeometryFile( Filename );
+	const ScaleToBounds = undefined;
+	const GetIndexMap = undefined;
 	
 	//	mesh stuff
 	let PositionSize = Geo.PositionSize;
@@ -476,7 +472,6 @@ function LoadGeometryToTextureBuffers(Filename,GetIndexMap,ScaleToBounds,MaxPosi
 	const AlphaIsPositionW = true;
 	if ( AlphaIsPositionW && Alphas && PositionSize < 4 )
 	{
-		Pop.Debug(Filename,"Pushing position W as alpha");
 		let NewPositions = [];
 		for ( let i=0;	i<Positions.length/PositionSize;	i++ )
 		{

@@ -620,6 +620,22 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 	}
 }
 
+function LoadAssetGeoTextureBuffer(RenderTarget)
+{
+	const MaxPositions = AutoTriangleMeshCount;
+	
+	let Filename = this;
+	const CachedFilename = GetCachedFilename(Filename,'geometry');
+	if ( Pop.FileExists(CachedFilename) )
+		Filename = CachedFilename;
+	
+	//	load positions, colours
+	const Geo = LoadGeometryFile( Filename );
+	const GeoTextureBuffers = LoadGeometryToTextureBuffers( Geo, MaxPositions );
+	return GeoTextureBuffers;
+}
+
+const FakeRenderTarget = {};
 
 function SetupAnimalTextureBufferActor(Filename,GetMeta)
 {
@@ -628,10 +644,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.FragShader = GetMeta().FragShader;
 	
 	{
-		const GetIndexMap = undefined;
-		const ScaleBounds = undefined;
-		const MaxPositions = AutoTriangleMeshCount;
-		this.TextureBuffers = LoadGeometryToTextureBuffers( Filename, GetIndexMap, ScaleBounds, MaxPositions );
+		//	setup the fetch func on demand, if already cached, won't make a difference
+		AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
+		this.TextureBuffers = GetAsset( Filename, FakeRenderTarget );
 	}
 	
 	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
