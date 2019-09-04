@@ -1072,7 +1072,7 @@ function Init()
 	
 	Hud.Animal_Card = new Pop.Hud.Label('AnimalCard');
 	Hud.Animal_Title = new Pop.Hud.Label('AnimalCard_Title');
-	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Line');
+	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');
 
 	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
 	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
