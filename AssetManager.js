@@ -423,7 +423,7 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 
 
 
-function LoadGeometryToTextureBuffers(RenderTarget,Filename,GetIndexMap,ScaleToBounds,MaxPositions)
+function LoadGeometryToTextureBuffers(Filename,GetIndexMap,ScaleToBounds,MaxPositions)
 {
 	const CachedFilename = GetCachedFilename(Filename,'geometry');
 	if ( Pop.FileExists(CachedFilename) )

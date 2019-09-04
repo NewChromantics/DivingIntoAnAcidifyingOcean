@@ -625,7 +625,12 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.VertShader = GetMeta().VertShader;
 	this.FragShader = GetMeta().FragShader;
 	
-	this.TextureBuffers = null;
+	{
+		const GetIndexMap = undefined;
+		const ScaleBounds = undefined;
+		const MaxPositions = AutoTriangleMeshCount;
+		this.TextureBuffers = LoadGeometryToTextureBuffers( Filename, GetIndexMap, ScaleBounds, MaxPositions );
+	}
 	
 	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
 	this.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
@@ -685,14 +690,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
-		const GetIndexMap = undefined;
-		const ScaleBounds = undefined;
-		const MaxPositions = AutoTriangleMeshCount;
-		
 		const Actor = this;
-		//	gr: does this NEED to be in rendertarget area?
-		if ( !Actor.TextureBuffers )
-			Actor.TextureBuffers = LoadGeometryToTextureBuffers( RenderTarget, Filename, GetIndexMap, ScaleBounds, MaxPositions );
 		
 		const Geo = GetAsset( this.Geometry, RenderTarget );
 		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
