@@ -13496,32 +13496,7 @@
       "visual_scene": {
         "-id": "ID3",
         "node": [
-          {
-            "-id": "ID4",
-            "-name": "Bend",
-            "translate": {
-              "-sid": "translate",
-              "#text": "0 0 -0"
-            },
-            "rotate": [
-              {
-                "-sid": "rotateY",
-                "#text": "0 1 0 -0"
-              },
-              {
-                "-sid": "rotateX",
-                "#text": "1 0 0 0"
-              },
-              {
-                "-sid": "rotateZ",
-                "#text": "0 0 1 -0"
-              }
-            ],
-            "scale": {
-              "-sid": "scale",
-              "#text": "1 1 1"
-            }
-          },
+          
           {
             "-id": "ID5",
             "-name": "Water_39",
