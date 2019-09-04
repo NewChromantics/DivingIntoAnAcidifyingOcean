@@ -1121,6 +1121,9 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	if ( StateTime < Params.ShowAnimal_Duration )
 		return;
 	
+	//	hide hud
+	Hud.Animal_Card.SetVisible(false);
+	
 	return Acid.State_Fly;
 }
 
