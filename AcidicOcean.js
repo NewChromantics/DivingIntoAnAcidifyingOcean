@@ -26,8 +26,9 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 const LoadWaterAsInstances = true;
 const LoadDebrisAsInstances = true;
 const PhysicsEnabled = true;
-let PhsyicsUpdateCount = 0;	//	gotta do one
+var PhsyicsUpdateCount = 0;	//	gotta do one
 
+var Debug_HighlightActors = [];
 
 const AutoTriangleMeshCount = 100000;//512*512;
 
@@ -127,17 +128,12 @@ var Hud = {};
 var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
 
 
-var SelectedActors = [];
-var SelectedActor = null;
-
 var LastMouseRay = null;	//	gr: this isn't getting updated any more
 var LastMouseRayUv = null;
 var LastMouseClicks = [];	//	array of queued uvs
 
 
 var RenderFrameCounter = new Pop.FrameCounter();
-
-
 
 
 
@@ -341,10 +337,10 @@ function UpdateMouseMove(x,y)
 	const CameraScreenUv = [u,v];
 	LastMouseRayUv = CameraScreenUv;
 	
-	SelectedActors = GetActorIntersections(CameraScreenUv);
-	if ( SelectedActors.length )
+	Debug_HighlightActors = GetActorIntersections(CameraScreenUv);
+	if ( Debug_HighlightActors.length )
 	{
-		const Names = SelectedActors.map( a => a.Actor.Name );
+		const Names = Debug_HighlightActors.map( a => a.Actor.Name );
 		//Pop.Debug("Selected actors;", Names );
 	}
 }
@@ -393,6 +389,8 @@ const TimelineMaxInteractiveYear = 2100;
 
 Params.TimelineYear = TimelineMinYear;
 Params.ExperienceDurationSecs = 240;
+Params.ShowAnimal_ExplodeSecs = 3;
+Params.ShowAnimal_Duration = 6;
 Params.AnimalBufferLod = 1.0;
 Params.DebugCullTimelineCamera = true;
 Params.TransposeFrustumPlanes = false;
@@ -456,6 +454,8 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('PhysicsDebrisNoiseScale',0,10);
 	ParamsWindow.AddParam('PhysicsDebrisDamping',0,1);
 	ParamsWindow.AddParam('ExperiencePlaying');
+	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
+	ParamsWindow.AddParam('ShowAnimal_Duration',0,20);
 	ParamsWindow.AddParam('AutoGrabDebugCamera');
 	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('FogColour','Colour');
@@ -1042,7 +1042,7 @@ function GetRenderScene(Time,VisibleFilter)
 		let Max = [TestSize,TestSize,TestSize];
 		PushActorBox( Pos, Min, Max, true );
 	}
-	SelectedActors.forEach( DrawIntersection );
+	Debug_HighlightActors.forEach( DrawIntersection );
 	
 	return Scene;
 }
@@ -1070,6 +1070,10 @@ function Init()
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
 	Hud.Stats_Ph = new Pop.Hud.Label('Stats_Ph_Label');
 	
+	Hud.Animal_Card = new Pop.Hud.Label('AnimalCard');
+	Hud.Animal_Title = new Pop.Hud.Label('AnimalCard_Title');
+	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Line');
+
 	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
 	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
 	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
@@ -1081,29 +1085,86 @@ function Init()
 	}
 }
 
-function OnClickActor_Fly(Actor,ClickPosition)
+var Acid = {};
+
+//	use a string if function not yet declared
+Acid.State_Fly = 'Fly';
+Acid.State_ShowAnimal = 'ShowAnimal';
+Acid.StateMap =
 {
-	Actor.UpdatePhysics = true;
+	'Fly':			Update_Fly,
+	'ShowAnimal':	Update_ShowAnimal
+};
+Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Fly, Acid.State_Fly, false );
+Acid.SelectedActor = null;
+
+function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
+		//	update hud to the current animal
+		//	move/offset camera to focus on it
+		const Animal = Acid.SelectedActor.Animal;
+		if ( !Animal )
+			throw "No selected animal";
+		
+		Hud.Animal_Card.SetVisible(true);
+		Hud.Animal_Title.SetValue( Animal.Name );
+		Hud.Animal_Description.SetValue( Animal.Description );
+	}
+	
+	if ( StateTime > Params.ShowAnimal_ExplodeSecs )
+	{
+		Acid.SelectedActor.UpdatePhysics = true;
+	}
+	
+	if ( StateTime < Params.ShowAnimal_Duration )
+		return;
+	
+	return Acid.State_Fly;
 }
 
-function UpdateState_Fly(FrameDurationSecs)
+
+function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
+	//	move time along
+	if ( Params.ExperiencePlaying )
+	{
+		const ExpYears = TimelineMaxYear - TimelineMinYear;
+		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
+		const YearsPerFrame = FrameDuration * YearsPerSec;
+		Params.TimelineYear += YearsPerFrame;
+		if ( ParamsWindow )
+			ParamsWindow.OnParamChanged('TimelineYear');
+	}
+	
+	//	check for animal selection
+	let SelectedActor = null;
 	//	process clicks
 	const ProcessClick = function(uv)
 	{
 		//	gr: should reuse selected list?
 		const IntersectedActors = GetActorIntersections(uv);
-		IntersectedActors.forEach( function(i)	{	OnClickActor_Fly( i.Actor, i.Position );	} );
-		
-		if ( IntersectedActors.length )
+		if ( IntersectedActors.length > 0 )
 		{
-			const Names = IntersectedActors.map( a => a.Actor.Name );
-			Pop.Debug("Selected actors;", Names, IntersectedActors );
+			SelectedActor = IntersectedActors[0].Actor;
 		}
 	}
 	LastMouseClicks.forEach( ProcessClick );
 	LastMouseClicks.length = 0;
 
+	if ( SelectedActor )
+	{
+		Acid.SelectedActor = SelectedActor;
+		return Acid.State_ShowAnimal;
+	}
+	
+	//	fly until we reach end of timeline
+	if ( Params.TimelineYear >= TimelineMaxInteractiveYear )
+		return 'Outro';
+	
+	//	stay flying
+	return null;
 }
 
 //	todo: proper app loop, currently triggered from render
@@ -1112,24 +1173,11 @@ function Update(FrameDurationSecs)
 	if ( AppTime === null )
 		Init();
 	
-	AppTime += FrameDurationSecs;
-
-	//	state update
-	UpdateState_Fly(FrameDurationSecs);
+	//	update app logic
+	Acid.StateMachine.LoopIteration();
 	
-	//	auto increment year
-	if ( Params.ExperiencePlaying )
-	{
-		const ExpYears = TimelineMaxYear - TimelineMinYear;
-		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
-		const YearsPerFrame = FrameDurationSecs * YearsPerSec;
-		Params.TimelineYear += YearsPerFrame;
-		if ( ParamsWindow )
-			ParamsWindow.OnParamChanged('TimelineYear');
-	}
-
+	
 	const Time = Params.TimelineYear;
-
 	
 	//	update audio
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
@@ -1198,6 +1246,7 @@ function UpdateSceneVisibility(Time)
 
 function Render(RenderTarget)
 {
+	//	gr: don't need to do this here now? let state machine run independently?
 	const DurationSecs = 1 / 60;
 	Update( DurationSecs );
 	

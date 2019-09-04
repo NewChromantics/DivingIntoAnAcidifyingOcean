@@ -67,7 +67,7 @@ if ( !IsDebugEnabled() )
 	DebugHud.SetVisible(false);
 }
 
-Pop.StateMachine = function(StateMap,InitialState,ErrorState)
+Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 {
 	//	if no initial state, use first key (is this in declaration order in every engine?)
 	InitialState = InitialState || Object.keys(StateMap)[0];
@@ -145,18 +145,21 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState)
 		Pop.Debug('OnStateMachineError',Error);
 	}
 
-	//	async or via animation...
-	let AysncUpdate = Pop.GetExeArguments().includes('AysncUpdate');
-	if ( !Pop.Global.requestAnimationFrame )
-		AysncUpdate = true;
-	
-	if ( AysncUpdate )
+	if ( AutoUpdate )
 	{
-		this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
-	}
-	else
-	{
-		this.LoopAnimation();
+		//	async or via animation...
+		let AysncUpdate = Pop.GetExeArguments().includes('AysncUpdate');
+		if ( !Pop.Global.requestAnimationFrame )
+			AysncUpdate = true;
+		
+		if ( AysncUpdate )
+		{
+			this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
+		}
+		else
+		{
+			this.LoopAnimation();
+		}
 	}
 }
 

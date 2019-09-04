@@ -285,7 +285,6 @@ function Update_Experience(FirstUpdate)
 		 'Hint_DragTimeline_Mobile',
 		 'Hint_DragTimeline_Desktop',
 		 'Hint_TouchToInteract',
-		 'AnimalCard'
 		 ];
 		ShowElements.forEach( ShowHud );
 	}
