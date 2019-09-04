@@ -146,7 +146,10 @@ function IsActorSelectable(Actor)
 	const Match = SelectableNames.some( MatchName => Actor.Name.includes(MatchName) );
 	if ( !Match )
 		return false;
-
+	
+	if ( Actor.AnimalHasBeenExploded )
+		return false;
+	
 	return true;
 }
 
@@ -1116,6 +1119,9 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		const Animal = Acid.SelectedActor.Animal;
 		if ( !Animal )
 			throw "No selected animal";
+
+		//	no longer selectable
+		Acid.SelectedActor.AnimalHasBeenExploded = true;
 		
 		Hud.Animal_Card.SetVisible(true);
 		Hud.Animal_Title.SetValue( Animal.Name );
