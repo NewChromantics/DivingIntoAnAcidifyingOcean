@@ -14,6 +14,8 @@ Pop.Include('AudioManager.js');
 //Pop.Include('Timeline.js');
 //Pop.Include('Animals.js');
 
+const BoldMode = Pop.GetExeArguments().includes('Bold');
+
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
@@ -447,7 +449,7 @@ Params.EnableMusic = true;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 8.0;
-Params.FogMaxDistance = 20.0;
+Params.FogMaxDistance = BoldMode ? 999 : 20.0;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.DebugPhysicsTextures = false;
@@ -464,7 +466,7 @@ Params.ScrollFlySpeed = 50;
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.01;
 Params.Animal_PhysicsNoiseScale = 9.9;
-Params.Debris_TriangleScale = 0.04;
+Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.04;
 Params.Debris_PhysicsDamping = 0.04;
 Params.Debris_PhysicsNoiseScale = 9.9;
 
@@ -473,7 +475,7 @@ Params.Debris_Colour1 = DebrisColours[1] || InvalidColour;
 Params.Debris_Colour2 = DebrisColours[2] || InvalidColour;
 Params.Debris_Colour3 = DebrisColours[3] || InvalidColour;
 Params.Debris_Colour4 = DebrisColours[4] || InvalidColour;
-Params.Ocean_TriangleScale = 0.0148;
+Params.Ocean_TriangleScale = BoldMode ? 0.8 : 0.0148;
 Params.Ocean_Colour0 = OceanColours[0] || InvalidColour;
 Params.Ocean_Colour1 = OceanColours[1] || InvalidColour;
 Params.Ocean_Colour2 = OceanColours[2] || InvalidColour;
