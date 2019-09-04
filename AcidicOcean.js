@@ -873,6 +873,7 @@ function LoadCameraScene(Filename)
 		{
 			let LocalScale = ActorNode.Scale;
 			let WorldPos = ActorNode.Position;
+			Actor.Geometry = 'Cube';
 			
 			//	some nodes have no geometry, so no bounding box
 			if ( !ActorNode.BoundingBox )
