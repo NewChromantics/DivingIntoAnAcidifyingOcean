@@ -25,7 +25,7 @@ const AnimalParticleVertShader = Pop.LoadFileAsString('AnimalParticle.vert.glsl'
 const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl');
 
 //	temp turning off and just having dummy actors
-const LoadWaterAsInstances = true;
+const LoadWaterAsInstances = false;
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
@@ -92,6 +92,8 @@ function LoadTimeline(Filename)
 function GetDebrisMeta()
 {
 	const Meta = {};
+	Meta.VertShader = AnimalParticleVertShader;
+	Meta.FragShader = AnimalParticleFragShader;
 	Meta.PhysicsNoiseScale = Params.Debris_PhysicsNoiseScale;
 	Meta.PhysicsDamping = Params.Debris_PhysicsDamping;
 	Meta.TriangleScale = Params.Debris_TriangleScale;
@@ -104,26 +106,26 @@ function GetDebrisMeta()
 	 Params.Debris_Colour4,
 	];
 	Meta.FitToBoundingBox = true;
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
 	return Meta;
 }
 
 function GetAnimalMeta()
 {
 	const Meta = {};
+	Meta.VertShader = AnimalParticleVertShader;
+	Meta.FragShader = AnimalParticleFragShader;
 	Meta.PhysicsNoiseScale = Params.Animal_PhysicsNoiseScale;
 	Meta.PhysicsDamping = Params.Animal_PhysicsDamping;
 	Meta.TriangleScale = Params.Animal_TriangleScale;
 	Meta.Colours = [InvalidColour];
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
 	return Meta;
 }
 
 function GetOceanMeta()
 {
 	const Meta = {};
+	Meta.VertShader = AnimalParticleVertShader;
+	Meta.FragShader = AnimalParticleFragShader;
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	Meta.TriangleScale = Params.Ocean_TriangleScale;
@@ -773,15 +775,20 @@ function LoadCameraScene(Filename)
 		//	but they're not ones we want to turn to animals anyway
 		const IsAnimalActor = IsActorSelectable(Actor);
 		const IsDebrisActor = ActorNode.Name.startsWith('Water_');
+		const IsOceanActor = ActorNode.Name.startsWith('Ocean_surface_');
 		
-		if ( IsAnimalActor || IsDebrisActor )
+		if ( IsAnimalActor || IsDebrisActor || IsOceanActor )
 		{
 			//let LocalScale = ActorNode.Scale;
 			let WorldPos = ActorNode.Position;
 			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 			Actor.BoundingBox = ActorNode.BoundingBox;
 			
-			if ( IsDebrisActor )
+			if ( IsOceanActor )
+			{
+				SetupAnimalTextureBufferActor.call( Actor, 'Ocean/ocean_pts.0001.ply', GetOceanMeta );
+			}
+			else if ( IsDebrisActor )
 			{
 				SetupAnimalTextureBufferActor.call( Actor, '.random', GetDebrisMeta );
 			}
