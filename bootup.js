@@ -77,22 +77,33 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 	this.CurrentStateStartTime = false;		//	when false, it hasnt been called
 	this.LastUpdateTime = Pop.GetTimeNowMs();
 	
-	this.LoopIteration = function()
+	this.LoopIteration = function(Paused)
 	{
+		Paused = (Paused === true);
 		const Now = Pop.GetTimeNowMs();
 		const ElapsedMs = Now - this.LastUpdateTime;
 		let NextState = null;
-		try
+		//try
 		{
 			//	get state to execute
 			const UpdateFuncName = StateMap[this.CurrentState];
 			const UpdateFunc = (typeof UpdateFuncName == 'function') ? UpdateFuncName : Pop.Global[UpdateFuncName];
 			const FirstUpdate = (this.CurrentStateStartTime===false);
+			
+			//	if we're paused, we need to discount this from the state time
+			//	maybe we need to switch to incrementing state time, but this suffers from drift
+			if ( Paused )
+			{
+				this.CurrentStateStartTime += ElapsedMs;
+			}
 			const StateTime = FirstUpdate ? 0 : Now - this.CurrentStateStartTime;
 			this.LastUpdateTime = Pop.GetTimeNowMs();
 			
+			const FrameDuration = Paused ? 0 : ElapsedMs / 1000;
+			const FrameStateTime = StateTime / 1000;
+			
 			//	do update
-			NextState = UpdateFunc( FirstUpdate, ElapsedMs / 1000, StateTime / 1000 );
+			NextState = UpdateFunc( FirstUpdate, FrameDuration, FrameStateTime );
 			
 			if ( FirstUpdate )
 				this.CurrentStateStartTime = Now;
@@ -104,6 +115,7 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 				this.CurrentStateStartTime = false;
 			}
 		}
+		/*
 		catch(e)
 		{
 			Pop.Debug("State Machine Update error in " + this.CurrentState + ": "+ e);
@@ -112,6 +124,7 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 			//	re throw errors for now
 			throw e;
 		}
+		*/
 	}
 	
 	this.LoopAsync = async function()

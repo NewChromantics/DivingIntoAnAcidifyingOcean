@@ -231,7 +231,7 @@ function GetMouseRay(uv)
 	const ViewRect = [-1,-1,1,1];
 	let Time = Params.TimelineYear;
 	//	get ray
-	const Camera = Params.MouseRayOnTimelineCamera ? GetTimelineCamera( Time ) : GetRenderCamera( Time );
+	const Camera = Params.MouseRayOnTimelineCamera ? GetTimelineCamera() : GetRenderCamera();
 	const RayDistance = Params.TestRayDistance;
 	
 	let ScreenToCameraTransform = Camera.GetProjectionMatrix( ViewRect );
@@ -353,7 +353,7 @@ function GetActorIntersections(CameraScreenUv)
 	//Pop.Debug(CameraScreenUv);
 	const Time = Params.TimelineYear;
 	const Viewport = [0,0,Rect[2],Rect[3]];
-	const Camera = GetTimelineCamera(Time);
+	const Camera = GetTimelineCamera();
 	
 	const Ray = GetMouseRay( CameraScreenUv );
 	
@@ -391,6 +391,12 @@ Params.TimelineYear = TimelineMinYear;
 Params.ExperienceDurationSecs = 240;
 Params.ShowAnimal_ExplodeSecs = 3;
 Params.ShowAnimal_Duration = 6;
+Params.ShowAnimal_CameraOffsetX = 0.32;
+Params.ShowAnimal_CameraOffsetY = 0.44;
+Params.ShowAnimal_CameraOffsetZ = 3.52;
+Params.ShowAnimal_CameraLerpInSpeed = 0.275;
+Params.ShowAnimal_CameraLerpOutSpeed = 0.10;
+
 Params.AnimalBufferLod = 1.0;
 Params.DebugCullTimelineCamera = true;
 Params.TransposeFrustumPlanes = false;
@@ -423,7 +429,6 @@ Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 24;	//	under 20 and keeps clipping too easily
-Params.CameraFaceForward = true;
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 60;
 Params.DrawBoundingBoxes = false;
@@ -456,6 +461,12 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ExperiencePlaying');
 	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
 	ParamsWindow.AddParam('ShowAnimal_Duration',0,20);
+	ParamsWindow.AddParam('ShowAnimal_CameraOffsetX',-10,10);
+	ParamsWindow.AddParam('ShowAnimal_CameraOffsetY',-10,10);
+	ParamsWindow.AddParam('ShowAnimal_CameraOffsetZ',-10,10);
+	ParamsWindow.AddParam('ShowAnimal_CameraLerpInSpeed',0,1);
+	ParamsWindow.AddParam('ShowAnimal_CameraLerpOutSpeed',0,1);
+
 	ParamsWindow.AddParam('AutoGrabDebugCamera');
 	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('FogColour','Colour');
@@ -468,7 +479,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('EnableMusic');
 	ParamsWindow.AddParam('DrawBoundingBoxes');
 	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
-	ParamsWindow.AddParam('CameraFaceForward');
 	ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
 	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 
@@ -804,40 +814,26 @@ function GetTimelineCameraPosition(Year)
 	return Pos;
 }
 
-function GetTimelineCamera(Time)
+function GetTimelineCamera()
 {
-	//	apply timeline camera pos temporarily and then remove again
-	/*
-	 Camera.Position = Math.Add3( Camera.Position, TimelineCameraPos );
-	 Camera.LookAt = Math.Add3( Camera.LookAt, TimelineCameraPos );
-	 const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
-	 Camera.Position = Math.Subtract3( Camera.Position, TimelineCameraPos );
-	 Camera.LookAt = Math.Subtract3( Camera.LookAt, TimelineCameraPos );
-	 */
-	
 	let Camera = new Pop.Camera();
-	Camera.Position = GetTimelineCameraPosition(Time);
-	if ( Params.CameraFaceForward )
-	{
-		Camera.LookAt = Camera.Position.slice();
-		Camera.LookAt[2] -= 1.0;
-	}
-	else
-	{
-		Camera.LookAt = GetTimelineCameraPosition(Time+0.01);
-	}
+	Camera.Position = Acid.GetCameraPosition();
+	
+	//	camera always faces forward now
+	Camera.LookAt = Camera.Position.slice();
+	Camera.LookAt[2] -= 1.0;
 	
 	Camera.NearDistance = Params.CameraNearDistance;
 	Camera.FarDistance = Params.CameraFarDistance;
 	return Camera;
 }
 
-function GetRenderCamera(Time)
+function GetRenderCamera()
 {
 	if ( Params.UseDebugCamera )
 		return DebugCamera;
 	
-	return GetTimelineCamera(Time);
+	return GetTimelineCamera();
 }
 
 //	todo: use generic actor
@@ -982,7 +978,7 @@ function GetRenderScene(Time,VisibleFilter)
 	
 	let PushDebugCameraActor = function()
 	{
-		let Camera = GetTimelineCamera(Time);
+		let Camera = GetTimelineCamera();
 		const Actor = new TActor();
 		const LocalScale = Params.DebugCameraPositionScale;
 		Actor.LocalToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix();
@@ -1097,6 +1093,19 @@ Acid.StateMap =
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Fly, Acid.State_Fly, false );
 Acid.SelectedActor = null;
+Acid.CameraPosition = null;	//	current pos for lerping depending on state
+Acid.GetCameraPosition = function()
+{
+	if ( !Acid.CameraPosition )
+		throw "this should have been set before use";
+	return Acid.CameraPosition;
+}
+
+function GetActorWorldPos(Actor)
+{
+	const Transform = Actor.GetLocalToWorldTransform();
+	return Math.GetMatrixTranslation( Transform );
+}
 
 function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 {
@@ -1112,6 +1121,17 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		Hud.Animal_Title.SetValue( Animal.Name );
 		Hud.Animal_Description.SetValue( Animal.Description );
 	}
+	
+	
+	//	lerp camera to pos
+	let TargetCameraPos = GetActorWorldPos(Acid.SelectedActor);
+	//	apply offset
+	const TargetOffset = [ Params.ShowAnimal_CameraOffsetX, Params.ShowAnimal_CameraOffsetY, Params.ShowAnimal_CameraOffsetZ ];
+	TargetCameraPos = Math.Add3( TargetCameraPos, TargetOffset );
+	//	move camera
+	Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpInSpeed );
+	
+	
 	
 	if ( StateTime > Params.ShowAnimal_ExplodeSecs )
 	{
@@ -1130,8 +1150,16 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
+	if ( FirstUpdate )
+	{
+		//	init very first camera pos
+		if ( !Acid.CameraPosition )
+		{
+			Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
+		}
+	}
+	
 	//	move time along
-	if ( Params.ExperiencePlaying )
 	{
 		const ExpYears = TimelineMaxYear - TimelineMinYear;
 		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
@@ -1139,6 +1167,13 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 		Params.TimelineYear += YearsPerFrame;
 		if ( ParamsWindow )
 			ParamsWindow.OnParamChanged('TimelineYear');
+	}
+
+	//	move camera
+	{
+		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
+		let TargetCameraPos = TimelineCameraPos;
+		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
 	}
 	
 	//	check for animal selection
@@ -1177,7 +1212,7 @@ function Update(FrameDurationSecs)
 		Init();
 	
 	//	update app logic
-	Acid.StateMachine.LoopIteration();
+	Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
 	
 	
 	const Time = Params.TimelineYear;
@@ -1221,7 +1256,7 @@ function Update(FrameDurationSecs)
 //	setup new animal actors where neccessary
 function UpdateSceneVisibility(Time)
 {
-	const CullingCamera = GetTimelineCamera(Time);
+	const CullingCamera = GetTimelineCamera();
 	const Rect = Window.GetScreenRect();
 	const Viewport = [0,0,Rect[2],Rect[3]];
 	const IsVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
@@ -1255,8 +1290,8 @@ function Render(RenderTarget)
 	
 	const Time = Params.TimelineYear;
 
-	const RenderCamera = GetRenderCamera( Time );
-	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera( Time ) : RenderCamera;
+	const RenderCamera = GetRenderCamera();
+	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera() : RenderCamera;
 	const Viewport = RenderTarget.GetRenderTargetRect();
 	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
 	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
@@ -1354,7 +1389,7 @@ function OnSwitchedToDebugCamera()
 	let Year = Params.TimelineYear;
 	
 	//	snap debug camera to run from current viewing position
-	let TimelineCamera = GetTimelineCamera(Year);
+	let TimelineCamera = GetTimelineCamera();
 	DebugCamera.Position = TimelineCamera.Position.slice();
 	DebugCamera.LookAt = TimelineCamera.LookAt.slice();
 }
