@@ -1400,13 +1400,14 @@ function OnSwitchedToDebugCamera()
 	DebugCamera.LookAt = TimelineCamera.LookAt.slice();
 }
 
-function SwitchToDebugCamera()
+function SwitchToDebugCamera(AutoGrab)
 {
 	if ( Params.UseDebugCamera )
 		return;
 	
-	if ( !Params.AutoGrabDebugCamera )
-		return;
+	if ( AutoGrab !== true )
+		if ( !Params.AutoGrabDebugCamera )
+			return;
 	
 	Params.UseDebugCamera = true;
 	ParamsWindow.OnParamChanged('UseDebugCamera');
@@ -1448,12 +1449,12 @@ Window.OnMouseMove = function(x,y,Button,FirstClick=false)
 	{
 		x *= Params.ScrollFlySpeed;
 		y *= Params.ScrollFlySpeed;
-		SwitchToDebugCamera();
+		SwitchToDebugCamera(true);
 		DebugCamera.OnCameraPanLocal( x, y, 0, FirstClick );
 	}
 	if ( Button == 1 )
 	{
-		SwitchToDebugCamera();
+		SwitchToDebugCamera(true);
 		DebugCamera.OnCameraOrbit( x, y, 0, FirstClick );
 	}
 }
@@ -1463,7 +1464,7 @@ Window.OnMouseScroll = function(x,y,Button,Delta)
 	let Fly = Delta[1] * 10;
 	Fly *= Params.ScrollFlySpeed;
 	
-	SwitchToDebugCamera();
+	SwitchToDebugCamera(true);
 	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
 	DebugCamera.OnCameraPanLocal( 0, 0, Fly, false );
 }
