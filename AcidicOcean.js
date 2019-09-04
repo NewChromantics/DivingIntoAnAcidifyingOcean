@@ -31,6 +31,7 @@ var PhsyicsUpdateCount = 0;	//	gotta do one
 var Debug_HighlightActors = [];
 
 const AutoTriangleMeshCount = 100000;//512*512;
+const InvalidColour = [0,1,0];
 
 
 function SetupFileAssets()
@@ -45,22 +46,15 @@ SetupFileAssets();
 function UnrollHexToRgb(Hexs)
 {
 	let Rgbs = [];
-	let PushRgb = function(Hex)
-	{
-		let Rgb = Pop.Colour.HexToRgb(Hex);
-		Rgbs.push( Rgb[0]/255 );
-		Rgbs.push( Rgb[1]/255 );
-		Rgbs.push( Rgb[2]/255 );
-	}
-	Hexs.forEach( PushRgb );
+	Rgbs = Hexs.map( Pop.Colour.HexToRgbf );
 	return Rgbs;
 }
 
 //	colours from colorbrewer2.org
 const OceanColoursHex = ['#c9e7f2','#4eb3d3','#2b8cbe','#0868ac','#084081','#023859','#03658c','#218da6','#17aebf','#15bfbf'];
 const DebrisColoursHex = ['#084081','#0868ac'];
-//const OceanColoursHex = ['#f7fcf0','#e0f3db','#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081'];
 const OceanColours = UnrollHexToRgb(OceanColoursHex);
+const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
 const LightColour = [0.86,0.95,0.94];
 
@@ -97,10 +91,17 @@ function LoadTimeline(Filename)
 function GetDebrisMeta()
 {
 	const Meta = {};
-	Meta.PhysicsNoiseScale = 0.9;
-	Meta.PhysicsDamping = 0.04;
-	Meta.TriangleScale = 0.01;
-	Meta.Colours = UnrollHexToRgb(DebrisColoursHex);
+	Meta.PhysicsNoiseScale = Params.Debris_PhysicsNoiseScale;
+	Meta.PhysicsDamping = Params.Debris_PhysicsDamping;
+	Meta.TriangleScale = Params.Debris_TriangleScale;
+	Meta.Colours =
+	[
+	 Params.Debris_Colour0,
+	 Params.Debris_Colour1,
+	 Params.Debris_Colour2,
+	 Params.Debris_Colour3,
+	 Params.Debris_Colour4,
+	];
 	Meta.FitToBoundingBox = true;
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
@@ -110,10 +111,10 @@ function GetDebrisMeta()
 function GetAnimalMeta()
 {
 	const Meta = {};
-	Meta.PhysicsNoiseScale = 9.9;
-	Meta.PhysicsDamping = 0.01;
-	Meta.TriangleScale = 0.01;
-	Meta.Colours = [0,1,0];
+	Meta.PhysicsNoiseScale = Params.Animal_PhysicsNoiseScale;
+	Meta.PhysicsDamping = Params.Animal_PhysicsDamping;
+	Meta.TriangleScale = Params.Animal_TriangleScale;
+	Meta.Colours = [InvalidColour];
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
 	return Meta;
@@ -124,8 +125,15 @@ function GetOceanMeta()
 	const Meta = {};
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
-	Meta.TriangleScale = 0.0148;
-	Meta.Colours = UnrollHexToRgb(OceanColoursHex);
+	Meta.TriangleScale = Params.Ocean_TriangleScale;
+	Meta.Colours =
+	[
+	 Params.Ocean_Colour0,
+	 Params.Ocean_Colour1,
+	 Params.Ocean_Colour2,
+	 Params.Ocean_Colour3,
+	 Params.Ocean_Colour4,
+	];
 	return Meta;
 }
 
@@ -453,6 +461,25 @@ Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
 Params.ScrollFlySpeed = 50;
 
+Params.Animal_TriangleScale = 0.01;
+Params.Animal_PhysicsDamping = 0.01;
+Params.Animal_PhysicsNoiseScale = 9.9;
+Params.Debris_TriangleScale = 0.04;
+Params.Debris_PhysicsDamping = 0.04;
+Params.Debris_PhysicsNoiseScale = 9.9;
+
+Params.Debris_Colour0 = DebrisColours[0] || InvalidColour;
+Params.Debris_Colour1 = DebrisColours[1] || InvalidColour;
+Params.Debris_Colour2 = DebrisColours[2] || InvalidColour;
+Params.Debris_Colour3 = DebrisColours[3] || InvalidColour;
+Params.Debris_Colour4 = DebrisColours[4] || InvalidColour;
+Params.Ocean_TriangleScale = 0.0148;
+Params.Ocean_Colour0 = OceanColours[0] || InvalidColour;
+Params.Ocean_Colour1 = OceanColours[1] || InvalidColour;
+Params.Ocean_Colour2 = OceanColours[2] || InvalidColour;
+Params.Ocean_Colour3 = OceanColours[3] || InvalidColour;
+Params.Ocean_Colour4 = OceanColours[4] || InvalidColour;
+
 let OnParamsChanged = function(Params,ChangedParamName)
 {
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
@@ -469,10 +496,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 	ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 	ParamsWindow.AddParam('AnimalBufferLod',0,1);
-	ParamsWindow.AddParam('PhysicsAnimalNoiseScale',0,10);
-	ParamsWindow.AddParam('PhysicsAnimalDamping',0,1);
-	ParamsWindow.AddParam('PhysicsDebrisNoiseScale',0,10);
-	ParamsWindow.AddParam('PhysicsDebrisDamping',0,1);
 	ParamsWindow.AddParam('ExperiencePlaying');
 	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
 	ParamsWindow.AddParam('ShowAnimal_Duration',0,20);
@@ -486,9 +509,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('FogColour','Colour');
 	ParamsWindow.AddParam('LightColour','Colour');
-	ParamsWindow.AddParam('Animal_TriangleScale',0,0.2);
-	ParamsWindow.AddParam('Ocean_TriangleScale',0,0.2);
-	ParamsWindow.AddParam('Debris_TriangleScale',0,0.2);
+
 	ParamsWindow.AddParam('FogMinDistance',0,50);
 	ParamsWindow.AddParam('FogMaxDistance',0,50);
 	ParamsWindow.AddParam('EnableMusic');
@@ -515,6 +536,26 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 	ParamsWindow.AddParam('CameraFarDistance', 1, 100);
 	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
+	
+	
+	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
+	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,1);
+	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
+	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
+	ParamsWindow.AddParam('Debris_Colour0','Colour');
+	ParamsWindow.AddParam('Debris_Colour1','Colour');
+	ParamsWindow.AddParam('Debris_Colour2','Colour');
+	ParamsWindow.AddParam('Debris_Colour3','Colour');
+	ParamsWindow.AddParam('Debris_Colour4','Colour');
+	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Ocean_Colour0','Colour');
+	ParamsWindow.AddParam('Ocean_Colour1','Colour');
+	ParamsWindow.AddParam('Ocean_Colour2','Colour');
+	ParamsWindow.AddParam('Ocean_Colour3','Colour');
+	ParamsWindow.AddParam('Ocean_Colour4','Colour');
+	
 }
 
 
@@ -548,7 +589,7 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
 		Shader.SetUniform('TriangleScale', Actor.Meta.TriangleScale);
 		Shader.SetUniform('Colours',Actor.Colours);
-		Shader.SetUniform('ColourCount',Actor.Colours.length/3);
+		Shader.SetUniform('ColourCount',Actor.Colours.length);
 	};
 	
 	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
@@ -631,11 +672,12 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			this.ResetPhysicsTextures();
 		}
 		
+		const Meta = GetMeta();
 		const SetAnimalPhysicsUniforms = function(Shader)
 		{
 			SetPhysicsUniforms(Shader);
-			Shader.SetUniform('NoiseScale', Params.PhysicsAnimalNoiseScale );
-			Shader.SetUniform('Damping', Params.PhysicsAnimalDamping );
+			Shader.SetUniform('NoiseScale', Meta.PhysicsNoiseScale );
+			Shader.SetUniform('Damping', Meta.PhysicsDamping );
 		}
 		
 		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
@@ -683,8 +725,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			{
 				Shader.SetUniform('ColourImageValid', false );
 			}
+		
 			Shader.SetUniform('Colours', Colours );
-			Shader.SetUniform('ColourCount', Colours.length/3 );
+			Shader.SetUniform('ColourCount', Colours.length );
 		}
 		
 		//	limit number of triangles
@@ -941,7 +984,7 @@ function GetActorScene(Time,Filter)
 			Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
 			Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
 			Actor.Uniforms['Colours']= Actor.Colours;
-			Actor.Uniforms['ColourCount']= Actor.Colours.length/3;
+			Actor.Uniforms['ColourCount']= Actor.Colours.length;
 			
 			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
 		}
@@ -1360,8 +1403,8 @@ function Render(RenderTarget)
 			return;
 		const UpdatePhysicsUniforms = function(Shader)
 		{
-			Shader.SetUniform('NoiseScale', Params.PhysicsDebrisNoiseScale );
-			Shader.SetUniform('Damping', Params.PhysicsDebrisDamping );
+			//Shader.SetUniform('NoiseScale', Params.PhysicsDebrisNoiseScale );
+			//Shader.SetUniform('Damping', Params.PhysicsDebrisDamping );
 		}
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
