@@ -21,6 +21,7 @@ uniform vec3 LocalPositions[3];/* = vec3[3](
 								vec3( 0,1,0 )
 								);*/
 uniform sampler2D ColourImage;
+uniform bool ColourImageValid;
 
 uniform float TriangleScale;// = 0.06;
 
@@ -49,12 +50,18 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 	return xyz;
 }
 
+vec4 GetNonTexturedColour()
+{
+	return float4(0,1,0,1);
+}
+
 vec4 GetTriangleColour(int TriangleIndex)
 {
 	float Lod = 0.0;
 	float2 uv = GetTriangleUv( TriangleIndex );
-	return textureLod( ColourImage, uv, Lod );
-	//return float4(0,0,1,1);
+	float4 Rgba = textureLod( ColourImage, uv, Lod );
+	Rgba = mix( GetNonTexturedColour(), Rgba, ColourImageValid ? 1.0 : 0.0 );
+	return Rgba;
 }
 
 void main()
@@ -68,15 +75,22 @@ void main()
 		LocalPos = float3(0,0,0);
 	
 	float3 TriangleWorldPos = GetTriangleWorldPos(TriangleIndex);
-	float4 WorldPos = LocalToWorldTransform * float4(LocalPos,1);
-	WorldPos.xyz += TriangleWorldPos;
-	WorldPos.w = 1.0;
+	float4 WorldPos;
+	
+	if ( BillboardTriangles )
+	{
+		WorldPos = LocalToWorldTransform * float4(TriangleWorldPos,1);
+	}
+	else
+	{
+		WorldPos = LocalToWorldTransform * float4(LocalPos,1);
+		WorldPos.xyz += TriangleWorldPos;
+	}
+	
 	float4 CameraPos = WorldToCameraTransform * WorldPos;
 	if ( BillboardTriangles )
 	{
-		//	gr: this seems like a fix for scale difference, but need to figure out if it's accurate
-		CameraPos.xyz += VertexPos;//*0.5;
-		CameraPos.w = 1.0;
+		CameraPos.xyz += VertexPos;
 	}
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;

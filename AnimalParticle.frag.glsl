@@ -5,8 +5,6 @@ varying vec3 FragWorldPos;
 
 const float CircleRadius = 0.5;
 
-uniform bool ColourImageValid;
-
 
 uniform float Fog_MinDistance;
 uniform float Fog_MaxDistance;
@@ -52,9 +50,6 @@ void main()
 
 	//	gr: for some reason, this is faster than using a constant!
 	gl_FragColor = Rgba;
-
-	if ( !ColourImageValid )
-		gl_FragColor = float4(0,1,0,1);
 	
 	gl_FragColor.xyz = ApplyFog( gl_FragColor.xyz, FragWorldPos );
 }

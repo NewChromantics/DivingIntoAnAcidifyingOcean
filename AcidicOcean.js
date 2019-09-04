@@ -24,7 +24,7 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 
 //	temp turning off and just having dummy actors
 const LoadWaterAsInstances = true;
-const LoadDebrisAsInstances = true;
+const LoadDebrisAsInstances = false;
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
@@ -566,7 +566,7 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 }
 
 
-function SetupAnimalTextureBufferActor(Filename,BoundingBox)
+function SetupAnimalTextureBufferActor(Filename,FitToBoundingBox)
 {
 	this.Geometry = 'AutoTriangleMesh';
 	this.VertShader = AnimalParticleVertShader;
@@ -574,11 +574,25 @@ function SetupAnimalTextureBufferActor(Filename,BoundingBox)
 	
 	this.TextureBuffers = null;
 	this.Colours = [0,1,0];
-	this.BoundingBox = BoundingBox;
 	
 	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
 	this.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
 	this.UpdatePhysics = false;
+	
+	if ( FitToBoundingBox )
+	{
+		Pop.Debug("Fitting to bounding box", FitToBoundingBox);
+		let BoxScale = Math.Subtract3( FitToBoundingBox.Max, FitToBoundingBox.Min );
+		let BoxPosition = Math.Lerp3( FitToBoundingBox.Max, FitToBoundingBox.Min, 0.5 );
+		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
+		BoxScale = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
+		Position = Math.Add3( Position, BoxPosition );
+		let Scale = BoxScale;
+		this.LocalToWorldTransform = Math.CreateTranslationScaleMatrix( Position, Scale );
+		this.BoundingBox.Min = [-1,-1,-1];
+		this.BoundingBox.Max = [1,1,1];
+		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
+	}
 
 	this.ResetPhysicsTextures = function()
 	{
@@ -716,17 +730,27 @@ function LoadCameraScene(Filename)
 		
 		//	there are some new objects with no bounding boxes or geo,
 		//	but they're not ones we want to turn to animals anyway
-		let LoadBufferActor = IsActorSelectable(Actor);
-		if ( LoadBufferActor )
+		const IsAnimalActor = IsActorSelectable(Actor);
+		const IsDebrisActor = ActorNode.Name.startsWith('Water_');
+		
+		if ( IsAnimalActor || IsDebrisActor )
 		{
 			//let LocalScale = ActorNode.Scale;
 			let WorldPos = ActorNode.Position;
 			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 			Actor.BoundingBox = ActorNode.BoundingBox;
-			const Animal = GetRandomAnimal();
-			Actor.Animal = Animal;
-			Actor.Name += " " + Animal.Name;
-			SetupAnimalTextureBufferActor.call( Actor, Animal.Model, ActorNode.BoundingBox );
+			
+			if ( IsDebrisActor )
+			{
+				SetupAnimalTextureBufferActor.call( Actor, '.random', ActorNode.BoundingBox );
+			}
+			else
+			{
+				const Animal = GetRandomAnimal();
+				Actor.Animal = Animal;
+				Actor.Name += " " + Animal.Name;
+				SetupAnimalTextureBufferActor.call( Actor, Animal.Model );
+			}
 		}
 		else
 		{

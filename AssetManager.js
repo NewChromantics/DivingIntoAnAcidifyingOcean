@@ -207,6 +207,8 @@ function GetAuto_AutoVtBuffer(TriangleCount)
 
 function GetAutoTriangleMesh(RenderTarget,TriangleCount)
 {
+	Pop.Debug('GetAutoTriangleMesh');
+	
 	//	vertex stuff
 	//	we should get these from geo for assets WITH a vertex buffer
 	let VertexSize = 2;
