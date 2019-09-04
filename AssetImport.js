@@ -179,8 +179,12 @@ function ParseGeometryFile(Contents,ParseFunc)
 		Positions.push(...xyz);
 		if ( d !== undefined )
 			Alphas.push( d );
-		if ( r !== undefined )
-			Colours.push(...[r,g,b]);
+		
+		//	todo: catch float vs 8bit by evaluating max
+		//	require all 3
+		let rgb = [r,g,b];
+		if ( !rgb.some( c => (c===undefined) ) )
+			Colours.push( ...rgb );
 	}
 	
 	const OnMeta = function()

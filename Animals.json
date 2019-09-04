@@ -331,7 +331,7 @@
 	{
 		"Name":		"PLASTIC BAG",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/Plastic_Bag.obj",
+		"Model":	"Models/PlasticBag.ply",
 		"AfterYear":	1956,
 		"category" : [ "nasty animal" ]
 
