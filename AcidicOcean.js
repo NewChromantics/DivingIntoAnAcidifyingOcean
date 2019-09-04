@@ -592,14 +592,16 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	
 	if ( GetMeta().FitToBoundingBox )
 	{
+		//	box is local space, but world size
 		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
-		let BoxPosition = Math.Lerp3( this.BoundingBox.Max, this.BoundingBox.Min, 0.5 );
 		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
-		BoxScale = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
-		Position = Math.Add3( Position, BoxPosition );
+		//	points are 0-1 so we need to move our offset (and bounds)
+		let BoxOffset = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
+		Position = Math.Subtract3( Position, BoxOffset );
 		let Scale = BoxScale;
 		this.LocalToWorldTransform = Math.CreateTranslationScaleMatrix( Position, Scale );
-		this.BoundingBox.Min = [-1,-1,-1];
+		//	bounds match mesh!
+		this.BoundingBox.Min = [0,0,0];
 		this.BoundingBox.Max = [1,1,1];
 		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
 	}
