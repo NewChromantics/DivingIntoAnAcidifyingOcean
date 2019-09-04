@@ -855,7 +855,9 @@ function LoadCameraScene(Filename)
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		
-		let LoadBufferActor = true;
+		//	there are some new objects with no bounding boxes or geo,
+		//	but they're not ones we want to turn to animals anyway
+		let LoadBufferActor = IsActorSelectable(Actor);
 		if ( LoadBufferActor )
 		{
 			//let LocalScale = ActorNode.Scale;
@@ -871,6 +873,14 @@ function LoadCameraScene(Filename)
 		{
 			let LocalScale = ActorNode.Scale;
 			let WorldPos = ActorNode.Position;
+			
+			//	some nodes have no geometry, so no bounding box
+			if ( !ActorNode.BoundingBox )
+			{
+				ActorNode.BoundingBox = {};
+				ActorNode.BoundingBox.Min = [0,0,0];
+				ActorNode.BoundingBox.Max = [1,1,1];
+			}
 			
 			const RenderAsBounds = true;
 			if ( RenderAsBounds )
@@ -1209,7 +1219,7 @@ function Init()
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinInteractiveYear, TimelineMaxInteractiveYear );
-
+	
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
