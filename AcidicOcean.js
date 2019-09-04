@@ -26,7 +26,6 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 
 //	temp turning off and just having dummy actors
 const LoadWaterAsInstances = true;
-const LoadDebrisAsInstances = false;
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
@@ -153,7 +152,6 @@ OceanMeta.TriangleScale = 0.0148;
 OceanMeta.Colours = OceanColours;
 
 var OceanActors = [];
-var DebrisActors = [];
 
 var AppTime = null;
 var Hud = {};
@@ -767,23 +765,7 @@ function LoadCameraScene(Filename)
 				return;
 			}
 		}
-		
-		if ( LoadDebrisAsInstances )
-		{
-			if ( ActorNode.Name.startsWith('Water_') )
-			{
-				let Meta = Object.assign({}, DebrisMeta );
-				Meta.PhysicsUpdateEnabled = true;
-				Meta.Position = ActorNode.Position;
-				Meta.ScaleMeshToBounds = ActorNode.BoundingBox;
-				
-				let Actor = new TPhysicsActor( Meta );
-				Actor.BoundingBox = ActorNode.BoundingBox;
-				DebrisActors.push( Actor );
-				//Scene.push( Actor );
-				return;
-			}
-		}
+	
 		
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
@@ -1004,7 +986,6 @@ function GetActorScene(Time,Filter)
 	}
 
 	OceanActors.forEach( a => PushPositionBufferActor( a ) );
-	DebrisActors.forEach( a => PushPositionBufferActor( a ) );
 	
 	CameraScene.forEach( PushCameraSceneActor );
 	
