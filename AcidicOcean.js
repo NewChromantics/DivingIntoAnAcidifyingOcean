@@ -64,7 +64,6 @@ const OceanColours = UnrollHexToRgb(OceanColoursHex);
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
 const LightColour = [0.86,0.95,0.94];
 
-const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
@@ -95,19 +94,42 @@ function LoadTimeline(Filename)
 
 
 
+function GetDebrisMeta()
+{
+	const Meta = {};
+	Meta.PhysicsNoiseScale = 0.9;
+	Meta.PhysicsDamping = 0.04;
+	Meta.TriangleScale = 0.01;
+	Meta.Colours = UnrollHexToRgb(DebrisColoursHex);
+	Meta.FitToBoundingBox = true;
+	Meta.VertShader = AnimalParticleVertShader;
+	Meta.FragShader = AnimalParticleFragShader;
+	return Meta;
+}
+
+function GetAnimalMeta()
+{
+	const Meta = {};
+	Meta.PhysicsNoiseScale = 9.9;
+	Meta.PhysicsDamping = 0.01;
+	Meta.TriangleScale = 0.01;
+	Meta.Colours = [0,1,0];
+	Meta.VertShader = AnimalParticleVertShader;
+	Meta.FragShader = AnimalParticleFragShader;
+	return Meta;
+}
+
+function GetOceanMeta()
+{
+	const Meta = {};
+	Meta.PhysicsNoiseScale = 0;
+	Meta.PhysicsDamping = 1;
+	Meta.TriangleScale = 0.0148;
+	Meta.Colours = UnrollHexToRgb(OceanColoursHex);
+	return Meta;
+}
 
 
-
-//	scene!
-
-
-var DebrisMeta = {};
-DebrisMeta.Filename = '.random';
-DebrisMeta.Position = [0,0,0];
-DebrisMeta.Scale = 1;
-DebrisMeta.TriangleScale = 0.052015;	//	0.0398
-DebrisMeta.Colours = DebrisColours;
-DebrisMeta.VertexSkip = 0;
 
 var OceanFilenames = [];
 for ( let i=1;	i<=96;	i++ )
@@ -390,6 +412,7 @@ const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2100;
 const TimelineMaxInteractiveYear = 2100;
 
+
 Params.TimelineYear = TimelineMinYear;
 Params.ExperienceDurationSecs = 240;
 Params.ShowAnimal_ExplodeSecs = 3;
@@ -399,7 +422,6 @@ Params.ShowAnimal_CameraOffsetY = 0.44;
 Params.ShowAnimal_CameraOffsetZ = 3.52;
 Params.ShowAnimal_CameraLerpInSpeed = 0.275;
 Params.ShowAnimal_CameraLerpOutSpeed = 0.10;
-
 Params.AnimalBufferLod = 1.0;
 Params.DebugCullTimelineCamera = true;
 Params.TransposeFrustumPlanes = false;
@@ -408,10 +430,6 @@ Params.FrustumCullTestY = false;	//	re-enable when we cull on bounding box
 Params.FrustumCullTestZ = true;
 Params.MouseRayOnTimelineCamera = false;
 Params.TestRaySize = 0.39;
-Params.PhysicsAnimalNoiseScale = 9.9;
-Params.PhysicsAnimalDamping = 0.01;
-Params.PhysicsDebrisNoiseScale = 0.9;
-Params.PhysicsDebrisDamping = 0.04;
 Params.DrawTestRay = false;
 Params.TestRayDistance = 0.82;
 Params.ExperiencePlaying = true;
@@ -424,9 +442,6 @@ Params.FogMinDistance = 8.0;
 Params.FogMaxDistance = 20.0;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
-Params.Animal_TriangleScale = 0.01;
-Params.Ocean_TriangleScale = OceanMeta.TriangleScale;
-Params.Debris_TriangleScale = DebrisMeta.TriangleScale;
 Params.DebugPhysicsTextures = false;
 Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
@@ -440,9 +455,6 @@ Params.ScrollFlySpeed = 50;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
-	OceanActors.forEach( a => a.Meta.TriangleScale = Params.Ocean_TriangleScale );
-	DebrisActors.forEach( a => a.Meta.TriangleScale = Params.Debris_TriangleScale );
-
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
 		OnSwitchedToDebugCamera();
 }
@@ -566,24 +578,22 @@ function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUnifor
 }
 
 
-function SetupAnimalTextureBufferActor(Filename,FitToBoundingBox)
+function SetupAnimalTextureBufferActor(Filename,GetMeta)
 {
 	this.Geometry = 'AutoTriangleMesh';
-	this.VertShader = AnimalParticleVertShader;
-	this.FragShader = AnimalParticleFragShader;
+	this.VertShader = GetMeta().VertShader;
+	this.FragShader = GetMeta().FragShader;
 	
 	this.TextureBuffers = null;
-	this.Colours = [0,1,0];
 	
 	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
 	this.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
 	this.UpdatePhysics = false;
 	
-	if ( FitToBoundingBox )
+	if ( GetMeta().FitToBoundingBox )
 	{
-		Pop.Debug("Fitting to bounding box", FitToBoundingBox);
-		let BoxScale = Math.Subtract3( FitToBoundingBox.Max, FitToBoundingBox.Min );
-		let BoxPosition = Math.Lerp3( FitToBoundingBox.Max, FitToBoundingBox.Min, 0.5 );
+		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
+		let BoxPosition = Math.Lerp3( this.BoundingBox.Max, this.BoundingBox.Min, 0.5 );
 		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
 		BoxScale = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
 		Position = Math.Add3( Position, BoxPosition );
@@ -648,6 +658,8 @@ function SetupAnimalTextureBufferActor(Filename,FitToBoundingBox)
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.LocalToWorldTransform;
 		
+		const Meta = GetMeta();
+		const Colours = Meta.Colours;
 		
 		const SetUniforms = function(Shader)
 		{
@@ -659,7 +671,7 @@ function SetupAnimalTextureBufferActor(Filename,FitToBoundingBox)
 			Shader.SetUniform('WorldPositions',PositionTexture);
 			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
 			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
-			Shader.SetUniform('TriangleScale', Params.Animal_TriangleScale );
+			Shader.SetUniform('TriangleScale', Meta.TriangleScale );
 			if ( ColourTexture )
 			{
 				Shader.SetUniform('ColourImage',ColourTexture);
@@ -669,6 +681,8 @@ function SetupAnimalTextureBufferActor(Filename,FitToBoundingBox)
 			{
 				Shader.SetUniform('ColourImageValid', false );
 			}
+			Shader.SetUniform('Colours', Colours );
+			Shader.SetUniform('ColourCount', Colours.length/3 );
 		}
 		
 		//	limit number of triangles
@@ -742,14 +756,14 @@ function LoadCameraScene(Filename)
 			
 			if ( IsDebrisActor )
 			{
-				SetupAnimalTextureBufferActor.call( Actor, '.random', ActorNode.BoundingBox );
+				SetupAnimalTextureBufferActor.call( Actor, '.random', GetDebrisMeta );
 			}
 			else
 			{
 				const Animal = GetRandomAnimal();
 				Actor.Animal = Animal;
 				Actor.Name += " " + Animal.Name;
-				SetupAnimalTextureBufferActor.call( Actor, Animal.Model );
+				SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetAnimalMeta );
 			}
 		}
 		else

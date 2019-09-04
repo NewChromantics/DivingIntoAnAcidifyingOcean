@@ -1,6 +1,6 @@
 precision highp float;
 varying vec4 Rgba;
-varying vec2 TriangleUv;
+varying vec3 TriangleUvIndex;
 varying vec3 FragWorldPos;
 
 const float CircleRadius = 0.5;
@@ -45,7 +45,7 @@ float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 
 void main()
 {
-	if ( length(TriangleUv) > CircleRadius )
+	if ( length(TriangleUvIndex.xy) > CircleRadius )
 		discard;
 
 	//	gr: for some reason, this is faster than using a constant!

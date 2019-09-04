@@ -3,7 +3,7 @@
 
 attribute vec2 Vertex;
 varying vec4 Rgba;
-varying vec2 TriangleUv;
+varying vec3 TriangleUvIndex;
 varying float3 FragWorldPos;
 
 uniform sampler2D WorldPositions;
@@ -20,8 +20,11 @@ uniform vec3 LocalPositions[3];/* = vec3[3](
 								vec3( 1,-1,0 ),
 								vec3( 0,1,0 )
 								);*/
-uniform sampler2D ColourImage;
-uniform bool ColourImageValid;
+uniform sampler2D	ColourImage;
+#define MAX_COLOURS	8
+uniform bool		ColourImageValid;
+uniform float3		Colours[MAX_COLOURS];
+uniform int			ColourCount;
 
 uniform float TriangleScale;// = 0.06;
 
@@ -50,24 +53,32 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 	return xyz;
 }
 
-vec4 GetNonTexturedColour()
+
+int modi(int Value,int Size)
 {
-	return float4(0,1,0,1);
+	float f = mod( float(Value), float(Size) );
+	return int(f);
 }
 
 vec4 GetTriangleColour(int TriangleIndex)
 {
+	//	gr: grabbing both is currently the fastest mix
+	//		we may want to split into two shaders, but then thats two batches...
 	float Lod = 0.0;
 	float2 uv = GetTriangleUv( TriangleIndex );
-	float4 Rgba = textureLod( ColourImage, uv, Lod );
-	Rgba = mix( GetNonTexturedColour(), Rgba, ColourImageValid ? 1.0 : 0.0 );
-	return Rgba;
+	float4 ColourImageColour = textureLod( ColourImage, uv, Lod );
+	
+	TriangleIndex = modi( TriangleIndex, ColourCount );
+	float4 ColourTableColour = float4( Colours[TriangleIndex], 1 );
+	
+	return mix( ColourTableColour, ColourImageColour, ColourImageValid ? 1.0 : 0.0 );
 }
 
 void main()
 {
 	int VertexIndex = int(Vertex.x);
 	int TriangleIndex = int(Vertex.y);
+	float TriangleIndexf = Vertex.y;
 	
 	float3 VertexPos = LocalPositions[VertexIndex] * TriangleScale;
 	float3 LocalPos = VertexPos;
@@ -96,7 +107,7 @@ void main()
 	gl_Position = ProjectionPos;
 
 	FragWorldPos = WorldPos.xyz;
-	TriangleUv = LocalPositions[VertexIndex].xy;
+	TriangleUvIndex = float3( LocalPositions[VertexIndex].xy, TriangleIndexf );
 	Rgba = GetTriangleColour(TriangleIndex);
 }
 
