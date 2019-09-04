@@ -323,66 +323,38 @@
 	height:		20vh;
 	letter-spacing: 0.07vw;
 	text-align:	left;
-	display: flex;
-	flex-direction: column;
-	padding-bottom: 10vh;
-
-
-	
 }
 
 #AnimalCard_Title
 {
-	font-weight: bold;
-	font-size:	2.3vh;
+	font-weight:	bold;
+	font-size:		2.3vh;
+	height:			5vh;
+	
+	border-bottom:	1vh solid white;
 }
 
 #AnimalCard_Description
 {
-	font-size:	1.8vh;
-	font-weight: 300;
-	display:	flex;
-	align-items:	left;
-
+	height:			15vh;
 }
 
-h1
+#AnimalCard_Description h1, #AnimalCard_Description h2
 {
-	top:0vh;
-	vertical-align:top;
-	margin-block-start:5vh;
-	margin-block-end: 0px;
+	height:			5vh;
+	background:		red;
+	/* remove h1 & h2 default styles */
+	padding:		0px;
+	margin:			0px;
+	font-size:		1.8vh;
+	font-weight:	300;
+	
 
-	background: rgba(0, 0, 0, 0.65) url(/Web/icons/bullet.svg) no-repeat 0% 20%;
-	background-size: 0.5vh;
-	padding-left: 10px;
-    margin-left: -10px;
-}
-
-h2
-{
-	top:0vh;
-	vertical-align:top;
-	margin-block-start:2.5vh;
-	margin-block-end: 0px;
 	list-style-type: circle;
-
-	background: rgba(0, 0, 0, 0.65) url(/Web/icons/bullet.svg) no-repeat 0% 25%;
-	background-size: 0.5vh;
-	padding-left: 10px;
-    margin-left: -10px;
-}
-
-
-#AnimalCard_Line
-{
-	display: block;
-	position: absolute;
-	left:-0.7em;
-	top:4.8vh;
-	width:16vw;
-	height:	0.1em;
-	background: white;
+	xxbackground: rgba(0, 0, 0, 0.65) url(/Web/icons/bullet.svg) no-repeat 0% 20%;
+	xxbackground-size: 0.5vh;
+	xxpadding-left: 10px;
+    xxmargin-left: -10px;
 }
 
 #Continue
