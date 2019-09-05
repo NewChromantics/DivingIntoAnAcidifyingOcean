@@ -199,9 +199,8 @@ function GetActorWorldBoundingBox(Actor)
 	return BoundingBoxWorld;
 }
 
-function GetActorWorldBoundingBoxCorners(Actor,IncludeBothX=true,IncludeBothY=true,IncludeBothZ=true)
+function GetActorWorldBoundingBoxCorners(BoundingBoxWorld,IncludeBothX=true,IncludeBothY=true,IncludeBothZ=true)
 {
-	const BoundingBoxWorld = GetActorWorldBoundingBox(Actor);
 	const Corners = [];
 	const Min = BoundingBoxWorld.Min;
 	const Max = BoundingBoxWorld.Max;
@@ -310,6 +309,17 @@ Math.InsideMinusOneToOne = function(f)
 	return ( f>=-1 && f<= 1 );
 }
 
+Math.PositionInsideBoxXZ = function(Position3,Box3)
+{
+	if ( Position3[0] < Box3.Min[0] )	return false;
+	//if ( Position3[1] < Box3.Min[1] )	return false;
+	if ( Position3[2] < Box3.Min[2] )	return false;
+	if ( Position3[0] > Box3.Max[0] )	return false;
+	//if ( Position3[1] > Box3.Max[1] )	return false;
+	if ( Position3[2] > Box3.Max[2] )	return false;
+	return true;
+}
+
 //	return the filter function
 function GetCameraActorCullingFilter(Camera,Viewport)
 {
@@ -323,20 +333,24 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 		const IsWorldPositionVisible = function(WorldPosition)
 		{
 			//const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
-			const ActorInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
-			const ActorInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum, ActorInWorldMtx );
-			const ActorInFrustumPos = Math.GetMatrixTranslation( ActorInFrustumMtx, true );
+			const PosInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
+			const PosInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum,  PosInWorldMtx );
+			const PosInFrustumPos = Math.GetMatrixTranslation(  PosInFrustumMtx, true );
 			
-			if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( ActorInFrustumPos[0] ) )	return false;
-			if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( ActorInFrustumPos[1] ) )	return false;
-			if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( ActorInFrustumPos[2] ) )	return false;
+			if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( PosInFrustumPos[0] ) )	return false;
+			if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( PosInFrustumPos[1] ) )	return false;
+			if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( PosInFrustumPos[2] ) )	return false;
 			
 			return true;
 		}
 		
 		if ( TestBounds )
 		{
-			const WorldBoundsCorners = GetActorWorldBoundingBoxCorners( Actor, Params.FrustumCullTestX, Params.FrustumCullTestY, Params.FrustumCullTestZ );
+			const WorldBounds = GetActorWorldBoundingBox( Actor );
+			if ( Math.PositionInsideBoxXZ( Camera.Position, WorldBounds ) )
+				return true;
+			
+			const WorldBoundsCorners = GetActorWorldBoundingBoxCorners( WorldBounds, Params.FrustumCullTestX, Params.FrustumCullTestY, Params.FrustumCullTestZ );
 			return WorldBoundsCorners.some( IsWorldPositionVisible );
 		}
 		else
