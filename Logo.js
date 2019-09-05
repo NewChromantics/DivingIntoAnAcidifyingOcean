@@ -91,7 +91,6 @@ function TLogoState()
 	
 	this.LogoActor = new TPhysicsActor(LogoMeta);
 	this.PreloadPromises = [];
-	this.PreloadPromisesFinished = false;
 	this.StartButton = null;
 	this.StartButtonPressed = false;
 	this.PreloadFilenames =
@@ -158,7 +157,7 @@ function TLogoState()
 
 	
 	
-	const Load = function(Filename)
+	const Load = function(Filename,BackupFilename)
 	{
 		if ( !Filename )
 			return;
@@ -168,7 +167,34 @@ function TLogoState()
 		if ( !Pop.AsyncCacheAssetAsString )
 			return;
 		
+		const LoadBackup = function(Error)
+		{
+			if ( typeof BackupFilename == 'string' )	//	sometimes is an index from forEach()
+			{
+				Pop.Debug("Preload of",Filename,"failed, loading Backup",BackupFilename);
+				Load.call( this, BackupFilename );
+			}
+		}.bind(this);
+
+		//	create promise and put in the list
 		const Promise = Pop.AsyncCacheAssetAsString(Filename);
+		Promise.IsSettled = false;
+		
+		//	track when promise is finished
+		const OnLoaded = function()
+		{
+			Promise.IsSettled = true;
+		}
+		
+		//	track & load backup where appropriate
+		const OnFailed = function(Error)
+		{
+			Promise.IsSettled = true;
+			LoadBackup(Error);
+		}
+		
+		Promise.then( OnLoaded ).catch( OnFailed );
+		
 		this.PreloadPromises.push( Promise );
 	}
 	this.PreloadFilenames.forEach( Load.bind(this) );
@@ -176,38 +202,30 @@ function TLogoState()
 	const LoadAsset = function(Filename,Type)
 	{
 		const CachedFilename = GetCachedFilename(Filename,Type);
-		Load.call( this, CachedFilename );
-	
-		//if ( Pop.GetExeArguments().includes('LoadRawAssets') )
-			Load.call( this, Filename );
+		Load.call( this, CachedFilename, Filename );
 	}
 	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'geometry' ) );
 	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, 'scene' ) );
 
 	
-	const OnPreloadFinished = function()
-	{
-		this.PreloadPromisesFinished = true;
-	}
-	Promise.all( this.PreloadPromises ).then( OnPreloadFinished.bind(this) );
-	
-	
 	this.Update = function()
 	{
-		//	show button when preloads done
-		if ( this.PreloadPromisesFinished )
+		//	calling allSettled() and then adding more... prematurely completes
+		let AllPreloadsFinished = this.PreloadPromises.every( p => p.IsSettled );
+		
+		if ( !this.StartButton )
 		{
-			if ( !this.StartButton )
+			let OnClicked = function()
 			{
-				let OnClicked = function()
-				{
-					this.StartButtonPressed = true;
-				}
-				this.StartButton = new Pop.Hud.Button('Hint_Start');
-				this.StartButton.OnClicked = OnClicked.bind(this);
-				this.StartButton.SetVisible(true);
+				this.StartButtonPressed = true;
 			}
+			this.StartButton = new Pop.Hud.Button('Hint_Start');
+			this.StartButton.OnClicked = OnClicked.bind(this);
 		}
+		
+		//	show button when preloads done
+		//	gr: due to above, this may disable itself again
+		this.StartButton.SetVisible( AllPreloadsFinished );
 	}
 }
 
@@ -239,14 +257,7 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 		//Pop.Debug("Logo...",StateTime);
 		return;
 	}
-	
-	//	wait for preloads
-	if ( !LogoState.PreloadPromisesFinished )
-	{
-		//Pop.Debug("Waiting for preloads...");
-		return;
-	}
-	
+		
 	//	wait for button to be pressed
 	if ( !LogoState.StartButtonPressed )
 		return;
