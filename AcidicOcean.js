@@ -25,7 +25,6 @@ const AnimalParticleVertShader = Pop.LoadFileAsString('AnimalParticle.vert.glsl'
 const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl');
 
 //	temp turning off and just having dummy actors
-const LoadWaterAsInstances = false;
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
@@ -147,8 +146,6 @@ function GetOceanMeta()
 	];
 	return Meta;
 }
-
-var OceanActors = [];
 
 var AppTime = null;
 var Hud = {};
@@ -552,68 +549,8 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Ocean_Colour2','Colour');
 	ParamsWindow.AddParam('Ocean_Colour3','Colour');
 	ParamsWindow.AddParam('Ocean_Colour4','Colour');
-	
 }
 
-
-
-
-function RenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUniforms,Time)
-{
-	if ( !Actor )
-		return;
-	
-	const PositionsTexture = Actor.GetPositionsTexture();
-	const VelocitysTexture = Actor.GetVelocitysTexture();
-	const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
-	const Shader = Pop.GetShader( RenderTarget, ParticleColorShader, ParticleTrianglesVertShader );
-	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
-	
-	
-	//let Geo = GetAsset( Actor.Geometry, RenderTarget );
-	//let Shader = Pop.GetShader( RenderTarget, Actor.FragShader, Actor.VertShader );
-	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
-
-	let SetUniforms = function(Shader)
-	{
-		SetGlobalUniforms( Shader );
-
-		Shader.SetUniform('LocalToWorldTransform', Actor.GetLocalToWorldTransform() );
-		Shader.SetUniform('LocalPositions', LocalPositions );
-		Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
-		Shader.SetUniform('WorldPositions',PositionsTexture);
-		Shader.SetUniform('WorldPositionsWidth',PositionsTexture.GetWidth());
-		Shader.SetUniform('WorldPositionsHeight',PositionsTexture.GetHeight());
-		Shader.SetUniform('TriangleScale', Actor.Meta.TriangleScale);
-		Shader.SetUniform('Colours',Actor.Colours);
-		Shader.SetUniform('ColourCount',Actor.Colours.length);
-	};
-	
-	RenderTarget.DrawGeometry( TriangleBuffer, Shader, SetUniforms );
-	
-	
-	if ( Params.DebugPhysicsTextures )
-	{
-		let w = 0.2;
-		let x = ActorIndex * (w * 1.05);
-		let Quad = GetQuadGeometry(RenderTarget);
-		let SetDebugPositionsUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [x, 0, w, 0.25 ] );
-			Shader.SetUniform('Texture',PositionsTexture);
-		};
-		let SetDebugVelocitysUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [x, 0.3, w, 0.25 ] );
-			Shader.SetUniform('Texture',VelocitysTexture);
-		};
-	
-		if ( PositionsTexture )
-			RenderTarget.DrawGeometry( Quad, BlitShader, SetDebugPositionsUniforms );
-		if ( VelocitysTexture )
-			RenderTarget.DrawGeometry( Quad, BlitShader, SetDebugVelocitysUniforms );
-	}
-}
 
 function LoadAssetGeoTextureBuffer(RenderTarget)
 {
@@ -798,26 +735,6 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
-		if ( LoadWaterAsInstances )
-		{
-			if ( ActorNode.Name.startsWith('Ocean_surface_') )
-			{
-				let Meta = Object.assign({}, OceanMeta );
-				Meta.PhysicsUpdateEnabled = true;
-				Meta.Position = ActorNode.Position;
-				//Meta.ScaleMeshToBounds = ActorNode.BoundingBox;
-				
-				let Actor = new TAnimatedActor( OceanMeta );
-				Actor.BoundingBox = ActorNode.BoundingBox;
-				//	gr: why isn't this loading in meta for animated actor
-				Actor.Position = ActorNode.Position;
-				OceanActors.push( Actor );
-				//Scene.push( Actor );
-				return;
-			}
-		}
-	
-		
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
@@ -1009,30 +926,6 @@ function GetActorScene(Time,Filter)
 	let Scene = [];
 	Filter = Filter || function(Actor)	{	return true;	};
 
-	let PushPositionBufferActor = function(Actor)
-	{
-		if ( !Filter(Actor) )
-			return;
-		
-		Actor.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
-		{
-			let Actor = this;
-			const PositionsTexture = Actor.GetPositionsTexture(RenderTarget);
-			Actor.Uniforms = [];
-			Actor.Uniforms['WorldPositions'] = PositionsTexture;
-			Actor.Uniforms['WorldPositionsWidth'] = PositionsTexture.GetWidth();
-			Actor.Uniforms['WorldPositionsHeight'] = PositionsTexture.GetHeight();
-			Actor.Uniforms['TriangleScale']= Actor.Meta.TriangleScale;
-			Actor.Uniforms['Colours']= Actor.Colours;
-			Actor.Uniforms['ColourCount']= Actor.Colours.length;
-			
-			RenderTriangleBufferActor( RenderTarget, this, ActorIndex, SetGlobalUniforms, Time );
-		}
-		
-		//let a = new TActor( )
-		Scene.push( Actor );
-	}
-
 	let PushCameraSceneActor = function(Actor)
 	{
 		if ( !Filter(Actor) )
@@ -1040,12 +933,8 @@ function GetActorScene(Time,Filter)
 		
 		Scene.push(Actor)
 	}
-
-	OceanActors.forEach( a => PushPositionBufferActor( a ) );
 	
 	CameraScene.forEach( PushCameraSceneActor );
-	
-	//Pop.Debug("Scene has x" + Scene.length + " actors");
 	
 	return Scene;
 }
