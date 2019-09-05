@@ -69,6 +69,9 @@ if ( !IsDebugEnabled() )
 
 Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 {
+	//	void processing jumps
+	const MaxFrameDurationMs = 3/60;
+	
 	//	if no initial state, use first key (is this in declaration order in every engine?)
 	InitialState = InitialState || Object.keys(StateMap)[0];
 	ErrorState = ErrorState || InitialState;
@@ -99,8 +102,9 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 			const StateTime = FirstUpdate ? 0 : Now - this.CurrentStateStartTime;
 			this.LastUpdateTime = Pop.GetTimeNowMs();
 			
-			const FrameDuration = Paused ? 0 : ElapsedMs / 1000;
+			const FrameDuration = Math.min( MaxFrameDurationMs, Paused ? 0 : ElapsedMs / 1000 );
 			const FrameStateTime = StateTime / 1000;
+			
 			
 			//	do update
 			NextState = UpdateFunc( FirstUpdate, FrameDuration, FrameStateTime );
