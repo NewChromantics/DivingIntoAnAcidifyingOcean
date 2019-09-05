@@ -674,7 +674,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		if ( !this.TextureBuffers )
 			throw "Not ready to setup physics yet, no texture buffers";
 		
-		this.PositionTexture = this.TextureBuffers.PositionTexture;
+		//	make copy of original reference!
+		Pop.Debug("Copy original position texture");
+		this.PositionTexture = new Pop.Image();
+		this.PositionTexture.Copy( this.TextureBuffers.PositionTexture );
 		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
 		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
@@ -712,7 +715,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const Geo = GetAsset( this.Geometry, RenderTarget );
 		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
-		const PositionTexture = this.TextureBuffers.PositionTexture;
+		const PositionTexture = this.PositionTexture ? this.PositionTexture : this.TextureBuffers.PositionTexture;
 		const ColourTexture = this.TextureBuffers.ColourTexture;
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.LocalToWorldTransform;
