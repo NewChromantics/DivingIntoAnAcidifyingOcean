@@ -14,6 +14,7 @@ function GetCachedFilename(Filename,Type)
 	const TypeExtension = '.' + Type + '.json';
 	let CachedFilename = Filename;
 	CachedFilename = CachedFilename.replace('.dae.json',TypeExtension);
+	CachedFilename = CachedFilename.replace('.svg.json',TypeExtension);
 	CachedFilename = CachedFilename.replace('.ply',TypeExtension);
 	CachedFilename = CachedFilename.replace('.obj',TypeExtension);
 	return CachedFilename;

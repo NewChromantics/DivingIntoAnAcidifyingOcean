@@ -19,14 +19,17 @@ function ConvertSceneFile(Filename,Pretty=false)
 
 function ConvertGeometryFile(Filename,Pretty=false)
 {
+	Pop.Debug('ConvertGeometryFile',Filename);
 	const CachedFilename = GetCachedFilename(Filename,'geometry');
 
 	if ( Pop.FileExists(CachedFilename) )
 	{
 		//return;
 	}
+	Pop.Debug('ConvertGeometryFile','LoadGeometryFile');
 	const Geo = LoadGeometryFile( Filename );
 	//const Json = Pretty ? JSON.stringify(Geo,null,'\t') : JSON.stringify(Geo);
+	Pop.Debug('ConvertGeometryFile','JSON.stringify');
 	const Json = JSON.stringify(Geo);
 	Pop.WriteStringToFile( CachedFilename, Json );
 	//Pop.ShowFileInFinder( CachedFilename );
@@ -37,8 +40,7 @@ function ConvertGeometryFile(Filename,Pretty=false)
 
 const GeoFiles =
 [
- 	'Logo/Logo.dae.json',
-	'Models/shell_v001.ply'
+ 	'Logo/Logo.svg.json',
 ];
 for ( let i=1;	i<=96;	i++ )
 {
