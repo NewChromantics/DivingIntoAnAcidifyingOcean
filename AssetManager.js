@@ -25,6 +25,9 @@ function GetQuadGeometry(RenderTarget)
 	
 	const VertexAttributeName = "TexCoord";
 	
+	//	emulate webgl on desktop
+	TriangleIndexes = undefined;
+	
 	QuadGeometry = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return QuadGeometry;
 }
@@ -139,7 +142,10 @@ function CreateCubeGeometry(RenderTarget,Min=-1,Max=1)
 	//	loads much faster as a typed array
 	VertexData = new Float32Array( VertexData );
 	TriangleIndexes = new Int32Array(TriangleIndexes);
-	
+
+	//	emulate webgl on desktop
+	TriangleIndexes = undefined;
+
 	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return TriangleBuffer;
 }
@@ -223,6 +229,9 @@ function GetAutoTriangleMesh(RenderTarget,TriangleCount)
 	VertexBuffer = new Float32Array( VertexBuffer );
 	TriangleIndexes = new Int32Array( TriangleIndexes );
 	
+	//	emulate webgl on desktop
+	TriangleIndexes = undefined;
+
 	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexBuffer, VertexSize, TriangleIndexes );
 	
 	return TriangleBuffer;
@@ -408,6 +417,10 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 	//	loads much faster as a typed array
 	VertexBuffer = new Float32Array( VertexBuffer );
 	TriangleIndexes = new Int32Array( TriangleIndexes );
+	
+	//	emulate webgl on desktop
+	TriangleIndexes = undefined;
+
 	
 	//let CreateBufferTime = Pop.GetTimeNowMs();
 	let TriangleBuffer = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexBuffer, VertexSize, TriangleIndexes );

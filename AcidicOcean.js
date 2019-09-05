@@ -122,9 +122,12 @@ function GetAnimalMeta()
 }
 
 
-
+//	store this somewhere else so the preload matches
 var OceanFilenames = [];
-for ( let i=1;	i<=96;	i++ )
+let LoadOceanFrames = 96;
+if ( Pop.GetExeArguments().includes('ShortOcean') )
+	LoadOceanFrames = 4;
+for ( let i=1;	i<=LoadOceanFrames;	i++ )
 	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
 
 function GetOceanMeta()
@@ -1074,12 +1077,12 @@ function Init()
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinInteractiveYear, TimelineMaxInteractiveYear );
-	
+		
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
 	Hud.Stats_Ph = new Pop.Hud.Label('Stats_Ph_Label');
-	
+		
 	Hud.Animal_Card = new Pop.Hud.Label('AnimalCard');
 	Hud.Animal_Title = new Pop.Hud.Label('AnimalCard_Title');
 	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');

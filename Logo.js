@@ -207,11 +207,16 @@ function TLogoState()
 	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'geometry' ) );
 	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, 'scene' ) );
 
+	this.IsPreloadFinished = function()
+	{
+		let AllFinished = this.PreloadPromises.every( p => p.IsSettled );
+		return AllFinished;
+	}
 	
 	this.Update = function()
 	{
 		//	calling allSettled() and then adding more... prematurely completes
-		let AllPreloadsFinished = this.PreloadPromises.every( p => p.IsSettled );
+		let AllPreloadsFinished = this.IsPreloadFinished();
 		
 		if ( !this.StartButton )
 		{
@@ -257,9 +262,14 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 		//Pop.Debug("Logo...",StateTime);
 		return;
 	}
-		
+	
 	//	wait for button to be pressed
-	if ( !LogoState.StartButtonPressed )
+	if ( !Pop.GetExeArguments().includes('AutoStart') )
+		if ( !LogoState.StartButtonPressed )
+			return;
+	
+	//	wait for preloads
+	if ( !LogoState.IsPreloadFinished() )
 		return;
 	
 	HideLogo();

@@ -11,6 +11,11 @@ let AudioFake = function()
 	this.load = function(){};
 }
 
+if ( Pop.GetPlatform() != 'Web' )
+{
+	Audio = AudioFake;
+}
+
 //	make these params an object?
 //	note: this is a player, not an asset
 Pop.Audio.Sound = function(Filename,Loop)

@@ -3,32 +3,52 @@
 //	but for now, lets just mess with the DOM
 Pop.Hud = {};
 
-//	reference to a label
-Pop.Hud.Label = function()
+if ( Pop.GetPlatform != 'Web' )
 {
-	Pop.Gui.Label.apply( this, arguments );
-
-	this.SetVisible = function(Visible)
+	function StubHudControl()
 	{
-		//	initial overwrites css, we want to switch back to css :/
-		//this.Element.style.display = Visible ? 'initial' : 'none';
-		this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		this.SetVisible = function(){};
+		this.SetValue = function(){};
+		this.SetMinMax = function(){};
 	}
-}
-
-//	reference to a slider
-Pop.Hud.Slider = Pop.Gui.Slider;
-
-//	reference to a button
-Pop.Hud.Button = function()
-{
-	Pop.Gui.Button.apply( this, arguments );
 	
-	this.SetVisible = function(Visible)
+	Pop.Hud.Slider = StubHudControl;
+	Pop.Hud.Button = StubHudControl;
+	Pop.Hud.Label = StubHudControl;
+}
+
+if ( Pop.GetPlatform == 'Web' )
+{
+	Pop.Hud.Label = function()
 	{
-		//	initial overwrites css, we want to switch back to css :/
-		//this.Element.style.display = Visible ? 'initial' : 'none';
-		this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		Pop.Gui.Label.apply( this, arguments );
+
+		this.SetVisible = function(Visible)
+		{
+			if ( !this.Element )
+				return;
+			//	initial overwrites css, we want to switch back to css :/
+			//this.Element.style.display = Visible ? 'initial' : 'none';
+			this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		}
 	}
 }
 
+
+if ( Pop.GetPlatform == 'Web' )
+{
+	//	reference to a button
+	Pop.Hud.Button = function()
+	{
+		Pop.Gui.Button.apply( this, arguments );
+		
+		this.SetVisible = function(Visible)
+		{
+			if ( !this.Element )
+				return;
+			//	initial overwrites css, we want to switch back to css :/
+			//this.Element.style.display = Visible ? 'initial' : 'none';
+			this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		}
+	}
+}
