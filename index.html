@@ -35,8 +35,6 @@
 <body>
 
 	<div id="Hud">
-		<div id="AudioMusic">Music: <span id="AudioMusicLabel">Track</span></div>
-		<div id="AudioVoice">Voice: <span id="AudioVoiceLabel">Voice</span></div>
 		<div ><span id="SubtitleLabel">Subtitles</span></div>
 
 		<div id="Timeline"><input type=range id="YearSlider" /></div>
@@ -91,6 +89,8 @@
 		<div id="IconSubtitles_Disable"><img src="Web/icons/Subtitles_Disable.svg"></div>
 
 		<div id="Debug">
+			<div id="Debug_AudioMusic">Music: <span id="AudioMusicLabel">Track</span></div>
+			<div id="Debug_AudioVoice">Voice: <span id="AudioVoiceLabel">Voice</span></div>
 			<div id="Debug_VisibleActors">Debug_VisibleActors</div>
 			<div id="Debug_RenderedActors">Debug_RenderedActors</div>
 			<div id="Debug_FrameRate">X FPS</div>
@@ -113,8 +113,6 @@
 			}
 			const HiddenElements =
 			[
-			 'AudioMusic',
-			 'AudioVoice',
 			 'SubtitleLabel',
 			 'YearSlider',
 			 'Timeline',

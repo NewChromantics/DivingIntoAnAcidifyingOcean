@@ -282,8 +282,6 @@ function Update_Experience(FirstUpdate)
 		}
 		const ShowElements =
 		[
-		 'AudioMusic',
-		 'AudioVoice',
 		 'SubtitleLabel',
 		 'YearSlider',
 		 'Timeline',
