@@ -33,6 +33,10 @@ var Debug_HighlightActors = [];
 const AutoTriangleMeshCount = 100000;//512*512;
 const InvalidColour = [0,1,0];
 
+const OceanActorPrefix = 'Ocean_surface_';
+const DebrisActorPrefix = 'Water_';
+const AnimalActorPrefixs = ['Animal','Bigbang'];
+const IgnoreActorPrefixs = ['Camera_Spline'];
 
 function SetupFileAssets()
 {
@@ -169,7 +173,7 @@ function IsActorSelectable(Actor)
 	if ( !Actor.Name )
 		return false;
 	
-	const SelectableNames = ['Animal','Bigbang'];
+	const SelectableNames = AnimalActorPrefixs;
 	const Match = SelectableNames.some( MatchName => Actor.Name.includes(MatchName) );
 	if ( !Match )
 		return false;
@@ -752,6 +756,12 @@ function LoadCameraScene(Filename)
 	
 	let OnActor = function(ActorNode)
 	{
+		if ( IgnoreActorPrefixs.some( MatchName => ActorNode.Name.includes(MatchName) ) )
+		{
+			Pop.Debug("Ignoring actor node " + ActorNode.Name, ActorNode );
+			return;
+		}
+		
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
@@ -759,8 +769,8 @@ function LoadCameraScene(Filename)
 		//	there are some new objects with no bounding boxes or geo,
 		//	but they're not ones we want to turn to animals anyway
 		const IsAnimalActor = IsActorSelectable(Actor);
-		const IsDebrisActor = ActorNode.Name.startsWith('Water_');
-		const IsOceanActor = ActorNode.Name.startsWith('Ocean_surface_');
+		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
+		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
 		
 		if ( IsAnimalActor || IsDebrisActor || IsOceanActor )
 		{
@@ -787,6 +797,8 @@ function LoadCameraScene(Filename)
 		}
 		else
 		{
+			Pop.Debug("Making default actor",ActorNode.Name);
+			
 			let LocalScale = ActorNode.Scale;
 			let WorldPos = ActorNode.Position;
 			Actor.Geometry = 'Cube';
