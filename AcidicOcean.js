@@ -92,6 +92,7 @@ function LoadTimeline(Filename)
 function GetDebrisMeta()
 {
 	const Meta = {};
+	Meta.Filename = '.random';
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
 	Meta.PhysicsNoiseScale = Params.Debris_PhysicsNoiseScale;
@@ -121,9 +122,16 @@ function GetAnimalMeta()
 	return Meta;
 }
 
+
+
+var OceanFilenames = [];
+for ( let i=1;	i<=96;	i++ )
+	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
+
 function GetOceanMeta()
 {
 	const Meta = {};
+	Meta.Filename = OceanFilenames;
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
 	Meta.PhysicsNoiseScale = 0;
@@ -139,19 +147,6 @@ function GetOceanMeta()
 	];
 	return Meta;
 }
-
-
-
-var OceanFilenames = [];
-for ( let i=1;	i<=96;	i++ )
-	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
-
-var OceanMeta = {};
-OceanMeta.Filename = OceanFilenames;
-OceanMeta.Position = [0,0,0];
-OceanMeta.Scale = 1.0;
-OceanMeta.TriangleScale = 0.0148;
-OceanMeta.Colours = OceanColours;
 
 var OceanActors = [];
 
@@ -644,9 +639,27 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.FragShader = GetMeta().FragShader;
 	
 	{
-		//	setup the fetch func on demand, if already cached, won't make a difference
-		AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
-		this.TextureBuffers = GetAsset( Filename, FakeRenderTarget );
+		//	handle array for animation
+		if ( Array.isArray(Filename) )
+		{
+			const LoadFrame = function(Filename)
+			{
+				AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
+				const Buffers = GetAsset( Filename, FakeRenderTarget );
+				
+				//	set at least one to grab colours
+				this.TextureBuffers = Buffers;
+				this.PositionAnimationTextures.push( Buffers.PositionTexture );
+			}
+			this.PositionAnimationTextures = [];
+			Filename.forEach( LoadFrame.bind(this) );
+		}
+		else
+		{
+			//	setup the fetch func on demand, if already cached, won't make a difference
+			AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
+			this.TextureBuffers = GetAsset( Filename, FakeRenderTarget );
+		}
 	}
 	
 	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
@@ -667,6 +680,26 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		this.BoundingBox.Min = [0,0,0];
 		this.BoundingBox.Max = [1,1,1];
 		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
+	}
+	
+	this.GetPositionTexture = function(Time)
+	{
+		//	is animation
+		if ( this.PositionAnimationTextures )
+		{
+			let FrameDuration = 1 / Params.OceanAnimationFrameRate;
+			let AnimDuration = this.PositionAnimationTextures.length * FrameDuration;
+			let NormalisedTime = (Time % AnimDuration) / AnimDuration;
+			let FrameIndex = Math.floor( NormalisedTime * this.PositionAnimationTextures.length );
+			//Pop.Debug("FrameIndex",FrameIndex,this.PositionAnimationTextures.length);
+			return this.PositionAnimationTextures[FrameIndex];
+		}
+		
+		//	position texture is copy from original source
+		if ( this.PositionTexture )
+			return this.PositionTexture;
+
+		return this.TextureBuffers.PositionTexture;
 	}
 
 	this.ResetPhysicsTextures = function()
@@ -715,7 +748,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const Geo = GetAsset( this.Geometry, RenderTarget );
 		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
-		const PositionTexture = this.PositionTexture ? this.PositionTexture : this.TextureBuffers.PositionTexture;
+		const PositionTexture = this.GetPositionTexture(Time);
 		const ColourTexture = this.TextureBuffers.ColourTexture;
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.LocalToWorldTransform;
@@ -804,11 +837,11 @@ function LoadCameraScene(Filename)
 			
 			if ( IsOceanActor )
 			{
-				SetupAnimalTextureBufferActor.call( Actor, 'Ocean/ocean_pts.0001.ply', GetOceanMeta );
+				SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
 			}
 			else if ( IsDebrisActor )
 			{
-				SetupAnimalTextureBufferActor.call( Actor, '.random', GetDebrisMeta );
+				SetupAnimalTextureBufferActor.call( Actor, GetDebrisMeta().Filename, GetDebrisMeta );
 			}
 			else
 			{
