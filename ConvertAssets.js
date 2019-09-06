@@ -88,6 +88,7 @@ function ImageToPng(Image,OnPngBytes)
 	{
 		const PngBytes = Image.GetPngData();
 		OnPngBytes( PngBytes );
+		return;
 	}
 	catch(e)
 	{
@@ -254,9 +255,9 @@ function ConvertTextureBufferFile(Filename)
 	
 	const WritePngBytes = function(PngBytes)
 	{
-		Pop.Debug("Writing PNG", CachedFilename, PngBytes);
-		Pop.WriteBytesToFile( CachedFilename, PngBytes );
-		Pop.ShowFileInFinder( CachedFilename );
+		Pop.Debug("Writing PNG", CachedFilename);
+		Pop.WriteToFile( CachedFilename, PngBytes );
+		//Pop.ShowFileInFinder( CachedFilename );
 	}
 	ImageToPng( PackedImage, WritePngBytes );
 
