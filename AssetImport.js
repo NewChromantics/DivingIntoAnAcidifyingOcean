@@ -233,19 +233,20 @@ function LoadGeometryFile(Filename)
 	}
 	
 	const Contents = Pop.LoadFileAsString(Filename);
-	if ( Filename.endsWith('.ply') )
+	const FilenameLower = Filename.toLowerCase();
+	if ( FilenameLower.endsWith('.ply') )
 	{
 		Geo = ParseGeometryFile( Contents, Pop.Ply.Parse );
 	}
-	else if ( Filename.endsWith('.obj') )
+	else if ( FilenameLower.endsWith('.obj') )
 	{
 		Geo = ParseGeometryFile( Contents, Pop.Obj.Parse );
 	}
-	else if ( Filename.endsWith('.dae.json') )
+	else if ( FilenameLower.endsWith('.dae.json') )
 	{
 		Geo = ParseGeometryFile( Contents, ParseColladaSceneAsModel );
 	}
-	else if ( Filename.endsWith('.svg.json') )
+	else if ( FilenameLower.endsWith('.svg.json') )
 	{
 		Geo = ParseGeometryFile( Contents, Pop.Svg.Parse );
 	}
