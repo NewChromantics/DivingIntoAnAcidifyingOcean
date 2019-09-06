@@ -568,7 +568,8 @@ function ImageToPng(Image,OnPngBytes)
 {
 	try
 	{
-		const PngBytes = Image.GetPngData();
+		const CompressionLevel = 1.0;
+		const PngBytes = Image.GetPngData(CompressionLevel);
 		OnPngBytes( PngBytes );
 		return;
 	}
