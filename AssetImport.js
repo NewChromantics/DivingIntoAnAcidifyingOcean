@@ -816,6 +816,26 @@ function LoadPackedImage(Image)
 
 	const TextureBuffers = {};
 	TextureBuffers.BoundingBox = Meta.BoundingBox;
+	TextureBuffers.TriangleCount = Meta.TriangleCount;
+	
+	//	maybe this should be in the renderer, but doing it here means we keep system kinda consistent
+	function RescaleImageToFloat(Image,Bounds)
+	{
+		const PixelBytes = Image.GetPixelBuffer();
+		const PixelFloats = new Float32Array( PixelBytes.length );
+		const Channels = GetChannelsFromPixelFormat( Image.GetFormat() );
+		const FloatFormat = 'Float' + Channels;
+		for ( let i=0;	i<PixelBytes.length;	i+=Channels )
+		{
+			for ( let c=0;	c<Channels;	c++ )
+			{
+				let f = PixelBytes[i+c] / 255;
+				f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
+				PixelFloats[i+c] = f;
+			}
+		}
+		Image.WritePixels( Image.GetWidth(), Image.GetHeight(), PixelFloats, FloatFormat );
+	}
 	
 	//	pop next images
 	for ( let i=0;	i<Meta.ImageMetas.length;	i++ )
@@ -825,7 +845,10 @@ function LoadPackedImage(Image)
 		const Pixels = PopBytes( ImageMeta.Width * ImageMeta.Height * Channels );
 		const Image = new Pop.Image();
 		Image.WritePixels( ImageMeta.Width, ImageMeta.Height, Pixels, ImageMeta.Format );
+		if ( ImageMeta.Name == 'PositionTexture' )
+			RescaleImageToFloat( Image, TextureBuffers.BoundingBox );
 		TextureBuffers[ImageMeta.Name] = Image;
+		Pop.Debug("Loaded image",ImageMeta.Name,Image);
 	}
 	
 	return TextureBuffers;
