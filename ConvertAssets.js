@@ -41,17 +41,15 @@ function CopyPixelBufferToPixelBuffer(DestinationRgba,Source,SourceFormat)
 {
 	function GetSourceRgba_From_Greyscale(PixelIndex)
 	{
-		const Grey = Source.slice( PixelIndex*1, (PixelIndex*1)+1 );
-		Grey.push(Grey);
-		Grey.push(Grey);
-		Grey.push(255);
-		return Grey;
+		const Grey = Source[PixelIndex];
+		const Rgba = [ Grey, Grey, Grey, 255 ];
+		return Rgba;
 	}
 	function GetSourceRgba_From_Rgb(PixelIndex)
 	{
 		const Rgb = Source.slice( PixelIndex*3, (PixelIndex*3)+3 );
-		Rgb.push(255);
-		return Rgb;
+		const Rgba = [ Rgb[0], Rgb[1], Rgb[2], 255 ];
+		return Rgba;
 	}
 	function GetSourceRgba_From_Rgba(PixelIndex)
 	{
