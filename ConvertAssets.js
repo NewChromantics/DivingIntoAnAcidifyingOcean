@@ -240,22 +240,29 @@ function CreatePackedImage(Contents)
 	return PackedImage;
 }
 
-function ConvertTextureBufferFile(Filename)
+function ConvertTextureBufferFile(Filename,Index)
 {
 	const CachedFilename = GetCachedFilename(Filename,'texturebuffer.png');
 	const Geo = LoadGeometryFile( Filename );
 	const MaxPositons = 128*1024;
-	const PositionFormat = 'RGBA';
+	const PositionFormat = 'RGB';
 	const ScaleToBounds = { Min:[0,0,0], Max:[1,1,1] };
 	const TextureBuffers = LoadGeometryToTextureBuffers( Geo, MaxPositons, ScaleToBounds, PositionFormat );
 
+	//	dont write this
+	TextureBuffers.AlphaTexture = null;
+	
 	const PackedImage = CreatePackedImage(TextureBuffers);
 	
 	const WritePngBytes = function(PngBytes)
 	{
 		Pop.Debug("Writing PNG", CachedFilename);
 		Pop.WriteToFile( CachedFilename, PngBytes );
-		//Pop.ShowFileInFinder( CachedFilename );
+		if ( Index == 0 )
+		{
+			Pop.ShowFileInFinder( CachedFilename );
+			//Pop.Debug("Png bytes",PngBytes);
+		}
 	}
 	ImageToPng( PackedImage, WritePngBytes );
 
