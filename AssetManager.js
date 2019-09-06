@@ -1,4 +1,4 @@
-Pop.Include('AssetImport.js');
+//Pop.Include('AssetImport.js');
 Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 
@@ -31,18 +31,6 @@ function GetQuadGeometry(RenderTarget)
 	return QuadGeometry;
 }
 
-
-
-function GenerateRandomVertexes(OnVertex)
-{
-	for ( let i=0;	i<10000;	i++ )
-	{
-		let x = Math.random() - 0.5;
-		let y = Math.random() - 0.5;
-		let z = Math.random() - 0.5;
-		OnVertex(x,y,z);
-	}
-}
 
 var AutoTriangleIndexes = [];
 function GetAutoTriangleIndexes(IndexCount)

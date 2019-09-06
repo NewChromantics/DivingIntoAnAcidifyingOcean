@@ -574,12 +574,21 @@ if ( IsDebugEnabled() )
 
 function LoadAssetGeoTextureBuffer(RenderTarget)
 {
-	const MaxPositions = AutoTriangleMeshCount;
-	
 	let Filename = this;
-	const CachedFilename = GetCachedFilename(Filename,'geometry');
-	if ( Pop.FileExists(CachedFilename) )
-		Filename = CachedFilename;
+	const MaxPositions = AutoTriangleMeshCount;
+
+	//	load texture buffer formats
+	const CachedTextureBufferFilename = GetCachedFilename(Filename,'texturebuffer.png');
+	if ( Pop.FileExists(CachedTextureBufferFilename) )
+	{
+		const Contents = Pop.LoadFileAsImage(CachedTextureBufferFilename);
+		const GeoTextureBuffers = LoadPackedImage( Contents );
+		return GeoTextureBuffers;
+	}
+	
+	const CachedGeoFilename = GetCachedFilename(Filename,'geometry');
+	if ( Pop.FileExists(CachedGeoFilename) )
+		Filename = CachedGeoFilename;
 	
 	//	load positions, colours
 	const Geo = LoadGeometryFile( Filename );

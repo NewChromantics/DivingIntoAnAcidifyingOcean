@@ -518,3 +518,288 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,P
 }
 
 
+function CopyPixelBufferToPixelBuffer(DestinationRgba,Source,SourceFormat)
+{
+	function GetSourceRgba_From_Greyscale(PixelIndex)
+	{
+		const Grey = Source[PixelIndex];
+		const Rgba = [ Grey, Grey, Grey, 255 ];
+		return Rgba;
+	}
+	function GetSourceRgba_From_Rgb(PixelIndex)
+	{
+		const Rgb = Source.slice( PixelIndex*3, (PixelIndex*3)+3 );
+		const Rgba = [ Rgb[0], Rgb[1], Rgb[2], 255 ];
+		return Rgba;
+	}
+	function GetSourceRgba_From_Rgba(PixelIndex)
+	{
+		const Rgba = Source.slice( PixelIndex*4, (PixelIndex*4)+4 );
+		return Rgba;
+	}
+	
+	function GetSourceRgbaFunctor()
+	{
+		switch(SourceFormat)
+		{
+			case 'Greyscale':	return GetSourceRgba_From_Greyscale;
+			case 'RGB':			return GetSourceRgba_From_Rgb;
+			case 'RGBA':		return GetSourceRgba_From_Rgba;
+		}
+		throw "Currently not supporting " + SourceFormat + " to rgba!";
+	};
+	
+	const GetSourceRgba = GetSourceRgbaFunctor();
+	for ( let p=0;	p<DestinationRgba.length/4;	p++ )
+	{
+		const SourceRgba = GetSourceRgba(p);
+		DestinationRgba[(p*4)+0] = SourceRgba[0];
+		DestinationRgba[(p*4)+1] = SourceRgba[1];
+		DestinationRgba[(p*4)+2] = SourceRgba[2];
+		DestinationRgba[(p*4)+3] = SourceRgba[3];
+	}
+	
+}
+
+function ImageToPng(Image,OnPngBytes)
+{
+	try
+	{
+		const PngBytes = Image.GetPngData();
+		OnPngBytes( PngBytes );
+		return;
+	}
+	catch(e)
+	{
+		Pop.Debug(e);
+	}
+	
+	Pop.Debug("ImageToPng",Image);
+	const Canvas = document.createElement('canvas');
+	const Width = Image.GetWidth();
+	const Height = Image.GetHeight();
+	Canvas.width = Width;
+	Canvas.height = Height;
+	const Context = Canvas.getContext('2d');
+	
+	const ImageData = Context.createImageData( Width, Height );
+	const Pixels = Image.GetPixelBuffer();
+	CopyPixelBufferToPixelBuffer( ImageData.data, Pixels, Image.GetFormat() );
+	
+	//	draw back to canvas
+	Context.putImageData( ImageData, 0, 0 );
+	
+	function OnBlob(PngBlob)
+	{
+		function OnBlobBuffer(ArrayBuffer)
+		{
+			OnPngBytes( ArrayBuffer );
+		}
+		function OnError(Error)
+		{
+			Pop.Debug("Error getting blob array buffer",Error);
+			throw Error;
+		}
+		PngBlob.arrayBuffer().then( OnBlobBuffer ).catch( OnError );
+	}
+	Canvas.toBlob( OnBlob, 'image/png', 1.0 );
+	/*
+	 //	try and use this mozilla extension
+	 const PngFile = Canvas.mozGetAsFile("Filename.png", 'image/png' );
+	 const PngArrayBuffer = await PngFile.arrayBuffer();
+	 return PngArrayBuffer;
+	 */
+}
+
+function StringToBytes(String)
+{
+	const Bytes = [];
+	for ( let i=0;	i<String.length;	i++ )
+	{
+		let Char = String.charCodeAt(i) & 0xff;
+		Bytes.push(Char);
+	}
+	return Bytes;
+}
+
+
+function BytesToString(Bytes)
+{
+	let OutputString = "";
+	for ( let i=0;	i<Bytes.length;	i++ )
+	{
+		let Char = String.fromCharCode( Bytes[i] );
+		OutputString += Char;
+	}
+	return OutputString;
+}
+
+const PackedImageFormat = 'RGB';
+
+function PadArray(Bytes,Stride,PaddingString)
+{
+	if ( PaddingString.length == 0 )
+		throw "Padding string needs to be at least 1 byte";
+	
+	const PadBytes = StringToBytes(PaddingString);
+	for ( let p=0;	p<Stride;	p++ )
+	{
+		//	no more padding needed
+		if ( (Bytes.length % Stride) == 0 )
+			break;
+		Bytes.push( PadBytes[p%PadBytes.length] );
+	}
+}
+
+//	packed PNG file
+//	first line is meta, which describes contents of the following lines
+function CreatePackedImage(Contents)
+{
+	Pop.Debug("Creating packed image",Contents);
+	
+	//	extract meta & non-meta
+	let Meta = {};
+	Meta.ImageMetas = [];
+	let Images = [];
+	
+	function PushImage(Name,Image)
+	{
+		Images.push( Image );
+		
+		let ImageMeta = {};
+		ImageMeta.Width = Image.GetWidth();
+		ImageMeta.Height = Image.GetHeight();
+		ImageMeta.Format = Image.GetFormat();
+		ImageMeta.Name = Name;
+		Meta.ImageMetas.push( ImageMeta );
+	}
+	
+	function PushMeta(Name,Content)
+	{
+		Meta[Name] = Content;
+	}
+	
+	function PushContent(Name)
+	{
+		const Content = Contents[Name];
+		if ( !Content )
+			return;
+		if ( Content.constructor == Pop.Image )
+			PushImage( Name, Content );
+		else
+			PushMeta( Name, Content );
+	}
+	const ContentKeys = Object.keys(Contents);
+	ContentKeys.forEach( PushContent );
+	
+	//	encode meta into a line of pixels
+	const MetaString = JSON.stringify(Meta);
+	const MetaBytes = StringToBytes(MetaString);
+	
+	//	make image width the length of the byte array so row0 is always meta
+	const PackedChannels = GetChannelsFromPixelFormat(PackedImageFormat);
+	//	gotta pad the meta to align to channels
+	PadArray( MetaBytes, PackedChannels, ' ' );
+	const PackedWidth = MetaBytes.length / PackedChannels;
+
+	let Pixels = [];
+	//	write meta
+	Pixels.push( ...MetaBytes );
+	//	write each image
+	for ( let i=0;	i<Images.length;	i++ )
+	{
+		const Image = Images[i];
+		const ImagePixels = Image.GetPixelBuffer();
+		
+		for ( let p=0;	p<ImagePixels.length;	p++ )
+			Pixels.push( ImagePixels[p] );
+		//	causing callstack error
+		//const ImagePixelsArray = Array.from(ImagePixels);
+		//Pixels.push( ...ImagePixelsArray );
+	}
+	
+	//	pad with pattern we can read in a hex editor
+	const PackedStride = PackedWidth*PackedChannels;
+	PadArray( Pixels, PackedStride, 'PAD!' );
+	
+	const PackedHeight = Pixels.length / PackedStride;
+	if ( !Number.isInteger(PackedHeight) )
+		throw "We didn't create aligned pixel buffer!";
+	
+	const PackedImage = new Pop.Image();
+	Pixels = new Uint8Array(Pixels);
+	PackedImage.WritePixels( PackedWidth, PackedHeight, Pixels, PackedImageFormat );
+	return PackedImage;
+}
+
+function GetImageAsPopImage(Img)
+{
+	if ( Img.constructor == Pop.Image )
+		return Img;
+
+	//	html5 image
+	if ( Img.constructor == HTMLImageElement )
+	{
+		//	gr: is this really the best way :/
+		const Canvas = document.createElement('canvas');
+		const Context = Canvas.getContext('2d');
+		const Width = Img.width;
+		const Height = Img.height;
+		Context.drawImage( Img, 0, 0 );
+		const ImageData = Context.getImageData(0, 0, Width, Height);
+		const Buffer = ImageData.data;
+		const PopImage = new Pop.Image();
+		PopImage.WritePixels( Width, Height, Buffer, 'RGBA' );
+		return PopImage;
+	}
+	
+	Pop.Debug("Dont know how to get pixels from ",Img);
+	
+	throw "Dont know how to get pixels from " + Img;
+}
+
+function LoadPackedImage(Image)
+{
+	Image = GetImageAsPopImage(Image);
+	const PixelBuffer = Image.GetPixelBuffer();
+	const PixelBufferChannels = GetChannelsFromPixelFormat( Image.GetFormat() );
+	const RgbChannels = 3;
+	
+	function GetBufferAsRgb(SourceBuffer)
+	{
+		if ( PixelBufferChannels == 3 )
+			return SourceBuffer;
+		if ( PixelBufferChannels < 3 )
+			throw "Source doesn't have enough data!";
+		const PixelCount = SourceBuffer.length / PixelBufferChannels;
+		const Rgb = new Uint8Array( RgbChannels * PixelCount );
+		for ( let p=0;	p<PixelCount;	p++ )
+		{
+			let si = p * PixelBufferChannels;
+			let di = p * RgbChannels;
+			Rgb[di+0] = SourceBuffer[si+0];
+			Rgb[di+1] = SourceBuffer[si+1];
+			Rgb[di+2] = SourceBuffer[si+2];
+		}
+		return Rgb;
+	}
+	
+	function GetPixels(PixelIndex,PixelCount)
+	{
+		//	get the buffer
+		const Slice = PixelBuffer.slice( PixelIndex*PixelBufferChannels, (PixelIndex+PixelCount)*PixelBufferChannels );
+		const SliceRgb = GetBufferAsRgb( Slice );
+		return SliceRgb;
+	}
+	
+	//	first line is meta
+	const FirstLineBytes = GetPixels( 0, Image.GetWidth() );
+	const FirstLine = BytesToString( FirstLineBytes );
+	Pop.Debug("First line from image",FirstLine);
+	const Meta = JSON.parse( FirstLine );
+	Pop.Debug(Meta);
+
+	throw "Do more stuff";
+	
+}
+

@@ -3,7 +3,7 @@ Pop.Include('Actors.js');
 Pop.Include('AssetManager.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
-Pop.Include('Animals.js');
+//Pop.Include('Animals.js');
 
 const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
 const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
@@ -155,16 +155,20 @@ function TLogoState()
 	//	autogen model asset filenames
 	this.PreloadGeoFilenames.push( ...GetAnimalAssetFilenames() );
 
-	
+	function IsImageFilename(Filename)
+	{
+		return Filename.toLowerCase().endsWith('.png');
+	}
 	
 	const Load = function(Filename,BackupFilename)
 	{
 		if ( !Filename )
 			return;
 		
+		const AsyncCacheFunction = IsImageFilename(Filename) ? Pop.AsyncCacheAssetAsImage : Pop.AsyncCacheAssetAsString;
 		//	no need to cache (desktop)
 		//	support this maybe?
-		if ( !Pop.AsyncCacheAssetAsString )
+		if ( !AsyncCacheFunction )
 			return;
 		
 		const LoadBackup = function(Error)
@@ -177,7 +181,7 @@ function TLogoState()
 		}.bind(this);
 
 		//	create promise and put in the list
-		const Promise = Pop.AsyncCacheAssetAsString(Filename);
+		const Promise = AsyncCacheFunction(Filename);
 		Promise.IsSettled = false;
 		
 		//	track when promise is finished
@@ -204,6 +208,7 @@ function TLogoState()
 		const CachedFilename = GetCachedFilename(Filename,Type);
 		Load.call( this, CachedFilename, Filename );
 	}
+	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'texturebuffer.png' ) );
 	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'geometry' ) );
 	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, 'scene' ) );
 
