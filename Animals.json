@@ -322,7 +322,7 @@
 	{
 		"Name":		"PLASTIC STRAW",
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
-		"Model":	"Models/PlasticStraw.PLY",
+		"Model":	"Models/PlasticStraw.ply",
 		"AfterYear":	1956,
 		"category" : [ "nasty animal" ]
 

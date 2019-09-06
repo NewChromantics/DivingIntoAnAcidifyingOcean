@@ -749,7 +749,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		
 		//	limit number of triangles
 		//	gr: why is this triangle count so much bigger than the buffer?
-		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount );
+		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount ) || AutoTriangleMeshCount;
 		TriangleCount *= Params.AnimalBufferLod;
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
 	}

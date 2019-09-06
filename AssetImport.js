@@ -10,6 +10,9 @@ const DataTextureWidth = 128;
 
 function GetCachedFilename(Filename,Type)
 {
+	if ( Filename.startsWith('.') )
+		return null;
+		
 	if ( !Filename )
 		return Filename;
 	if ( !Type )
@@ -758,48 +761,71 @@ function GetImageAsPopImage(Img)
 	throw "Dont know how to get pixels from " + Img;
 }
 
+function BufferToRgb(Buffer,BufferFormat,ChannelCount)
+{
+	const BufferChannels = GetChannelsFromPixelFormat(BufferFormat);
+	if ( BufferChannels == ChannelCount )
+		return Buffer;
+	
+	if ( BufferChannels < ChannelCount )
+		throw "Source doesn't have enough data!";
+	
+	const PixelCount = Buffer.length / BufferChannels;
+	const Rgb = new Uint8Array( ChannelCount * PixelCount );
+	for ( let p=0;	p<PixelCount;	p++ )
+	{
+		let si = p * BufferChannels;
+		let di = p * ChannelCount;
+		Rgb[di+0] = Buffer[si+0];
+		Rgb[di+1] = Buffer[si+1];
+		Rgb[di+2] = Buffer[si+2];
+	}
+	return Rgb;
+}
+
 function LoadPackedImage(Image)
 {
 	Image = GetImageAsPopImage(Image);
-	const PixelBuffer = Image.GetPixelBuffer();
-	const PixelBufferChannels = GetChannelsFromPixelFormat( Image.GetFormat() );
-	const RgbChannels = 3;
+	let PixelBuffer = Image.GetPixelBuffer();
+	const PackedImageChannels = GetChannelsFromPixelFormat(PackedImageFormat);
+	PixelBuffer = BufferToRgb( PixelBuffer, Image.GetFormat(), PackedImageChannels );
 	
-	function GetBufferAsRgb(SourceBuffer)
-	{
-		if ( PixelBufferChannels == 3 )
-			return SourceBuffer;
-		if ( PixelBufferChannels < 3 )
-			throw "Source doesn't have enough data!";
-		const PixelCount = SourceBuffer.length / PixelBufferChannels;
-		const Rgb = new Uint8Array( RgbChannels * PixelCount );
-		for ( let p=0;	p<PixelCount;	p++ )
-		{
-			let si = p * PixelBufferChannels;
-			let di = p * RgbChannels;
-			Rgb[di+0] = SourceBuffer[si+0];
-			Rgb[di+1] = SourceBuffer[si+1];
-			Rgb[di+2] = SourceBuffer[si+2];
-		}
-		return Rgb;
-	}
-	
-	function GetPixels(PixelIndex,PixelCount)
+	function GetPixels(PixelIndex,PixelCount,Channels)
 	{
 		//	get the buffer
-		const Slice = PixelBuffer.slice( PixelIndex*PixelBufferChannels, (PixelIndex+PixelCount)*PixelBufferChannels );
-		const SliceRgb = GetBufferAsRgb( Slice );
-		return SliceRgb;
+		const Slice = PixelBuffer.slice( PixelIndex*Channels, (PixelIndex+PixelCount)*Channels );
+		return Slice;
+	}
+	
+	let ByteOffset = 0;
+	function PopBytes(Length)
+	{
+		const Slice = PixelBuffer.slice( ByteOffset, ByteOffset+Length );
+		ByteOffset += Length;
+		return Slice;
 	}
 	
 	//	first line is meta
-	const FirstLineBytes = GetPixels( 0, Image.GetWidth() );
+	const FirstLineBytes = PopBytes( Image.GetWidth() * PackedImageChannels );
 	const FirstLine = BytesToString( FirstLineBytes );
 	Pop.Debug("First line from image",FirstLine);
 	const Meta = JSON.parse( FirstLine );
 	Pop.Debug(Meta);
 
-	throw "Do more stuff";
+	const TextureBuffers = {};
+	TextureBuffers.BoundingBox = Meta.BoundingBox;
 	
+	//	pop next images
+	for ( let i=0;	i<Meta.ImageMetas.length;	i++ )
+	{
+		const ImageMeta = Meta.ImageMetas[i];
+		const Channels = GetChannelsFromPixelFormat( ImageMeta.Format );
+		const Pixels = PopBytes( ImageMeta.Width * ImageMeta.Height * Channels );
+		const Image = new Pop.Image();
+		Image.WritePixels( ImageMeta.Width, ImageMeta.Height, Pixels, ImageMeta.Format );
+		TextureBuffers[ImageMeta.Name] = Image;
+	}
+	
+	return TextureBuffers;
 }
 

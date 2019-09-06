@@ -8,7 +8,7 @@ function ConvertSceneFile(Filename,Pretty=false)
 	const CachedFilename = GetCachedFilename(Filename,'scene');
 	if ( Pop.FileExists(CachedFilename) )
 	{
-		//return;
+		return;
 	}
 	const Scene = LoadSceneFile( Filename );
 	const Json = Pretty ? JSON.stringify(Scene,null,'\t') : JSON.stringify(Scene);
@@ -25,7 +25,7 @@ function ConvertGeometryFile(Filename,Pretty=false)
 
 	if ( Pop.FileExists(CachedFilename) )
 	{
-		//return;
+		return;
 	}
 	Pop.Debug('ConvertGeometryFile','LoadGeometryFile');
 	const Geo = LoadGeometryFile( Filename );
@@ -40,6 +40,10 @@ function ConvertGeometryFile(Filename,Pretty=false)
 function ConvertTextureBufferFile(Filename,Index)
 {
 	const CachedFilename = GetCachedFilename(Filename,'texturebuffer.png');
+	if ( Pop.FileExists(CachedFilename) )
+	{
+		return;
+	}
 	const Geo = LoadGeometryFile( Filename );
 	const MaxPositons = 128*1024;
 	const PositionFormat = 'RGB';
@@ -87,13 +91,13 @@ const SceneFiles =
 const TextureBufferFiles =
 [
 ];
-TextureBufferFiles.push( ...GetAnimalAssetFilenames() );
 for ( let i=1;	i<=96;	i++ )
 {
 	let Filename = 'Ocean/ocean_pts.' + (''+i).padStart(4,'0');
 	Filename += '.ply';
 	TextureBufferFiles.push(Filename);
 }
+TextureBufferFiles.push( ...GetAnimalAssetFilenames() );
 
 Pop.Debug( TextureBufferFiles );
 
