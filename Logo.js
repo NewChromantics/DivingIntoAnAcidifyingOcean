@@ -361,7 +361,7 @@ function LogoRenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUn
 	{
 		let w = 0.2;
 		let x = ActorIndex * (w * 1.05);
-		let Quad = GetQuadGeometry(RenderTarget);
+		let Quad = GetAsset('Quad',RenderTarget);
 		let SetDebugPositionsUniforms = function(Shader)
 		{
 			Shader.SetUniform('VertexRect', [x, 0, w, 0.25 ] );
@@ -435,7 +435,7 @@ function LogoRender(RenderTarget)
 		const ProjectionAspectRatio = Viewport[3] / Viewport[2];
 		const BlitShader = Pop.GetShader( RenderTarget, LogoSdfFrag, QuadVertShader );
 		RenderTarget.ClearColour(0,1,0);
-		const Quad = GetQuadGeometry(RenderTarget);
+		const Quad = GetAsset('Quad',RenderTarget);
 		const SetUniforms = function(Shader)
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );

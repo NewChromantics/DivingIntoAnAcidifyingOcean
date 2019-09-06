@@ -133,7 +133,7 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	UpdateVelocityShader = Pop.GetShader( RenderTarget, UpdateVelocityShader, QuadVertShader );
 	UpdatePositionShader = Pop.GetShader( RenderTarget, UpdatePositionShader, QuadVertShader );
-	let Quad = GetQuadGeometry(RenderTarget);
+	let Quad = GetAsset('Quad',RenderTarget);
 	
 	//	copy old velocitys
 	let CopyVelcoityToScratch = function(RenderTarget)

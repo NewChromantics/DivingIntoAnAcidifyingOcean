@@ -6,13 +6,8 @@ Pop.Include('PopEngineCommon/PopTexture.js');
 const RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
 
 
-//	todo: tie with render target!
-let QuadGeometry = null;
 function GetQuadGeometry(RenderTarget)
 {
-	if ( QuadGeometry )
-		return QuadGeometry;
-	
 	let VertexSize = 2;
 	let l = 0;
 	let t = 0;
@@ -27,7 +22,7 @@ function GetQuadGeometry(RenderTarget)
 	//	emulate webgl on desktop
 	TriangleIndexes = undefined;
 	
-	QuadGeometry = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
+	let QuadGeometry = new Pop.Opengl.TriangleBuffer( RenderTarget, VertexAttributeName, VertexData, VertexSize, TriangleIndexes );
 	return QuadGeometry;
 }
 
@@ -142,6 +137,7 @@ function CreateCubeGeometry(RenderTarget,Min=-1,Max=1)
 var Assets = [];
 var AssetFetchFunctions = [];
 AssetFetchFunctions['Cube'] = CreateCubeGeometry;
+AssetFetchFunctions['Quad'] = GetQuadGeometry;
 AssetFetchFunctions['SmallCube'] = function(rt)	{	return CreateCubeGeometry(rt,-0.1,0.1);	};
 AssetFetchFunctions['Cube01'] = function(rt)	{	return CreateCubeGeometry(rt,0,1);	};
 
@@ -160,18 +156,7 @@ function GetAsset(Name,RenderContext)
 	if ( !AssetFetchFunctions.hasOwnProperty(Name) )
 		throw "No known asset named "+ Name;
 	
-	//try
-	{
-		ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
-	}
-	/*
-	catch(e)
-	{
-		//	on error, put up a cube
-		Pop.Debug("Error loading asset",Name,e);
-		ContextAssets[Name] = CreateCubeGeometry(RenderContext);
-	}
-	 */
+	ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
 	return ContextAssets[Name];
 }
 
