@@ -30,7 +30,7 @@ var PhsyicsUpdateCount = 0;	//	gotta do one
 
 var Debug_HighlightActors = [];
 
-const AutoTriangleMeshCount = 100000;//512*512;
+const AutoTriangleMeshCount = 256*512;	//	130k
 const InvalidColour = [0,1,0];
 
 const OceanActorPrefix = 'Ocean_surface_';
@@ -46,14 +46,6 @@ SetupFileAssets();
 
 
 
-
-function UnrollHexToRgb(Hexs)
-{
-	let Rgbs = [];
-	Rgbs = Hexs.map( Pop.Colour.HexToRgbf );
-	return Rgbs;
-}
-
 //	colours from colorbrewer2.org
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
 const LightColour = [0.86,0.95,0.94];
@@ -62,7 +54,7 @@ const LightColour = [0.86,0.95,0.94];
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
 DebugCamera.LookAt = [ 0,0,-1 ];
-DebugCamera.FarDistance = 300;	//	try not to clip anythig in debug mode
+DebugCamera.FarDistance = 400;	//	try not to clip anythig in debug mode
 
 
 
@@ -462,6 +454,7 @@ Params.FogMaxDistance = BoldMode ? 999 : 20.0;
 Params.FogColour = FogColour;
 Params.LightColour = LightColour;
 Params.DebugPhysicsTextures = false;
+Params.DebugNoiseTextures = true;
 Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
@@ -543,6 +536,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('DrawTestRay');
 	ParamsWindow.AddParam('EnablePhysicsIteration');
 	ParamsWindow.AddParam('DebugPhysicsTextures');
+	ParamsWindow.AddParam('DebugNoiseTextures');
 	ParamsWindow.AddParam('BillboardTriangles');
 	ParamsWindow.AddParam('ShowClippedParticle');
 	ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
@@ -1455,7 +1449,37 @@ function Render(RenderTarget)
 			Pop.Debug("Error rendering actor", Actor.Name,e);
 		}
 	}
+	
+	
+	function RenderTextureQuad(Texture,TextureIndex)
+	{
+		const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
+		const Quad = GetAsset('Quad',RenderTarget);
+		
+		let w = 0.2;
+		let h = 0.2;
+		let x = 0.2;
+		let y = 0.2 + (TextureIndex*h*1.10);
+		const SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('VertexRect', [x, y, w, h ] );
+			Shader.SetUniform('Texture',Texture);
+		};
+		RenderTarget.DrawGeometry( Quad, BlitShader, SetUniforms );
+	}
+	
+	const DebugTextures = [];
+	if ( Params.DebugNoiseTextures )
+	{
+		DebugTextures.push( RandomTexture );
+	}
+	
+	//	render
 	Scene.forEach( RenderSceneActor );
+	DebugTextures.forEach( RenderTextureQuad );
+
+	
+	//	debug stats
 	
 	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
 	RenderFrameCounter.Add();
