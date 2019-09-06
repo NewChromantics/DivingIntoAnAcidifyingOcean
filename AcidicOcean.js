@@ -647,6 +647,14 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		this.BoundingBox.Max = [1,1,1];
 		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
 	}
+	else
+	{
+		//	update bounding box to use geo
+		if ( this.TextureBuffers.BoundingBox )
+			this.BoundingBox = this.TextureBuffers.BoundingBox;
+	}
+	
+	
 	
 	this.GetPositionTexture = function(Time)
 	{
