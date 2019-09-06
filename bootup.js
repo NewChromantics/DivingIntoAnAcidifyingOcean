@@ -118,6 +118,8 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 				this.CurrentState = NextState;
 				this.CurrentStateStartTime = false;
 			}
+			
+			return FrameDuration;
 		}
 		/*
 		catch(e)

@@ -1167,7 +1167,8 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		Hud.Animal_Description.SetValue( Animal.Description );
 	}
 	
-	
+	Update( FrameDuration );
+
 	//	lerp camera to pos
 	let TargetCameraPos = GetActorWorldPos(Acid.SelectedActor);
 	//	apply offset
@@ -1203,6 +1204,8 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 			Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
 		}
 	}
+
+	Update( FrameDuration );
 	
 	//	move time along
 	{
@@ -1250,15 +1253,10 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	return null;
 }
 
-//	todo: proper app loop, currently triggered from render
 function Update(FrameDurationSecs)
 {
 	if ( AppTime === null )
 		Init();
-	
-	//	update app logic
-	Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
-	
 	
 	const Time = Params.TimelineYear;
 	
@@ -1352,9 +1350,11 @@ function UpdateSceneVisibility(Time)
 
 function Render(RenderTarget)
 {
-	//	gr: don't need to do this here now? let state machine run independently?
-	const DurationSecs = 1 / 60;
-	Update( DurationSecs );
+	//	update app logic
+	let DurationSecs = Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
+	
+	//	stop div by zero
+	DurationSecs = Math.max( DurationSecs, 0.001 );
 	
 	const Time = Params.TimelineYear;
 
