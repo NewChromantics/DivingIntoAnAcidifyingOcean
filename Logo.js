@@ -3,7 +3,8 @@ Pop.Include('Actors.js');
 Pop.Include('AssetManager.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
-//Pop.Include('Animals.js');
+Pop.Include('AssetImport.js');
+Pop.Include('Animals.js');
 
 const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
 const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
@@ -160,11 +161,28 @@ function TLogoState()
 		return Filename.toLowerCase().endsWith('.png');
 	}
 	
-	const Load = function(Filename,BackupFilename)
+	function IsValidFilename(Filename)
 	{
 		if ( !Filename )
+			return false;
+		if ( Filename.startsWith('.') )
+			return false;
+		return true;
+	}
+	
+	//	load filenames, preference first
+	const Load = function(Filenames)
+	{
+		if ( !Filenames )
+			return;
+		if ( !Array.isArray(Filenames) )
+			Filenames = [Filenames];
+		
+		Filenames = Filenames.filter( IsValidFilename );
+		if ( Filenames.length == 0 )
 			return;
 		
+		const Filename = Filenames.shift();
 		const AsyncCacheFunction = IsImageFilename(Filename) ? Pop.AsyncCacheAssetAsImage : Pop.AsyncCacheAssetAsString;
 		//	no need to cache (desktop)
 		//	support this maybe?
@@ -173,11 +191,8 @@ function TLogoState()
 		
 		const LoadBackup = function(Error)
 		{
-			if ( typeof BackupFilename == 'string' )	//	sometimes is an index from forEach()
-			{
-				Pop.Debug("Preload of",Filename,"failed, loading Backup",BackupFilename);
-				Load.call( this, BackupFilename );
-			}
+			Pop.Debug("Preload of",Filename,"failed, loading next backup",Filenames);
+			Load.call( this, Filenames );
 		}.bind(this);
 
 		//	create promise and put in the list
@@ -203,14 +218,15 @@ function TLogoState()
 	}
 	this.PreloadFilenames.forEach( Load.bind(this) );
 	
-	const LoadAsset = function(Filename,Type)
+	const LoadAsset = function(Filename,Types)
 	{
-		const CachedFilename = GetCachedFilename(Filename,Type);
-		Load.call( this, CachedFilename, Filename );
+		const AssetFilenames = [];
+		Types.forEach( t => AssetFilenames.push( GetCachedFilename(Filename,t) ) );
+		AssetFilenames.push(Filename);
+		Load.call( this, AssetFilenames );
 	}
-	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'texturebuffer.png' ) );
-	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, 'geometry' ) );
-	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, 'scene' ) );
+	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png','geometry'] ) );
+	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, ['scene'] ) );
 
 	this.IsPreloadFinished = function()
 	{
