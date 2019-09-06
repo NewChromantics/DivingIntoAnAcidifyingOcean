@@ -748,6 +748,8 @@ function GetImageAsPopImage(Img)
 		const Context = Canvas.getContext('2d');
 		const Width = Img.width;
 		const Height = Img.height;
+		Canvas.width = Width;
+		Canvas.height = Height;
 		Context.drawImage( Img, 0, 0 );
 		const ImageData = Context.getImageData(0, 0, Width, Height);
 		const Buffer = ImageData.data;
