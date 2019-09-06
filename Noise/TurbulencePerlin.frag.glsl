@@ -6,18 +6,30 @@ varying vec2 uv;
 uniform float Time;
 
 //	speed up by hardcoding values at compile time
-//#define _Octaves		8
-//#define _Frequency		1.0f
-//#define _Amplitude		1.0f
-//#define _Offset			float3(0,0,0)
-//#define _Lacunarity		1.92f
-//#define _Persistence	0.8f
-fixed _Octaves = 8;
-float _Frequency = 1.0;
-float _Amplitude = 1.0;
-float3 _Offset = float3(0,0,0);
-float _Lacunarity = 1.92;
-float _Persistence = 0.8;
+#define MAX_OCATAVES	8
+#define _Octaves		8
+#define _Offset			float3(0,0,0)
+
+//#define _Frequency		1.0
+uniform float _Frequency;//	= 1.0;
+//#define _Amplitude		1.0
+uniform float _Amplitude;// = 1.0;
+//#define _Lacunarity		1.92
+uniform float _Lacunarity;// = 1.92;
+//#define _Persistence	0.8
+uniform float _Persistence;// = 0.8;
+
+
+
+
+#define rsqrt inversesqrt
+#define lerp mix
+/*
+ float3 rsqrt(float3 a)
+ {
+ return pow(a, -0.5);
+ }
+ */
 
 
 //
@@ -58,19 +70,22 @@ void FAST32_hash_3D( 	float3 gridcell,
 	P = P.xzxz * P.yyww;
 	float3 lowz_mod = float3( 1.0 / ( SOMELARGEFLOATS.xyz + gridcell.zzz * ZINC.xyz ) );
 	float3 highz_mod = float3( 1.0 / ( SOMELARGEFLOATS.xyz + gridcell_inc1.zzz * ZINC.xyz ) );
-	lowz_hash_0 = frac( P * lowz_mod.xxxx );
-	highz_hash_0 = frac( P * highz_mod.xxxx );
-	lowz_hash_1 = frac( P * lowz_mod.yyyy );
-	highz_hash_1 = frac( P * highz_mod.yyyy );
-	lowz_hash_2 = frac( P * lowz_mod.zzzz );
-	highz_hash_2 = frac( P * highz_mod.zzzz );
+	lowz_hash_0 = fract( P * lowz_mod.xxxx );
+	highz_hash_0 = fract( P * highz_mod.xxxx );
+	lowz_hash_1 = fract( P * lowz_mod.yyyy );
+	highz_hash_1 = fract( P * highz_mod.yyyy );
+	lowz_hash_2 = fract( P * lowz_mod.zzzz );
+	highz_hash_2 = fract( P * highz_mod.zzzz );
 }
 
 //	Interpolation functions
 //	( smoothly increase from 0.0 to 1.0 as x increases linearly from 0.0 to 1.0 )
 //	http://briansharpe.wordpress.com/2011/11/14/two-useful-interpolation-functions-for-noise-development/
-float3 Interpolation_C2( float3 x ) { return x * x * x * (x * (x * 6.0 - 15.0) + 10.0); }
-
+float3 Interpolation_C2( float3 x )
+{
+	return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
+	
+}
 
 //	Perlin Noise 3D  ( gradient noise )
 //	Return value range of -1.0->1.0
@@ -113,10 +128,12 @@ float Perlin3D( float3 P )
 
 float PerlinNormal(float3 p, int octaves, float3 offset, float frequency, float amplitude, float lacunarity, float persistence)
 {
-	float sum = 0;
-	for (int i = 0; i < octaves; i++)
+	float sum = 0.0;
+	for (int i = 0; i <MAX_OCATAVES; i++)
 	{
-		float h = 0;
+		if ( i>=octaves )
+			break;
+		float h = 0.0;
 		h = Perlin3D((p + offset) * frequency);
 		sum += h*amplitude;
 		frequency *= lacunarity;
@@ -130,8 +147,8 @@ void main()
 	//float3 Seed = float3( i.uv,  _Time.y * _AnimSpeed );
 	
 	float t = Time;
-	float u = i.uv.x;
-	float v = i.uv.y;
+	float u = uv.x;
+	float v = uv.y;
 	
 	float3 Seedx = float3( t, u, v );
 	float3 Seedy = float3( u, v, t );

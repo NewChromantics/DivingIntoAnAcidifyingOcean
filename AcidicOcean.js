@@ -24,6 +24,9 @@ const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 const AnimalParticleVertShader = Pop.LoadFileAsString('AnimalParticle.vert.glsl');
 const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl');
 
+const Noise_TurbulenceFragShader = Pop.LoadFileAsString('Noise/TurbulencePerlin.frag.glsl');
+
+
 //	temp turning off and just having dummy actors
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
@@ -485,6 +488,11 @@ Params.Ocean_Colour2 = InvalidColour;
 Params.Ocean_Colour3 = InvalidColour;
 Params.Ocean_Colour4 = InvalidColour;
 
+Params.Turbulence_Frequency = 1.0;
+Params.Turbulence_Amplitude = 1.0;
+Params.Turbulence_Lacunarity = 1.92;
+Params.Turbulence_Persistence = 0.8;
+
 let OnParamsChanged = function(Params,ChangedParamName)
 {
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
@@ -500,8 +508,8 @@ if ( IsDebugEnabled() )
 	ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 	ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 	ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
-	ParamsWindow.AddParam('AnimalBufferLod',0,1);
 	ParamsWindow.AddParam('ExperiencePlaying');
+	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
 	ParamsWindow.AddParam('ShowAnimal_Duration',0,20);
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetX',-10,10);
@@ -509,9 +517,10 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetZ',-10,10);
 	ParamsWindow.AddParam('ShowAnimal_CameraLerpInSpeed',0,1);
 	ParamsWindow.AddParam('ShowAnimal_CameraLerpOutSpeed',0,1);
+	ParamsWindow.AddParam('DebugNoiseTextures');
+	ParamsWindow.AddParam('AnimalBufferLod',0,1);
 
 	ParamsWindow.AddParam('AutoGrabDebugCamera');
-	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('FogColour','Colour');
 	ParamsWindow.AddParam('LightColour','Colour');
 
@@ -536,7 +545,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('DrawTestRay');
 	ParamsWindow.AddParam('EnablePhysicsIteration');
 	ParamsWindow.AddParam('DebugPhysicsTextures');
-	ParamsWindow.AddParam('DebugNoiseTextures');
 	ParamsWindow.AddParam('BillboardTriangles');
 	ParamsWindow.AddParam('ShowClippedParticle');
 	ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
@@ -546,7 +554,7 @@ if ( IsDebugEnabled() )
 	
 	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
-	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,1);
+	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,10);
 	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
@@ -563,6 +571,12 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Ocean_Colour2','Colour');
 	ParamsWindow.AddParam('Ocean_Colour3','Colour');
 	ParamsWindow.AddParam('Ocean_Colour4','Colour');
+	
+	
+	ParamsWindow.AddParam('Turbulence_Frequency',0,4);
+	ParamsWindow.AddParam('Turbulence_Amplitude',0,4);
+	ParamsWindow.AddParam('Turbulence_Lacunarity',0,4);
+	ParamsWindow.AddParam('Turbulence_Persistence',0,4);
 }
 
 
@@ -1269,6 +1283,10 @@ function Update(FrameDurationSecs)
 	if ( AppTime === null )
 		Init();
 	
+	//	gr: continue physics even if paused
+	//AppTime += FrameDurationSecs;
+	AppTime += 1/60;
+
 	const Time = Params.TimelineYear;
 	
 	//	update audio
@@ -1359,6 +1377,32 @@ function UpdateSceneVisibility(Time)
 	Hud.Debug_VisibleActors.SetValue("Visible Actors: " + VisibleActorCount + "/" + Actors.length );
 }
 
+
+var Noise_Turbulence = new Pop.Image( [512,512], 'Float4' );
+
+function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
+{
+	//Pop.Debug("UpdateNoiseTexture",Texture,Time);
+	const Shader = Pop.GetShader( RenderTarget, NoiseShader, QuadVertShader );
+	const Quad = GetAsset('Quad',RenderTarget);
+
+	const RenderNoise = function(RenderTarget)
+	{
+		RenderTarget.ClearColour(0,0,1);
+		const SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
+			Shader.SetUniform('Time', Time );
+			Shader.SetUniform('_Frequency',Params.Turbulence_Frequency);
+			Shader.SetUniform('_Amplitude',Params.Turbulence_Amplitude);
+			Shader.SetUniform('_Lacunarity',Params.Turbulence_Lacunarity);
+			Shader.SetUniform('_Persistence',Params.Turbulence_Persistence);
+		}
+		RenderTarget.DrawGeometry( Quad, Shader, SetUniforms );
+	}
+	RenderTarget.RenderToRenderTarget( Texture, RenderNoise );
+}
+
 function Render(RenderTarget)
 {
 	//	update app logic
@@ -1369,6 +1413,12 @@ function Render(RenderTarget)
 	
 	const Time = Params.TimelineYear;
 
+	
+	const NoiseTime = AppTime;
+	UpdateNoiseTexture( RenderTarget, Noise_Turbulence, Noise_TurbulenceFragShader, NoiseTime );
+	
+
+	
 	const RenderCamera = GetRenderCamera();
 	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera() : RenderCamera;
 	const Viewport = RenderTarget.GetRenderTargetRect();
@@ -1393,8 +1443,7 @@ function Render(RenderTarget)
 			return;
 		const UpdatePhysicsUniforms = function(Shader)
 		{
-			//Shader.SetUniform('NoiseScale', Params.PhysicsDebrisNoiseScale );
-			//Shader.SetUniform('Damping', Params.PhysicsDebrisDamping );
+			Shader.SetUniform('Noise',Noise_Turbulence);
 		}
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
@@ -1405,6 +1454,7 @@ function Render(RenderTarget)
 		Scene.forEach( UpdateActorPhysics );
 		PhsyicsUpdateCount++;
 	}
+	
 	RenderTarget.ClearColour( ...Params.FogColour );
 	
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
@@ -1472,6 +1522,7 @@ function Render(RenderTarget)
 	if ( Params.DebugNoiseTextures )
 	{
 		DebugTextures.push( RandomTexture );
+		DebugTextures.push( Noise_Turbulence );
 	}
 	
 	//	render

@@ -13,6 +13,8 @@ const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo/L
 const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
 
 
+const MinimumLogoSecs = 0.1;
+
 function HideLogo()
 {
 	let HideHud = function(Name)
@@ -98,7 +100,7 @@ function TLogoState()
 	[
 		//	assets
 		'Timeline.json',
-		 'Animals.json',
+		'Animals.json',
 	 
 		'Quad.vert.glsl',
 		'ParticleTriangles.vert.glsl',
@@ -112,6 +114,7 @@ function TLogoState()
 	 
 	 	'AnimalParticle.frag.glsl',
 		'AnimalParticle.vert.glsl',
+	 	'Noise/TurbulencePerlin.frag.glsl',
 
 
 		//	code
@@ -278,7 +281,7 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	
 	//	wait minimum of X secs
 	//	todo: and button press
-	if ( StateTime < 3 )
+	if ( StateTime < MinimumLogoSecs )
 	{
 		//Pop.Debug("Logo...",StateTime);
 		return;
