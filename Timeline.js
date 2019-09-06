@@ -4,10 +4,19 @@ function TKeyframe(Time,Uniforms)
 	this.Uniforms = Uniforms;
 }
 
+//	recursive so we can lerp arrays of arrays
+function LerpArray(Min,Max,Time)
+{
+	let Values = Min.slice();
+	for ( let i=0;	i<Min.length;	i++ )
+		Values[i] = LerpValue( Min[i], Max[i], Time );
+	return Values;
+}
+
 function LerpValue(a,b,Lerp)
 {
 	if ( Array.isArray(a) )
-		return Math.LerpArray( a, b, Lerp );
+		return LerpArray( a, b, Lerp );
 
 	let IsLerpable = ( typeof a == 'number' );
 

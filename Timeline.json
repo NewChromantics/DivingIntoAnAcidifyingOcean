@@ -3,7 +3,21 @@
 	{
 		"Music": "Audio/AcidicOcean_AMB_AboveTheSurface.mp3",
 		"Subtitle":"",
-		"VoiceAudio":""
+		"VoiceAudio":"",
+		"DebrisColours": [
+		[0.03,0.25,0.51],
+		[0.03,0.41,0.67],
+		[0.17,0.55,0.75],
+		[0.31,0.70,0.83],
+		[0.79,0.91,0.95]
+		],
+		"OceanColours":[
+		[0.79,0.91,0.95],
+		[0.31,0.70,0.83],
+		[0.17,0.55,0.75],
+		[0.03,0.41,0.67],
+		[0.03,0.25,0.51]
+		]
 	},
 
 	"1801":
@@ -96,6 +110,21 @@
 	"2102":
 	{
 		"Subtitle":"",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3"
+		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3",
+		
+		"DebrisColours": [
+			[1,0,0],
+			[1,0,0],
+			[1,0,0],
+			[1,0,0],
+			[1,0,0]
+		],
+		"OceanColours":[
+			[1,0,0],
+			[1,0,0],
+			[1,0,0],
+			[1,0,0],
+			[1,0,0]
+		]
 	}
 }

@@ -55,10 +55,6 @@ function UnrollHexToRgb(Hexs)
 }
 
 //	colours from colorbrewer2.org
-const OceanColoursHex = ['#c9e7f2','#4eb3d3','#2b8cbe','#0868ac','#084081','#023859','#03658c','#218da6','#17aebf','#15bfbf'];
-const DebrisColoursHex = ['#084081','#0868ac'];
-const OceanColours = UnrollHexToRgb(OceanColoursHex);
-const DebrisColours = UnrollHexToRgb(DebrisColoursHex);
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
 const LightColour = [0.86,0.95,0.94];
 
@@ -483,17 +479,18 @@ Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.04;
 Params.Debris_PhysicsDamping = 0.04;
 Params.Debris_PhysicsNoiseScale = 9.9;
 
-Params.Debris_Colour0 = DebrisColours[0] || InvalidColour;
-Params.Debris_Colour1 = DebrisColours[1] || InvalidColour;
-Params.Debris_Colour2 = DebrisColours[2] || InvalidColour;
-Params.Debris_Colour3 = DebrisColours[3] || InvalidColour;
-Params.Debris_Colour4 = DebrisColours[4] || InvalidColour;
+Params.CustomiseWaterColours = false;
+Params.Debris_Colour0 = InvalidColour;
+Params.Debris_Colour1 = InvalidColour;
+Params.Debris_Colour2 = InvalidColour;
+Params.Debris_Colour3 = InvalidColour;
+Params.Debris_Colour4 = InvalidColour;
 Params.Ocean_TriangleScale = BoldMode ? 0.8 : 0.0148;
-Params.Ocean_Colour0 = OceanColours[0] || InvalidColour;
-Params.Ocean_Colour1 = OceanColours[1] || InvalidColour;
-Params.Ocean_Colour2 = OceanColours[2] || InvalidColour;
-Params.Ocean_Colour3 = OceanColours[3] || InvalidColour;
-Params.Ocean_Colour4 = OceanColours[4] || InvalidColour;
+Params.Ocean_Colour0 = InvalidColour;
+Params.Ocean_Colour1 = InvalidColour;
+Params.Ocean_Colour2 = InvalidColour;
+Params.Ocean_Colour3 = InvalidColour;
+Params.Ocean_Colour4 = InvalidColour;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -559,6 +556,8 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
+	ParamsWindow.AddParam('CustomiseWaterColours');
+	
 	ParamsWindow.AddParam('Debris_Colour0','Colour');
 	ParamsWindow.AddParam('Debris_Colour1','Colour');
 	ParamsWindow.AddParam('Debris_Colour2','Colour');
@@ -1294,6 +1293,29 @@ function Update(FrameDurationSecs)
 	Hud.Stats_Co2.SetValue( Stats_Co2 );
 	Hud.Stats_Oxygen.SetValue( Stats_Oxygen );
 	Hud.Stats_Ph.SetValue( Stats_Ph );
+	
+	//	update colours
+	if ( !Params.CustomiseWaterColours )
+	{
+		const UpdateReflection = true;	//	gr: thought this might be a hit updating the dom, but it's not
+		const DebrisColours = Timeline.GetUniform( Time, 'DebrisColours' );
+		const OceanColours = Timeline.GetUniform( Time, 'OceanColours' );
+
+		function CopyValue(Value,Index,NamePrefix)
+		{
+			let Name = NamePrefix + Index;
+			Params[Name] = Value || InvalidColour;
+			if ( UpdateReflection )
+				ParamsWindow.OnParamChanged(Name);
+		}
+		function CopyValues(Array,NamePrefix)
+		{
+			for ( let i=0;	i<5;	i++ )
+				CopyValue( Array[i], i, NamePrefix );
+		}
+		CopyValues( DebrisColours, 'Debris_Colour' );
+		CopyValues( OceanColours, 'Ocean_Colour' );
+	}
 	
 	UpdateSceneVisibility(Time);
 }
