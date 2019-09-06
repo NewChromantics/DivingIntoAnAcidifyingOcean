@@ -265,11 +265,52 @@ function LoadGeometryFile(Filename)
 	return Geo;
 }
 
-
-function LoadGeometryToTextureBuffers(Geo,MaxPositions)
+function GetChannelsFromPixelFormat(PixelFormat)
 {
-	const ScaleToBounds = undefined;
+	switch( PixelFormat )
+	{
+		case 'Greyscale':	return 1;
+		case 'RGBA':		return 4;
+		case 'RGB':			return 3;
+		case 'Float1':		return 1;
+		case 'Float2':		return 2;
+		case 'Float3':		return 3;
+		case 'Float4':		return 4;
+	}
+	throw "GetChannelsFromPixelFormat unhandled format " + PixelFormat;
+}
+
+function ConvertFloatPixelsToFormat(SourcePixels,SourcePixelChannels,DestFormat)
+{
+	Pop.Debug("ConvertFloatPixelsToFormat",DestFormat);
+	const DestChannels = GetChannelsFromPixelFormat( DestFormat );
+	const DestBuffer = new Uint8Array( SourcePixels.length / SourcePixelChannels * DestChannels );
+	
+	function FloatToByte(Value)
+	{
+		return Math.floor( Value * 255 );
+	}
+	
+	for ( let p=0;	p<SourcePixels.length/SourcePixelChannels;	p++ )
+	{
+		let SrcIndex = p * SourcePixelChannels;
+		let DstIndex = p * DestChannels;
+		for ( let i=0;	i<DestChannels;	i++ )
+		{
+			let Value = 255;
+			if ( i < SourcePixelChannels )
+				Value = FloatToByte( SourcePixels[SrcIndex+i] );
+			DestBuffer[DstIndex+i] = Value;
+		}
+	}
+	return DestBuffer;
+}
+
+
+function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,PositionFormat='Float3')
+{
 	const GetIndexMap = undefined;
+	const ScaleByBounds = undefined;
 	
 	//	mesh stuff
 	let PositionSize = Geo.PositionSize;
@@ -286,10 +327,8 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions)
 	if ( Alphas )
 		Alphas.length = Math.min( MaxPositions*AlphaSize, Alphas.length );
 	
-	//	scale positions
-	if ( ScaleToBounds && Positions )
+	if ( ScaleByBounds && Positions )
 	{
-		Pop.Debug("Scaling to ",ScaleToBounds);
 		const PositionCount = Positions.length / PositionSize;
 		for ( let p=0;	p<PositionCount;	p++ )
 		{
@@ -312,7 +351,38 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions)
 		}
 	}
 	
-	const AlphaIsPositionW = true;
+	
+	//	scale positions
+	if ( ScaleToBounds && Positions )
+	{
+		Pop.Debug("Scaling to ",ScaleToBounds);
+		const PositionCount = Positions.length / PositionSize;
+		for ( let p=0;	p<PositionCount;	p++ )
+		{
+			for ( let v=0;	v<PositionSize;	v++ )
+			{
+				let i = (p * PositionSize)+v;
+				let f = Positions[i];
+				f = Math.range( Geo.BoundingBox.Min[v], Geo.BoundingBox.Max[v], f );
+				f = Math.lerp( ScaleToBounds.Min[v], ScaleToBounds.Max[v], f );
+				Positions[i] = f;
+			}
+		}
+		
+		//	retain original bounds for normalising
+		/*
+		//	scale up the geo bounding box
+		Geo.BoundingBox.Min = Geo.BoundingBox.Min.slice();
+		Geo.BoundingBox.Max = Geo.BoundingBox.Max.slice();
+		for ( let i=0;	i<3;	i++ )
+		{
+			Geo.BoundingBox.Min[i] = Math.lerp( ScaleToBounds.Min[i], ScaleToBounds.Max[i], Geo.BoundingBox.Min[i] );
+			Geo.BoundingBox.Max[i] = Math.lerp( ScaleToBounds.Min[i], ScaleToBounds.Max[i], Geo.BoundingBox.Max[i] );
+		}
+		*/
+	}
+	
+	const AlphaIsPositionW = false;
 	if ( AlphaIsPositionW && Alphas && PositionSize < 4 )
 	{
 		let NewPositions = [];
@@ -360,12 +430,21 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions)
 		const PixelValues = Positions.slice();
 		PixelValues.length = PixelDataSize;
 		
-		const Pixels = new Float32Array( PixelValues );
-		if ( Pixels.length != PixelDataSize )
-			throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
+		//	convert to 8 bit
+		if ( !PositionFormat.startsWith('Float') )
+		{
+			const Pixels8 = ConvertFloatPixelsToFormat( PixelValues, PositionSize, PositionFormat );
+			PositionImage.WritePixels( Width, Height, Pixels8, PositionFormat );
+		}
+		else
+		{
+			const Pixels = new Float32Array( PixelValues );
+			if ( Pixels.length != PixelDataSize )
+				throw "Float32Array size("+Pixels.length+") didn't pad to " + PixelDataSize;
 		
-		const PixelFormat = 'Float'+Channels;
-		PositionImage.WritePixels( Width, Height, Pixels, PixelFormat );
+			const PixelFormat = 'Float'+Channels;
+			PositionImage.WritePixels( Width, Height, Pixels, PixelFormat );
+		}
 	}
 	
 	const ColoursAs8Bit = true;
