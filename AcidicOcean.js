@@ -497,8 +497,8 @@ Params.DrawBoundingBoxesFilled = false;
 Params.ScrollFlySpeed = 50;
 
 Params.Animal_TriangleScale = 0.01;
-Params.Animal_PhysicsDamping = 0.01;
-Params.Animal_PhysicsNoiseScale = 9.9;
+Params.Animal_PhysicsDamping = 0.12;
+Params.Animal_PhysicsNoiseScale = 16.0;
 Params.NastyAnimal_PhysicsNoiseScale = 0.45;
 Params.NastyAnimal_PhysicsSpringScale = 0.65;
 Params.NastyAnimal_PhysicsDamping = 0.01;
@@ -521,7 +521,7 @@ Params.Ocean_Colour2 = InvalidColour;
 Params.Ocean_Colour3 = InvalidColour;
 Params.Ocean_Colour4 = InvalidColour;
 
-Params.Turbulence_Frequency = 1.13;
+Params.Turbulence_Frequency = 2.2;
 Params.Turbulence_Amplitude = 1.0;
 Params.Turbulence_Lacunarity = 0.10;
 Params.Turbulence_Persistence = 0.20;
