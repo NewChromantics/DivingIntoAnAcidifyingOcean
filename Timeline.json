@@ -9,19 +9,9 @@
 		[0.03,0.41,0.67],
 		[0.17,0.55,0.75],
 		[0.31,0.70,0.83],
-		[0.79,0.91,0.95],
-		[0.03,0.25,0.51],
-		[0.03,0.41,0.67],
-		[0.17,0.55,0.75],
-		[0.31,0.70,0.83],
 		[0.79,0.91,0.95]
 		],
 		"OceanColours":[
-		[0.79,0.91,0.95],
-		[0.31,0.70,0.83],
-		[0.17,0.55,0.75],
-		[0.03,0.41,0.67],
-		[0.03,0.25,0.51],
 		[0.79,0.91,0.95],
 		[0.31,0.70,0.83],
 		[0.17,0.55,0.75],
@@ -33,7 +23,7 @@
 	"1801":
 	{
 		"Subtitle":"Every second breath we take...",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_EverySecondBreath.mp3"
+		"VoiceAudio":""
 	},
 	"1804":
 	{
@@ -49,7 +39,7 @@
 	"1830":
 	{
 		"Subtitle":"In a single lifetime…",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_InASingleLifetime.mp3"
+		"VoiceAudio":""
 	},
 	
 	"1843":
