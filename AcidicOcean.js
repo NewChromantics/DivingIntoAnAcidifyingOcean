@@ -1564,6 +1564,8 @@ function Render(RenderTarget)
 			return;
 		const UpdatePhysicsUniforms = function(Shader)
 		{
+			const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
+			Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
 			Shader.SetUniform('Noise',Noise_Turbulence);
 		}
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );

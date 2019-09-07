@@ -3,6 +3,7 @@ precision highp float;
 varying vec2 uv;
 uniform sampler2D LastVelocitys;
 uniform sampler2D OrigPositions;
+uniform float3 OrigPositionsBoundingBox[2];
 
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
@@ -11,11 +12,25 @@ uniform float Gravity;// = -0.1;
 uniform float Damping;
 const float TinyNoiseScale = 0.1;
 
+float Range(float Min,float Max,float Value)
+{
+	return (Value-Min) / (Max-Min);
+}
+
+float3 Range3(float3 Min,float3 Max,float3 Value)
+{
+	float x = Range( Min.x, Max.x, Value.x );
+	float y = Range( Min.y, Max.y, Value.y );
+	float z = Range( Min.z, Max.z, Value.z );
+	return float3(x,y,z);
+}
+
 float3 GetNormal(float2 uv)
 {
 	vec3 Position = texture2D( OrigPositions, uv ).xyz;
-	vec3 Normal = normalize( Position );
-	return Position;
+
+	vec3 PositionNorm = Range3( OrigPositionsBoundingBox[0], OrigPositionsBoundingBox[1], Position );
+	return PositionNorm;
 }
 
 float3 GetNoise(float2 uv)
