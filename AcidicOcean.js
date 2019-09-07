@@ -41,7 +41,8 @@ const InvalidColour = [0,1,0];
 const OceanActorPrefix = 'Ocean_surface_';
 const DebrisActorPrefix = 'Water_';
 const NastyAnimalPrefix = 'Nasty_Animal_';
-const AnimalActorPrefixs = ['Animal_','Bigbang_',NastyAnimalPrefix];
+const BigBangAnimalPrefix = 'Bigbang_';
+const AnimalActorPrefixs = ['Animal_',BigBangAnimalPrefix,NastyAnimalPrefix];
 const IgnoreActorPrefixs = ['Camera_Spline'];
 
 function SetupFileAssets()
@@ -441,7 +442,7 @@ function GetActorIntersections(CameraScreenUv)
 	}
 	
 	//	find actor
-	const Scene = GetActorScene( Time, FilterActor );
+	const Scene = GetActorScene( FilterActor );
 	const SelectedActors = GetIntersectingActors( Ray, Scene );
 	
 	return SelectedActors;
@@ -450,10 +451,12 @@ function GetActorIntersections(CameraScreenUv)
 
 
 const TimelineMinYear = 1790;
+const TimelineBigBangYear = 1823;
 const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2160;
 const TimelineMaxInteractiveYear = 2100;
 
+const BigBangDuration = 10;
 
 Params.TimelineYear = TimelineMinYear;
 Params.ExperienceDurationSecs = 240;
@@ -1031,7 +1034,7 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 
 
 //	filter for culling
-function GetActorScene(Time,Filter)
+function GetActorScene(Filter)
 {
 	let Scene = [];
 	Filter = Filter || function(Actor)	{	return true;	};
@@ -1129,7 +1132,7 @@ function GetRenderScene(Time,VisibleFilter)
 		Scene.push( Actor );
 	}
 	
-	const ActorScene = GetActorScene( Time, VisibleFilter );
+	const ActorScene = GetActorScene( VisibleFilter );
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
@@ -1195,6 +1198,7 @@ function Init()
 	Hud.Animal_Title = new Pop.Hud.Label('AnimalCard_Title');
 	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');
 
+	Hud.Debug_State = new Pop.Hud.Label('Debug_State');
 	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
 	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
 	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
@@ -1209,14 +1213,18 @@ function Init()
 var Acid = {};
 
 //	use a string if function not yet declared
+Acid.State_Intro = 'Intro';
 Acid.State_Fly = 'Fly';
 Acid.State_ShowAnimal = 'ShowAnimal';
+Acid.State_BigBang = 'BigBang';
 Acid.StateMap =
 {
+	'Intro':		Update_Intro,
+	'BigBang':		Update_BigBang,
 	'Fly':			Update_Fly,
 	'ShowAnimal':	Update_ShowAnimal
 };
-Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Fly, Acid.State_Fly, false );
+Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, false );
 Acid.SelectedActor = null;
 Acid.FogLerp = 0;
 Acid.FogTargetPosition = null;
@@ -1311,6 +1319,75 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	return Acid.State_Fly;
 }
 
+
+
+function Update_Intro(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
+		//	init very first camera pos
+		if ( !Acid.CameraPosition )
+		{
+			Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
+		}
+	}
+	
+	Update( FrameDuration );
+	
+	//	move time along
+	{
+		const ExpYears = TimelineMaxYear - TimelineMinYear;
+		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
+		const YearsPerFrame = FrameDuration * YearsPerSec;
+		Params.TimelineYear += YearsPerFrame;
+		if ( ParamsWindow )
+			ParamsWindow.OnParamChanged('TimelineYear');
+	}
+	
+	//	move camera
+	{
+		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
+		let TargetCameraPos = TimelineCameraPos;
+		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
+	}
+	
+	UpdateFog(FrameDuration);
+	
+	//	fly until we hit big bang
+	if ( Params.TimelineYear >= TimelineBigBangYear )
+		return Acid.State_BigBang;
+	
+	//	stay flying
+	return null;
+}
+
+
+function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
+		//	explode all bigbang nodes
+		function IsBigBangActor(Actor)
+		{
+			return Actor.Name.startsWith( BigBangAnimalPrefix );
+		}
+		const BigBangActors = GetActorScene( IsBigBangActor );
+		function Explode(Actor)
+		{
+			Actor.UpdatePhysics = true;
+			Actor.AnimalHasBeenExploded = true;
+		}
+		BigBangActors.forEach( Explode );
+	}
+	
+	UpdateFog( FrameDuration );
+	Update( FrameDuration );
+
+	if ( StateTime < BigBangDuration )
+		return null;
+	
+	return Acid.State_Fly;
+}
 
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
@@ -1442,6 +1519,8 @@ function Update(FrameDurationSecs)
 	Hud.Stats_Oxygen.SetValue( Stats_Oxygen );
 	Hud.Stats_Ph.SetValue( Stats_Ph );
 	
+	Hud.Debug_State.SetValue( "State: " + Acid.StateMachine.CurrentState );
+	
 	//	update colours
 	if ( !Params.CustomiseWaterColours )
 	{
@@ -1492,7 +1571,7 @@ function UpdateSceneVisibility(Time)
 		if ( Actor.IsVisible )
 			VisibleActorCount++;
 	}
-	const Actors = GetActorScene( Time, function(){return true;} );
+	const Actors = GetActorScene( function(){return true;} );
 	Actors.forEach( UpdateActorVisibility );
 	
 	Hud.Debug_VisibleActors.SetValue("Visible Actors: " + VisibleActorCount + "/" + Actors.length );
