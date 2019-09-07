@@ -27,6 +27,8 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 const Noise_TurbulenceFragShader = Pop.LoadFileAsString('Noise/TurbulencePerlin.frag.glsl');
 
 
+
+
 //	temp turning off and just having dummy actors
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
@@ -38,7 +40,8 @@ const InvalidColour = [0,1,0];
 
 const OceanActorPrefix = 'Ocean_surface_';
 const DebrisActorPrefix = 'Water_';
-const AnimalActorPrefixs = ['Animal','Bigbang'];
+const NastyAnimalPrefix = 'Nasty_Animal_';
+const AnimalActorPrefixs = ['Animal_','Bigbang_',NastyAnimalPrefix];
 const IgnoreActorPrefixs = ['Camera_Spline'];
 
 function SetupFileAssets()
@@ -89,8 +92,13 @@ function GetDebrisMeta()
 	Meta.Filename = '.random';
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
-	Meta.PhysicsNoiseScale = Params.Debris_PhysicsNoiseScale;
-	Meta.PhysicsDamping = Params.Debris_PhysicsDamping;
+	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
+	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
+	
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
+
 	Meta.TriangleScale = Params.Debris_TriangleScale;
 	Meta.Colours =
 	[
@@ -109,13 +117,33 @@ function GetAnimalMeta()
 	const Meta = {};
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
-	Meta.PhysicsNoiseScale = Params.Animal_PhysicsNoiseScale;
-	Meta.PhysicsDamping = Params.Animal_PhysicsDamping;
+	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
+	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
+
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
+	
 	Meta.TriangleScale = Params.Animal_TriangleScale;
 	Meta.Colours = [InvalidColour];
 	return Meta;
 }
 
+function GetNastyAnimalMeta()
+{
+	let Meta = GetAnimalMeta();
+	
+	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocityPulse;
+	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
+
+	Meta.PhysicsUniforms.NoiseScale = Params.NastyAnimal_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.SpringScale = Params.NastyAnimal_PhysicsSpringScale;
+	Meta.PhysicsUniforms.Damping = Params.NastyAnimal_PhysicsDamping;
+	Meta.PhysicsUniforms.ExplodeScale = Params.NastyAnimal_PhysicsExplodeScale;
+
+
+	return Meta;
+}
 
 //	store this somewhere else so the preload matches
 var OceanFilenames = [];
@@ -165,7 +193,7 @@ function IsActorSelectable(Actor)
 		return false;
 	
 	const SelectableNames = AnimalActorPrefixs;
-	const Match = SelectableNames.some( MatchName => Actor.Name.includes(MatchName) );
+	const Match = SelectableNames.some( MatchName => Actor.Name.startsWith(MatchName) );
 	if ( !Match )
 		return false;
 	
@@ -471,6 +499,11 @@ Params.ScrollFlySpeed = 50;
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.01;
 Params.Animal_PhysicsNoiseScale = 9.9;
+Params.NastyAnimal_PhysicsNoiseScale = 0.45;
+Params.NastyAnimal_PhysicsSpringScale = 0.65;
+Params.NastyAnimal_PhysicsDamping = 0.01;
+Params.NastyAnimal_PhysicsExplodeScale = 3.1;
+
 Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.04;
 Params.Debris_PhysicsDamping = 0.04;
 Params.Debris_PhysicsNoiseScale = 9.9;
@@ -555,6 +588,11 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,10);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsNoiseScale',0,10);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsSpringScale',0,1);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsExplodeScale',0,10);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsDamping',0,1);
+
 	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
@@ -608,9 +646,10 @@ const FakeRenderTarget = {};
 
 function SetupAnimalTextureBufferActor(Filename,GetMeta)
 {
+	const Meta = GetMeta();
 	this.Geometry = 'AutoTriangleMesh';
-	this.VertShader = GetMeta().VertShader;
-	this.FragShader = GetMeta().FragShader;
+	this.VertShader = Meta.VertShader;
+	this.FragShader = Meta.FragShader;
 	
 	{
 		//	handle array for animation
@@ -636,11 +675,11 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		}
 	}
 	
-	this.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
-	this.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
+	this.UpdateVelocityShader = Meta.VelocityShader;
+	this.UpdatePositionShader = Meta.PositionShader;
 	this.UpdatePhysics = false;
 	
-	if ( GetMeta().FitToBoundingBox )
+	if ( Meta.FitToBoundingBox )
 	{
 		//	box is local space, but world size
 		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
@@ -698,8 +737,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
 		this.VelocityTexture = new Pop.Image(Size,'Float3');
 		this.ScratchTexture = new Pop.Image(Size,'Float3');
-		this.PositionOrigTexture = new Pop.Image();
-		this.PositionOrigTexture.Copy( this.PositionTexture );
+		//this.PositionOrigTexture = new Pop.Image();
+		this.PositionOrigTexture = this.TextureBuffers.PositionTexture;
+		//this.PositionOrigTexture.Copy( this.PositionTexture );
 	}
 	
 	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
@@ -716,8 +756,13 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const SetAnimalPhysicsUniforms = function(Shader)
 		{
 			SetPhysicsUniforms(Shader);
-			Shader.SetUniform('NoiseScale', Meta.PhysicsNoiseScale );
-			Shader.SetUniform('Damping', Meta.PhysicsDamping );
+			
+			function ApplyUniform(UniformName)
+			{
+				const Value = Meta.PhysicsUniforms[UniformName];
+				Shader.SetUniform( UniformName, Value );
+			}
+			Object.keys( Meta.PhysicsUniforms ).forEach( ApplyUniform );
 		}
 		
 		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
@@ -816,7 +861,8 @@ function LoadCameraScene(Filename)
 				const Animal = GetRandomAnimal( ActorNode.Name );
 				Actor.Animal = Animal;
 				Actor.Name += " " + Animal.Name;
-				SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetAnimalMeta );
+				const GetMeta = ActorNode.Name.startsWith( NastyAnimalPrefix ) ? GetNastyAnimalMeta : GetAnimalMeta;
+				SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetMeta );
 			}
 		}
 		else

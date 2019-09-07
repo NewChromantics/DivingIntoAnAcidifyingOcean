@@ -111,6 +111,7 @@ function TLogoState()
 		'Edge.frag.glsl',
 		'PhysicsIteration_UpdateVelocity.frag.glsl',
 		'PhysicsIteration_UpdatePosition.frag.glsl',
+		'PhysicsIteration_UpdateVelocityPulse.frag.glsl',
 	 
 	 	'AnimalParticle.frag.glsl',
 		'AnimalParticle.vert.glsl',

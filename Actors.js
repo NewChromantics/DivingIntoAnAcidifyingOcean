@@ -1,6 +1,7 @@
 
 const BlitCopyShader = Pop.LoadFileAsString('BlitCopy.frag.glsl');
 const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
+const ParticlePhysicsIteration_UpdateVelocityPulse = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocityPulse.frag.glsl');
 const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
 const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
