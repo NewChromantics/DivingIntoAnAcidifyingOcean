@@ -813,7 +813,7 @@ function LoadCameraScene(Filename)
 			}
 			else
 			{
-				const Animal = GetRandomAnimal();
+				const Animal = GetRandomAnimal( ActorNode.Name );
 				Actor.Animal = Animal;
 				Actor.Name += " " + Animal.Name;
 				SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetAnimalMeta );

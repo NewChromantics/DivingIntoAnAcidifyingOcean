@@ -13,15 +13,26 @@ let AnimalUsageCounter = 0;
 //	debug, force one model to load
 const ForceRandomAnimal = null;//"PLASTIC BAG";
 
-function GetRandomAnimal()
+function GetRandomAnimal(Category)
 {
-	const AnimalNames = Object.keys(AnimalDatabase);
-	//const AnimalIndex = Math.floor( Math.random() * AnimalNames.length );
-	let AnimalIndex = (AnimalUsageCounter++) % AnimalNames.length;
 	if ( ForceRandomAnimal )
-		AnimalIndex = AnimalNames.indexOf(ForceRandomAnimal);
+		return AnimalDatabase[ForceRandomAnimal];
+
+	function FilterByCategory(AnimalName)
+	{
+		const Animal = AnimalDatabase[AnimalName];
+		const MatchedCategory = Animal.Categorys.some( c => Category.startsWith( c ) );
+		return MatchedCategory;
+	}
 	
-	const Animal = AnimalDatabase[AnimalNames[AnimalIndex]];
+	//	get animals that fit category to choose from
+	let AnimalNames = Object.keys(AnimalDatabase);
+	AnimalNames = AnimalNames.filter( FilterByCategory );
+	
+	//const AnimalIndex = Math.floor( Math.random() * AnimalNames.length );
+	const AnimalIndex = (AnimalUsageCounter++) % AnimalNames.length;
+	const AnimalName = AnimalNames[AnimalIndex];
+	const Animal = AnimalDatabase[AnimalName];
 	return Animal;
 }
 

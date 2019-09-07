@@ -5,7 +5,7 @@
 		"Description":	"<h1> When scientists placed pteropods in water with levels of pH and CO2 projected for the year 2100, their shells started decaying within 48h and nearly completely dissolved within 45 days. </h1> <h2>pH is a very important thing. In humans, a small change of 0.2 to 0.3 pH in blood can cause seizures, comas, and even death.</h2>",
 		"Model":	"Models/pteropod_v1.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 	},
 	
 	"JELLYFISH":
@@ -14,7 +14,7 @@
 		"Description":	"<h1> Acidification is will shift the competitive advantage among ocean species. </h1> <h2>Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years.</h2>",
 		"Model":	"Models/jellyfish_v1.ply",
 		"AfterYear":	1950,
-		"category" : [ "animal"]
+		"Categorys" : [ "Animal_"]
 
 	},
 
@@ -24,7 +24,7 @@
 		"Description":	"<h1> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h1> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. A 10% reduction in pteropod numbers could cause salmon to lose up to 20% of their mass.</h2>",
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 
@@ -34,7 +34,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Seagrass.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 
@@ -44,7 +44,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 
@@ -54,7 +54,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Anemone.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal"]
+		"Categorys" : [ "Animal_"]
 
 	},
 	"FISH LARVAE":
@@ -63,7 +63,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/FishLarvae.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal"]
+		"Categorys" : [ "Animal_"]
 
 	},
 	"SEA URCHIN":
@@ -72,7 +72,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/SeaUrchins3.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"COCKLE":
@@ -81,7 +81,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/cockle_v1.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 	"ALGAL BLOOM":
@@ -90,7 +90,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/AlgalBloom.ply",
 		"AfterYear":	2040,
-		"category" : [ "animal"]
+		"Categorys" : [ "Animal_"]
 
 	},
 	"POLLOCK":
@@ -99,7 +99,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"ANTARCTIC KRILL":
@@ -108,7 +108,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/AnarcticKrill.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 	"CORALLINE ALGAE":
@@ -117,7 +117,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/CorallineAlgue.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal"]
+		"Categorys" : [ "Animal_"]
 
 	},
 	"NODULARIA SPUMIGENA":
@@ -126,7 +126,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/NodulariaSpumi.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"KELP FOREST":
@@ -135,7 +135,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	".random",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"DEEP SEA CRAB":
@@ -144,7 +144,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/DeepSeaCrab.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"SHARK":
@@ -153,7 +153,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/shark_v1.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 	"CEPHALOPODS":
@@ -162,7 +162,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/cephalopod_v1.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 	"DEEP SEA CORAL":
@@ -171,7 +171,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/DeepSeaCoral2.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"BUBBLE GUM CORAL":
@@ -180,7 +180,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/BubbleGumCoral.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"LOBSTER":
@@ -189,7 +189,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Lobster.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"JUVENILE BIVALVE":
@@ -198,7 +198,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/JuvenileBivalve.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"BLUE KING CRAB":
@@ -207,7 +207,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/BlueKingCrab.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"SEA TURTLE":
@@ -216,7 +216,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/seaturtle_v1.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 	"YELLOWFIN TUNA":
@@ -225,7 +225,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/YellowTuna.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"COBIA":
@@ -234,7 +234,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Cobia.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"PHYTOPLANKTON":
@@ -243,7 +243,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Phytoplankton.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"MUSSELS":
@@ -252,7 +252,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/Mussel.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"MENIDIA MENIDIA":
@@ -261,7 +261,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 	"BRACHYURAN CRAB":
@@ -270,7 +270,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 		"BRITTLE STAR":
@@ -279,7 +279,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/BrittleStar.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 		"CORAL":
@@ -288,7 +288,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	".random",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 		"CLOWNFISH":
@@ -297,7 +297,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/clownfish_v1.ply",
 		"AfterYear":	1860,
-		"category" : [ "animal", "bigbang" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 		"PLASTIC BOTTLE":
@@ -306,7 +306,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/PlasticBottle.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"CAN":
@@ -315,7 +315,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/BeerCan.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"PLASTIC STRAW":
@@ -324,7 +324,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/PlasticStraw.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"PLASTIC BAG":
@@ -333,7 +333,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/PlasticBag2.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"SANITARY PAD":
@@ -342,7 +342,7 @@
 		"Description":	"<h1> As many as 10 000 disposable period products are used in a woman's reproductive lifetime, which corresponds to a carbon footprint of 5,3kg of CO2 per year. Average carbon footprint? </h1> <h2> Every year, UK women produce the equivalent of 200 000 tonnes of menstrual waste. That’s 27 Eiffel Towers. </h2> <h2> Forty pads, panty liners and backing strips are found for every kilometre of UK beach, along with 12 used tampons and applicators. </h2>",
 		"Model":	"Models/SanitaryPad.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"PIECE OF PLASTIC":
@@ -351,7 +351,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/PiecesOfPlastic.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"FOOD CONTAINER":
@@ -360,7 +360,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/PlasticContainer.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"CIGARETTE STUB":
@@ -369,7 +369,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/CigeretteStub.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 		"GHOST NET":
@@ -378,7 +378,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	".random",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	},
 	"MICROPLASTIC":
@@ -387,7 +387,7 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/MicroPlastic2.ply",
 		"AfterYear":	1956,
-		"category" : [ "nasty animal" ]
+		"Categorys" : [ "Nasty_Animal_" ]
 
 	}
 
