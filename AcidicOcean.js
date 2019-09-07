@@ -146,6 +146,18 @@ function GetNastyAnimalMeta()
 	return Meta;
 }
 
+
+function GetBigBangAnimalMeta()
+{
+	let Meta = GetAnimalMeta();
+	
+	Meta.PhysicsUniforms.Noise = RandomTexture;
+	
+	return Meta;
+}
+
+
+
 //	store this somewhere else so the preload matches
 var OceanFilenames = [];
 let LoadOceanFrames = 96;
@@ -875,7 +887,11 @@ function LoadCameraScene(Filename)
 				const Animal = GetRandomAnimal( ActorNode.Name );
 				Actor.Animal = Animal;
 				Actor.Name += " " + Animal.Name;
-				const GetMeta = ActorNode.Name.startsWith( NastyAnimalPrefix ) ? GetNastyAnimalMeta : GetAnimalMeta;
+				let GetMeta = GetAnimalMeta;
+				if ( ActorNode.Name.startsWith( NastyAnimalPrefix ) )
+					GetMeta = GetNastyAnimalMeta;
+				if ( ActorNode.Name.startsWith( BigBangAnimalPrefix ) )
+					GetMeta = GetBigBangAnimalMeta;
 				SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetMeta );
 			}
 		}
