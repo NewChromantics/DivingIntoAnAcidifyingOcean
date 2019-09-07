@@ -23,7 +23,7 @@ float3 GetNoise(float2 uv)
 	//	sample from the noise texture in a
 	float3 Normal = GetNormal(uv);
 	float2 Sampleuv = Normal.xy;
-	Sampleuv *= Normal.z;
+	Sampleuv *= Normal.z * 0.5;
 	
 	float3 NoiseValue = texture2D( Noise, Sampleuv ).xyz;
 	//	turn to -1..1 (amplitude needs to be 1 really)
