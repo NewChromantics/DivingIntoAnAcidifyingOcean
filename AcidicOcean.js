@@ -482,7 +482,11 @@ Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 8.0;
 Params.FogMaxDistance = BoldMode ? 999 : 20.0;
+Params.FogHighlightMinDistance = 0.8;
+Params.FogHighlightMaxDistance = 2.7;
 Params.FogColour = FogColour;
+Params.FogParamsLerpSpeed = 0.1;
+Params.FogTargetLerpSpeed = 0.2;
 Params.LightColour = LightColour;
 Params.DebugPhysicsTextures = false;
 Params.DebugNoiseTextures = IsDebugEnabled();
@@ -494,6 +498,7 @@ Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 25;
 Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
+Params.DrawHighlightedActors = false;
 Params.ScrollFlySpeed = 50;
 
 Params.Animal_TriangleScale = 0.01;
@@ -560,6 +565,9 @@ if ( IsDebugEnabled() )
 
 	ParamsWindow.AddParam('FogMinDistance',0,50);
 	ParamsWindow.AddParam('FogMaxDistance',0,50);
+	ParamsWindow.AddParam('FogHighlightMinDistance',0,50);
+	ParamsWindow.AddParam('FogHighlightMaxDistance',0,50);
+	ParamsWindow.AddParam('FogParamsLerpSpeed',0,1);
 	ParamsWindow.AddParam('EnableMusic');
 	ParamsWindow.AddParam('DrawBoundingBoxes');
 	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
@@ -1154,7 +1162,8 @@ function GetRenderScene(Time,VisibleFilter)
 		let Max = [TestSize,TestSize,TestSize];
 		PushActorBox( Pos, Min, Max, true );
 	}
-	Debug_HighlightActors.forEach( DrawIntersection );
+	if ( Params.DrawHighlightedActors )
+		Debug_HighlightActors.forEach( DrawIntersection );
 	
 	return Scene;
 }
@@ -1209,12 +1218,26 @@ Acid.StateMap =
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Fly, Acid.State_Fly, false );
 Acid.SelectedActor = null;
+Acid.FogLerp = 0;
+Acid.FogTargetPosition = null;
 Acid.CameraPosition = null;	//	current pos for lerping depending on state
 Acid.GetCameraPosition = function()
 {
 	if ( !Acid.CameraPosition )
 		throw "this should have been set before use";
 	return Acid.CameraPosition;
+}
+Acid.GetFogParams = function()
+{
+	let TargetPos = Acid.FogTargetPosition || [0,0,0];
+	
+	const FogParams = {};
+	const CameraPos = Acid.GetCameraPosition();
+
+	FogParams.WorldPosition = Math.LerpArray( CameraPos, TargetPos, Acid.FogLerp );
+	FogParams.MinDistance = Math.Lerp( Params.FogMinDistance, Params.FogHighlightMinDistance, Acid.FogLerp );
+	FogParams.MaxDistance = Math.Lerp( Params.FogMaxDistance, Params.FogHighlightMaxDistance, Acid.FogLerp );
+	return FogParams;
 }
 
 function GetActorWorldPos(Actor)
@@ -1223,8 +1246,29 @@ function GetActorWorldPos(Actor)
 	return Math.GetMatrixTranslation( Transform );
 }
 
+function UpdateFog(FrameDuration)
+{
+	if ( Acid.SelectedActor )
+	{
+		//	update position in case user quickly switches
+		let ActorPos = GetActorWorldPos( Acid.SelectedActor );
+		if ( !Acid.FogTargetPosition )
+			Acid.FogTargetPosition = ActorPos;
+		
+		Acid.FogTargetPosition = Math.LerpArray( Acid.FogTargetPosition, ActorPos, Params.FogTargetLerpSpeed );
+		Acid.FogLerp += Params.FogParamsLerpSpeed;
+	}
+	else
+	{
+		Acid.FogLerp -= Params.FogParamsLerpSpeed;
+	}
+	Acid.FogLerp = Math.clamp( 0, 1, Acid.FogLerp );
+}
+
 function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 {
+	UpdateFog(FrameDuration);
+	
 	if ( FirstUpdate )
 	{
 		//	update hud to the current animal
@@ -1299,23 +1343,51 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	}
 	
 	//	check for animal selection
-	let SelectedActor = null;
-	//	process clicks
-	const ProcessClick = function(uv)
+	function CompareNearest(IntersectionA,IntersectionB)
 	{
-		//	gr: should reuse selected list?
+		const za = IntersectionA.Position[2];
+		const zb = IntersectionB.Position[2];
+		if ( za < zb )	return -1;
+		if ( za > zb )	return 1;
+		return 0;
+	}
+
+	function GetActorFromUv(uv)
+	{
+		if ( !LastMouseRayUv )
+			return null;
+		
 		const IntersectedActors = GetActorIntersections(uv);
-		if ( IntersectedActors.length > 0 )
+		if ( IntersectedActors.length == 0 )
+			return null;
+		//	sort by nearest!
+		IntersectedActors.sort( CompareNearest );
+		let ActorSelectedActor = IntersectedActors[0].Actor;
+		return ActorSelectedActor;
+	}
+	
+	//	update highlight
+	let HighlightedActor = GetActorFromUv( LastMouseRayUv );
+	let HighlightedActorClicked = false;
+	if ( LastMouseClicks.length > 0 )
+	{
+		let LastClickUv =  LastMouseClicks[LastMouseClicks.length-1];
+		LastMouseClicks.length = 0;
+		let LastClickActor = GetActorFromUv( LastClickUv );
+		if ( LastClickActor )
 		{
-			SelectedActor = IntersectedActors[0].Actor;
+			HighlightedActor = LastClickActor;
+			HighlightedActorClicked = true;
 		}
 	}
-	LastMouseClicks.forEach( ProcessClick );
-	LastMouseClicks.length = 0;
 
-	if ( SelectedActor )
+	Acid.SelectedActor = HighlightedActor;
+	
+	UpdateFog(FrameDuration);
+	
+	
+	if ( HighlightedActorClicked )
 	{
-		Acid.SelectedActor = SelectedActor;
 		return Acid.State_ShowAnimal;
 	}
 	
@@ -1510,7 +1582,7 @@ function Render(RenderTarget)
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 	
-	let FogWorldPos = RenderCamera.Position;
+	const FogParams = Acid.GetFogParams();
 	
 	
 	let RenderSceneActor = function(Actor,ActorIndex)
@@ -1520,10 +1592,10 @@ function Render(RenderTarget)
 			Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
 			Shader.SetUniform('CameraToWorldTransform', CameraToWorldTransform );
 			Shader.SetUniform('CameraProjectionTransform', CameraProjectionTransform );
-			Shader.SetUniform('Fog_MinDistance',Params.FogMinDistance);
-			Shader.SetUniform('Fog_MaxDistance',Params.FogMaxDistance);
+			Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
+			Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
 			Shader.SetUniform('Fog_Colour',Params.FogColour);
-			Shader.SetUniform('Fog_WorldPosition', FogWorldPos );
+			Shader.SetUniform('Fog_WorldPosition', FogParams.WorldPosition );
 			Shader.SetUniform('Light_Colour', Params.LightColour );
 			Shader.SetUniform('Light_MinPower', 0.1 );
 			Shader.SetUniform('Light_MaxPower', 1.0 );
@@ -1555,10 +1627,10 @@ function Render(RenderTarget)
 		const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 		const Quad = GetAsset('Quad',RenderTarget);
 		
-		let w = 0.2;
+		let w = 0.1;
 		let h = 0.2;
-		let x = 0.2;
-		let y = 0.2 + (TextureIndex*h*1.10);
+		let x = 0.1;
+		let y = 0.1 + (TextureIndex*h*1.10);
 		const SetUniforms = function(Shader)
 		{
 			Shader.SetUniform('VertexRect', [x, y, w, h ] );
