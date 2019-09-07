@@ -521,10 +521,11 @@ Params.Ocean_Colour2 = InvalidColour;
 Params.Ocean_Colour3 = InvalidColour;
 Params.Ocean_Colour4 = InvalidColour;
 
-Params.Turbulence_Frequency = 1.0;
+Params.Turbulence_Frequency = 1.13;
 Params.Turbulence_Amplitude = 1.0;
-Params.Turbulence_Lacunarity = 1.92;
-Params.Turbulence_Persistence = 0.8;
+Params.Turbulence_Lacunarity = 0.10;
+Params.Turbulence_Persistence = 0.20;
+Params.Turbulence_TimeScalar = 0.14;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -544,7 +545,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ExperiencePlaying');
 	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
-	ParamsWindow.AddParam('ShowAnimal_Duration',0,20);
+	ParamsWindow.AddParam('ShowAnimal_Duration',0,60);
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetX',-10,10);
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetY',-10,10);
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetZ',-10,10);
@@ -585,9 +586,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 	
 	
-	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
-	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
-	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,10);
 	ParamsWindow.AddParam('NastyAnimal_PhysicsNoiseScale',0,10);
 	ParamsWindow.AddParam('NastyAnimal_PhysicsSpringScale',0,1);
 	ParamsWindow.AddParam('NastyAnimal_PhysicsExplodeScale',0,10);
@@ -611,10 +609,15 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Ocean_Colour4','Colour');
 	
 	
+	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
+	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,20);
 	ParamsWindow.AddParam('Turbulence_Frequency',0,4);
 	ParamsWindow.AddParam('Turbulence_Amplitude',0,4);
 	ParamsWindow.AddParam('Turbulence_Lacunarity',0,4);
 	ParamsWindow.AddParam('Turbulence_Persistence',0,4);
+	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
+
 }
 
 
@@ -1460,7 +1463,7 @@ function Render(RenderTarget)
 	const Time = Params.TimelineYear;
 
 	
-	const NoiseTime = AppTime;
+	const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
 	UpdateNoiseTexture( RenderTarget, Noise_Turbulence, Noise_TurbulenceFragShader, NoiseTime );
 	
 

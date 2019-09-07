@@ -6,8 +6,8 @@ varying vec2 uv;
 uniform float Time;
 
 //	speed up by hardcoding values at compile time
-#define MAX_OCATAVES	8
-#define _Octaves		8
+#define MAX_OCATAVES	2
+#define _Octaves		2
 #define _Offset			float3(0,0,0)
 
 //#define _Frequency		1.0
