@@ -120,21 +120,16 @@
 
 	"2035":
 	{
-		"Subtitle":"We are now passing a Dead zones, areas with low or no oxygen are drastically increasing all around the world.",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_EverySecondBreath.mp3"
-	},
-
-	"2040":
-	{
+		"VoiceAudio":"Audio/AcidicOcean_VOICE_2050.mp3",
 		"Subtitle":"2050 represents a tipping point for the future of the oceans."
 	},
 
-	"2047":
+	"2042":
 	{
 		"Subtitle":"With increasingly warmer temperatures around the world, we are depleting the oceans of oxygen and suffocating all lifeforms."
 	},
 
-	"2057":
+	"2052":
 	{
 		"Subtitle":"These animals don’t only sustain the rest of marine life. They ultimately sustain us. Human beings, and our economies, cultures, and communities, depend on them. "
 	},
@@ -206,7 +201,7 @@
 	"2102":
 	{
 		"Subtitle":"If we don't drastically reduce our CO2 production, and limit the planet’s temperature rise to under 1.5°C, the whole ocean system may collapse.",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3"
+		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
 	},
 
 	"2114":
