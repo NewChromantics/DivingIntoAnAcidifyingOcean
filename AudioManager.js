@@ -18,7 +18,7 @@ if ( Pop.GetPlatform() != 'Web' )
 
 //	make these params an object?
 //	note: this is a player, not an asset
-Pop.Audio.Sound = function(Filename,Loop)
+Pop.Audio.Sound = function(Filename,Loop=false)
 {
 	this.Filename = Filename;
 	this.AudioPlayer = null;
@@ -110,7 +110,7 @@ Pop.Audio.Sound = function(Filename,Loop)
 }
 
 
-const TQueuedAudio = function(Filename,Loop,StartQuiet)
+const TQueuedAudio = function(Filename,Loop,StartQuiet,GetVolume)
 {
 	//	fades are 0..1. null if not yet invoked
 	this.Filename = Filename;
@@ -127,7 +127,9 @@ const TQueuedAudio = function(Filename,Loop,StartQuiet)
 	{
 		let FadeInVolume = this.FadeInElapsed;
 		let FadeOutVolume = (this.FadeOutElapsed===null) ? 1 : 1 - this.FadeOutElapsed;
-		return FadeInVolume * FadeOutVolume;
+		let Volume = FadeInVolume * FadeOutVolume;
+		Volume *= GetVolume();
+		return Volume;
 	}
 	
 	this.StartFadeOut = function()
@@ -178,14 +180,14 @@ const TQueuedAudio = function(Filename,Loop,StartQuiet)
 	}
 }
 
-const TAudioManager = function(GetCrossFadeDuration)
+const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetVoiceVolume,GetSoundVolume)
 {
 	//	array of TQueuedAudio
 	//	the last element in the queue is NOT fading out, every other one is
 	this.MusicQueue = [];
 	this.VoiceQueue = [];
+	this.Sounds = [];
 
-	
 	this.UpdateAudioQueue = function(Queue,FadeStep)
 	{
 		//	make sure any item not at the end of the queue is fading off
@@ -207,6 +209,17 @@ const TAudioManager = function(GetCrossFadeDuration)
 		}
 	}
 	
+	this.UpdateSounds = function()
+	{
+		//	delete dead sounds, but also set volume, which will recreate if error
+		const SoundVolume = GetSoundVolume();
+		function UpdateSound(Sound)
+		{
+			Sound.SetVolume( SoundVolume );
+		}
+		this.Sounds.forEach( UpdateSound );
+	}
+	
 	this.Update = function(Timestep)
 	{
 		const FadeSecs = GetCrossFadeDuration();
@@ -214,6 +227,7 @@ const TAudioManager = function(GetCrossFadeDuration)
 		
 		this.UpdateAudioQueue( this.MusicQueue, FadeStep );
 		this.UpdateAudioQueue( this.VoiceQueue, FadeStep );
+		this.UpdateSounds();
 	}
 	
 	this.SetMusic = function(Filename)
@@ -228,7 +242,7 @@ const TAudioManager = function(GetCrossFadeDuration)
 		
 		let Loop = true;
 		let StartQuiet = false;
-		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet );
+		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet, GetMusicVolume );
 		this.MusicQueue.push( NewSound );
 	}
 	
@@ -249,7 +263,7 @@ const TAudioManager = function(GetCrossFadeDuration)
 		
 		let Loop = false;
 		let StartQuiet = false;
-		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet );
+		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet, GetVoiceVolume );
 		this.VoiceQueue.push( NewSound );
 	}
 	
@@ -279,5 +293,11 @@ const TAudioManager = function(GetCrossFadeDuration)
 	this.GetVoiceQueueDebug = function()
 	{
 		return this.GetQueueDebug(this.VoiceQueue);
+	}
+	
+	this.PlaySound = function(Filename)
+	{
+		const Sound = new Pop.Audio.Sound(Filename);
+		this.Sounds.push( Sound );
 	}
 }

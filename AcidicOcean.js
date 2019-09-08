@@ -28,6 +28,9 @@ const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl'
 
 const Noise_TurbulenceFragShader = Pop.LoadFileAsString('Noise/TurbulencePerlin.frag.glsl');
 
+const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
+const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
+const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_ShellDissolution.mp3';
 
 
 
@@ -202,9 +205,13 @@ function GetOceanMeta()
 	return Meta;
 }
 
+function GetMusicVolume()	{	return Params.MusicVolume;	}
+function GetVoiceVolume()	{	return Params.VoiceVolume;	}
+function GetSoundVolume()	{	return Params.SoundVolume;	}
+
 var AppTime = null;
 var Hud = {};
-var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration );
+var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetVoiceVolume, GetSoundVolume );
 
 
 var LastMouseRay = null;	//	gr: this isn't getting updated any more
@@ -479,7 +486,7 @@ function GetActorIntersections(CameraScreenUv)
 
 
 const TimelineMinYear = 1790;
-const TimelineBigBangYear = 1823;
+const TimelineBigBangYear = 1813;
 const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2160;
 const TimelineMaxInteractiveYear = 2100;
@@ -509,6 +516,9 @@ Params.ExperiencePlaying = true;
 Params.AutoGrabDebugCamera = false;
 Params.UseDebugCamera = false;
 Params.EnableMusic = true;
+Params.MusicVolume = 1;
+Params.VoiceVolume = 1;
+Params.SoundVolume = 1;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
 Params.FogMinDistance = 8.0;
@@ -592,6 +602,9 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
 	ParamsWindow.AddParam('ExperiencePlaying');
 	ParamsWindow.AddParam('UseDebugCamera');
+	ParamsWindow.AddParam('MusicVolume',0,1);
+	ParamsWindow.AddParam('VoiceVolume',0,1);
+	ParamsWindow.AddParam('SoundVolume',0,1);
 	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
 	ParamsWindow.AddParam('ShowAnimal_Duration',0,60);
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetX',-10,10);
@@ -1374,6 +1387,9 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 			}
 			Acid.SkipSelectedAnimal = true;
 		}
+		
+		//	play a nosie!
+		AudioManager.PlaySound( AnimalSelectedSoundFilename );
 	}
 	
 	Update( FrameDuration );
@@ -1390,7 +1406,11 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	if ( StateTime > Params.ShowAnimal_ExplodeSecs )
 	{
-		Acid.SelectedActor.UpdatePhysics = true;
+		if ( !Acid.SelectedActor.UpdatePhysics )
+		{
+			Acid.SelectedActor.UpdatePhysics = true;
+			AudioManager.PlaySound( AnimalDissolveSoundFilename );
+		}
 	}
 	
 	//	never exit
@@ -1472,6 +1492,9 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 			Actor.AnimalHasBeenExploded = true;
 		}
 		BigBangActors.forEach( Explode );
+		
+		//	play a big bang sound
+		AudioManager.PlaySound( ExplosionSoundFilename );
 	}
 	
 	UpdateFog( FrameDuration );
