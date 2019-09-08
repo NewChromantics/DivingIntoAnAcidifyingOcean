@@ -196,21 +196,6 @@
 	"2102":
 	{
 		"Subtitle":"",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3",
-		
-		"DebrisColours": [
-			[1,0,0],
-			[1,0,0],
-			[1,0,0],
-			[1,0,0],
-			[1,0,0]
-		],
-		"OceanColours":[
-			[1,0,0],
-			[1,0,0],
-			[1,0,0],
-			[1,0,0],
-			[1,0,0]
-		]
+		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3"
 	}
 }
