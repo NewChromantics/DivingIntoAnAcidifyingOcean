@@ -6,7 +6,7 @@
 		"Model":	"Models/pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":3
+		"Scale":2.5
 	},
 	
 	"JELLYFISH":
@@ -105,7 +105,8 @@
 		"Description":	"<h1> More than 3 billion pounds of Walleye Pollock are caught annually in North America, making them very important to the region’s economy. As a result, they were the among the first to be studied in high-CO2 water. </h1> <h2> The pollock's ability to detect predators and prey highly decreases in more acidic waters. When scientists exposed young pollock to high CO2 and introduced the scent of what they eat, some even struggled to recognise their food. </h2>",
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_","Bigbang_"  ],
+		"Scale":2.5
 
 	},
 	"ANTARCTIC KRILL":
@@ -163,8 +164,8 @@
 		"Description":	"<h1> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h1> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.3
+		"Categorys" : [ "Animal_"],
+		"Scale":0.1
 
 	},
 	"CEPHALOPODS":
@@ -278,7 +279,8 @@
 		"Description":	"<h1> The larval growth of the small Menidia Menidia fish was found to be negatively affected in both reduced oxygen and low pH both conditions of reduced, both independently and combined.  </h1> <h2> In adults, on the other hand, only the combination of acidic and deoxygenated waters had a negative effect. </h2> <h2> They are a common subject of scientific research because of their sensitivity to environmental changes. </h2>",
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_"]
+		"Categorys" : [ "Animal_", "Bigbang_"],
+		"Scale":1.5
 
 	},
 	"BRACHYURAN CRAB":
@@ -288,7 +290,7 @@
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.37
+		"Scale":0.5
 
 	},
 		"BRITTLE STAR":
@@ -316,7 +318,7 @@
 		"Model":	"Models/ClownFIsh.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":4
+		"Scale":2.5
 
 	},
 		"PLASTIC BOTTLE":
