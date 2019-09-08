@@ -813,6 +813,18 @@ function BufferToRgb(Buffer,BufferFormat,ChannelCount)
 	return Rgb;
 }
 
+function ResizeTypedArray(Array,NewSize)
+{
+	if ( Array.length == NewSize )
+		return Array;
+	
+	const NewArray = new Array.constructor( NewSize );
+	const MinSize = Math.min( NewSize, Array.length );
+	for ( let i=0;	i<MinSize;	i++ )
+		NewArray[i] = Array[i];
+	return NewArray;
+}
+
 function LoadPackedImage(Image)
 {
 	Image = GetImageAsPopImage(Image);
@@ -882,16 +894,33 @@ function LoadPackedImage(Image)
 	{
 		const ImageMeta = Meta.ImageMetas[i];
 		const PixelSize = GetBytesPerPixelFromPixelFormat( ImageMeta.Format );
-		//const Channels = GetChannelsFromPixelFormat( ImageMeta.Format );
+		const Channels = GetChannelsFromPixelFormat( ImageMeta.Format );
 		let Pixels = PopBytes( ImageMeta.Width * ImageMeta.Height * PixelSize );
-		//Pop.Debug("Converting "+ImageMeta.Format);
-		if ( ImageMeta.Format.startsWith('Float') )
-			Pixels = new Float32Array( Pixels.buffer );
 		
+		//	cast bytes
+		if ( IsFloatFormat(ImageMeta.Format) )
+		{
+			//	cast bytes to float
+			Pixels = new Float32Array( Pixels.buffer );
+		}
+		
+		//	write image
 		const Image = new Pop.Image();
 		Image.WritePixels( ImageMeta.Width, ImageMeta.Height, Pixels, ImageMeta.Format );
+		
 		if ( ImageMeta.Name == 'PositionTexture' )
+		{
 			RescaleImageToFloat( Image, TextureBuffers.BoundingBox );
+		}
+		else
+		{
+			//	gotta align to pow2
+			const Width = ImageMeta.Width;
+			const Height = Math.GetNextPowerOf2(ImageMeta.Height);
+			Pixels = ResizeTypedArray( Pixels, Width*Height*Channels );
+			Image.WritePixels( Width, Height, Pixels, ImageMeta.Format );
+		}
+		
 		TextureBuffers[ImageMeta.Name] = Image;
 		Pop.Debug("Loaded image",ImageMeta.Name,Image,ImageMeta.Format);
 	}
