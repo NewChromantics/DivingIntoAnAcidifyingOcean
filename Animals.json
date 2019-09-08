@@ -297,7 +297,8 @@
 		"Description":	"<h1> bla1 </h1> <h2> bla2 </h2>",
 		"Model":	"Models/clownfish_v1.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":10
 
 	},
 		"PLASTIC BOTTLE":

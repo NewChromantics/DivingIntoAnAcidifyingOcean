@@ -88,7 +88,7 @@ function LoadTimeline(Filename)
 
 
 
-function GetDebrisMeta()
+function GetDebrisMeta(Actor)
 {
 	const Meta = {};
 	
@@ -122,6 +122,8 @@ function GetAnimalMeta(Actor)
 	const Meta = {};
 	
 	Meta.LocalScale = Params.AnimalScale;
+	if ( Actor && Actor.Animal && Actor.Animal.Scale !== undefined )
+		Meta.LocalScale = Actor.Animal.Scale;
 	
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
@@ -137,9 +139,9 @@ function GetAnimalMeta(Actor)
 	return Meta;
 }
 
-function GetNastyAnimalMeta()
+function GetNastyAnimalMeta(Actor)
 {
-	let Meta = GetAnimalMeta();
+	let Meta = GetAnimalMeta(Actor);
 	
 	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocityPulse;
 	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
@@ -154,9 +156,9 @@ function GetNastyAnimalMeta()
 }
 
 
-function GetBigBangAnimalMeta()
+function GetBigBangAnimalMeta(Actor)
 {
-	let Meta = GetAnimalMeta();
+	let Meta = GetAnimalMeta(Actor);
 	
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 	
