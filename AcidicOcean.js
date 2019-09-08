@@ -91,6 +91,9 @@ function LoadTimeline(Filename)
 function GetDebrisMeta()
 {
 	const Meta = {};
+	
+	Meta.LocalScale = 1;
+	
 	Meta.Filename = '.random';
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
@@ -114,9 +117,12 @@ function GetDebrisMeta()
 	return Meta;
 }
 
-function GetAnimalMeta()
+function GetAnimalMeta(Actor)
 {
 	const Meta = {};
+	
+	Meta.LocalScale = Params.AnimalScale;
+	
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
 	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
@@ -170,6 +176,7 @@ for ( let i=1;	i<=LoadOceanFrames;	i++ )
 function GetOceanMeta()
 {
 	const Meta = {};
+	Meta.LocalScale = 1;
 	Meta.Filename = OceanFilenames;
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
@@ -548,6 +555,8 @@ Params.Turbulence_Lacunarity = 0.10;
 Params.Turbulence_Persistence = 0.20;
 Params.Turbulence_TimeScalar = 0.14;
 
+Params.AnimalScale = 1.0;
+
 let OnParamsChanged = function(Params,ChangedParamName)
 {
 	if ( ChangedParamName == 'UseDebugCamera' && Params.UseDebugCamera )
@@ -642,6 +651,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Turbulence_Persistence',0,4);
 	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
 
+	ParamsWindow.AddParam('AnimalScale',0,2);
 }
 
 
@@ -673,7 +683,7 @@ const FakeRenderTarget = {};
 
 function SetupAnimalTextureBufferActor(Filename,GetMeta)
 {
-	const Meta = GetMeta();
+	const Meta = GetMeta(this);
 	this.Geometry = 'AutoTriangleMesh';
 	this.VertShader = Meta.VertShader;
 	this.FragShader = Meta.FragShader;
@@ -779,7 +789,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			this.ResetPhysicsTextures();
 		}
 		
-		const Meta = GetMeta();
+		const Meta = GetMeta(this);
 		const SetAnimalPhysicsUniforms = function(Shader)
 		{
 			SetPhysicsUniforms(Shader);
@@ -805,9 +815,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const PositionTexture = this.GetPositionTexture(Time);
 		const ColourTexture = this.TextureBuffers.ColourTexture;
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
-		const LocalToWorldTransform = this.LocalToWorldTransform;
+		const LocalToWorldTransform = this.GetLocalToWorldTransform();
 		
-		const Meta = GetMeta();
+		const Meta = GetMeta(this);
 		const Colours = Meta.Colours;
 		
 		const SetUniforms = function(Shader)
@@ -840,6 +850,14 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount ) || AutoTriangleMeshCount;
 		TriangleCount = Math.floor( TriangleCount * Params.AnimalBufferLod );
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
+	}
+
+	this.GetLocalToWorldTransform = function()
+	{
+		let Scale = GetMeta(this).LocalScale;
+		let ScaleMtx = Math.CreateScaleMatrix( Scale );
+		let Transform = Math.MatrixMultiply4x4( this.LocalToWorldTransform, ScaleMtx );
+		return Transform;
 	}
 
 }
@@ -1009,7 +1027,7 @@ function GetRenderCamera()
 	return GetTimelineCamera();
 }
 
-//	todo: use generic actor
+
 function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 {
 	this.LocalToWorldTransform = Transform;
@@ -1027,14 +1045,15 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	{
 		const Geo = GetAsset( this.Geometry, RenderTarget );
 		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
+		const LocalToWorldTransform = this.GetLocalToWorldTransform();
 		
 		const SetUniforms = function(Shader)
 		{
 			SetGlobalUniforms( Shader );
-			Shader.SetUniform('LocalToWorldTransform', this.LocalToWorldTransform );
+			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
 		}
 		
-		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms.bind(this) );
+		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms );
 	}
 	
 	this.GetLocalToWorldTransform = function()
