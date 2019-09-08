@@ -73,19 +73,27 @@
 
 #SubtitleLabel
 {
-	background-color:	rgba(255, 0, 0, 0.34);
+	background-color:	rgba(0, 0, 0, 0.15);
 
 	position:		absolute;
 	left:			10vw;
-	top:			80vh;
+	top:			45vh;
 	width:			80vw;
 	height:			5vh;
-	font-size:		3vh;
+	font-size:		2.5vh;
 	
 	text-align:			center;
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
+}
+
+#LogoBg
+{
+	display:	block;
+	position:	absolute;
+	width: 100vw;
+
 }
 
 #Stats
@@ -97,7 +105,7 @@
 	top:			5vh;
 	width:			23vh;
 	height:			15vh;
-	background-color:	blue;
+
 }
 
 #About
