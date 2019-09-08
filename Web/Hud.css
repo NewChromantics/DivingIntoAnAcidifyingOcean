@@ -12,7 +12,12 @@
 
 #Logo
 {
-	visibility:	visible;
+	visibility:	inherit;
+}
+
+#Hint_Start
+{
+	visibility:	hidden;
 }
 
 /* start experience stuff hidden */
