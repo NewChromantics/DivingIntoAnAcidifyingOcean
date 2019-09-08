@@ -5,7 +5,8 @@
 		"Description":	"<h1> Ocean acidification is the ongoing decrease in the pH of the Earth's oceans, caused by the uptake of carbon dioxide (CO) from the atmosphere. Since the Industrial revolution, oceans have become 30% more acidic. And by 2100 it is expected they will become 170% more acidic. </h1> <h2> When scientists placed pteropods in water with the levels of pH and CO2 projected for the year 2100, their shells started decaying within 48 hours. They nearly completely dissolved within 45 days. </h2>  <h2> pH is a very important thing. In humans, a small change of 0.2 to 0.3 pH in blood can cause seizures, comas, and even death. </h2>",
 		"Model":	"Models/pteropod.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":4
 	},
 	
 	"JELLYFISH":
@@ -24,7 +25,7 @@
 		"Description":	"<h1> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h1> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. With just a 10% reduction in pteropod numbers, salmon could lose up to 20% of their mass.</h2>",
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_" ]
 
 	},
 
@@ -108,14 +109,15 @@
 		"Description":	"<h1> Antarctic krill have performed an essential role for around 1000 years: through their feeding habits they help with carbon dioxide sinking, whereby they export large quantities of CO2 from the biosphere to the deep bottom of the Antarctic. </h1> <h2> The acidification of the oceans is having a huge impact on krill: their exoskeleton contains carbonate, which is susceptible to dissolution under low pH conditions. It has been shown that increased carbon dioxide can disrupt the development of krill eggs and even prevent the juvenile krill from hatching, leading to future geographically widespread decreases in krill hatching success. </h2> <h2> Krill need the Antarctic’s pack ice structures to have a fair chance of survival, especially in the early stages of their development. But the reduction of the pack ice zone due to global warming is one of the causes of their decline in numbers. </h2>",
 		"Model":	"Models/AntarcticKrill.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":6
 
 	},
 	"CORALLINE ALGAE":
 	{
 		"Name":		"CORALLINE ALGAE",
 		"Description":	"<h1> Coralline algae - red algae with a hard, calcifying tissue - provide habitat for other invertebrates, like sea urchins, and add calcareous material to the structure of the coral reef, helping cementing it together. </h1> <h2> The chemical they produce promote the settlement of the larvae of certain herbivorous invertebrates which, in turn, supports some seaweeds. Most coralline algae species build shells from the high-magnesium calcite form of calcium carbonate, which is more soluble than the aragonite or regular calcite forms. </h2> <h2> One study found that, in acidifying conditions, coralline algae covered 92% less area, making space for other types of non-calcifying algae, which can smother and damage coral reefs. But this has negative impacts, as many coral larvae prefer to settle onto coralline algae when they are ready to leave the plankton stage and start life on a coral reef. </h2>",
-		"Model":	".random",
+		"Model":	"Models/CorallineAlgue.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"]
 
@@ -126,7 +128,8 @@
 		"Description":	"<h1> Nodularia Spumigena, a nitrogen-fixing cyanobacteria, help the nitrogen change between states so it can be used by other organisms in an important process and cycle called Nitrogen Fixation. </h1> <h2> Recent studies show that ocean acidification has the potential to alter the marine nitrogen cycle which controls much of primary production in the sea.  </h2> <h2> When immersed in the low pH conditions expected in 2100 of around 7.6. nodularia spumigena show a reduced growth rate and reduced nitrogen fixation rate at elevated CO2. </h2>",
 		"Model":	"Models/NodulariaSpumi.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"Scale":0.28
 
 	},
 	"KELP FOREST":
@@ -135,7 +138,8 @@
 		"Description":	"<h1> Kelp requires cold water for growth, and elevated seawater temperatures from global warming are a major threat to kelp forest survival. Similarly, strong individual storms can wipe out large areas of kelp forest, by ripping the kelp plants from the seafloor. </h1> <h2> Overfishing and hunting create imbalances in the animal population and affect the whole ecosystem. </h2> <h2> Pollution in the form of sewage, industrial waste, inorganic fertilisers, and pesticides carried from freshwater runoff can impair kelp growth and reproduction. </h2>",
 		"Model":	"Models/KelpForest.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"Scale":0.3
 
 	},
 	"DEEP SEA CRAB":
@@ -144,7 +148,8 @@
 		"Description":	"<h1> Research has shown that the deep sea crab are much less able to recover from short term exposure to very high CO2 than shallow dwelling crabs. The waters of the deep sea are naturally more acidic because of the accumulation of carbon dioxide from the respiration of other deep sea organisms. </h1> <h2> Adding anthropogenic CO2 into the deep sea will make these waters even more acidic. </h2> <h2> Studies have also found that these negative effects were amplified at low oxygen concentrations. </h2>",
 		"Model":	"Models/DeepSeaCrab.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"Scale":0.17
 
 	},
 	"SHARK":
@@ -153,7 +158,8 @@
 		"Description":	"<h1> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h1> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":0.3
 
 	},
 	"CEPHALOPODS":
@@ -162,7 +168,8 @@
 		"Description":	"<h1> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h1> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
 		"Model":	"Models/cephalopod.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":5
 
 	},
 	"DEEP SEA CORAL":
@@ -216,7 +223,8 @@
 		"Description":	"<h1> Sea turtles are 'amniotes', meaning they breathe air and lay their eggs on land. But hotter beaches, due to climate change, will put sea turtle embryos at risk: during development, the sex of an embryo is determined by the heat of incubation, with warmer nests producing females and cooler nests producing males, but temperatures above 33°C are lethal. </h1> <h2> In the coral reefs with which hawksbills, a kind of turtle, are closely associated, increased water temperatures and acidification will undermine the ability of coral polyps to survive and build reefs. </h2> <h2> Near-shore habitats where some species forage will also be destroyed by coastal flooding and decreased visibility; seagrasses are declining worldwide.  </h2>",
 		"Model":	"Models/SeaTurtle.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":1
 
 	},
 	"YELLOWFIN TUNA":
@@ -225,7 +233,7 @@
 		"Description":	"<h1> The Yellow and Bluefin tuna are integral to the diet of millions of people and one of the most commercially valuable fish. But most tuna stocks are fully exploited (meaning there is no room for fishery expansion) and some are already overexploited (there is a risk of stock collapse). Bluefin tuna represents only 1% of the global catch but illegal fishing is pushing it to the brink of extinction. </h1> <h2> Research shows that the increasing acidification of the ocean causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the yellowfin larvae within a week of exposure.  </h2> <h2> Acidification also affects their growth rate of 20-41% and reduces their rate of survival. </h2>",
 		"Model":	"Models/YellowTuna.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_"]
 
 	},
 	"COBIA":
@@ -261,7 +269,8 @@
 		"Description":	"<h1> The larval growth of the small Menidia Menidia fish was found to be negatively affected in both reduced oxygen and low pH both conditions of reduced, both independently and combined.  </h1> <h2> In adults, on the other hand, only the combination of acidic and deoxygenated waters had a negative effect. </h2> <h2> They are a common subject of scientific research because of their sensitivity to environmental changes. </h2>",
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_", "Bigbang_"],
+		"Scale":0.5
 
 	},
 	"BRACHYURAN CRAB":
@@ -270,7 +279,8 @@
 		"Description":	"<h1> Warming temperatures may allow the brachyuran crab to invade the shelf surrounding Antarctica, with significant consequences for the local organisms that have evolved in the absence of such predators. </h1> <h2> The weakly calcified shells of Antarctic echinoderms and molluscs – further stressed by acidification – would provide little defense from these predators. </h2> <h2> In addition to warming temperatures, the retreat of sea ice, and increasing species invasions, high latitude regions are subject to heavy fishing pressure which is an additional stressor for these ecosystems. </h2>",
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_", "Bigbang_"],
+		"Scale":0.37
 
 	},
 		"BRITTLE STAR":
@@ -288,7 +298,7 @@
 		"Description":	"<h1> Corals reefs are a marine invertebrate that live in symbiosis with a photosynthetic unicellular organism called zooxanthellae which sustains the coral with nutrients. </h1> <h2> They are home to an estimated 1 million types of organisms, 25% of the world’s species. </h2> <h2> Coral bleaching is the most known threat: in case of warmer waters the coral expels the zooxanthellae, causing the coral to turn completely white and be prone to death. </h2> <h2> Another threat is ocean acidification: research has shown that most corals grown in low pH conditions highly reduced their calcification rates, especially when in combination with warmer temperatures. </h2> <h2> Surprisingly enough, sun screens are a big threat to them! </h2>",
 		"Model":	"Models/Coral.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_"]
 
 	},
 		"CLOWNFISH":
@@ -298,7 +308,7 @@
 		"Model":	"Models/ClownFIsh.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":10
+		"Scale":4
 
 	},
 		"PLASTIC BOTTLE":
@@ -359,7 +369,7 @@
 	{
 		"Name":		"FOOD CONTAINER",
 		"Description":	"<h1> Once food packaging use comes to an end it becomes the largest end-use market segment accounting for just over 40% of total plastic usage. </h1> <h2> Over the last ten years more plastic has been produced than during the whole of the last century. </h2>",
-		"Model":	".random",
+		"Model":	"Models/PlasticContainer.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ]
 
@@ -368,7 +378,7 @@
 	{
 		"Name":		"CIGARETTE STUB",
 		"Description":	"<h1> By itself, cellulose acetate, which form a cigarette filter, takes between 18 months to 10 years to degrade. </h1> <h2> Studies have shown that one cigarette filter in about two gallons of water is lethal to water fleas, a tiny crustacean found in freshwater and saltwater. Wildlife also easily confuses them for food and ingests them. </h2> <h2> In 2017, cigarette filters were the biggest source of plastic pollution on beaches, with 1,863,838 collected. </h2>",
-		"Model":	".random",
+		"Model":	"Models/CigeretteStub.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ]
 
