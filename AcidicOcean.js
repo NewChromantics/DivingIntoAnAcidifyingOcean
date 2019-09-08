@@ -487,7 +487,7 @@ const TimelineMaxInteractiveYear = 2100;
 const BigBangDuration = 10;
 
 Params.TimelineYear = TimelineMinYear;
-Params.ExperienceDurationSecs = 240;
+Params.ExperienceDurationSecs = 370;
 Params.ShowAnimal_ExplodeSecs = 3;
 Params.ShowAnimal_Duration = 40;
 Params.ShowAnimal_CameraOffsetX = 0.32;
