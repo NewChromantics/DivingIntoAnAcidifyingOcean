@@ -15,7 +15,8 @@
 		"Description":	"<h1> Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years. </h1> <h2> In the last 50 years oxygen levels in the ocean have dropped by around 2%. In such conditions, jellyfish can still thrive whereas other marine animals cannot.</h2>",
 		"Model":	"Models/jellyfish.ply",
 		"AfterYear":	1950,
-		"Categorys" : [ "Animal_"]
+		"Categorys" : [ "Animal_"],
+		"Scale":1.5
 
 	},
 
@@ -36,7 +37,8 @@
 		"Description":	"<h1> One square meter of seagrass can generate 10 litres of oxygen daily through photosynthesis. </h1> <h2> Per hectare, seagrasses hold twice as much carbon dioxide as rain forests and can sequester about 27.4 million tons of CO2 annually. </h2> <h2> Other causes of their decline are mechanical destruction of habitat and intense overfishing. </h2>",
 		"Model":	"Models/Seagrass.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"Scale":0.4
 
 	},
 
@@ -82,9 +84,10 @@
 	{
 		"Name":		"COCKLE",
 		"Description":	"<h1> When CO2 is absorbed by seawater, chemical reactions occur that reduce seawater pH, carbonate ion concentration, and saturation states of biologically important calcium carbonate minerals. These last minerals are the building blocks of Aragonite, what the Cockle's shell is made of. </h1> <h2> Healthy Aragonite data should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall below 1Ω all skeletons and shells will start dissolving.  </h2> <h2> Under the current progression of carbon emissions, around 70% of North Atlantic cold-water skeletons and shells will be living in corrosive waters by 2050–60. </h2>",
-		"Model":	".random",
+		"Model":	"Models/cockle_v1.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":3
 
 	},
 	"ALGAL BLOOM":
@@ -275,8 +278,7 @@
 		"Description":	"<h1> The larval growth of the small Menidia Menidia fish was found to be negatively affected in both reduced oxygen and low pH both conditions of reduced, both independently and combined.  </h1> <h2> In adults, on the other hand, only the combination of acidic and deoxygenated waters had a negative effect. </h2> <h2> They are a common subject of scientific research because of their sensitivity to environmental changes. </h2>",
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.5
+		"Categorys" : [ "Animal_", "Bigbang_"]
 
 	},
 	"BRACHYURAN CRAB":

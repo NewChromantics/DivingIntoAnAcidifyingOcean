@@ -382,7 +382,7 @@
 	margin-bottom:	1vh;
 	padding-left:	2vh;	/* space for bullet */
 
-	background-color:	rgba(0, 0, 0, 0.65);
+	background-color:	rgba(0, 0, 0, 0.40);
 	background-image:	url(/Web/icons/bullet.svg);
 	background-repeat:	no-repeat;
 	background-size:	0.5vh;
@@ -413,6 +413,80 @@
 	letter-spacing: 0.07vw;
 
 
+}
+
+#Solution
+{
+	display: block;
+	position: absolute;
+	background-color:	rgba(0, 0, 0, 0.40);
+	top: 0vh;
+	width: 100vw;
+
+	display: flex;
+	justify-content: center;
+}
+
+#Solution_Title
+{
+	display: block;
+	position: absolute;
+	top: 35vh;
+	left:0vw;
+	width: 100vw;
+	height: 10vh;
+	font-size: 1.5vh;
+	text-align: center;
+
+	display: flex;
+	justify-content: center;
+}
+
+#Solution_Tips
+{
+	top: 50vh;
+	left:20vw;
+	width: 80vw;
+	height: 5vh;
+	font-size: 1.5vh;
+	text-align: center;
+
+	display: flex;
+	justify-content: center;
+}
+
+#Solution_TipsImg
+{
+	top: 30vh;
+	left:20vw;
+	width: 80vw;
+	height: 5vh;
+
+	display: flex;
+	justify-content: center;
+}
+
+#Solution_WorldText
+{
+	display: block;
+	position: absolute;
+	top: 70vh;
+	left:0vw;
+	width: 100vw;
+	font-size: 1.5vh;
+	text-align: center;
+
+	display: flex;
+	justify-content: center;
+}
+#Solution_WorldImg
+{
+	display: block;
+	position: absolute;
+	top: 75vh;
+	left:45vw;
+	width: 5vw;
+	height: 5vh;
 }
 
 #Music
