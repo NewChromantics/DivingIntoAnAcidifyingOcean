@@ -1,7 +1,7 @@
 {
 	"1790":
 	{
-		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
+		"Music": "Audio/AcidicOcean_AMB_Intro_V2.mp3",
 		"Subtitle":"",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Intro.mp3",
 		"DebrisColours": [
@@ -63,6 +63,7 @@
 	
 	"1860":
 	{
+		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
 		"Subtitle":"If we fail to act, what will happen to them… and to us?",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
@@ -72,7 +73,7 @@
 	},
 	"1863":
 	{
-		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
+
 		"Music": "Audio/AcidicOcean_MUSIC_Sonification.mp3"
 	},
 	
