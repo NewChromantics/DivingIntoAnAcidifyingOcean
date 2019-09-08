@@ -3,7 +3,7 @@
 	{
 		"Name":		"PTEROPOD",
 		"Description":	"<h1> Ocean acidification is the ongoing decrease in the pH of the Earth's oceans, caused by the uptake of carbon dioxide (CO) from the atmosphere. Since the Industrial revolution, oceans have become 30% more acidic. And by 2100 it is expected they will become 170% more acidic. </h1> <h2> When scientists placed pteropods in water with the levels of pH and CO2 projected for the year 2100, their shells started decaying within 48 hours. They nearly completely dissolved within 45 days. </h2>  <h2> pH is a very important thing. In humans, a small change of 0.2 to 0.3 pH in blood can cause seizures, comas, and even death. </h2>",
-		"Model":	"Models/pteropod_v1.ply",
+		"Model":	"Models/pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 	},
@@ -12,7 +12,7 @@
 	{
 		"Name":		"JELLYFISH",
 		"Description":	"<h1> Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years. </h1> <h2> In the last 50 years oxygen levels in the ocean have dropped by around 2%. In such conditions, jellyfish can still thrive whereas other marine animals cannot.</h2>",
-		"Model":	"Models/jellyfish_v1.ply",
+		"Model":	"Models/jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"]
 
@@ -79,7 +79,7 @@
 	{
 		"Name":		"COCKLE",
 		"Description":	"<h1> When CO2 is absorbed by seawater, chemical reactions occur that reduce seawater pH, carbonate ion concentration, and saturation states of biologically important calcium carbonate minerals. These last minerals are the building blocks of Aragonite, what the Cockle's shell is made of. </h1> <h2> Healthy Aragonite data should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall below 1Ω all skeletons and shells will start dissolving.  </h2> <h2> Under the current progression of carbon emissions, around 70% of North Atlantic cold-water skeletons and shells will be living in corrosive waters by 2050–60. </h2>",
-		"Model":	"Models/cockle_v1.ply",
+		"Model":	".random",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -106,7 +106,7 @@
 	{
 		"Name":		"ANTARCTIC KRILL",
 		"Description":	"<h1> Antarctic krill have performed an essential role for around 1000 years: through their feeding habits they help with carbon dioxide sinking, whereby they export large quantities of CO2 from the biosphere to the deep bottom of the Antarctic. </h1> <h2> The acidification of the oceans is having a huge impact on krill: their exoskeleton contains carbonate, which is susceptible to dissolution under low pH conditions. It has been shown that increased carbon dioxide can disrupt the development of krill eggs and even prevent the juvenile krill from hatching, leading to future geographically widespread decreases in krill hatching success. </h2> <h2> Krill need the Antarctic’s pack ice structures to have a fair chance of survival, especially in the early stages of their development. But the reduction of the pack ice zone due to global warming is one of the causes of their decline in numbers. </h2>",
-		"Model":	"Models/AnarcticKrill.ply",
+		"Model":	"Models/AntarcticKrill.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -133,7 +133,7 @@
 	{
 		"Name":		"KELP FOREST",
 		"Description":	"<h1> Kelp requires cold water for growth, and elevated seawater temperatures from global warming are a major threat to kelp forest survival. Similarly, strong individual storms can wipe out large areas of kelp forest, by ripping the kelp plants from the seafloor. </h1> <h2> Overfishing and hunting create imbalances in the animal population and affect the whole ecosystem. </h2> <h2> Pollution in the form of sewage, industrial waste, inorganic fertilisers, and pesticides carried from freshwater runoff can impair kelp growth and reproduction. </h2>",
-		"Model":	".random",
+		"Model":	"Models/KelpForest.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ]
 
@@ -151,7 +151,7 @@
 	{
 		"Name":		"SHARK",
 		"Description":	"<h1> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h1> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
-		"Model":	"Models/shark_v1.ply",
+		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -160,7 +160,7 @@
 	{
 		"Name":		"CEPHALOPODS",
 		"Description":	"<h1> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h1> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
-		"Model":	"Models/cephalopod_v1.ply",
+		"Model":	"Models/cephalopod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -214,7 +214,7 @@
 	{
 		"Name":		"SEA TURTLE",
 		"Description":	"<h1> Sea turtles are 'amniotes', meaning they breathe air and lay their eggs on land. But hotter beaches, due to climate change, will put sea turtle embryos at risk: during development, the sex of an embryo is determined by the heat of incubation, with warmer nests producing females and cooler nests producing males, but temperatures above 33°C are lethal. </h1> <h2> In the coral reefs with which hawksbills, a kind of turtle, are closely associated, increased water temperatures and acidification will undermine the ability of coral polyps to survive and build reefs. </h2> <h2> Near-shore habitats where some species forage will also be destroyed by coastal flooding and decreased visibility; seagrasses are declining worldwide.  </h2>",
-		"Model":	"Models/seaturtle_v1.ply",
+		"Model":	"Models/SeaTurtle.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -286,7 +286,7 @@
 	{
 		"Name":		"CORAL",
 		"Description":	"<h1> Corals reefs are a marine invertebrate that live in symbiosis with a photosynthetic unicellular organism called zooxanthellae which sustains the coral with nutrients. </h1> <h2> They are home to an estimated 1 million types of organisms, 25% of the world’s species. </h2> <h2> Coral bleaching is the most known threat: in case of warmer waters the coral expels the zooxanthellae, causing the coral to turn completely white and be prone to death. </h2> <h2> Another threat is ocean acidification: research has shown that most corals grown in low pH conditions highly reduced their calcification rates, especially when in combination with warmer temperatures. </h2> <h2> Surprisingly enough, sun screens are a big threat to them! </h2>",
-		"Model":	".random",
+		"Model":	"Models/Coral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -295,7 +295,7 @@
 	{
 		"Name":		"CLOWNFISH",
 		"Description":	"<h1> The clownfish live in a symbiotic mutualism with the stinging sea anemone. They mostly live in reefs, for example Coral Reef, which are dying due to rising water temperatures. This is also killing the sea anemone. </h1> <h2> When the sea anemone doesn't protect the clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise. </h2> <h2> Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators. </h2>",
-		"Model":	"Models/clownfish_v1.ply",
+		"Model":	"Models/ClownFIsh.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ]
 
@@ -358,7 +358,7 @@
 	{
 		"Name":		"FOOD CONTAINER",
 		"Description":	"<h1> Once food packaging use comes to an end it becomes the largest end-use market segment accounting for just over 40% of total plastic usage. </h1> <h2> Over the last ten years more plastic has been produced than during the whole of the last century. </h2>",
-		"Model":	"Models/PlasticContainer.ply",
+		"Model":	".random",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ]
 
@@ -367,7 +367,7 @@
 	{
 		"Name":		"CIGARETTE STUB",
 		"Description":	"<h1> By itself, cellulose acetate, which form a cigarette filter, takes between 18 months to 10 years to degrade. </h1> <h2> Studies have shown that one cigarette filter in about two gallons of water is lethal to water fleas, a tiny crustacean found in freshwater and saltwater. Wildlife also easily confuses them for food and ingests them. </h2> <h2> In 2017, cigarette filters were the biggest source of plastic pollution on beaches, with 1,863,838 collected. </h2>",
-		"Model":	"Models/CigeretteStub.ply",
+		"Model":	".random",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ]
 
@@ -376,7 +376,7 @@
 	{
 		"Name":		"GHOST NET",
 		"Description":	"<h1> Discarded nylon plastic fishing nets comprise a large part of plastic pollution, with an estimated 640,000 tons (£1.28 billion) of fishing gear left in the ocean each year. </h1> <h2> On average these nets entangle and harm between 30-40 marine animals per net when left in the ocean. </h2>",
-		"Model":	".random",
+		"Model":	"Models/FishingNet.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ]
 
