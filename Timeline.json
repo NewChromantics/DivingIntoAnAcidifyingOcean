@@ -1,9 +1,9 @@
 {
 	"1790":
 	{
-		"Music": "Audio/AcidicOcean_VOICE_Intro.mp3",
+		"Music": "AcidicOcean_AMB_AboveTheSurface.mp3",
 		"Subtitle":"",
-		"VoiceAudio":"",
+		"VoiceAudio":"Audio/AcidicOcean_VOICE_Intro.mp3",
 		"DebrisColours": [
 		[0.03,0.25,0.51],
 		[0.03,0.41,0.67],
@@ -55,7 +55,7 @@
 	{
 		"Subtitle":"If we fail to act, what will happen to them… and to us?",
 		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3",
-		"Music": "Audio/AcidicOcean_Sonification.mp3",
+		"Music2": "Audio/AcidicOcean_Sonification.mp3",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
 		"Stats_Co2":0,

@@ -14,6 +14,7 @@ Pop.Include('AudioManager.js');
 //Pop.Include('Timeline.js');
 //Pop.Include('Animals.js');
 
+const EnableVoiceOver = Pop.GetExeArguments().includes('EnableVoiceOver');
 const BoldMode = Pop.GetExeArguments().includes('Bold');
 
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
@@ -534,7 +535,7 @@ Params.Debris_Colour1 = InvalidColour;
 Params.Debris_Colour2 = InvalidColour;
 Params.Debris_Colour3 = InvalidColour;
 Params.Debris_Colour4 = InvalidColour;
-Params.Ocean_TriangleScale = BoldMode ? 0.8 : 0.0148;
+Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
 Params.Ocean_Colour0 = InvalidColour;
 Params.Ocean_Colour1 = InvalidColour;
 Params.Ocean_Colour2 = InvalidColour;
@@ -837,7 +838,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		//	limit number of triangles
 		//	gr: why is this triangle count so much bigger than the buffer?
 		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount ) || AutoTriangleMeshCount;
-		TriangleCount *= Params.AnimalBufferLod;
+		TriangleCount = Math.floor( TriangleCount * Params.AnimalBufferLod );
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
 	}
 
@@ -1215,6 +1216,11 @@ function Init()
 	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');
 	Hud.Animal_ContinueButton = new Pop.Hud.Button('Continue');
 
+	if ( IsDebugEnabled() )
+	{
+		let DebugHud = new Pop.Hud.Label('Debug');
+		DebugHud.SetVisible(true);
+	}
 	Hud.Debug_State = new Pop.Hud.Label('Debug_State');
 	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
 	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
@@ -1523,8 +1529,12 @@ function Update(FrameDurationSecs)
 	//	update audio
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
 	AudioManager.SetMusic( Params.EnableMusic ? CurrentMusic : null );
-	const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
-	AudioManager.PlayVoice( CurrentVoice );
+	
+	if ( EnableVoiceOver )
+	{
+		const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
+		AudioManager.PlayVoice( CurrentVoice );
+	}
 	AudioManager.Update( FrameDurationSecs );
 
 	//	update some stuff from timeline
