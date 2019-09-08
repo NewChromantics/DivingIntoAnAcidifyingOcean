@@ -283,6 +283,26 @@ function GetChannelsFromPixelFormat(PixelFormat)
 	throw "GetChannelsFromPixelFormat unhandled format " + PixelFormat;
 }
 
+function GetBytesPerPixelFromPixelFormat(PixelFormat)
+{
+	const ChannelCount = GetChannelsFromPixelFormat( PixelFormat );
+	switch( PixelFormat )
+	{
+		case 'Greyscale':
+		case 'RGBA':
+		case 'RGB':
+			return 1 * ChannelCount;
+			
+		case 'Float1':
+		case 'Float2':
+		case 'Float3':
+		case 'Float4':
+			return 4 * ChannelCount;
+	}
+	throw "GetBytesPerPixelFromPixelFormat unhandled format " + PixelFormat;
+}
+
+
 function ConvertFloatPixelsToFormat(SourcePixels,SourcePixelChannels,DestFormat)
 {
 	Pop.Debug("ConvertFloatPixelsToFormat",DestFormat);
@@ -310,7 +330,7 @@ function ConvertFloatPixelsToFormat(SourcePixels,SourcePixelChannels,DestFormat)
 }
 
 
-function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,PositionFormat='Float3')
+function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,PositionFormat='Float3',PadImages=true)
 {
 	const GetIndexMap = undefined;
 	const ScaleByBounds = undefined;
@@ -420,13 +440,20 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,P
 		 */
 	}
 	
+	function GetHeight(Height)
+	{
+		if ( PadImages )
+			return Math.GetNextPowerOf2( Height );
+		return Math.ceil( Height );
+	}
+	
 	let PositionImage = new Pop.Image();
 	if ( PositionImage )
 	{
 		//	pad to square
 		const Channels = PositionSize;
 		const Width = DataTextureWidth;
-		const Height = Math.GetNextPowerOf2( Positions.length / Width / Channels );
+		const Height = GetHeight( Positions.length / Width / Channels );
 		const PixelDataSize = Channels * Width * Height;
 		Pop.Debug("Position texture",Width,Height,Channels,"Total",PixelDataSize);
 		
@@ -461,7 +488,7 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,P
 		//	pad to square
 		const Channels = ColourSize;
 		const Width = DataTextureWidth;
-		const Height = Math.GetNextPowerOf2( Colours.length / Width / Channels );
+		const Height = GetHeight( Colours.length / Width / Channels );
 		const PixelDataSize = Channels * Width * Height;
 		Pop.Debug("Colours texture",Width,Height,Channels,"Total",PixelDataSize);
 		
@@ -495,7 +522,7 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,P
 		//	pad to square
 		const Channels = AlphaSize;
 		const Width = DataTextureWidth;
-		const Height = Math.GetNextPowerOf2( Alphas.length / Width / Channels );
+		const Height = GetHeight( Alphas.length / Width / Channels );
 		const PixelDataSize = Channels * Width * Height;
 		Pop.Debug("Alphas texture",Width,Height,Channels,"Total",PixelDataSize);
 		
@@ -823,33 +850,50 @@ function LoadPackedImage(Image)
 	function RescaleImageToFloat(Image,Bounds)
 	{
 		const PixelBytes = Image.GetPixelBuffer();
-		const PixelFloats = new Float32Array( PixelBytes.length );
-		const Channels = GetChannelsFromPixelFormat( Image.GetFormat() );
+		//	need aligned image
+		const Height = Math.GetNextPowerOf2(Image.GetHeight());
+		const Width = Image.GetWidth();
+		const Format = Image.GetFormat();
+		
+		const Channels = GetChannelsFromPixelFormat( Format );
 		const FloatFormat = 'Float' + Channels;
+
+		//	gr: save mem/resources by reusing buffer
+		const InputIsFloat = Format.startsWith('Float');
+		//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
+		const PixelFloats = new Float32Array( Width*Height*Channels );
+
+		const Scalar = InputIsFloat ? 1 : 1/255;
 		for ( let i=0;	i<PixelBytes.length;	i+=Channels )
 		{
 			for ( let c=0;	c<Channels;	c++ )
 			{
-				let f = PixelBytes[i+c] / 255;
+				let f = PixelBytes[i+c] * Scalar;
 				f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
 				PixelFloats[i+c] = f;
 			}
 		}
-		Image.WritePixels( Image.GetWidth(), Image.GetHeight(), PixelFloats, FloatFormat );
+		
+		Image.WritePixels( Width, Height, PixelFloats, FloatFormat );
 	}
 	
 	//	pop next images
 	for ( let i=0;	i<Meta.ImageMetas.length;	i++ )
 	{
 		const ImageMeta = Meta.ImageMetas[i];
-		const Channels = GetChannelsFromPixelFormat( ImageMeta.Format );
-		const Pixels = PopBytes( ImageMeta.Width * ImageMeta.Height * Channels );
+		const PixelSize = GetBytesPerPixelFromPixelFormat( ImageMeta.Format );
+		//const Channels = GetChannelsFromPixelFormat( ImageMeta.Format );
+		let Pixels = PopBytes( ImageMeta.Width * ImageMeta.Height * PixelSize );
+		//Pop.Debug("Converting "+ImageMeta.Format);
+		if ( ImageMeta.Format.startsWith('Float') )
+			Pixels = new Float32Array( Pixels.buffer );
+		
 		const Image = new Pop.Image();
 		Image.WritePixels( ImageMeta.Width, ImageMeta.Height, Pixels, ImageMeta.Format );
 		if ( ImageMeta.Name == 'PositionTexture' )
 			RescaleImageToFloat( Image, TextureBuffers.BoundingBox );
 		TextureBuffers[ImageMeta.Name] = Image;
-		Pop.Debug("Loaded image",ImageMeta.Name,Image);
+		Pop.Debug("Loaded image",ImageMeta.Name,Image,ImageMeta.Format);
 	}
 	
 	return TextureBuffers;

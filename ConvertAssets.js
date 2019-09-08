@@ -39,6 +39,7 @@ function ConvertGeometryFile(Filename,Pretty=false)
 
 function ConvertTextureBufferFile(Filename,Index)
 {
+	const IsOceanFilename = Filename.startsWith('Ocean');
 	const CachedFilename = GetCachedFilename(Filename,'texturebuffer.png');
 	if ( Pop.FileExists(CachedFilename) )
 	{
@@ -46,9 +47,11 @@ function ConvertTextureBufferFile(Filename,Index)
 	}
 	const Geo = LoadGeometryFile( Filename );
 	const MaxPositons = 128*1024;
-	const PositionFormat = 'RGB';
+	
+	const PositionFormat = IsOceanFilename ? 'Float3' : 'RGB';
 	const ScaleToBounds = { Min:[0,0,0], Max:[1,1,1] };
-	const TextureBuffers = LoadGeometryToTextureBuffers( Geo, MaxPositons, ScaleToBounds, PositionFormat );
+	const PadImages = false;
+	const TextureBuffers = LoadGeometryToTextureBuffers( Geo, MaxPositons, ScaleToBounds, PositionFormat, PadImages );
 
 	//	dont write this
 	TextureBuffers.AlphaTexture = null;
