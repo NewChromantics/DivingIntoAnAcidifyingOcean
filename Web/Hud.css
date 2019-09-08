@@ -2,6 +2,8 @@
 {
 	font-size:	3vmin;
 	color: #ffffff;
+	xbackground:	red;
+	xheight:100vh;
 }
 
 /* start debug hidden */
@@ -12,11 +14,6 @@
 
 #Logo
 {
-	visibility:	inherit;
-}
-
-#Hint_Start
-{
 	visibility:	hidden;
 }
 
@@ -25,6 +22,18 @@
 {
 	visibility:	hidden;
 }
+
+/* thing at the end */
+#Solution
+{
+	visibility:	inherit;
+}
+
+#Hint_Start
+{
+	visibility:	hidden;
+}
+
 
 #AudioMusic
 {
@@ -417,76 +426,65 @@
 
 #Solution
 {
-	display: block;
-	position: absolute;
+	overflow:hidden;
 	background-color:	rgba(0, 0, 0, 0.40);
-	top: 0vh;
-	width: 100vw;
+	xbackground:	red;
 
-	display: flex;
-	justify-content: center;
-}
+	position:	absolute;
+	padding-top:	10vh;
+	top:		10vh;
+	left:		8vw;
+	width:		84vw;
+	height:		70vh;
 
-#Solution_Title
-{
-	display: block;
-	position: absolute;
-	top: 35vh;
-	left:0vw;
-	width: 100vw;
-	height: 10vh;
-	font-size: 1.5vh;
+	font-weight:	bold;
+	font-size:		2.2vh;
 	text-align: center;
-
-	display: flex;
-	justify-content: center;
 }
+
+#Solution_Recycle		{	left:	0vw;	background-image:	url(icons/recycle.svg);	}
+#Solution_Walk			{	left:	14vw;	background-image:	url(icons/bike.svg);	}
+#Solution_CleanEnergy	{	left:	28vw;	background-image:	url(icons/wind.svg);	}
+#Solution_EnergyEff		{	left:	42vw;	background-image:	url(icons/a.svg);	}
+#Solution_EatLocal		{	left:	56vw;	background-image:	url(icons/organic.svg);	}
+#Solution_GrowTree		{	left:	70vw;	background-image:	url(icons/plant.svg);	}
 
 #Solution_Tips
 {
-	top: 50vh;
-	left:20vw;
-	width: 80vw;
-	height: 5vh;
-	font-size: 1.5vh;
-	text-align: center;
-
-	display: flex;
-	justify-content: center;
+	margin-top:	10vh;
+	xbackground:	green;
+	position:	relative;
+	height:		30vh;
 }
 
-#Solution_TipsImg
+#Solution_Tips div
 {
-	top: 30vh;
-	left:20vw;
-	width: 80vw;
-	height: 5vh;
-
-	display: flex;
-	justify-content: center;
+	position:	absolute;
+	top:		0px;
+	width:		14vw;
+	height:		16vh;
+	xbackground-color:	blue;
+	xbackground-image:	url(icons/recycle.svg);
+	background-repeat:	no-repeat;
+	background-size:	25%;
+	background-position:	center bottom;
 }
 
 #Solution_WorldText
 {
-	display: block;
-	position: absolute;
-	top: 70vh;
-	left:0vw;
-	width: 100vw;
-	font-size: 1.5vh;
-	text-align: center;
-
-	display: flex;
-	justify-content: center;
+	xbackground-color:	magenta;
+	font-style:			italic;
+	height:				8vh;
 }
-#Solution_WorldImg
+
+#Solution_WorldIcon
 {
-	display: block;
-	position: absolute;
-	top: 75vh;
-	left:45vw;
-	width: 5vw;
-	height: 5vh;
+	xbackground-color:	yellow;
+	background-image:	url(icons/world.svg);
+	height:				10vh;
+	background-repeat:	no-repeat;
+	background-size:	80% contain;
+	background-position:	center bottom;
 }
 
 #Music
