@@ -164,7 +164,7 @@
 		"Description":	"<h1> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h1> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"],
+		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":0.1
 
 	},
@@ -174,7 +174,7 @@
 		"Description":	"<h1> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h1> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
 		"Model":	"Models/cephalopod.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Categorys" : [ "Animal_" ],
 		"Scale":5
 
 	},
