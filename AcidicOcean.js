@@ -112,6 +112,11 @@ function GetDebrisMeta(Actor)
 	 Params.Debris_Colour2,
 	 Params.Debris_Colour3,
 	 Params.Debris_Colour4,
+	 Params.Debris_Colour5,
+	 Params.Debris_Colour6,
+	 Params.Debris_Colour7,
+	 Params.Debris_Colour8,
+	 Params.Debris_Colour9,
 	];
 	Meta.FitToBoundingBox = true;
 	return Meta;
@@ -544,12 +549,22 @@ Params.Debris_Colour1 = InvalidColour;
 Params.Debris_Colour2 = InvalidColour;
 Params.Debris_Colour3 = InvalidColour;
 Params.Debris_Colour4 = InvalidColour;
+Params.Debris_Colour5 = InvalidColour;
+Params.Debris_Colour6 = InvalidColour;
+Params.Debris_Colour7 = InvalidColour;
+Params.Debris_Colour8 = InvalidColour;
+Params.Debris_Colour9 = InvalidColour;
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
 Params.Ocean_Colour0 = InvalidColour;
 Params.Ocean_Colour1 = InvalidColour;
 Params.Ocean_Colour2 = InvalidColour;
 Params.Ocean_Colour3 = InvalidColour;
 Params.Ocean_Colour4 = InvalidColour;
+Params.Ocean_Colour5 = InvalidColour;
+Params.Ocean_Colour6 = InvalidColour;
+Params.Ocean_Colour7 = InvalidColour;
+Params.Ocean_Colour8 = InvalidColour;
+Params.Ocean_Colour9 = InvalidColour;
 
 Params.Turbulence_Frequency = 2.2;
 Params.Turbulence_Amplitude = 1.0;
@@ -636,13 +651,23 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Debris_Colour2','Colour');
 	ParamsWindow.AddParam('Debris_Colour3','Colour');
 	ParamsWindow.AddParam('Debris_Colour4','Colour');
+	ParamsWindow.AddParam('Debris_Colour5','Colour');
+	ParamsWindow.AddParam('Debris_Colour6','Colour');
+	ParamsWindow.AddParam('Debris_Colour7','Colour');
+	ParamsWindow.AddParam('Debris_Colour8','Colour');
+	ParamsWindow.AddParam('Debris_Colour9','Colour');
 	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Ocean_Colour0','Colour');
 	ParamsWindow.AddParam('Ocean_Colour1','Colour');
 	ParamsWindow.AddParam('Ocean_Colour2','Colour');
 	ParamsWindow.AddParam('Ocean_Colour3','Colour');
 	ParamsWindow.AddParam('Ocean_Colour4','Colour');
-	
+	ParamsWindow.AddParam('Ocean_Colour5','Colour');
+	ParamsWindow.AddParam('Ocean_Colour6','Colour');
+	ParamsWindow.AddParam('Ocean_Colour7','Colour');
+	ParamsWindow.AddParam('Ocean_Colour8','Colour');
+	ParamsWindow.AddParam('Ocean_Colour9','Colour');
+
 	
 	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
@@ -1601,7 +1626,7 @@ function Update(FrameDurationSecs)
 		}
 		function CopyValues(Array,NamePrefix)
 		{
-			for ( let i=0;	i<5;	i++ )
+			for ( let i=0;	i<10;	i++ )
 				CopyValue( Array[i], i, NamePrefix );
 		}
 		CopyValues( DebrisColours, 'Debris_Colour' );
