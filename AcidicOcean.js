@@ -1302,12 +1302,14 @@ Acid.State_Intro = 'Intro';
 Acid.State_Fly = 'Fly';
 Acid.State_ShowAnimal = 'ShowAnimal';
 Acid.State_BigBang = 'BigBang';
+Acid.State_Outro = 'Outro';
 Acid.StateMap =
 {
 	'Intro':		Update_Intro,
 	'BigBang':		Update_BigBang,
 	'Fly':			Update_Fly,
-	'ShowAnimal':	Update_ShowAnimal
+	'ShowAnimal':	Update_ShowAnimal,
+	'Outro':		Update_Outro
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, false );
 Acid.SelectedActor = null;
@@ -1506,6 +1508,16 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	return Acid.State_Fly;
 }
 
+
+function Update_Outro(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
+		const SolutionHud = new Pop.Hud.Label('Solution');
+		SolutionHud.SetVisible(true);
+	}
+}
+	
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
@@ -1587,7 +1599,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	
 	//	fly until we reach end of timeline
 	if ( Params.TimelineYear >= TimelineMaxInteractiveYear )
-		return 'Outro';
+		return Acid.State_Outro;
 	
 	//	stay flying
 	return null;
