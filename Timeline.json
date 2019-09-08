@@ -1,95 +1,35 @@
-{
-	"1790":
+
+		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
+	},
+
+	"2084":
 	{
-		"Music": "AcidicOcean_AMB_AboveTheSurface.mp3",
-		"Subtitle":"",
-		"VoiceAudio":"Audio/AcidicOcean_VOICE_Intro.mp3",
+		
 		"DebrisColours": [
-		[0.03,0.25,0.51],
-		[0.03,0.41,0.67],
-		[0.17,0.55,0.75],
-		[0.31,0.70,0.83],
-		[0.79,0.91,0.95]
+		[1.00,0.38,0.02],
+		[1.00,0.64,0.01],
+		[1.00,0.82,0.29],
+		[1.00,0.90,0.09],
+		[0.51,0.25,0.12],
+		[1.00,0.38,0.02],
+		[1.00,0.64,0.01],
+		[1.00,0.82,0.29],
+		[1.00,0.90,0.09],
+		[0.51,0.25,0.12]
 		],
 		"OceanColours":[
-		[0.79,0.91,0.95],
-		[0.31,0.70,0.83],
-		[0.17,0.55,0.75],
-		[0.03,0.41,0.67],
-		[0.03,0.25,0.51]
+		[1.00,0.38,0.02],
+		[1.00,0.64,0.01],
+		[1.00,0.82,0.29],
+		[1.00,0.90,0.09],
+		[0.51,0.25,0.12],
+		[1.00,0.38,0.02],
+		[1.00,0.64,0.01],
+		[1.00,0.82,0.29],
+		[1.00,0.90,0.09],
+		[0.51,0.25,0.12]
 		]
-	},
-
-	"1801":
-	{
-		"Subtitle":"Every second breath we take...",
-		"VoiceAudio":""
-	},
-	"1804":
-	{
-		"Subtitle":"... comes from the ocean"
-	},
-	
-	"1819":
-	{
-		"Subtitle":"But we’re killing over 96% of ocean life."
-	},
-
-	
-	"1830":
-	{
-		"Subtitle":"In a single lifetime…",
-		"VoiceAudio":""
-	},
-	
-	"1843":
-	{
-		"Subtitle":"we are acidifying the oceans faster than ever before"
-	},
-	"1850":
-	{
-		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms."
-	},
-	
-	"1860":
-	{
-		"Subtitle":"If we fail to act, what will happen to them… and to us?",
-		"Music": "Audio/AcidicOcean_AMB_BelowTheSurface.mp3",
-		"Music2": "Audio/AcidicOcean_Sonification.mp3",
-		"Timeline_CameraPosition":[0,5, -10],
-		"Stats_Temp":0,
-		"Stats_Co2":0,
-		"Stats_Oxygen":0,
-		"Stats_Ph":0
-	},
-	
-	
-	"1865":
-	{
-		"Subtitle":"THIS IS A PTEROPOD BLA BLA "
-	},
-	
-
-	
-	"2019":
-	{
-		"FogColour":[0,0,0],
-		"Stats_Temp":0.8,
-		"Stats_Co2":36,
-		"Stats_Oxygen":1.36,
-		"Stats_Ph":30
 		
-	},
-
-	"2035":
-	{
-		"Subtitle":"We are now passing a Dead zones, areas with low or no oxygen are drastically increasing all around the world.",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_EverySecondBreath.mp3"
-	},
-
-	"2045":
-	{
-		"Subtitle":"Also caused by excessive nutrient pollution from human activities, they deplete the oxygen required to support most marine life."
 	},
 
 	"2100":
@@ -99,7 +39,31 @@
 		"Stats_Temp":4,
 		"Stats_Co2":90,
 		"Stats_Oxygen":27,
-		"Stats_Ph":170
+		"Stats_Ph":170,
+		"DebrisColours": [
+		[0.67,0.00,0.00],
+		[1.00,0.00,0.05],
+		[0.71,0.02,0.13],
+		[1.00,0.00,0.22],
+		[1.00,0.33,0.31],
+		[0.92,0.02,0.25],
+		[0.80,0.05,0.09],
+		[1.00,0.82,0.29],
+		[1.00,0.90,0.09],
+		[0.51,0.25,0.12]
+		],
+		"OceanColours":[
+		[0.67,0.00,0.00],
+		[1.00,0.00,0.05],
+		[0.71,0.02,0.13],
+		[1.00,0.00,0.22],
+		[1.00,0.33,0.31],
+		[0.92,0.02,0.25],
+		[0.80,0.05,0.09],
+		[1.00,0.82,0.29],
+		[1.00,0.90,0.09],
+		[0.51,0.25,0.12]
+		]
 	},
 
 	"2102":
