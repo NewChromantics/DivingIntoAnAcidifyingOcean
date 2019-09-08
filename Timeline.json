@@ -39,6 +39,11 @@
 	{
 		"Subtitle":"... comes from the ocean"
 	},
+
+	"1813":
+	{
+		"VoiceAudio":"Audio/AcidicOcean_FX_Explosion.mp3"
+	},
 	
 	"1819":
 	{
@@ -74,7 +79,7 @@
 	"1863":
 	{
 
-		"Music": "Audio/AcidicOcean_MUSIC_Sonification.mp3"
+		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3"
 	},
 	
 	
