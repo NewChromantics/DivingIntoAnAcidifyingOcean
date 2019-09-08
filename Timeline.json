@@ -30,45 +30,44 @@
 		]
 	},
 
-	"1801":
+	"1793":
 	{
-		"Subtitle":"Every second breath we take...",
-		"VoiceAudio":""
+		"Subtitle":"Every second breath we take comes from the ocean"
 	},
-	"1804":
+	"1800":
 	{
-		"Subtitle":"... comes from the ocean"
+		"Subtitle":"But this won’t last much longer. "
 	},
 
-	"1813":
+	"1807":
 	{
-		"VoiceAudio":"Audio/AcidicOcean_FX_Explosion.mp3"
+		"Subtitle":"We’re in the process of killing around 96% of ocean life. "
 	},
 	
 	"1819":
 	{
-		"Subtitle":"But we’re killing over 96% of ocean life."
+		"Subtitle":"That’s what happened some 252 million years ago in an event known as “the great dying” largely due to global warming."
 	},
 
 	
 	"1830":
 	{
-		"Subtitle":"In a single lifetime…",
-		"VoiceAudio":""
+		"Subtitle":"n our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere. This is absorbed by the oceans and acidifies the water.",
+
 	},
 	
-	"1843":
+	"1845":
 	{
-		"Subtitle":"we are acidifying the oceans faster than ever before"
+		"Subtitle":"It decreases our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life."
 	},
-	"1850":
+	"1854":
 	{
-		"Subtitle":"We are depleting the seas of oxygen and suffocating all lifeforms."
+		"Subtitle":"Shells and skeletons dissolve, and marine animals’ physiology changes."
 	},
 	
 	"1860":
 	{
-		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
+		
 		"Subtitle":"If we fail to act, what will happen to them… and to us?",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
@@ -82,11 +81,6 @@
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3"
 	},
 	
-	
-	"1865":
-	{
-		"Subtitle":"THIS IS A PTEROPOD BLA BLA "
-	},
 	
 
 	
@@ -126,13 +120,18 @@
 
 	"2035":
 	{
-		"Subtitle":"We are now passing a Dead zones, areas with low or no oxygen are drastically increasing all around the world.",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_EverySecondBreath.mp3"
+		"VoiceAudio":"Audio/AcidicOcean_VOICE_2050.mp3",
+		"Subtitle":"2050 represents a tipping point for the future of the oceans."
 	},
 
-	"2045":
+	"2042":
 	{
-		"Subtitle":"Also caused by excessive nutrient pollution from human activities, they deplete the oxygen required to support most marine life."
+		"Subtitle":"With increasingly warmer temperatures around the world, we are depleting the oceans of oxygen and suffocating all lifeforms."
+	},
+
+	"2052":
+	{
+		"Subtitle":"These animals don’t only sustain the rest of marine life. They ultimately sustain us. Human beings, and our economies, cultures, and communities, depend on them. "
 	},
 
 	"2084":
@@ -201,7 +200,32 @@
 
 	"2102":
 	{
-		"Subtitle":"",
-		"VoiceAudio":"Audio/AcidicOcean_Voice_Conclusion.mp3"
+		"Subtitle":"If we don't drastically reduce our CO2 production, and limit the planet’s temperature rise to under 1.5°C, the whole ocean system may collapse.",
+		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
+	},
+
+	"2114":
+	{
+		"Subtitle":"This won’t only affect the ocean. Many land animals depend on fish to survive."
+	},
+
+	"2122":
+	{
+		"Subtitle":"And so do we, our economies and our cultures."
+	},
+
+	"2127":
+	{
+		"Subtitle":"To prevent this, we need to reduce our carbon footprint. "
+	},
+
+	"2133":
+	{
+		"Subtitle":"We still have the power to stop this catastrophe. "
+	},
+
+	"2138":
+	{
+		"Subtitle":"But the time to act is NOW. "
 	}
 }
