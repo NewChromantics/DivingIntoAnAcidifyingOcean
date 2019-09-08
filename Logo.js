@@ -6,6 +6,9 @@ Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('AssetImport.js');
 Pop.Include('Animals.js');
 
+
+const EnableInteractiveLogo = Pop.GetExeArguments().includes('Logo');
+
 const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
 const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
 const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
@@ -15,18 +18,22 @@ const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
 
 const MinimumLogoSecs = 0.1;
 
-function HideLogo()
+function HideLogoElements()
 {
-	let HideHud = function(Name)
-	{
-		let Div = new Pop.Hud.Label(Name);
-		Div.SetVisible(false);
-	}
+	let Div = new Pop.Hud.Label('Logo');
+	Div.SetVisible(false);
+}
 
-	HideHud('TitleText');
-	HideHud('Hint_Start');
-	HideHud('Hint_Headphones');
-	HideHud('IconHeadphones');
+function ShowLogoElements()
+{
+	let Div = new Pop.Hud.Label('Logo');
+	Div.SetVisible(true);
+}
+
+function ShowExperienceElements()
+{
+	let Div = new Pop.Hud.Label('Experience');
+	Div.SetVisible(true);
 }
 
 function TLogoState()
@@ -267,10 +274,14 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	if ( FirstUpdate )
 	{
 		LogoState = new TLogoState();
-		LoadLogoScene();
+
+		ShowLogoElements();
 		
-		//	hide title as we replace it with our own!
+		if ( EnableInteractiveLogo )
 		{
+			LoadLogoScene();
+
+			//	hide title as we replace it with our own!
 			let Div = new Pop.Hud.Label('TitleText');
 			Div.SetVisible(false);
 		}
@@ -297,7 +308,7 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	if ( !LogoState.IsPreloadFinished() )
 		return;
 	
-	HideLogo();
+	HideLogoElements();
 	return 'Experience';
 }
 
@@ -309,28 +320,7 @@ function Update_Experience(FirstUpdate)
 		let Source = Pop.LoadFileAsString('AcidicOcean.js');
 		Pop.CompileAndRun( Source, 'AcidicOcean.js' );
 		
-		//	show some elements
-		let ShowHud = function(Name)
-		{
-			let Div = new Pop.Hud.Label(Name);
-			Div.SetVisible(true);
-		}
-		const ShowElements =
-		[
-		 'SubtitleLabel',
-		 'YearSlider',
-		 'Timeline',
-		 'Year',
-		 'Stats',
-		// 'Hint_Headphones',
-		 'IconHeadphones',
-		 'Hint_TapAnimal',
-		 'Hint_ClickAnimal',
-		 'Hint_DragTimeline_Mobile',
-		 'Hint_DragTimeline_Desktop',
-		 'Hint_TouchToInteract',
-		 ];
-		ShowElements.forEach( ShowHud );
+		ShowExperienceElements();
 	}
 }
 

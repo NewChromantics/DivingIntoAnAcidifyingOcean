@@ -29,35 +29,7 @@ function IsDebugEnabled()
 	return HasDebug;
 }
 
-//	testing anim
-/*
-Pop.Include('PopEngineCommon/PopCollada.js');
-
-const OnActor = function(Actor)
-{
-	Pop.Debug(Actor);
-}
-const OnSpline = function(Actor)
-{
-	Pop.Debug(Actor);
-}
-const Contents = Pop.LoadFileAsString('CameraSpline.dae.json');
-Pop.Collada.Parse(Contents,OnActor,OnSpline);
-*/
- 
-//Pop.Include('PopEngineCommon/PopShaderCache.js');
-//Pop.Include('PopEngineCommon/PopMath.js');
-//Pop.Include('PopEngineCommon/PopPly.js');
-//Pop.Include('PopEngineCommon/PopObj.js');
-//Pop.Include('PopEngineCommon/PopCollada.js');
-//Pop.Include('PopEngineCommon/PopTexture.js');
-//Pop.Include('PopEngineCommon/PopCamera.js');
-//Pop.Include('PopEngineCommon/ParamsWindow.js');
-
-//Pop.Include('AssetManager.js');
-//Pop.Include('AudioManager.js');
 Pop.Include('Hud.js');
-
 Pop.Include('Logo.js');
 
 
@@ -193,7 +165,7 @@ let StateMachine = new Pop.StateMachine( StateMap );
 
 function BootupRender(RenderTarget)
 {
-	RenderTarget.ClearColour(0,0,1);
+	RenderTarget.ClearColour(0,0,0);
 }
 
 //	window now shared from bootup

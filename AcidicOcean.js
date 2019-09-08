@@ -1220,6 +1220,8 @@ function Init()
 	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
 	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
 	
+	Hud.Animal_Card.SetVisible(false);
+	
 	RenderFrameCounter.Report = function(CountPerSec)
 	{
 		Hud.Debug_FrameRate.SetValue( CountPerSec.toFixed(2) + " fps" );

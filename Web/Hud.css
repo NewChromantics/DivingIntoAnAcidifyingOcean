@@ -4,6 +4,23 @@
 	color: #ffffff;
 }
 
+/* start debug hidden */
+#Debug
+{
+	visibility:	hidden;
+}
+
+#Logo
+{
+	visibility:	visible;
+}
+
+/* start experience stuff hidden */
+#Experience
+{
+	visibility:	hidden;
+}
+
 #AudioMusic
 {
 	display:	block;
@@ -388,18 +405,18 @@
 
 }
 
-#Hud #Music
+#Music
 {
 	/* position me */
 }
 
 /* currently playing track */
-#Hud #MusicLabel
+#MusicLabel
 {
 	font-size:	10vh;
 }
 
-#Hud #Year
+#Year
 {
 	/* position me */
 	display:	block;
@@ -408,7 +425,7 @@
 }
 
 /* Current year */
-#Hud #YearLabel
+#YearLabel
 {
 	font-size:	10vh;
 }

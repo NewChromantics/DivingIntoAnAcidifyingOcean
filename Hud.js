@@ -15,7 +15,7 @@ Pop.Hud.Label = function()
 			return;
 		//	initial overwrites css, we want to switch back to css :/
 		//this.Element.style.display = Visible ? 'initial' : 'none';
-		this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
 	}
 }
 
@@ -30,7 +30,7 @@ Pop.Hud.Button = function()
 			return;
 		//	initial overwrites css, we want to switch back to css :/
 		//this.Element.style.display = Visible ? 'initial' : 'none';
-		this.Element.style.visibility = Visible ? 'visible' : 'hidden';
+		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
 	}
 }
 

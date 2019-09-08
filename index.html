@@ -35,58 +35,65 @@
 <body>
 
 	<div id="Hud">
-		<div ><span id="SubtitleLabel">Subtitles</span></div>
-
-		<div id="Timeline"><input type=range id="YearSlider" /></div>
-		<div id="Year">Year: <span id="YearLabel">000</span></div>
-
+		
 		<div id="About"> About </div>
-
-		<div id="Stats">
-			<div id="Stats_Temp"><strong>Temperature:</strong> +<span id="Stats_Temp_Label">XXX</span>&deg;C</div>
-			<div id="Stats_Co2"><strong>CO2 Intake:</strong> <span id="Stats_Co2_Label">XXX</span>% More</div>
-			<div id="Stats_Oxygen"><strong>Oxygen Level:</strong> <span id="Stats_Oxygen_Label">-X.XX</span>%</div>
-			<div id="Stats_Ph"><strong>pH acidity:</strong> <span id="Stats_Ph_Label">X</span>% more</div>
-		</div>
-		<div id="YearStart">1860</div>	
-		<div id="YearEnd">2100</div>
-
-		<div id="TitleText">ACIDIC OCEAN</div>
-		<div id="Hint_Start">S T A R T</div><!-- gr: will change this to a button -->
-
-		<div id="Hint_Headphones"> Use headphones for a better experience </div>
-		<div id="IconHeadphones"> <img src="Web/icons/Headphones.svg"> </div>
-
-		<div  id="Hint_TapAnimal">Tap on the animal to select it</div>
-		<div  id="Hint_ClickAnimal">Click on the animal to select it</div>
-		<div  id="Hint_DragTimeline_Mobile">Drag the timeline to explore</div>
-		<div id="Hint_DragTimeline_Desktop">Drag the timeline to explore</div>
-		<div id="Hint_TouchToInteract">Touch to interact</div>
-
-		<div id="AnimalCard"> 
-			<div id="AnimalCard_Title">JELLYFISH</div>
-			
-			<div id="AnimalCard_Description">
-				<h1>
-			 		Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years.
-				</h1>
-				<h2>
-				In the last 50 years oxygen levels have dropped by around 2%
-				</h2>
-			</div>
-			<div id="Continue"><img src="Web/icons/Continue.svg"></div>
-			<div id="Next">Continue</div>
-			
-		</div>
-
 		<div id="IconSubtitles"><img src="Web/icons/Subtitles.svg"></div>
 		<span id="Subtitle_Line"> </span>
-
+		
 		<div id="SubIconText"> Enable subtitles</div>
-
+		
 		<div id="IconSubtitles_Enable"><img src="Web/icons/Subtitles_Enable.svg"></div>
 		<div id="SubIconText">Disable subtitles</div>
 		<div id="IconSubtitles_Disable"><img src="Web/icons/Subtitles_Disable.svg"></div>
+
+		
+		<div id="Logo">
+			<div id="TitleText">ACIDIC OCEAN</div>
+			<div id="Hint_Start">S T A R T</div>
+			
+			<div id="Hint_Headphones"> Use headphones for a better experience </div>
+			<div id="IconHeadphones"> <img src="Web/icons/Headphones.svg"> </div>
+		</div><!-- Logo screen -->
+
+		<div id="Experience">
+			<div ><span id="SubtitleLabel">Subtitles</span></div>
+
+			<div id="Timeline"><input type=range id="YearSlider" /></div>
+			<div id="Year">Year: <span id="YearLabel">000</span></div>
+
+			
+			<div id="Stats">
+				<div id="Stats_Temp"><strong>Temperature:</strong> +<span id="Stats_Temp_Label">XXX</span>&deg;C</div>
+				<div id="Stats_Co2"><strong>CO2 Intake:</strong> <span id="Stats_Co2_Label">XXX</span>% More</div>
+				<div id="Stats_Oxygen"><strong>Oxygen Level:</strong> <span id="Stats_Oxygen_Label">-X.XX</span>%</div>
+				<div id="Stats_Ph"><strong>pH acidity:</strong> <span id="Stats_Ph_Label">X</span>% more</div>
+			</div>
+			<div id="YearStart">1860</div>
+			<div id="YearEnd">2100</div>
+
+
+			<div  id="Hint_TapAnimal">Tap on the animal to select it</div>
+			<div  id="Hint_ClickAnimal">Click on the animal to select it</div>
+			<div  id="Hint_DragTimeline_Mobile">Drag the timeline to explore</div>
+			<div id="Hint_DragTimeline_Desktop">Drag the timeline to explore</div>
+			<div id="Hint_TouchToInteract">Touch to interact</div>
+
+			<div id="AnimalCard">
+				<div id="AnimalCard_Title">JELLYFISH</div>
+				
+				<div id="AnimalCard_Description">
+					<h1>
+						Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years.
+					</h1>
+					<h2>
+					In the last 50 years oxygen levels have dropped by around 2%
+					</h2>
+				</div>
+				<div id="Continue"><img src="Web/icons/Continue.svg"></div>
+				<div id="Next">Continue</div>
+				
+			</div>
+		</div><!-- experience -->
 
 		<div id="Debug">
 			<div id="Debug_State">State ?</div>
@@ -96,7 +103,7 @@
 			<div id="Debug_RenderedActors">Debug_RenderedActors</div>
 			<div id="Debug_FrameRate">X FPS</div>
 			<div id="Debug_RenderStats">Debug_RenderStats</div>
-		</div>
+		</div><!-- Debug -->
 	</div>
 	
 	<script src='PopEngineCommon/PopWebApi.js'></script>
@@ -107,33 +114,8 @@
 		
 		async function Bootup()
 		{
-			const HideHud = function(Name)
-			{
-				const Element = document.getElementById(Name);
-				Element.style.visibility = 'hidden';
-			}
-			const HiddenElements =
-			[
-			 'SubtitleLabel',
-			 'YearSlider',
-			 'Timeline',
-			 'Year',
-			 'Stats',
-			 'Hint_Start',
-			 'Hint_Headphones',
-			 'IconHeadphones',
-			 'Hint_TapAnimal',
-			 'Hint_ClickAnimal',
-			 'Hint_DragTimeline_Mobile',
-			 'Hint_DragTimeline_Desktop',
-			 'Hint_TouchToInteract',
-			 'AnimalCard'
-			];
-			HiddenElements.forEach( HideHud );
-			
 			const AsyncAssetLoads = Pop.GetExeArguments().includes('AsyncAssets');
-			
-			
+						
 			const PreloadAssets =
 			[
 				'bootup.js',
