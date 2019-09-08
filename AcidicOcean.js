@@ -16,6 +16,7 @@ Pop.Include('AudioManager.js');
 
 const EnableVoiceOver = Pop.GetExeArguments().includes('EnableVoiceOver');
 const BoldMode = Pop.GetExeArguments().includes('Bold');
+const AnimalTest = Pop.GetExeArguments().includes('AnimalTest');
 
 const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
@@ -1367,6 +1368,10 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		Acid.SkipSelectedAnimal = false;
 		Hud.Animal_ContinueButton.OnClicked = function()
 		{
+			if ( AnimalTest )
+			{
+				Acid.SelectedActor.ResetPhysicsTextures();
+			}
 			Acid.SkipSelectedAnimal = true;
 		}
 	}
@@ -1387,6 +1392,10 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	{
 		Acid.SelectedActor.UpdatePhysics = true;
 	}
+	
+	//	never exit
+	if ( AnimalTest )
+		return;
 	
 	let Finished = false;
 	if ( StateTime > Params.ShowAnimal_Duration )
