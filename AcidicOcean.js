@@ -1213,6 +1213,7 @@ function Init()
 	Hud.Animal_Card = new Pop.Hud.Label('AnimalCard');
 	Hud.Animal_Title = new Pop.Hud.Label('AnimalCard_Title');
 	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');
+	Hud.Animal_ContinueButton = new Pop.Hud.Button('Continue');
 
 	Hud.Debug_State = new Pop.Hud.Label('Debug_State');
 	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
@@ -1244,6 +1245,7 @@ Acid.StateMap =
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, false );
 Acid.SelectedActor = null;
+Acid.SkipSelectedAnimal = false;
 Acid.FogLerp = 0;
 Acid.FogTargetPosition = null;
 Acid.CameraPosition = null;	//	current pos for lerping depending on state
@@ -1309,6 +1311,12 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		Hud.Animal_Card.SetVisible(true);
 		Hud.Animal_Title.SetValue( Animal.Name );
 		Hud.Animal_Description.SetValue( Animal.Description );
+		
+		Acid.SkipSelectedAnimal = false;
+		Hud.Animal_ContinueButton.OnClicked = function()
+		{
+			Acid.SkipSelectedAnimal = true;
+		}
 	}
 	
 	Update( FrameDuration );
@@ -1328,7 +1336,14 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		Acid.SelectedActor.UpdatePhysics = true;
 	}
 	
-	if ( StateTime < Params.ShowAnimal_Duration )
+	let Finished = false;
+	if ( StateTime > Params.ShowAnimal_Duration )
+		Finished = true;
+
+	if ( Acid.SkipSelectedAnimal )
+		Finished = true;
+	
+	if ( !Finished )
 		return;
 	
 	//	hide hud
