@@ -108,6 +108,7 @@ function GetDebrisMeta(Actor)
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
+	Meta.PhysicsUniforms.Noise = RandomTexture;
 
 	Meta.TriangleScale = Params.Debris_TriangleScale;
 	Meta.Colours =
@@ -143,6 +144,7 @@ function GetAnimalMeta(Actor)
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
+	Meta.PhysicsUniforms.Noise = Noise_Turbulence;
 	
 	Meta.TriangleScale = Params.Animal_TriangleScale;
 	Meta.Colours = [InvalidColour];
@@ -161,7 +163,6 @@ function GetNastyAnimalMeta(Actor)
 	Meta.PhysicsUniforms.Damping = Params.NastyAnimal_PhysicsDamping;
 	Meta.PhysicsUniforms.ExplodeScale = Params.NastyAnimal_PhysicsExplodeScale;
 
-
 	return Meta;
 }
 
@@ -171,6 +172,8 @@ function GetBigBangAnimalMeta(Actor)
 	let Meta = GetAnimalMeta(Actor);
 	
 	Meta.PhysicsUniforms.Noise = RandomTexture;
+	Meta.PhysicsUniforms.Damping = Params.BigBang_Damping;
+	Meta.PhysicsUniforms.NoiseScale = Params.BigBang_NoiseScale;
 	
 	return Meta;
 }
@@ -544,6 +547,9 @@ Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
 Params.ScrollFlySpeed = 50;
+
+Params.BigBang_Damping = 0.01;
+Params.BigBang_NoiseScale = 9;
 
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.12;
@@ -1805,7 +1811,6 @@ function Render(RenderTarget)
 		{
 			const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
 			Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
-			Shader.SetUniform('Noise',Noise_Turbulence);
 		}
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
