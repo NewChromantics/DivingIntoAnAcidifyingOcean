@@ -92,7 +92,12 @@
 {
 	display:	block;
 	position:	absolute;
-	width: 100vw;
+	width:		100vw;
+	height:		100vh;
+	background-image:		url(icons/LogoBG.png);
+	background-repeat:		no-repeat;
+	background-size:		contain;
+	background-position:	center center;
 
 }
 
