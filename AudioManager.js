@@ -180,11 +180,12 @@ const TQueuedAudio = function(Filename,Loop,StartQuiet,GetVolume)
 	}
 }
 
-const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetVoiceVolume,GetSoundVolume)
+const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetMusic2Volume,GetVoiceVolume,GetSoundVolume)
 {
 	//	array of TQueuedAudio
 	//	the last element in the queue is NOT fading out, every other one is
 	this.MusicQueue = [];
+	this.Music2Queue = [];
 	this.VoiceQueue = [];
 	this.Sounds = [];
 
@@ -226,6 +227,7 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetVoiceVolum
 		const FadeStep = Timestep / FadeSecs;
 		
 		this.UpdateAudioQueue( this.MusicQueue, FadeStep );
+		this.UpdateAudioQueue( this.Music2Queue, FadeStep );
 		this.UpdateAudioQueue( this.VoiceQueue, FadeStep );
 		this.UpdateSounds();
 	}
@@ -246,6 +248,22 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetVoiceVolum
 		this.MusicQueue.push( NewSound );
 	}
 	
+	this.SetMusic2 = function(Filename)
+	{
+		//	see if this is at the end of the queue
+		if ( this.Music2Queue.length > 0 )
+		{
+			let Last = this.Music2Queue[this.Music2Queue.length-1];
+			if ( Last.Filename == Filename )
+				return;
+		}
+		
+		let Loop = true;
+		let StartQuiet = false;
+		let NewSound = new TQueuedAudio( Filename, Loop, StartQuiet, GetMusic2Volume );
+		this.Music2Queue.push( NewSound );
+	}
+
 	this.PlayVoice = function(Filename)
 	{
 		//	empty string is a blank audio
@@ -288,6 +306,11 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetVoiceVolum
 	this.GetMusicQueueDebug = function()
 	{
 		return this.GetQueueDebug(this.MusicQueue);
+	}
+	
+	this.GetMusic2QueueDebug = function()
+	{
+		return this.GetQueueDebug(this.Music2Queue);
 	}
 
 	this.GetVoiceQueueDebug = function()

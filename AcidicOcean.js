@@ -206,12 +206,13 @@ function GetOceanMeta()
 }
 
 function GetMusicVolume()	{	return Params.MusicVolume;	}
+function GetMusic2Volume()	{	return Params.Music2Volume;	}
 function GetVoiceVolume()	{	return Params.VoiceVolume;	}
 function GetSoundVolume()	{	return Params.SoundVolume;	}
 
 var AppTime = null;
 var Hud = {};
-var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetVoiceVolume, GetSoundVolume );
+var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
 
 var LastMouseRay = null;	//	gr: this isn't getting updated any more
@@ -517,6 +518,7 @@ Params.AutoGrabDebugCamera = false;
 Params.UseDebugCamera = false;
 Params.EnableMusic = true;
 Params.MusicVolume = 1;
+Params.Music2Volume = 1;
 Params.VoiceVolume = 1;
 Params.SoundVolume = 1;
 Params.DebugCameraPositionCount = 0;
@@ -603,6 +605,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ExperiencePlaying');
 	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('MusicVolume',0,1);
+	ParamsWindow.AddParam('Music2Volume',0,1);
 	ParamsWindow.AddParam('VoiceVolume',0,1);
 	ParamsWindow.AddParam('SoundVolume',0,1);
 	ParamsWindow.AddParam('ShowAnimal_ExplodeSecs',0,20);
@@ -1260,6 +1263,7 @@ function Init()
 	AppTime = 0;
 	
 	Hud.MusicLabel = new Pop.Hud.Label('AudioMusicLabel');
+	Hud.Music2Label = new Pop.Hud.Label('AudioMusic2Label');
 	Hud.VoiceLabel = new Pop.Hud.Label('AudioVoiceLabel');
 	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
@@ -1626,6 +1630,9 @@ function Update(FrameDurationSecs)
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
 	AudioManager.SetMusic( Params.EnableMusic ? CurrentMusic : null );
 	
+	const CurrentMusic2 = Timeline.GetUniform( Time, 'Music2' );
+	AudioManager.SetMusic2( Params.EnableMusic ? CurrentMusic2 : null );
+
 	if ( EnableVoiceOver )
 	{
 		const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
@@ -1642,9 +1649,11 @@ function Update(FrameDurationSecs)
 	Hud.YearLabel.SetValue( Math.floor(Params.TimelineYear) );
 	Hud.YearSlider.SetValue( Params.TimelineYear );
 	const MusicDebug = AudioManager.GetMusicQueueDebug();
+	const Music2Debug = AudioManager.GetMusic2QueueDebug();
 	const VoiceDebug = AudioManager.GetVoiceQueueDebug();
 	const Subtitle = Timeline.GetUniform( Time, 'Subtitle' );
 	Hud.MusicLabel.SetValue( MusicDebug );
+	Hud.Music2Label.SetValue( Music2Debug );
 	Hud.VoiceLabel.SetValue( VoiceDebug );
 	Hud.SubtitleLabel.SetValue( Subtitle );
 
