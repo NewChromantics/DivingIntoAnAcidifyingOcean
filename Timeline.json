@@ -180,10 +180,15 @@
 		
 	},
 
-	"2100":
+	"2099":
 	{
 		"StatsVisible":false,
 		"TimelineVisible":false,
+		"Subtitle":""
+	},
+	
+	"2100":
+	{
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
 		"Stats_Temp":4,
