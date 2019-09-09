@@ -1277,6 +1277,11 @@ function Init()
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinInteractiveYear, TimelineMaxInteractiveYear );
+	Hud.YearSlider.OnChanged = function(NewValue)
+	{
+		Pop.Debug("Slider changed",NewValue);
+		Acid.UserSetYear = NewValue;
+	}
 	
 	Hud.Stats = new Pop.Hud.Label('Stats');
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
@@ -1333,6 +1338,7 @@ Acid.SelectedActor = null;
 Acid.SkipSelectedAnimal = false;
 Acid.FogLerp = 0;
 Acid.FogTargetPosition = null;
+Acid.UserSetYear = null;
 Acid.CameraPosition = null;	//	current pos for lerping depending on state
 Acid.GetCameraPosition = function()
 {
@@ -1549,6 +1555,15 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	Update( FrameDuration );
 	
 	//	move time along
+	if ( Acid.UserSetYear !== null )
+	{
+		//	pop user's year
+		Params.TimelineYear = Acid.UserSetYear;
+		Acid.UserSetYear = null;
+		if ( ParamsWindow )
+			ParamsWindow.OnParamChanged('TimelineYear');
+	}
+	else
 	{
 		const ExpYears = TimelineMaxYear - TimelineMinYear;
 		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
@@ -1663,6 +1678,7 @@ function Update(FrameDurationSecs)
 	Hud.Music2Label.SetValue( Music2Debug );
 	Hud.VoiceLabel.SetValue( VoiceDebug );
 	Hud.SubtitleLabel.SetValue( Subtitle );
+	Hud.SubtitleLabel.SetVisible( Subtitle.length > 0 );
 
 	const DecimalPlaces = 2;
 	const Stats_Temp = Timeline.GetUniform( Time, 'Stats_Temp' ).toFixed(DecimalPlaces);
