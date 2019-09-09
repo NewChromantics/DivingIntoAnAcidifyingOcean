@@ -9,13 +9,21 @@ Pop.Hud.Label = function()
 {
 	Pop.Gui.Label.apply( this, arguments );
 
+	this.VisibleCache = null;
+	
 	this.SetVisible = function(Visible)
 	{
 		if ( !this.Element )
 			return;
+		
+		//	avoid style changes
+		if ( this.VisibleCache === Visible )
+			return;
+		
 		//	initial overwrites css, we want to switch back to css :/
 		//this.Element.style.display = Visible ? 'initial' : 'none';
 		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
+		this.VisibleCache = Visible;
 	}
 }
 
@@ -24,13 +32,21 @@ Pop.Hud.Button = function()
 {
 	Pop.Gui.Button.apply( this, arguments );
 	
+	this.VisibleCache = null;
+	
 	this.SetVisible = function(Visible)
 	{
 		if ( !this.Element )
 			return;
+		
+		//	avoid style changes
+		if ( this.VisibleCache === Visible )
+			return;
+		
 		//	initial overwrites css, we want to switch back to css :/
 		//this.Element.style.display = Visible ? 'initial' : 'none';
 		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
+		this.VisibleCache = Visible;
 	}
 }
 

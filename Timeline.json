@@ -1,6 +1,9 @@
 {
 	"1790":
 	{
+		"HintClickAnimalVisible":false,
+		"HintDragTimelineVisible":false,
+		"StatsVisible":false,
 		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
 		"Subtitle":"",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Intro.mp3",
@@ -67,7 +70,8 @@
 	
 	"1860":
 	{
-		
+		"HintClickAnimalVisible":true,
+		"StatsVisible":true,
 		"Subtitle":"If we fail to act, what will happen to them… and to us?",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
@@ -77,13 +81,25 @@
 	},
 	"1863":
 	{
-
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3"
 	},
 	
+	"1870":
+	{
+		"HintClickAnimalVisible":false
+	},
+	
+	"1880":
+	{
+		"HintDragTimelineVisible":true
+	},
+	
+	"1885":
+	{
+		"HintDragTimelineVisible":false
+	},
 	
 
-	
 	"2019":
 	{
 		"FogColour":[0,0,0],
@@ -166,6 +182,7 @@
 
 	"2100":
 	{
+		"StatsVisible":false,
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
 		"Stats_Temp":4,

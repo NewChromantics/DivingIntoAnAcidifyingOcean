@@ -1289,6 +1289,10 @@ function Init()
 	
 	Hud.Animal_Card.SetVisible(false);
 	
+	Hud.Hint_ClickAnimal = new Pop.Hud.Label('Hint_ClickAnimal');
+	Hud.Hint_DragTimeline = new Pop.Hud.Label('Hint_DragTimeline');
+
+	
 	RenderFrameCounter.Report = function(CountPerSec)
 	{
 		Hud.Debug_FrameRate.SetValue( CountPerSec.toFixed(2) + " fps" );
@@ -1654,6 +1658,13 @@ function Update(FrameDurationSecs)
 	
 	Hud.Debug_State.SetValue( "State: " + Acid.StateMachine.CurrentState );
 	
+	
+	//	update some huds
+	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
+	const Hint_DragTimeline_Visible = Timeline.GetUniform( Time, 'HintDragTimelineVisible' );
+	Hud.Hint_ClickAnimal.SetVisible( Hint_ClickAnimal_Visible );
+	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible );
+
 	//	update colours
 	if ( !Params.CustomiseWaterColours )
 	{
