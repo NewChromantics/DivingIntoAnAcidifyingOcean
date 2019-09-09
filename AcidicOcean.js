@@ -32,6 +32,7 @@ const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
 const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
 const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_ShellDissolution.mp3';
 
+const EnableLoseContextTest = false;
 
 
 //	temp turning off and just having dummy actors
@@ -1941,6 +1942,15 @@ Window.OnRender = Render;
 
 Window.OnMouseDown = function(x,y,Button)
 {
+	if ( EnableLoseContextTest )
+	{
+		if ( Button == 2 )
+		{
+			Window.TestLoseContext();
+			return;
+		}
+	}
+	
 	if ( Button == 0 )
 	{
 		QueueSceneClick( x, y );
