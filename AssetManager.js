@@ -1,9 +1,40 @@
 //Pop.Include('AssetImport.js');
 Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
+Pop.Include('PopEngineCommon/PopMath.js');
 
 
-const RandomTexture = Pop.CreateRandomImage( 1024, 1024 );
+
+//	gr: should change this to specific noise algos
+//	this creates with normalised xyz around 0.5,0.5,0.5
+function CreateRandomSphereImage(Width,Height)
+{
+	let Channels = 4;
+	let Format = 'Float4';
+	
+	let Pixels = new Float32Array( Width * Height * Channels );
+	for ( let i=0;	i<Pixels.length;	i+=4 )
+	{
+		let xyz = [ Math.random()-0.5, Math.random()-0.5, Math.random()-0.5 ];
+		xyz = Math.Normalise3( xyz );
+		xyz = Math.Add3( xyz, [1,1,1] );
+		xyz = Math.Multiply3( xyz, [0.5,0.5,0.5] );
+		
+		let w = Math.random();
+		Pixels[i+0] = xyz[0];
+		Pixels[i+1] = xyz[1];
+		Pixels[i+2] = xyz[2];
+		Pixels[i+3] = xyz[3];
+	}
+	
+	let Texture = new Pop.Image();
+	Texture.WritePixels( Width, Height, Pixels, Format );
+	return Texture;
+}
+
+const RandomTexture = CreateRandomSphereImage( 1024, 1024 );
+
+
 
 
 function GetQuadGeometry(RenderTarget)

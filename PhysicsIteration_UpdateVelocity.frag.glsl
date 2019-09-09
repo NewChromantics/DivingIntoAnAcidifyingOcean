@@ -10,7 +10,7 @@ uniform float PhysicsStep;// = 1.0/60.0;
 uniform float NoiseScale;// = 0.1;
 uniform float Gravity;// = -0.1;
 uniform float Damping;
-const float TinyNoiseScale = 0.1;
+uniform float TinyNoiseScale;
 
 float Range(float Min,float Max,float Value)
 {

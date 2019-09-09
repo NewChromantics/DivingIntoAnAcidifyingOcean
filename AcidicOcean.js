@@ -145,6 +145,7 @@ function GetAnimalMeta(Actor)
 	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
 	Meta.PhysicsUniforms.Noise = Noise_Turbulence;
+	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
 	
 	Meta.TriangleScale = Params.Animal_TriangleScale;
 	Meta.Colours = [InvalidColour];
@@ -174,6 +175,7 @@ function GetBigBangAnimalMeta(Actor)
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 	Meta.PhysicsUniforms.Damping = Params.BigBang_Damping;
 	Meta.PhysicsUniforms.NoiseScale = Params.BigBang_NoiseScale;
+	Meta.PhysicsUniforms.TinyNoiseScale = Params.BigBang_TinyNoiseScale;
 	
 	return Meta;
 }
@@ -549,7 +551,8 @@ Params.DrawHighlightedActors = false;
 Params.ScrollFlySpeed = 50;
 
 Params.BigBang_Damping = 0.01;
-Params.BigBang_NoiseScale = 9;
+Params.BigBang_NoiseScale = 0.1;
+Params.BigBang_TinyNoiseScale = 10;
 
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.12;

@@ -139,9 +139,7 @@ function TLogoState()
 		'PopEngineCommon/PopPly.js',
 		'PopEngineCommon/PopObj.js',
 		'PopEngineCommon/PopCollada.js',
-		'PopEngineCommon/PopTexture.js',
-		'Noise0.png',
-	 	null
+		'PopEngineCommon/PopTexture.js'
 	];
 	this.PreloadSceneFilenames =
 	[
