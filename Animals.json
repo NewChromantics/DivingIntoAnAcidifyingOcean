@@ -16,7 +16,7 @@
 		"Model":	"Models/jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
-		"Scale":1.5
+		"Scale":1.2
 
 	},
 
@@ -26,8 +26,7 @@
 		"Description":	"<h1> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h1> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. With just a 10% reduction in pteropod numbers, salmon could lose up to 20% of their mass.</h2>",
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ],
-		"Scale":1
+		"Categorys" : [ "Animal_" ]
 
 	},
 
@@ -86,8 +85,7 @@
 		"Description":	"<h1> When CO2 is absorbed by seawater, chemical reactions occur that reduce seawater pH, carbonate ion concentration, and saturation states of biologically important calcium carbonate minerals. These last minerals are the building blocks of Aragonite, what the Cockle's shell is made of. </h1> <h2> Healthy Aragonite data should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall below 1Ω all skeletons and shells will start dissolving.  </h2> <h2> Under the current progression of carbon emissions, around 70% of North Atlantic cold-water skeletons and shells will be living in corrosive waters by 2050–60. </h2>",
 		"Model":	"Models/cockle_v1.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":3
+		"Categorys" : [ "Animal_", "Bigbang_" ]
 
 	},
 	"ALGAL BLOOM":
@@ -106,7 +104,7 @@
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
-		"Scale":2.5
+		"Scale":1.8
 
 	},
 	"ANTARCTIC KRILL":
@@ -165,7 +163,7 @@
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.1
+		"Scale":0.2
 
 	},
 	"CEPHALOPODS":
@@ -290,7 +288,7 @@
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.5
+		"Scale":1.2
 
 	},
 		"BRITTLE STAR":
@@ -318,7 +316,7 @@
 		"Model":	"Models/ClownFIsh.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":2.5
+		"Scale":2
 
 	},
 		"PLASTIC BOTTLE":
