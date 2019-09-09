@@ -3,7 +3,27 @@
 //	but for now, lets just mess with the DOM
 Pop.Hud = {};
 
-Pop.Hud.Slider = Pop.Gui.Slider;
+Pop.Hud.Slider = function()
+{
+	Pop.Gui.Slider.apply( this, arguments );
+	
+	this.VisibleCache = null;
+	
+	this.SetVisible = function(Visible)
+	{
+		if ( !this.Element )
+			return;
+		
+		//	avoid style changes
+		if ( this.VisibleCache === Visible )
+			return;
+		
+		//	initial overwrites css, we want to switch back to css :/
+		//this.Element.style.display = Visible ? 'initial' : 'none';
+		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
+		this.VisibleCache = Visible;
+	}
+}
 
 Pop.Hud.Label = function()
 {

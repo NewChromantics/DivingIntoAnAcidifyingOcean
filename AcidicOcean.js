@@ -1262,10 +1262,12 @@ function Init()
 	Hud.MusicLabel = new Pop.Hud.Label('AudioMusicLabel');
 	Hud.VoiceLabel = new Pop.Hud.Label('AudioVoiceLabel');
 	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
+	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
 	Hud.YearSlider.SetMinMax( TimelineMinInteractiveYear, TimelineMaxInteractiveYear );
-		
+	
+	Hud.Stats = new Pop.Hud.Label('Stats');
 	Hud.Stats_Temp = new Pop.Hud.Label('Stats_Temp_Label');
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
@@ -1662,8 +1664,12 @@ function Update(FrameDurationSecs)
 	//	update some huds
 	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
 	const Hint_DragTimeline_Visible = Timeline.GetUniform( Time, 'HintDragTimelineVisible' );
+	const Stats_Visible = Timeline.GetUniform( Time, 'StatsVisible' );
+	const Timeline_Visible = Timeline.GetUniform( Time, 'TimelineVisible' );
 	Hud.Hint_ClickAnimal.SetVisible( Hint_ClickAnimal_Visible );
 	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible );
+	Hud.Stats.SetVisible( Stats_Visible );
+	Hud.Timeline.SetVisible( Timeline_Visible );
 
 	//	update colours
 	if ( !Params.CustomiseWaterColours )

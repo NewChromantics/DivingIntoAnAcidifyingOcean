@@ -4,6 +4,7 @@
 		"HintClickAnimalVisible":false,
 		"HintDragTimelineVisible":false,
 		"StatsVisible":false,
+		"TimelineVisible":false,
 		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
 		"Subtitle":"",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Intro.mp3",
@@ -72,6 +73,7 @@
 	{
 		"HintClickAnimalVisible":true,
 		"StatsVisible":true,
+		"TimelineVisible":true,
 		"Subtitle":"If we fail to act, what will happen to them… and to us?",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
@@ -183,6 +185,7 @@
 	"2100":
 	{
 		"StatsVisible":false,
+		"TimelineVisible":false,
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
 		"Stats_Temp":4,
