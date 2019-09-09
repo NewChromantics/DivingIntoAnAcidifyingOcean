@@ -86,7 +86,8 @@
 	
 	"1870":
 	{
-		"HintClickAnimalVisible":false
+		"HintClickAnimalVisible":false,
+		"Subtitle":""
 	},
 	
 	"1880":
