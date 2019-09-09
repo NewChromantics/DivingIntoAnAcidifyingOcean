@@ -514,11 +514,6 @@
 	top:	18vh;
 }
 
-/* Current year */
-#YearLabel
-{
-	font-size:	10vh;
-}
 
 /* slider http://danielstern.ca/range.css/#/ */
 /* I'm not sure this is visible in all screen sizes... */
@@ -542,128 +537,118 @@
 	
 }
 
+#TimelineContainer
+{
+	xbackground:	red;
+	position:	absolute;
+	width:		80vw;
+	left:		10vw;
+	height:		15vh;
+	top:		80vh;
+	xoverflow:	hidden;
+}
+
+#YearSlider, #YearLabelBox
+{
+	margin:		0px;
+	padding:	0px;
+	position:	absolute;
+	left:		0vw;
+	top:		0vh;
+	height:		8vh;
+	width:		100%;
+	xbackground:	yellow;
+}
+#YearLabelBox
+{
+	pointer-events:	none;
+	z-index:	2;
+	top:		6vh;
+	xleft:		-8vw;
+}
+
+#YearLabel, #YearStart, #YearEnd
+{
+	pointer-events:		none;
+	background-color:	rgba(0, 0, 0, 0.80);
+	
+}
+
+#YearLabel
+{
+	border-radius:		1vw;
+	text-align:		center;
+	--FontHeight:	8vh;
+	position:		absolute;
+	width:			calc(4 * var(--FontHeight) * 1.0);
+	margin-left:	calc(-1 * 4/2 * var(--FontHeight) * 1.0);	/* - halfwidth  to center */
+	font-size:		var(--FontHeight);
+	height:			calc( 1.2 * var(--FontHeight) );
+	z-index:		2;
+}
+
+#YearStart, #YearEnd
+{
+	--FontHeight:	2vh;
+	width:		calc( 4 * var(--FontHeight) );
+	z-index:	1;
+	position:	absolute;
+	top:		8vh;
+	font-size:		var(--FontHeight);
+	height:			calc( 2.2 * var(--FontHeight) );
+}
 #YearStart
 {
-	display: block;
-	position: absolute;
-	flex-grow: 0;
-	left: 8vw;
-	top: 91vh;
-	width: 4vw;
-	text-align:	center;
-	background-color: rgba(0, 0, 0, 0.15);
-	font-size:	2vmin;
-	
-	/*	gr: not working */
-	vertical-align:	middle;
-	xheight: 9vh;	/* need height to vertically align */
-
+	text-align:	left;
+	left:		1vw;
 }
-
 #YearEnd
 {
-	display: block;
-	position: absolute;
-	flex-grow: 0;
-	right: 7.6vw;
-	top: 91vh;
-	width: 4vw;
-	text-align:	center;
-	background-color: rgba(0, 0, 0, 0.15);
-	font-size:	2vmin;
+	text-align:	right;
+	right:		1vw;
+}
+
+#YearSlider
+{
+	cursor: pointer;
+	xbackground:	blue;
+	-webkit-appearance:	none;
+
+	background-color:	rgba(0, 0, 0, 0.80);
+	border-radius:		1vw;
+}
+
+
+#YearSlider:focus
+{
+	outline: none;
+}
+
+#YearSlider::-webkit-slider-runnable-track
+{
+	height:			0.40vh;	/* same as #AnimalCard_Title border */
+	min-height:		2px;
 	
-	/*	gr: not working */
-	vertical-align:	middle;
-	xheight: 9vh;	/* need height to vertically align */
-
+	background:		white;
+	border:			none;
+	box-shadow:		none;
+	
 }
 
+#YearSlider::-webkit-slider-thumb
+{
+	margin-top:	-2vh;
+	box-shadow:	none;
+	border:		none;
+	height:		4vh;
+	width:		0.5vw;
+	min-width:	5px;
+	background:	white;
+	cursor: pointer;
+	-webkit-appearance: none;
+}
 
-#YearSlider {
-  -webkit-appearance: none;
-  width: 100%;
-  margin: 20.75px 0;
-}
-#YearSlider:focus {
-  outline: none;
-}
-#YearSlider::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 0.5px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
-  background: #ffffff;
-  border-radius: 4.2px;
-  border: 0px solid #010101;
-}
-#YearSlider::-webkit-slider-thumb {
-  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #ffffff;
-  height: 15px;
-  width: 5px;
-  border-radius: 1px;
-  background: #ffffff;
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: -7.75px;
-}
-#YearSlider::-webkit-slider-runnable-track {
-  background: #ffffff;
-}
-#YearSlider::-moz-range-track {
-  width: 100%;
-  height: 0.5px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
-  background: #ffffff;
-  border-radius: 4.2px;
-  border: 0px solid #010101;
-}
-#YearSlider::-moz-range-thumb {
-  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #ffffff;
-  height: 15px;
-  width: 5px;
-  border-radius: 1px;
-  background: #ffffff;
-  cursor: pointer;
-}
-#YearSlider::-ms-track {
-  width: 100%;
-  height: 0.5px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-#YearSlider::-ms-fill-lower {
-  background: #f2f2f2;
-  border: 0px solid #010101;
-  border-radius: 8.4px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
-}
-#YearSlider::-ms-fill-upper {
-  background: #ffffff;
-  border: 0px solid #010101;
-  border-radius: 8.4px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.01), 0px 0px 1px rgba(13, 13, 13, 0.01);
-}
-#YearSlider::-ms-thumb {
-  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #ffffff;
-  height: 15px;
-  width: 5px;
-  border-radius: 1px;
-  background: #ffffff;
-  cursor: pointer;
-  height: 1.5px;
-}
-#YearSlider:focus::-ms-fill-lower {
-  background: #ffffff;
-}
-#YearSlider:focus::-ms-fill-upper {
-  background: #ffffff;
-}
+
 
 #Debug_VisibleActors, #Debug_RenderedActors, #Debug_FrameRate, #Debug_RenderStats
 {
