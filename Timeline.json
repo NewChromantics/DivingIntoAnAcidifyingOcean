@@ -6,6 +6,7 @@
 		"StatsVisible":false,
 		"TimelineVisible":false,
 		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
+		"Music2": "",
 		"Subtitle":"",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Intro.mp3",
 		"DebrisColours": [
@@ -56,8 +57,9 @@
 	
 	"1830":
 	{
+		"Music": "AcidicOcean_AMB_UnderWater.mp3",
+		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
 		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere. This is absorbed by the oceans and acidifies the water."
-
 	},
 	
 	"1845":
@@ -80,10 +82,6 @@
 		"Stats_Co2":0,
 		"Stats_Oxygen":0,
 		"Stats_Ph":0
-	},
-	"1863":
-	{
-		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3"
 	},
 	
 	"1870":
