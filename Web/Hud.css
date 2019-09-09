@@ -575,7 +575,7 @@
 #YearLabel, #YearStart, #YearEnd
 {
 	pointer-events:		none;
-	background-color:	rgba(0, 0, 0, 0.80);
+	background-color:	rgba(0, 0, 0, 0.50);
 	
 }
 
@@ -619,7 +619,7 @@
 	xbackground:	blue;
 	-webkit-appearance:	none;
 
-	background-color:	rgba(0, 0, 0, 0.80);
+	background-color:	rgba(0, 0, 0, 0.10);
 	border-radius:		1vw;
 }
 
