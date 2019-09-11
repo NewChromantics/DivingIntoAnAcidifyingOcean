@@ -41,7 +41,7 @@
 	},
 	"1800":
 	{
-		"Subtitle":"But this won’t last much longer."
+		"Subtitle":"But this won’t be for much longer."
 	},
 
 	"1807":
@@ -51,7 +51,7 @@
 	
 	"1819":
 	{
-		"Subtitle":"That’s what happened some 252 million years ago in an event known as “the great dying” largely due to global warming."
+		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere."
 	},
 
 	
@@ -59,7 +59,7 @@
 	{
 		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
-		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere. This is absorbed by the oceans and acidifies the water."
+		"Subtitle":" This is absorbed by the oceans and acidifies the water."
 	},
 	
 	"1845":
