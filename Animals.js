@@ -13,11 +13,25 @@ let AnimalUsageCounter = 0;
 //	debug, force one model to load
 const ForceRandomAnimal = null;//"PLASTIC BAG";
 
-function GetRandomAnimal(Category)
+function GetRandomAnimal(NodeName)
 {
+	const Category = NodeName;
+	
 	if ( ForceRandomAnimal )
 		return AnimalDatabase[ForceRandomAnimal];
 
+	//	if second half of node name matches an animal, use that explicitly
+	try
+	{
+		const NodeAnimalName = NodeName.split('_')[1];
+		if ( AnimalDatabase.hasOwnProperty(NodeAnimalName) )
+			return AnimalDatabase[NodeAnimalName];
+	}
+	catch(e)
+	{
+		Pop.Debug("Error getting specific animal name from",NodeName);
+	}
+	
 	function FilterByCategory(AnimalName)
 	{
 		const Animal = AnimalDatabase[AnimalName];
