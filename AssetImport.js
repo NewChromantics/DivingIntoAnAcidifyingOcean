@@ -850,9 +850,9 @@ function LoadPackedImage(Image)
 	//	first line is meta
 	const FirstLineBytes = PopBytes( Image.GetWidth() * PackedImageChannels );
 	const FirstLine = BytesToString( FirstLineBytes );
-	Pop.Debug("First line from image",FirstLine);
+	//Pop.Debug("First line from image",FirstLine);
 	const Meta = JSON.parse( FirstLine );
-	Pop.Debug(Meta);
+	//Pop.Debug(Meta);
 
 	const TextureBuffers = {};
 	TextureBuffers.BoundingBox = Meta.BoundingBox;
@@ -922,7 +922,7 @@ function LoadPackedImage(Image)
 		}
 		
 		TextureBuffers[ImageMeta.Name] = Image;
-		Pop.Debug("Loaded image",ImageMeta.Name,Image,ImageMeta.Format);
+		//Pop.Debug("Loaded image",ImageMeta.Name,Image,ImageMeta.Format);
 	}
 	
 	return TextureBuffers;
