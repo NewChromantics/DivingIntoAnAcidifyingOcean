@@ -1944,12 +1944,16 @@ function OnSwitchedToDebugCamera()
 	DebugCamera.LookAt = TimelineCamera.LookAt.slice();
 }
 
-function SwitchToDebugCamera(AutoGrab)
+function SwitchToDebugCamera(ForceAutoGrab)
 {
 	if ( Params.UseDebugCamera )
 		return;
 	
-	if ( AutoGrab !== true )
+	//	auto grab always off in non debug
+	if ( !IsDebugEnabled() )
+		ForceAutoGrab = false;
+	
+	if ( ForceAutoGrab !== true )
 		if ( !Params.AutoGrabDebugCamera )
 			return;
 	
