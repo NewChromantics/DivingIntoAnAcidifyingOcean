@@ -501,7 +501,8 @@ const TimelineMaxInteractiveYear = 2100;
 const BigBangDuration = 10;
 
 Params.TimelineYear = TimelineMinYear;
-Params.ExperienceDurationSecs = 370;
+Params.YearsPerSecond = 1;
+Params.CustomYearsPerSecond = false;
 Params.ShowAnimal_ExplodeSecs = 3;
 Params.ShowAnimal_Duration = 40;
 Params.ShowAnimal_CameraOffsetX = 0.32;
@@ -611,7 +612,8 @@ if ( IsDebugEnabled() )
 	const ParamsWindowRect = [800,20,350,200];
 	ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 	ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
-	ParamsWindow.AddParam('ExperienceDurationSecs',30,600);
+	ParamsWindow.AddParam('YearsPerSecond',0,10);
+	ParamsWindow.AddParam('CustomYearsPerSecond');
 	ParamsWindow.AddParam('ExperiencePlaying');
 	ParamsWindow.AddParam('UseDebugCamera');
 	ParamsWindow.AddParam('MusicVolume',0,1);
@@ -1475,17 +1477,8 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	}
 	
 	Update( FrameDuration );
-	
-	//	move time along
-	{
-		const ExpYears = TimelineMaxYear - TimelineMinYear;
-		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
-		const YearsPerFrame = FrameDuration * YearsPerSec;
-		Params.TimelineYear += YearsPerFrame;
-		if ( ParamsWindow )
-			ParamsWindow.OnParamChanged('TimelineYear');
-	}
-	
+	UpdateYearTime( FrameDuration );
+
 	//	move camera
 	{
 		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
@@ -1503,6 +1496,13 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	return null;
 }
 
+function UpdateYearTime(FrameDuration)
+{
+	const YearsPerFrame = FrameDuration * Params.YearsPerSecond;
+	Params.TimelineYear += YearsPerFrame;
+	if ( ParamsWindow )
+		ParamsWindow.OnParamChanged('TimelineYear');
+}
 
 function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 {
@@ -1527,7 +1527,9 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	
 	UpdateFog( FrameDuration );
 	Update( FrameDuration );
+	UpdateYearTime( FrameDuration );
 
+	
 	if ( StateTime < BigBangDuration )
 		return null;
 	
@@ -1568,12 +1570,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	}
 	else
 	{
-		const ExpYears = TimelineMaxYear - TimelineMinYear;
-		const YearsPerSec = ExpYears / Params.ExperienceDurationSecs;
-		const YearsPerFrame = FrameDuration * YearsPerSec;
-		Params.TimelineYear += YearsPerFrame;
-		if ( ParamsWindow )
-			ParamsWindow.OnParamChanged('TimelineYear');
+		UpdateYearTime( FrameDuration );
 	}
 
 	//	move camera
@@ -1727,6 +1724,13 @@ function Update(FrameDurationSecs)
 		}
 		CopyValues( DebrisColours, 'Debris_Colour' );
 		CopyValues( OceanColours, 'Ocean_Colour' );
+	}
+	
+	//	update frame rate
+	if ( !Params.CustomYearsPerSecond )
+	{
+		Params.YearsPerSecond = Timeline.GetUniform( Time, 'YearsPerSecond' );
+		ParamsWindow.OnParamChanged('YearsPerSecond');
 	}
 	
 	UpdateSceneVisibility(Time);

@@ -1,6 +1,7 @@
 {
 	"1790":
 	{
+		"YearsPerSecond":1,
 		"HintClickAnimalVisible":false,
 		"HintDragTimelineVisible":false,
 		"StatsVisible":false,
@@ -71,6 +72,11 @@
 		"Subtitle":"Shells and skeletons dissolve, and marine animals’ physiology changes."
 	},
 	
+	"1859":
+	{
+		"YearsPerSecond":1
+	},
+	
 	"1860":
 	{
 		"HintClickAnimalVisible":true,
@@ -86,6 +92,7 @@
 	
 	"1870":
 	{
+		"YearsPerSecond":0.5,
 		"HintClickAnimalVisible":false,
 		"Subtitle":""
 	},
