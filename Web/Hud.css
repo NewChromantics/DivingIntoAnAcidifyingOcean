@@ -566,7 +566,7 @@
 #YearLabel, #YearStart, #YearEnd
 {
 	pointer-events:		none;
-	background-color:	rgba(0, 0, 0, 0.50);
+
 	
 }
 
@@ -574,7 +574,7 @@
 {
 	border-radius:		1vw;
 	text-align:		center;
-	--FontHeight:	8vh;
+	--FontHeight:	2vh;
 	position:		absolute;
 	width:			calc(4 * var(--FontHeight) * 1.0);
 	margin-left:	calc(-1 * 4/2 * var(--FontHeight) * 1.0);	/* - halfwidth  to center */
@@ -589,7 +589,7 @@
 	width:		calc( 4 * var(--FontHeight) );
 	z-index:	1;
 	position:	absolute;
-	top:		8vh;
+	top:		-0.5vh;
 	font-size:		var(--FontHeight);
 	height:			calc( 2.2 * var(--FontHeight) );
 }
@@ -622,7 +622,7 @@
 
 #YearSlider::-webkit-slider-runnable-track
 {
-	height:			0.40vh;	/* same as #AnimalCard_Title border */
+	height:			0.20vh;	/* same as #AnimalCard_Title border */
 	min-height:		2px;
 	
 	background:		white;
@@ -633,12 +633,12 @@
 
 #YearSlider::-webkit-slider-thumb
 {
-	margin-top:	-2vh;
+	margin-top:	-1vh;
 	box-shadow:	none;
 	border:		none;
-	height:		4vh;
-	width:		0.5vw;
-	min-width:	5px;
+	height:		2vh;
+	width:		0.2vw;
+	min-width:	2px;
 	background:	white;
 	cursor: pointer;
 	-webkit-appearance: none;
