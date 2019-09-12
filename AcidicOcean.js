@@ -71,6 +71,17 @@ DebugCamera.FarDistance = 400;	//	try not to clip anythig in debug mode
 
 
 
+function IsAutoClearTextureActor(Actor)
+{
+	if ( Actor.Name.startsWith(OceanActorPrefix) )
+	{
+		//return false;
+	}
+	
+	return true;
+}
+
+
 function LoadTimeline(Filename)
 {
 	const Contents = Pop.LoadFileAsString(Filename);
@@ -919,6 +930,24 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		return Transform;
 	}
 
+	this.ClearOpenglTextures = function()
+	{
+		function ClearTexture(Image)
+		{
+			if ( !Image )
+				return;
+			Image.DeleteOpenglTexture();
+		}
+		
+		if ( this.PositionAnimationTextures )
+			this.PositionAnimationTextures.forEach(ClearTexture);
+		
+		ClearTexture( this.PositionTexture );
+		ClearTexture( this.VelocityTexture );
+		ClearTexture( this.ScratchTexture );
+		//ClearTexture( this.PositionOrigTexture );
+	}
+
 }
 
 
@@ -1124,6 +1153,11 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	{
 		return this.BoundingBox;
 	}
+	
+	this.ClearOpenglTextures = function()
+	{
+		
+	}
 }
 
 
@@ -1312,7 +1346,8 @@ function Init()
 	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
 	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
 	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
-	
+	Hud.Debug_TextureHeap = new Pop.Hud.Label('Debug_TextureHeap');
+
 	Hud.Animal_Card.SetVisible(false);
 	
 	Hud.Hint_ClickAnimal = new Pop.Hud.Label('Hint_ClickAnimal');
@@ -1694,7 +1729,9 @@ function Update(FrameDurationSecs)
 	Hud.Stats_Ph.SetValue( Stats_Ph );
 	
 	Hud.Debug_State.SetValue( "State: " + Acid.StateMachine.CurrentState );
-	
+	const TextureHeapCount = Window.TextureHeap.AllocCount;
+	const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
+	Hud.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
 	
 	//	update some huds
 	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
@@ -1759,6 +1796,10 @@ function UpdateSceneVisibility(Time)
 		else if ( WasVisible && !Actor.IsVisible )
 		{
 			Pop.Debug("Actor " + Actor.Name + " now hidden");
+			//	gr: we assume that if its hidden, its gone behind us
+			//		if it's an animal, lets delete the texture data
+			if ( IsAutoClearTextureActor(Actor) )
+				Actor.ClearOpenglTextures();
 		}
 		if ( Actor.IsVisible )
 			VisibleActorCount++;
