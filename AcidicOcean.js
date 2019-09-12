@@ -148,6 +148,9 @@ function GetAnimalMeta(Actor)
 	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
 	
 	Meta.TriangleScale = Params.Animal_TriangleScale;
+	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
+		Meta.TriangleScale = Actor.Animal.TriangleScale;
+
 	Meta.Colours = [InvalidColour];
 	return Meta;
 }
