@@ -6,7 +6,8 @@
 		"Model":	"Models/pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":2.5
+		"Scale":2.5,
+        "TriangleScale":0.001398
 	},
 	
 	"Jellyfish":
@@ -16,7 +17,8 @@
 		"Model":	"Models/jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
-		"Scale":1.2
+		"Scale":1.2,
+        "TriangleScale":0.002393
 
 	},
 
@@ -26,7 +28,8 @@
 		"Description":	"<h1> The pacific pink salmon. Both a highly energetic fish that swims upstream, and – incredibly – it remembers the exact location it was hatched.  </h1> <h2> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h2> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. With just a 10% reduction in pteropod numbers, salmon could lose up to 20% of their mass.</h2>",
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+        "TriangleScale":0.0027
 
 	},
 
@@ -37,7 +40,8 @@
 		"Model":	"Models/Seagrass.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.3
+		"Scale":0.1,
+        "TriangleScale":0.0027
 
 	},
 
@@ -47,7 +51,9 @@
 		"Description":	"<h1>  The Pacific Oyster… a multifaceted creature, oysters are often eaten as a delicacy but also form pearls, often used to produce luxury jewelry.  </h1> <h2> Between 2005 and 2009, oyster seed production in Northwest America plummeted by as much as 80%. </h2> <h2> Many of the physiological changes from ocean acidification are expected to affect species or groups of organisms that play a disproportionately important role in ecosystems. This includes ecosystem engineers, which create or modify various marine habitats . Such changes may lead to shifts in the composition, structure, and function of these systems, and ultimately affect the goods and services provided to society. </h2>",
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"Scale":3,
+        "TriangleScale":0.001796
 
 	},
 
@@ -57,7 +63,9 @@
 		"Description":	"<h1>  Sea anemones are one step away from becoming jellyfish. These mesmerizing single polyp creatures anchor themselves to hard surfaces, and prey on what floats around them.  </h1> <h2> In a Chilean study it was found that in low pH levels Sea Anemones had increased metabolism, and when low pH was combined with low oxygen, they encountered metabolic depression. </h2> ",
 		"Model":	"Models/Anemone.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"]
+		"Categorys" : [ "Animal_"],
+		"Scale":2,
+        "TriangleScale":0.007
 
 	},
 	"Larvae":
@@ -67,7 +75,8 @@
 		"Model":	"Models/FishLarvae.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.7
+		"Scale":7,
+        "TriangleScale":0.0017
 
 	},
 	"Urchin":
@@ -85,7 +94,8 @@
 		"Description":	"<h1> With their heart shaped shell, Cockles are actually able to jump in the sandy beaches they live in.  </h1> <h2> When CO2 is absorbed by seawater, chemical reactions occur that reduce seawater pH, carbonate ion concentration, and saturation states of biologically important calcium carbonate minerals. These last minerals are the building blocks of Aragonite, what the Cockle's shell is made of. </h2> <h2> Healthy Aragonite data should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall below 1Ω all skeletons and shells will start dissolving.  </h2> <h2> Under the current progression of carbon emissions, around 70% of North Atlantic cold-water skeletons and shells will be living in corrosive waters by 2050–60. </h2>",
 		"Model":	"Models/cockle_v1.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ]
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+        "TriangleScale":0.001
 
 	},
 	"AlgalBloom":
@@ -104,7 +114,8 @@
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
-		"Scale":1.8
+		"Scale":1.8,
+        "TriangleScale":0.001995
 
 	},
 	"Krill":
@@ -114,7 +125,8 @@
 		"Model":	"Models/AntarcticKrill.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":6
+		"Scale":6,
+        "TriangleScale":0.00199
 
 	},
 	"CorallineAlgae":
@@ -123,7 +135,8 @@
 		"Description":	"<h1>  Like coral reefs, coralline algae help bring life to the reef.  </h1> <h2> Coralline algae - red algae with a hard, calcifying tissue - provide habitat for other invertebrates, like sea urchins, and add calcareous material to the structure of the coral reef, helping cementing it together. </h2> <h2> The chemical they produce promote the settlement of the larvae of certain herbivorous invertebrates which, in turn, supports some seaweeds. Most coralline algae species build shells from the high-magnesium calcite form of calcium carbonate, which is more soluble than the aragonite or regular calcite forms. </h2> <h2> One study found that, in acidifying conditions, coralline algae covered 92% less area, making space for other types of non-calcifying algae, which can smother and damage coral reefs. But this has negative impacts, as many coral larvae prefer to settle onto coralline algae when they are ready to leave the plankton stage and start life on a coral reef. </h2>",
 		"Model":	"Models/CorallineAlgue.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"]
+		"Categorys" : [ "Animal_"],
+        "TriangleScale":0.00199
 
 	},
 	"Nodularia":
@@ -143,7 +156,7 @@
 		"Model":	"Models/KelpForest.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.3
+		"Scale":0.1
 
 	},
 	"DeepSeaCrab":
@@ -163,7 +176,8 @@
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.2
+		"Scale":0.2,
+        "TriangleScale":0.00657
 
 	},
 	"Cephalopod":
@@ -173,7 +187,8 @@
 		"Model":	"Models/cephalopod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":5
+		"Scale":5,
+        "TriangleScale":0.00358
 
 	},
 	"DeepSeaCoral":
@@ -182,7 +197,8 @@
 		"Description":	"<h1>  Also known as cold-water corals, extends to deeper, darker parts of the oceans, ranging from near the surface, to the abyss. </h1> <h2> Deep sea corals are founded on the accumulation of calcium carbonate, providing the structural framework for these biodiverse ecosystems. </h2> <h2> With expected shoaling of the aragonite saturation horizon, many of these communities may become exposed to waters corrosive to coral skeletons. </h2> <h2> In lower pH, the calcification rates in the cold water species Lophelia pertusa were reduced by an average of 30-56%. </h2> <h2> The introduction of anthropogenic carbon dioxide in deep sea will make these naturally acidic waters even more acidic. </h2>",
 		"Model":	"Models/DeepSeaCoral2.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+        "TriangleScale":0.00438
 
 	},
 	"BubblegumCoral":
@@ -192,7 +208,8 @@
 		"Model":	"Models/BubbleGumCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1.8
+		"Scale":1.8,
+        "TriangleScale":0.00438
 
 	},
 	"Lobster":
@@ -201,7 +218,8 @@
 		"Description":	"<h1>  These large crustaceans, with their long, muscly bodies and frontal claws, lobsters can live up to 50 years – left undisturbed. They often aren’t though, as they are a highly regarded – and highly priced – seafood. This makes them an important part of local fishing economies. </h1> <h2> For the American Lobster, ocean acidification has been shown to have devastating effects on the growth and shell building rates of juveniles. </h2> <h2> The negative effects of acidification have also been seen in the early development of nonbivalve species such as the European lobster Homarus gammarus. </h2> <h2> Measured traits included survival, metabolism, growth, activity and metamorphosis in either larvae/juveniles or adults. Survival and growth were sensitive to both low oxygen and low pH conditions and their union. In warmer, more acidic water, lobsters breathed and ate more, while cutting energy on reproduction and growth. </h2>",
 		"Model":	"Models/Lobster.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+        "TriangleScale":0.00139
 
 	},
 	"JuvenileBivalve":
@@ -211,7 +229,8 @@
 		"Model":	"Models/JuvenileBivalve.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.2
+		"Scale":1.2,
+        "TriangleScale":0.0009
 
 	},
 	"BlueCrab":
@@ -230,7 +249,8 @@
 		"Model":	"Models/SeaTurtle.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1
+		"Scale":1,
+        "TriangleScale":0.0039
 
 	},
 	"Tuna":
@@ -239,7 +259,8 @@
 		"Description":	"<h1> Yellowfin tuna has the perfect camouflage: its shining metallic blue on top and shimmering silver-white on the bottom, helping it blend in with the ocean waters from both above and below.   </h1> <h2> The Yellow and Bluefin tuna are integral to the diet of millions of people and one of the most commercially valuable fish. But most tuna stocks are fully exploited (meaning there is no room for fishery expansion) and some are already overexploited (there is a risk of stock collapse). Bluefin tuna represents only 1% of the global catch but illegal fishing is pushing it to the brink of extinction. </h2> <h2> Research shows that the increasing acidification of the ocean causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the yellowfin larvae within a week of exposure.  </h2> <h2> Acidification also affects their growth rate of 20-41% and reduces their rate of survival. </h2>",
 		"Model":	"Models/YellowTuna.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"]
+		"Categorys" : [ "Animal_"],
+        "TriangleScale":0.00279
 
 	},
 	"Cobia":
@@ -248,7 +269,8 @@
 		"Description":	"<h1>  The cobia is a curious, solitary fish. </h1> <h2> While the Cobia lacks the swim bladder, it grows large otoliths, small ear bones that affect hearing and balance.  </h2> <h2> Acidic waters negatively affect these bones, especially in larvae, which likely alters their ability to detect sound and could impair the ability of the animal to navigate and avoid prey. </h2>",
 		"Model":	"Models/Cobia.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+        "TriangleScale":0.00338
 
 	},
 	"Phytoplankton":
@@ -268,7 +290,8 @@
 		"Model":	"Models/Mussel.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.4
+		"Scale":1.2,
+        "TriangleScale":0.001
 
 	},
 	"Menidia":
@@ -278,7 +301,8 @@
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":1.5
+		"Scale":1.5,
+        "TriangleScale":0.001597
 
 	},
 	"Crab":
@@ -288,7 +312,8 @@
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":1.2
+		"Scale":1.8,
+        "TriangleScale":0.001
 
 	},
 		"BrittleStar":
@@ -297,7 +322,8 @@
 		"Description":	"<h1>  The brittle star is a close relation of the starfish, with a central body and 5 long arms which they use to crawl around the ocean floor. </h1> <h2> Brittle stars have been on this planet for about than 500 million years, but they could now face severe population decline due to the rise in acidity of the water. </h2> <h2> Their skeletons are made of calcite, which dissolves more readily in acidic waters. The calcite ossicles show initial show signs of initial dissolution after only two years when in contact with today's waters, suggesting they are close to a threshold of dissolution. </h2> <h2> Adults might lose muscle mass while regenerating their arms, and most of the larvae won't survive. </h2>",
 		"Model":	"Models/BrittleStar.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+        "TriangleScale":0.002592
 
 	},
 		"Coral":
@@ -306,7 +332,8 @@
 		"Description":	"<h1>  Coral reefs have served as Cradles of Evolution throughout Earth’s biological history. More marine species have originated in reef ecosystems than in any other. And today they are home to an estimated 1 million types of organisms, 25% of the world’s species. </h1> <h2> Corals reefs are a marine invertebrate that live in symbiosis with a photosynthetic unicellular organism called zooxanthellae which sustains the coral with nutrients. </h2> <h2> They are home to an estimated 1 million types of organisms, 25% of the world’s species. </h2> <h2> Coral bleaching is the most known threat: in case of warmer waters the coral expels the zooxanthellae, causing the coral to turn completely white and be prone to death. </h2> <h2> Another threat is ocean acidification: research has shown that most corals grown in low pH conditions highly reduced their calcification rates, especially when in combination with warmer temperatures. </h2> <h2> Surprisingly enough, sun screens are a big threat to them! </h2>",
 		"Model":	"Models/CoralCorrectTexture.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"]
+		"Categorys" : [ "Animal_"],
+        "TriangleScale":0.002592
 
 	},
 		"Clownfish":
@@ -316,7 +343,8 @@
 		"Model":	"Models/ClownFIsh.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":2
+		"Scale":2,
+        "TriangleScale":0.0014	
 
 	},
 		"Bottle":
@@ -363,7 +391,7 @@
 		"Model":	"Models/SanitaryPad.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.15
+		"Scale":0.5
 
 	},
 		"Plastic":
@@ -399,7 +427,9 @@
 		"Description":	"<h1> Discarded nylon plastic fishing nets comprise a large part of plastic pollution, with an estimated 640,000 tons (£1.28 billion) of fishing gear left in the ocean each year. </h1> <h2> On average these nets entangle and harm between 30-40 marine animals per net when left in the ocean. </h2>",
 		"Model":	"Models/FishingNet.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+		"Scale":0.2,
+        "TriangleScale":0.00199
 
 	},
 	"Microplastic":
@@ -408,7 +438,8 @@
 		"Description":	"<h1> A 2015 study estimated that there was between 93 and 236 thousand metric tons of microplastics in the world’s oceans. </h1> <h2> Scientists are only just now discovering how much the problem of microplastic has spread. They studied the scat of 51 wild fur Seals and discovered that 67% of the samples showed an abundance of microfibers. </h2> <h2> Microfibers are the least studied form of microplastic. They are small hairs of plastic, less than 1 millimetre in size, from materials such as polyester or nylon and can end up in the ocean through waste water even after cleaning. They also can absorb a wide array of pollutants. </h2> <h2> It is projected that by 2050, 99% of all sea bird species will have ingested plastic. </h2>",
 		"Model":	"Models/MicroPlastic2.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+		"Scale":5
 
 	}
 
