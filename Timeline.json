@@ -40,37 +40,46 @@
 	{
 		"Subtitle":"Every second breath we take comes from the ocean."
 	},
-	"1800":
+	"1798":
 	{
 		"Subtitle":"But this won’t be for much longer."
 	},
 
-	"1807":
+	"1802":
 	{
 		"Subtitle":"We’re in the process of killing around 96% of ocean life."
 	},
 	
-	"1819":
+	"1809":
 	{
 		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere."
 	},
 
+	"1817":
+	{
+		"Subtitle":"This is absorbed by the oceans and acidifies the water."
+	},
+
+	"1822":
+	{
+		"Subtitle":"It decreases our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life."
+	},
 	
 	"1830":
 	{
 		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
-		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
-		"Subtitle":" This is absorbed by the oceans and acidifies the water."
+		"Subtitle":"Shells and skeletons dissolve, and marine animals’ physiology changes. "
 	},
 	
-	"1845":
+	"1837":
 	{
-		"Subtitle":"It decreases our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life."
+		"Subtitle":"If we fail to act, what will happen to them… and to us?"
 	},
-	"1854":
+	"1844":
 	{
-		"Subtitle":"Shells and skeletons dissolve, and marine animals’ physiology changes."
+		"Subtitle":""
 	},
+	
 	
 	"1859":
 	{
@@ -82,7 +91,7 @@
 		"HintClickAnimalVisible":true,
 		"StatsVisible":true,
 		"TimelineVisible":true,
-		"Subtitle":"If we fail to act, what will happen to them… and to us?",
+		"Subtitle":"",
 		"Timeline_CameraPosition":[0,5, -10],
 		"Stats_Temp":0,
 		"Stats_Co2":0,
@@ -94,6 +103,7 @@
 	{
 		"YearsPerSecond":0.5,
 		"HintClickAnimalVisible":false,
+		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
 		"Subtitle":""
 	},
 	
@@ -148,14 +158,22 @@
 		"Subtitle":"2050 represents a tipping point for the future of the oceans."
 	},
 
-	"2042":
+	"2041":
 	{
 		"Subtitle":"With increasingly warmer temperatures around the world, we are depleting the oceans of oxygen and suffocating all lifeforms."
 	},
 
-	"2052":
+	"2051":
 	{
-		"Subtitle":"These animals don’t only sustain the rest of marine life. They ultimately sustain us. Human beings, and our economies, cultures, and communities, depend on them. "
+		"Subtitle":"These animals don’t only sustain the rest of marine life. They ultimately sustain us. "
+	},
+	"2057":
+	{
+		"Subtitle":"Human beings, and our economies, cultures, and communities, depend on them."
+	},
+	"2064":
+	{
+		"Subtitle":""
 	},
 
 	"2084":
