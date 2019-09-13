@@ -6,7 +6,7 @@
 		"Model":	"Models/pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":2.5,
+		"Scale":1.7,
         "TriangleScale":0.001398
 	},
 	
@@ -29,6 +29,7 @@
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
+        "Scale":1.6,
         "TriangleScale":0.0027
 
 	},
@@ -51,9 +52,9 @@
 		"Description":	"<h1>  The Pacific Oyster… a multifaceted creature, oysters are often eaten as a delicacy but also form pearls, often used to produce luxury jewelry.  </h1> <h2> Between 2005 and 2009, oyster seed production in Northwest America plummeted by as much as 80%. </h2> <h2> Many of the physiological changes from ocean acidification are expected to affect species or groups of organisms that play a disproportionately important role in ecosystems. This includes ecosystem engineers, which create or modify various marine habitats . Such changes may lead to shifts in the composition, structure, and function of these systems, and ultimately affect the goods and services provided to society. </h2>",
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ],
-		"Scale":3,
-        "TriangleScale":0.001796
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":4,
+        "TriangleScale":0.002
 
 	},
 
@@ -64,7 +65,7 @@
 		"Model":	"Models/Anemone.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":2,
+		"Scale":1.5,
         "TriangleScale":0.007
 
 	},
@@ -95,7 +96,8 @@
 		"Model":	"Models/cockle_v1.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-        "TriangleScale":0.001
+		"Scale":2,
+        "TriangleScale":0.0016
 
 	},
 	"AlgalBloom":
@@ -104,7 +106,9 @@
 		"Description":	"<h1> The rapid growth of algae, otherwise known as algal bloom, can sometimes become so big it can be seen from space.  </h1> <h2> With increased nutrient pollution and ocean warming, the Cyanobacteria algae can bloom uncontrolled, then die and decompose. The bacterial degradation of their biomass consumes the oxygen in the water, thereby creating the state of hypoxia where there is low or no oxygen dissolved in the water, creating a Dead Zone. </h2> <h2> 252 million years ago the Earth experienced 'The Great Dying', when global warming, ocean acidification, and hypoxia caused nearly 90% of the planet’s species to be wiped out. </h2> <h2> On land 70% of life became extinct while in the ocean 96% of marine life disappeared as global marine oxygen levels drop by 76%. </h2>",
 		"Model":	"Models/AlgalBloom.ply",
 		"AfterYear":	2040,
-		"Categorys" : [ "Animal_"]
+		"Categorys" : [ "Animal_"],
+		"Scale":5,
+        "TriangleScale":0.001
 
 	},
 	"Pollock":
@@ -166,7 +170,7 @@
 		"Model":	"Models/DeepSeaCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.17
+		"Scale":0.7
 
 	},
 	"Shark":
@@ -175,7 +179,7 @@
 		"Description":	"<h1>  Sharks are one of the most well-known predators on the planet. There are around 500 different species of sharks, and they live at the top of their food chain.  </h1> <h2> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h2> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_"],
+		"Categorys" : [ "Animal_"],
 		"Scale":0.2,
         "TriangleScale":0.00657
 
@@ -186,7 +190,7 @@
 		"Description":	"<h1>  Cephalopods… color blind, colour-changing creatures, they swim freely through black inked clouds, having recently abandoned their shelled homes. </h1> <h2> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h2> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
 		"Model":	"Models/cephalopod.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ],
+		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":5,
         "TriangleScale":0.00358
 
@@ -198,6 +202,7 @@
 		"Model":	"Models/DeepSeaCoral2.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
+        "Scale":0.7,
         "TriangleScale":0.00438
 
 	},
@@ -208,8 +213,8 @@
 		"Model":	"Models/BubbleGumCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1.8,
-        "TriangleScale":0.00438
+		"Scale":0.3,
+        "TriangleScale":0.00238
 
 	},
 	"Lobster":
@@ -229,7 +234,7 @@
 		"Model":	"Models/JuvenileBivalve.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1.2,
+		"Scale":2,
         "TriangleScale":0.0009
 
 	},
@@ -239,7 +244,9 @@
 		"Description":	"<h1> The Blue King Crab is a species of North Pacific king crab often found in the Bering Sea, which only reproduce every other year.  </h1> <h2> According to research, when placed in waters with a level of acidity expected in 2100, juvenile blue king crabs showed a change in morphology, reduced growth, and increased mortality. </h2> <h2> While the mortality rate started off high, it then adjusted, which suggests that the blue king crab may be able to alter their physiology to adapt to low pH water. However, given the current low population levels of the blue king crab, any reduced survival or growth at low pH could result in lower populations in the future. </h2>",
 		"Model":	"Models/BlueKingCrab.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"Scale":2,
+        "TriangleScale":0.001
 
 	},
 	"Turtle":
@@ -248,7 +255,7 @@
 		"Description":	"<h1> These majestic creatures glide swiftly through the waters, while also breathing air and laying eggs on the land.  </h1> <h2> Sea turtles are 'amniotes', meaning they breathe air and lay their eggs on land. But hotter beaches, due to climate change, will put sea turtle embryos at risk: during development, the sex of an embryo is determined by the heat of incubation, with warmer nests producing females and cooler nests producing males, but temperatures above 33°C are lethal. </h2> <h2> In the coral reefs with which hawksbills, a kind of turtle, are closely associated, increased water temperatures and acidification will undermine the ability of coral polyps to survive and build reefs. </h2> <h2> Near-shore habitats where some species forage will also be destroyed by coastal flooding and decreased visibility; seagrasses are declining worldwide.  </h2>",
 		"Model":	"Models/SeaTurtle.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Categorys" : [ "Animal_" ],
 		"Scale":1,
         "TriangleScale":0.0039
 
@@ -269,7 +276,7 @@
 		"Description":	"<h1>  The cobia is a curious, solitary fish. </h1> <h2> While the Cobia lacks the swim bladder, it grows large otoliths, small ear bones that affect hearing and balance.  </h2> <h2> Acidic waters negatively affect these bones, especially in larvae, which likely alters their ability to detect sound and could impair the ability of the animal to navigate and avoid prey. </h2>",
 		"Model":	"Models/Cobia.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ],
+		"Categorys" : [ "Animal_", "Bigbang_" ],
         "TriangleScale":0.00338
 
 	},
@@ -280,7 +287,7 @@
 		"Model":	"Models/Phytoplankton.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.2
+		"Scale":2
 
 	},
 	"Mussels":
@@ -289,9 +296,9 @@
 		"Description":	"<h1>  Mussels… with their dark shells and shimmering, silvery interior, these elongated bivalve live attached to rocks thanks to byssal threads, which resemble a sort of beard. Mussels feed entirely on plankton and to do so they filter up to 65 litres of water a day, and their cultivation is a major food source - a booming $1.5 billion industry that is deeply rooted in some cultures. </h1> <h2> Mussels live attached to rocks due to their byssal threads, and can withstand harsh weather and extreme conditions. But climate change is impairing their ability to cling. Research has shown that when mussel byssal threads are grown in acidified conditions with a pH lower than 7.6 were 40% weaker than normal. </h2> <h2> Ocean acidification doesn't just dissolve their clinging threads, it also affects the way they can make their shells. Scientists have in fact discovered a 25% decrease in calcification in waters with pH 7.6, the level expected in 2100. </h2> ",
 		"Model":	"Models/Mussel.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ],
-		"Scale":1.2,
-        "TriangleScale":0.001
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":2.4,
+        "TriangleScale":0.0008
 
 	},
 	"Menidia":
@@ -301,7 +308,7 @@
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":1.5,
+		"Scale":1.7,
         "TriangleScale":0.001597
 
 	},
@@ -311,8 +318,8 @@
 		"Description":	"<h1>  A crustacean with 10 limbs, the brachyuran crab lives with its small abdomen curled up underneath the main shell, and the skeleton outside of their body. </h1> <h2> Warming temperatures may allow the brachyuran crab to invade the shelf surrounding Antarctica, with significant consequences for the local organisms that have evolved in the absence of such predators. </h2> <h2> The weakly calcified shells of Antarctic echinoderms and molluscs – further stressed by acidification – would provide little defense from these predators. </h2> <h2> In addition to warming temperatures, the retreat of sea ice, and increasing species invasions, high latitude regions are subject to heavy fishing pressure which is an additional stressor for these ecosystems. </h2>",
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":1.8,
+		"Categorys" : [ "Animal_"],
+		"Scale":2,
         "TriangleScale":0.001
 
 	},
@@ -323,6 +330,7 @@
 		"Model":	"Models/BrittleStar.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
+        "Scale":0.7,
         "TriangleScale":0.002592
 
 	},
@@ -342,9 +350,19 @@
 		"Description":	"<h1>  The clownfish somewhat lives up to its name, with its display of bright colours and striking patterns. They live in a symbiotic mutualism with the stinging sea anemone. </h1> <h2> The clownfish live in a symbiotic mutualism with the stinging sea anemone. They mostly live in reefs, for example Coral Reef, which are dying due to rising water temperatures. This is also killing the sea anemone. </h2> <h2> When the sea anemone doesn't protect the clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise. </h2> <h2> Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators. </h2>",
 		"Model":	"Models/ClownFIsh.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Categorys" : [ "Animal_"],
 		"Scale":2,
         "TriangleScale":0.0014	
+
+	},"Microplastic":
+	{
+		"Name":		"MICROPLASTIC",
+		"Description":	"<h1> A 2015 study estimated that there was between 93 and 236 thousand metric tons of microplastics in the world’s oceans. </h1> <h2> Scientists are only just now discovering how much the problem of microplastic has spread. They studied the scat of 51 wild fur Seals and discovered that 67% of the samples showed an abundance of microfibers. </h2> <h2> Microfibers are the least studied form of microplastic. They are small hairs of plastic, less than 1 millimetre in size, from materials such as polyester or nylon and can end up in the ocean through waste water even after cleaning. They also can absorb a wide array of pollutants. </h2> <h2> It is projected that by 2050, 99% of all sea bird species will have ingested plastic. </h2>",
+		"Model":	"Models/MicroPlastic2.ply",
+		"AfterYear":	1956,
+		"Categorys" : [ "Nasty_Animal_" ],
+		"Scale":8,
+        "TriangleScale":0.02
 
 	},
 		"Bottle":
@@ -391,7 +409,8 @@
 		"Model":	"Models/SanitaryPad.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.5
+		"Scale":0.5,
+        "TriangleScale":0.02
 
 	},
 		"Plastic":
@@ -409,7 +428,8 @@
 		"Description":	"<h1> Once food packaging use comes to an end it becomes the largest end-use market segment accounting for just over 40% of total plastic usage. </h1> <h2> Over the last ten years more plastic has been produced than during the whole of the last century. </h2>",
 		"Model":	"Models/PlasticContainer.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+		"Scale":2
 
 	},
 		"Cigarette":
@@ -418,7 +438,8 @@
 		"Description":	"<h1> By itself, cellulose acetate, which form a cigarette filter, takes between 18 months to 10 years to degrade. </h1> <h2> Studies have shown that one cigarette filter in about two gallons of water is lethal to water fleas, a tiny crustacean found in freshwater and saltwater. Wildlife also easily confuses them for food and ingests them. </h2> <h2> In 2017, cigarette filters were the biggest source of plastic pollution on beaches, with 1,863,838 collected. </h2>",
 		"Model":	"Models/CigeretteStub.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+        "TriangleScale":0.02
 
 	},
 		"Net":
@@ -429,18 +450,9 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":0.2,
-        "TriangleScale":0.00199
-
-	},
-	"Microplastic":
-	{
-		"Name":		"MICROPLASTIC",
-		"Description":	"<h1> A 2015 study estimated that there was between 93 and 236 thousand metric tons of microplastics in the world’s oceans. </h1> <h2> Scientists are only just now discovering how much the problem of microplastic has spread. They studied the scat of 51 wild fur Seals and discovered that 67% of the samples showed an abundance of microfibers. </h2> <h2> Microfibers are the least studied form of microplastic. They are small hairs of plastic, less than 1 millimetre in size, from materials such as polyester or nylon and can end up in the ocean through waste water even after cleaning. They also can absorb a wide array of pollutants. </h2> <h2> It is projected that by 2050, 99% of all sea bird species will have ingested plastic. </h2>",
-		"Model":	"Models/MicroPlastic2.ply",
-		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":5
+        "TriangleScale":0.003
 
 	}
+	
 
 }
