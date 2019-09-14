@@ -47,6 +47,9 @@ const NastyAnimalPrefix = 'Nasty_Animal_';
 const BigBangAnimalPrefix = 'Bigbang_';
 const AnimalActorPrefixs = ['Animal_',BigBangAnimalPrefix,NastyAnimalPrefix];
 const IgnoreActorPrefixs = ['Camera_Spline'];
+//const IgnoreActorPrefixs = ['Camera_Spline',OceanActorPrefix,DebrisActorPrefix];	//	nocrash?
+//const IgnoreActorPrefixs = ['Camera_Spline',DebrisActorPrefix];	//	crash
+//const IgnoreActorPrefixs = ['Camera_Spline',OceanActorPrefix];	//	crash
 
 function SetupFileAssets()
 {
@@ -905,6 +908,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			}
 			else
 			{
+				//	NOT setting this image was cause of crash on some intel graphics cards (macbook air 2015, intel graphics 6000)
+				Shader.SetUniform('ColourImage',RandomTexture);
 				Shader.SetUniform('ColourImageValid', false );
 			}
 		
