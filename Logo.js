@@ -111,7 +111,6 @@ function TLogoState()
 	 
 		'Quad.vert.glsl',
 		'ParticleTriangles.vert.glsl',
-		'ParticleColour.frag.glsl',
 		'BlitCopy.frag.glsl',
 		'Geo.vert.glsl',
 		'Colour.frag.glsl',
