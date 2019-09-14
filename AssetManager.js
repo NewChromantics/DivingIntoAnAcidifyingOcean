@@ -24,7 +24,7 @@ function CreateRandomSphereImage(Width,Height)
 		Pixels[i+0] = xyz[0];
 		Pixels[i+1] = xyz[1];
 		Pixels[i+2] = xyz[2];
-		Pixels[i+3] = xyz[3];
+		Pixels[i+3] = w;
 	}
 	
 	let Texture = new Pop.Image();
