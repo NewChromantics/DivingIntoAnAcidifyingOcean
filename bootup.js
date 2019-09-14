@@ -168,9 +168,18 @@ function BootupRender(RenderTarget)
 	RenderTarget.ClearColour(0,0,0);
 }
 
+function OnKeyPress(Key)
+{
+	if ( Key == 'l' )
+	{
+		Window.TestLoseContext();
+	}
+}
+
 //	window now shared from bootup
 const Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = BootupRender;
+Window.OnKeyDown = OnKeyPress;
 
 const Params = {};
 Params.EnablePhysicsIteration = true;
