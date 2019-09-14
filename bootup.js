@@ -157,6 +157,7 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 //	use a string if function not yet declared
 let StateMap =
 {
+	//'CrashTest': Update_CrashTest,
 	'Logo':	'Update_Logo',
 	'Experience': 'Update_Experience'
 };
@@ -173,6 +174,7 @@ function OnKeyPress(Key)
 	if ( Key == 'l' )
 	{
 		Window.TestLoseContext();
+		return true;
 	}
 }
 
@@ -183,4 +185,85 @@ Window.OnKeyDown = OnKeyPress;
 
 const Params = {};
 Params.EnablePhysicsIteration = true;
+
+
+function TCrashTest()
+{
+	this.Textures = [];
+	this.Debug_Hud = new Pop.Hud.Label('Debug');
+	this.Debug_TextureHeap = new Pop.Hud.Label('Debug_TextureHeap');
+	
+	this.Render = function(RenderTarget)
+	{
+		const Texture = this.Textures[this.Textures.length-1];
+		const Shader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
+		const Quad = GetAsset('Quad',RenderTarget);
+		
+		RenderTarget.ClearColour(0,0,1);
+		Pop.Debug("Drawing",Texture);
+		const SetUniforms = function(Shader)
+		{
+			Shader.SetUniform('VertexRect', [0,0,1,1] );
+			Shader.SetUniform('Texture', Texture );
+		}
+		RenderTarget.DrawGeometry( Quad, Shader, SetUniforms );
+	}
+}
+
+var CrashTest = null;
+
+
+const DebugColours =
+[
+ [1,0,0,1],
+ [1,1,0,1],
+ [0,1,0,1],
+ [0,1,1,1],
+ [0,0,1,1],
+ [1,0,1,1],
+];
+let LastDebugColour = 0;
+function CreateDebugColourImage(Width,Height)
+{
+	const Colour = DebugColours[ (LastDebugColour++) % DebugColours.length ];
+
+	let Channels = 4;
+	let Format = 'Float4';
+		
+	let Pixels = new Float32Array( Width * Height * Channels );
+	for ( let i=0;	i<Pixels.length;	i+=4 )
+	{
+		Pixels[i+0] = Colour[0];
+		Pixels[i+1] = Colour[1];
+		Pixels[i+2] = Colour[2];
+		Pixels[i+3] = Colour[3];
+	}
+		
+	let Texture = new Pop.Image();
+	Texture.WritePixels( Width, Height, Pixels, Format );
+	return Texture;
+}
+
+function Update_CrashTest(FirstUpdate,UpdateDuration,StateTime)
+{
+	if ( FirstUpdate)
+	{
+		CrashTest = new TCrashTest();
+		CrashTest.Debug_Hud.SetVisible(true);
+		CrashTest.Debug_TextureHeap.SetVisible(true);
+		Window.OnRender = CrashTest.Render.bind(CrashTest);
+	}
+	
+	//	every frame create another big texture
+	if ( CrashTest.Textures.length < 1000 )
+	{
+		const NewTexture = CreateDebugColourImage( 1024, 1024 );
+		CrashTest.Textures.push( NewTexture );
+	}
+	
+	//	update hud
+	const TextureHeapCount = Window.TextureHeap.AllocCount;
+	const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
+	CrashTest.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
+}
 
