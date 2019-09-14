@@ -60,6 +60,9 @@ vec3 GetTriangleWorldPos(int TriangleIndex)
 
 int modi(int Value,int Size)
 {
+	//if ( Size <= 0 )
+	//	return 0;
+	
 	float f = mod( float(Value), float(Size) );
 	return int(f);
 }
