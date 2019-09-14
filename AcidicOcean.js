@@ -33,7 +33,7 @@ const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_ShellDissolution.mp3';
 
 
 //	temp turning off and just having dummy actors
-const PhysicsEnabled = true;
+const PhysicsEnabled = !Pop.GetExeArguments().includes('PhysicsDisabled');
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
 var Debug_HighlightActors = [];
