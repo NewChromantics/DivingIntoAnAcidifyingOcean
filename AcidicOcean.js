@@ -1344,6 +1344,7 @@ function Init()
 	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
 	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
 	Hud.Debug_TextureHeap = new Pop.Hud.Label('Debug_TextureHeap');
+	Hud.Debug_GeometryHeap = new Pop.Hud.Label('Debug_GeometryHeap');
 
 	Hud.Animal_Card.SetVisible(false);
 	
@@ -1729,6 +1730,10 @@ function Update(FrameDurationSecs)
 	const TextureHeapCount = Window.TextureHeap.AllocCount;
 	const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
 	Hud.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
+	const GeometryHeapCount = Window.GeometryHeap.AllocCount;
+	const GeometryHeapSizeMb = Window.GeometryHeap.AllocSize / 1024 / 1024;
+	Hud.Debug_GeometryHeap.SetValue("Geometry x" + GeometryHeapCount + " " + GeometryHeapSizeMb.toFixed(2) + "mb" );
+	
 	
 	//	update some huds
 	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
