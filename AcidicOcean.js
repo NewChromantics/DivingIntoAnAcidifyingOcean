@@ -18,7 +18,6 @@ const EnableVoiceOver = Pop.GetExeArguments().includes('EnableVoiceOver');
 const BoldMode = Pop.GetExeArguments().includes('Bold');
 const AnimalTest = Pop.GetExeArguments().includes('AnimalTest');
 
-const ParticleColorShader = Pop.LoadFileAsString('ParticleColour.frag.glsl');
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
 const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
