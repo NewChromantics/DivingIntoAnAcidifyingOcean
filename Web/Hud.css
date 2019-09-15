@@ -73,7 +73,6 @@
 
 #SubtitleLabel
 {
-	background-color:	rgba(0, 0, 0, 0.15);
 
 	position:		absolute;
 	left:			10vw;
@@ -431,7 +430,7 @@
 #Solution
 {
 	overflow:hidden;
-	background-color:	rgba(0, 0, 0, 0.40);
+
 	xbackground:	red;
 
 	position:	absolute;
@@ -441,8 +440,8 @@
 	width:		84vw;
 	height:		70vh;
 
-	font-weight:	bold;
-	font-size:		2.2vh;
+	font-weight:	300;
+	font-size:		1.5vh;
 	text-align: center;
 }
 
@@ -458,7 +457,12 @@
 	margin-top:	10vh;
 	xbackground:	green;
 	position:	relative;
-	height:		30vh;
+	height:		20vh;
+	font-weight:	bold;
+
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
 }
 
 #Solution_Tips div
@@ -478,6 +482,7 @@
 {
 	xbackground-color:	magenta;
 	font-style:			italic;
+	top: 25vh;
 	height:				8vh;
 }
 
@@ -485,7 +490,7 @@
 {
 	xbackground-color:	yellow;
 	background-image:	url(icons/world.svg);
-	height:				10vh;
+	height:				5vh;
 	background-repeat:	no-repeat;
 	background-size:	80% contain;
 	background-position:	center bottom;
