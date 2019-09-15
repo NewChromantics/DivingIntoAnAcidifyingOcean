@@ -1618,10 +1618,9 @@ function Update_Solution(FirstUpdate,FrameDuration,StateTime)
 	{
 		const SolutionHud = new Pop.Hud.Label('Solution');
 		SolutionHud.SetVisible(true);
-		
-		//	do one final update
-		Update(FrameDuration);
 	}
+
+	Update(FrameDuration);
 }
 
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)

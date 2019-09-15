@@ -232,6 +232,7 @@
 	
 	"2100":
 	{
+		"YearsPerSecond":0.5,
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
 		"Stats_Temp":4,
@@ -266,6 +267,7 @@
 
 	"2102":
 	{
+		"YearsPerSecond":1,
 		"Subtitle":"If we don't drastically reduce our CO2 production, and limit the planet’s temperature rise to under 1.5°C, the whole ocean system may collapse.",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
 	},
