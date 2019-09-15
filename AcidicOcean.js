@@ -511,6 +511,7 @@ const TimelineBigBangYear = 1823;
 const TimelineMinInteractiveYear = 1860;
 const TimelineMaxYear = 2160;
 const TimelineMaxInteractiveYear = 2100;
+const TimelineSolutionYear = 2146;
 
 const BigBangDuration = 10;
 
@@ -1371,13 +1372,15 @@ Acid.State_Fly = 'Fly';
 Acid.State_ShowAnimal = 'ShowAnimal';
 Acid.State_BigBang = 'BigBang';
 Acid.State_Outro = 'Outro';
+Acid.State_Solution = 'Solution';
 Acid.StateMap =
 {
 	'Intro':		Update_Intro,
 	'BigBang':		Update_BigBang,
 	'Fly':			Update_Fly,
 	'ShowAnimal':	Update_ShowAnimal,
-	'Outro':		Update_Outro
+	'Outro':		Update_Outro,
+	'Solution':		Update_Solution
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, false );
 Acid.SelectedActor = null;
@@ -1582,11 +1585,45 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
+		
+	}
+	
+	Update( FrameDuration );
+	
+	//	move time along
+	UpdateYearTime( FrameDuration );
+	
+	//	move camera
+	{
+		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
+		let TargetCameraPos = TimelineCameraPos;
+		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
+	}
+	
+	Acid.SelectedActor = null;
+	
+	UpdateFog(FrameDuration);
+	
+	//	fly until we reach end of timeline
+	if ( Params.TimelineYear >= TimelineSolutionYear )
+		return Acid.State_Solution;
+	
+	//	stay flying
+	return null;
+}
+
+function Update_Solution(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
 		const SolutionHud = new Pop.Hud.Label('Solution');
 		SolutionHud.SetVisible(true);
+		
+		//	do one final update
+		Update(FrameDuration);
 	}
 }
-	
+
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
