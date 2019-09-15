@@ -276,7 +276,7 @@
 	display:	block;
 	position:	absolute;
 	left:		45vw;
-	xxxtop:		45vh;
+	top:		40vh;
 	width:		9.3vw;
 	height:		4vh;
 	font-size:	2vh;
@@ -321,7 +321,7 @@
 	display:	block;
 	position:	absolute;
 	left:		45vw;
-	top:		60vh;
+	top:		40vh;
 	width:		9.3vw;
 	height:		4vh;
 	font-size:	2vh;
@@ -367,9 +367,9 @@
 	xxbackground:green;
 	display:	block;
 	position:	absolute;
-	left:		13vw;
-	top:		10vw;
-	width:		50vh;		/* use height or width but dont mix */
+	left:		10vw;
+	top:		18vh;
+	width:		60vh;		/* use height or width but dont mix */
 	xheight:		20vh;
 	text-align:	left;
 }
@@ -402,7 +402,6 @@
 	margin-bottom:	1vh;
 	padding-left:	2vh;	/* space for bullet */
 
-	background-color:	rgba(0, 0, 0, 0.40);
 	background-image:	url(icons/bullet.svg);
 	background-repeat:	no-repeat;
 	background-size:	0.5vh;
@@ -435,7 +434,7 @@
 
 	position:	absolute;
 	padding-top:	10vh;
-	top:		10vh;
+	top:		22vh;
 	left:		8vw;
 	width:		84vw;
 	height:		70vh;

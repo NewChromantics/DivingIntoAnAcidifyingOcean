@@ -86,7 +86,8 @@
 		"Description":	"<h1> Considered a delicacy in many cultures, sea urchins are spiny, globular animals with self-sharpening teeth tucked beneath their bodies. And while they are sightless, they find their food through their senses of smell and hearing.  </h1> <h2> Juveniles species of different kinds of sea urchins were exposed for 100 days to two treatments of pH: a pH of 8.0 μ and pH of 7.6. μ. The juveniles of a certain species, D. africanum, were more predated from the acidic treatment than those kept in the control treatment. </h2> <h2> All juveniles species studied that were reared in a pH of 7.6 showed changes in the form of thie skeletal structures. </h2>",
 		"Model":	"Models/SeaUrchins3.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" ]
+		"Categorys" : [ "Animal_" ],
+		"TriangleScale":0.002
 
 	},
 	"Cockle":
@@ -150,7 +151,7 @@
 		"Model":	"Models/NodulariaSpumi.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.28
+		"Scale":0.5
 
 	},
 	"Kelp":
@@ -177,7 +178,7 @@
 	{
 		"Name":		"SHARK",
 		"Description":	"<h1>  Sharks are one of the most well-known predators on the planet. There are around 500 different species of sharks, and they live at the top of their food chain.  </h1> <h2> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h2> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
-		"Model":	"Models/Shark.ply",
+		"Model":	".random",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":0.2,
@@ -320,7 +321,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":2,
-        "TriangleScale":0.001
+        "TriangleScale":0.0018
 
 	},
 		"BrittleStar":
@@ -348,7 +349,7 @@
 	{
 		"Name":		"CLOWNFISH",
 		"Description":	"<h1>  The clownfish somewhat lives up to its name, with its display of bright colours and striking patterns. They live in a symbiotic mutualism with the stinging sea anemone. </h1> <h2> The clownfish live in a symbiotic mutualism with the stinging sea anemone. They mostly live in reefs, for example Coral Reef, which are dying due to rising water temperatures. This is also killing the sea anemone. </h2> <h2> When the sea anemone doesn't protect the clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise. </h2> <h2> Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators. </h2>",
-		"Model":	"Models/ClownFIsh.ply",
+		"Model":	".random",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":2,

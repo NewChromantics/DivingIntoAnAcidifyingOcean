@@ -1,5 +1,5 @@
 {
-	"1790":
+	"1800":
 	{
 		"YearsPerSecond":1,
 		"HintClickAnimalVisible":false,
@@ -36,46 +36,59 @@
 		]
 	},
 
-	"1793":
+	"1803":
 	{
 		"Subtitle":"Every second breath we take comes from the ocean."
 	},
-	"1798":
+	"1806":
+	{
+		"Subtitle":" "
+	},
+	"1808":
 	{
 		"Subtitle":"But this won’t be for much longer."
 	},
+	"1813":
+	{
+		"Subtitle":" "
+	},
 
-	"1802":
+	"1820":
 	{
 		"Subtitle":"We’re in the process of killing around 96% of ocean life."
 	},
-	
-	"1809":
-	{
-		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere."
-	},
 
-	"1817":
+	"1828":
 	{
-		"Subtitle":"This is absorbed by the oceans and acidifies the water."
-	},
-
-	"1822":
-	{
-		"Subtitle":"It decreases our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life."
+		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
+		"Subtitle":" "
 	},
 	
 	"1830":
 	{
-		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
+		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere."
+	},
+
+	"1838":
+	{
+		"Subtitle":"This is absorbed by the oceans and acidifies the water."
+	},
+
+	"1842":
+	{
+		"Subtitle":"It decreases our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life."
+	},
+	
+	"1850":
+	{
 		"Subtitle":"Shells and skeletons dissolve, and marine animals’ physiology changes. "
 	},
 	
-	"1837":
+	"1855":
 	{
 		"Subtitle":"If we fail to act, what will happen to them… and to us?"
 	},
-	"1844":
+	"1860":
 	{
 		"Subtitle":""
 	},
@@ -98,11 +111,15 @@
 		"Stats_Oxygen":0,
 		"Stats_Ph":0
 	},
+
+	"1863":
+	{
+		"HintClickAnimalVisible":false
+	},
 	
 	"1870":
 	{
 		"YearsPerSecond":0.5,
-		"HintClickAnimalVisible":false,
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
 		"Subtitle":""
 	},
@@ -112,7 +129,7 @@
 		"HintDragTimelineVisible":true
 	},
 	
-	"1885":
+	"1883":
 	{
 		"HintDragTimelineVisible":false
 	},
