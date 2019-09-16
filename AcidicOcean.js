@@ -567,8 +567,8 @@ Params.DrawHighlightedActors = false;
 Params.ScrollFlySpeed = 50;
 
 Params.BigBang_Damping = 0.01;
-Params.BigBang_NoiseScale = 0.1;
-Params.BigBang_TinyNoiseScale = 10;
+Params.BigBang_NoiseScale = 0.01;
+Params.BigBang_TinyNoiseScale = 0.5;
 
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.12;
@@ -685,6 +685,11 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('NastyAnimal_PhysicsExplodeScale',0,10);
 	ParamsWindow.AddParam('NastyAnimal_PhysicsDamping',0,1);
 
+	ParamsWindow.AddParam('BigBang_Damping',0,1);
+	ParamsWindow.AddParam('BigBang_NoiseScale',0,5);
+	ParamsWindow.AddParam('BigBang_TinyNoiseScale',0,20);
+
+	
 	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
