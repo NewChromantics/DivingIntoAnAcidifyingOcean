@@ -62,7 +62,7 @@ function TPhysicsActor(Meta)
 			return;
 
 		if ( this.Meta.PhysicsUpdateEnabled !== false )
-			PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
+			PhysicsIteration( RenderTarget, Time, FrameDuration, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.Meta.UpdateVelocityShader, this.Meta.UpdatePositionShader, SetPhysicsUniforms );
 	}
 	
 	this.ResetPhysicsTextures = function()
@@ -124,13 +124,14 @@ function TPhysicsActor(Meta)
 
 
 
-function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,ScratchTexture,PositionOrigTexture,UpdateVelocityShader,UpdatePositionShader,SetPhysicsUniforms)
+function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,ScratchTexture,PositionOrigTexture,UpdateVelocityShader,UpdatePositionShader,SetPhysicsUniforms)
 {
 	if ( !Params.EnablePhysicsIteration )
 		return;
 	
 	SetPhysicsUniforms = SetPhysicsUniforms || function(){};
 	
+	const PhysicsStep = FrameDuration;
 	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 	UpdateVelocityShader = Pop.GetShader( RenderTarget, UpdateVelocityShader, QuadVertShader );
 	UpdatePositionShader = Pop.GetShader( RenderTarget, UpdatePositionShader, QuadVertShader );
@@ -154,7 +155,7 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 		let SetUniforms = function(Shader)
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
+			Shader.SetUniform('PhysicsStep', PhysicsStep );
 			Shader.SetUniform('Gravity', 0 );
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
@@ -184,7 +185,7 @@ function PhysicsIteration(RenderTarget,Time,PositionTexture,VelocityTexture,Scra
 		let SetUniforms = function(Shader)
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('PhysicsStep', 1.0/60.0 );
+			Shader.SetUniform('PhysicsStep', PhysicsStep );
 			Shader.SetUniform('Velocitys',VelocityTexture);
 			Shader.SetUniform('LastPositions',ScratchTexture);
 			SetPhysicsUniforms( Shader );

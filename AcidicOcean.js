@@ -873,7 +873,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Object.keys( Meta.PhysicsUniforms ).forEach( ApplyUniform );
 		}
 		
-		PhysicsIteration( RenderTarget, Time, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
+		PhysicsIteration( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
 	}
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
