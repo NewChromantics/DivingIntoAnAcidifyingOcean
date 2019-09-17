@@ -106,15 +106,15 @@
 		"Name":		"ALGAL BLOOM",
 		"Description":	"<h1> The rapid growth of algae, otherwise known as algal bloom, can sometimes become so big it can be seen from space.  </h1> <h2> With increased nutrient pollution and ocean warming, the Cyanobacteria algae can bloom uncontrolled, then die and decompose. The bacterial degradation of their biomass consumes the oxygen in the water, thereby creating the state of hypoxia where there is low or no oxygen dissolved in the water, creating a Dead Zone. </h2> <h2> 252 million years ago the Earth experienced 'The Great Dying', when global warming, ocean acidification, and hypoxia caused nearly 90% of the planet’s species to be wiped out. </h2> <h2> On land 70% of life became extinct while in the ocean 96% of marine life disappeared as global marine oxygen levels drop by 76%. </h2>",
 		"Model":	"Models/AlgalBloom.ply",
-		"AfterYear":	2040,
+		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":5,
-        "TriangleScale":0.001
+        "TriangleScale":0.0017
 
 	},
 	"Pollock":
 	{
-		"Name":		"WALLEYEPOLLOCK",
+		"Name":		"WALLEYE POLLOCK",
 		"Description":	"<h1>  The Walleye Pollock is a species of cod  of the Bering Sea, famous for their well developed drumming muscles used to produce sounds during courtship. </h1> <h2> More than 3 billion pounds of Walleye Pollock are caught annually in North America, making them very important to the region’s economy. As a result, they were the among the first to be studied in high-CO2 water. </h2> <h2> The pollock's ability to detect predators and prey highly decreases in more acidic waters. When scientists exposed young pollock to high CO2 and introduced the scent of what they eat, some even struggled to recognise their food. </h2>",
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
@@ -151,7 +151,8 @@
 		"Model":	"Models/NodulariaSpumi.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.5
+		"Scale":0.5,
+        "TriangleScale":0.001
 
 	},
 	"Kelp":
@@ -288,7 +289,7 @@
 		"Model":	"Models/Phytoplankton.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":2
+		"Scale":6
 
 	},
 	"Mussels":
@@ -430,7 +431,7 @@
 		"Model":	"Models/PlasticContainer.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":2
+		"Scale":3.5
 
 	},
 		"Cigarette":
@@ -440,6 +441,7 @@
 		"Model":	"Models/CigeretteStub.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
+		"Scale":2,
         "TriangleScale":0.02
 
 	},
