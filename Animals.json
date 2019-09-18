@@ -73,7 +73,7 @@
 	{
 		"Name":		"FISH LARVAE",
 		"Description":	"<h1> Fish larvae are the future of the oceans.  </h1> <h2> When grown in the predicted levels of CO2 for the year 2100, fish larvae showed considerable tissue damage, necrosis, and severe internal damage, resulting in a general decrease in survival rates. </h2> ",
-		"Model":	"Models/FishLarvae.ply",
+		"Model":	"Models/FishLava.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":7,
@@ -84,7 +84,7 @@
 	{
 		"Name":		"SEA URCHIN",
 		"Description":	"<h1> Considered a delicacy in many cultures, sea urchins are spiny, globular animals with self-sharpening teeth tucked beneath their bodies. And while they are sightless, they find their food through their senses of smell and hearing.  </h1> <h2> Juveniles species of different kinds of sea urchins were exposed for 100 days to two treatments of pH: a pH of 8.0 μ and pH of 7.6. μ. The juveniles of a certain species, D. africanum, were more predated from the acidic treatment than those kept in the control treatment. </h2> <h2> All juveniles species studied that were reared in a pH of 7.6 showed changes in the form of thie skeletal structures. </h2>",
-		"Model":	"Models/SeaUrchins3.ply",
+		"Model":	"Models/SeaUrchin.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"TriangleScale":0.002
@@ -138,7 +138,7 @@
 	{
 		"Name":		"CORALLINE ALGAE",
 		"Description":	"<h1>  Like coral reefs, coralline algae help bring life to the reef.  </h1> <h2> Coralline algae - red algae with a hard, calcifying tissue - provide habitat for other invertebrates, like sea urchins, and add calcareous material to the structure of the coral reef, helping cementing it together. </h2> <h2> The chemical they produce promote the settlement of the larvae of certain herbivorous invertebrates which, in turn, supports some seaweeds. Most coralline algae species build shells from the high-magnesium calcite form of calcium carbonate, which is more soluble than the aragonite or regular calcite forms. </h2> <h2> One study found that, in acidifying conditions, coralline algae covered 92% less area, making space for other types of non-calcifying algae, which can smother and damage coral reefs. But this has negative impacts, as many coral larvae prefer to settle onto coralline algae when they are ready to leave the plankton stage and start life on a coral reef. </h2>",
-		"Model":	"Models/CorallineAlgue.ply",
+		"Model":	"Models/CooralineAlgue.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
         "TriangleScale":0.00199
@@ -201,7 +201,7 @@
 	{
 		"Name":		"DEEP SEA CORAL",
 		"Description":	"<h1>  Also known as cold-water corals, extends to deeper, darker parts of the oceans, ranging from near the surface, to the abyss. </h1> <h2> Deep sea corals are founded on the accumulation of calcium carbonate, providing the structural framework for these biodiverse ecosystems. </h2> <h2> With expected shoaling of the aragonite saturation horizon, many of these communities may become exposed to waters corrosive to coral skeletons. </h2> <h2> In lower pH, the calcification rates in the cold water species Lophelia pertusa were reduced by an average of 30-56%. </h2> <h2> The introduction of anthropogenic carbon dioxide in deep sea will make these naturally acidic waters even more acidic. </h2>",
-		"Model":	"Models/DeepSeaCoral2.ply",
+		"Model":	"Models/DeepseaCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":0.7,
@@ -233,7 +233,7 @@
 	{
 		"Name":		"JUVENILE BIVALVE",
 		"Description":	"<h1> The Juvenile Bivalve are the newly born shelled marine animals.  </h1> <h2> When it comes to ocean acidification, research demonstrates shell dissolution and mortality for larval and juvenile stages in a number of bivalve species. </h2> <h2> When immersed in waters with pH 7.6, which is expected in 2100, the shells had massive dissolution within 24h and was completely gone in 2 weeks. </h2>",
-		"Model":	"Models/JuvenileBivalve.ply",
+		"Model":	"Models/JuvenilleBivalve.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":2,
@@ -286,7 +286,7 @@
 	{
 		"Name":		"PHYTOPLANKTON",
 		"Description":	"<h1> Named after the Greek for 'wondering plants', phytoplankton are too small to be seen with the naked eye, but can be seen from space when they bloom.   </h1> <h2> Phytoplankton account for about half of all photosynthetic activity on Earth. Their cumulative energy fixation in carbon compounds is the basis for the vast majority of oceanic and also many freshwater food webs. </h2> <h2> Scientists believe that phytoplankton produce between 50 - 85% of the world's oxygen despite amounting to only ~1% of global plant biomass, and have been controlling the atmospheric CO2/O2 balance by the sequestration of carbon from the atmosphere into the seafloor within their biological mass (biological pump). </h2> <h2> Despite substantial variation in both the magnitude and spatial pattern of change, the majority of published studies predict that phytoplankton biomass and/or primary production has declined in the past century and will decline over the next century. </h2>",
-		"Model":	"Models/Phytoplankton.ply",
+		"Model":	"Models/Phlytoplankton.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":6
@@ -296,7 +296,7 @@
 	{
 		"Name":		"MUSSELS",
 		"Description":	"<h1>  Mussels… with their dark shells and shimmering, silvery interior, these elongated bivalve live attached to rocks thanks to byssal threads, which resemble a sort of beard. Mussels feed entirely on plankton and to do so they filter up to 65 litres of water a day, and their cultivation is a major food source - a booming $1.5 billion industry that is deeply rooted in some cultures. </h1> <h2> Mussels live attached to rocks due to their byssal threads, and can withstand harsh weather and extreme conditions. But climate change is impairing their ability to cling. Research has shown that when mussel byssal threads are grown in acidified conditions with a pH lower than 7.6 were 40% weaker than normal. </h2> <h2> Ocean acidification doesn't just dissolve their clinging threads, it also affects the way they can make their shells. Scientists have in fact discovered a 25% decrease in calcification in waters with pH 7.6, the level expected in 2100. </h2> ",
-		"Model":	"Models/Mussel.ply",
+		"Model":	"Models/Mussel_v002.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":2.4,
@@ -360,7 +360,7 @@
 	{
 		"Name":		"MICROPLASTIC",
 		"Description":	"<h1> A 2015 study estimated that there was between 93 and 236 thousand metric tons of microplastics in the world’s oceans. </h1> <h2> Scientists are only just now discovering how much the problem of microplastic has spread. They studied the scat of 51 wild fur Seals and discovered that 67% of the samples showed an abundance of microfibers. </h2> <h2> Microfibers are the least studied form of microplastic. They are small hairs of plastic, less than 1 millimetre in size, from materials such as polyester or nylon and can end up in the ocean through waste water even after cleaning. They also can absorb a wide array of pollutants. </h2> <h2> It is projected that by 2050, 99% of all sea bird species will have ingested plastic. </h2>",
-		"Model":	"Models/MicroPlastic2.ply",
+		"Model":	"Models/MicroPlastic.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":8,
@@ -398,7 +398,7 @@
 	{
 		"Name":		"PLASTIC BAG",
 		"Description":	"<h1> This year 5 trillion plastic bags will be consumed, or 160,000 per second. This number would be able to wrap around the world 7 times every hour, and cover an area twice the size of France. </h1> <h2> Most bags are simply thrown out, as they have an average “working life” of 15 minutes, and only less than 1% are recycled. They are most often made from Polyethylene that takes centuries to degrade. Each ton of recycled plastic bags produces energy equivalent to 11 barrels of oil, which is another incredibly destructive pollutant of our oceans. </h2> <h2> Seabirds, turtles, seals, sea lions, whales, and fish eat these plastic bags. The death of one Sperm Whale found in California in the USA in 2008 was caused by 22.2kg of plastic that the whale had eaten. </h2>",
-		"Model":	"Models/PlasticBag2.ply",
+		"Model":	"Models/PlasticBag.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":2
@@ -438,7 +438,7 @@
 	{
 		"Name":		"CIGARETTE STUB",
 		"Description":	"<h1> By itself, cellulose acetate, which form a cigarette filter, takes between 18 months to 10 years to degrade. </h1> <h2> Studies have shown that one cigarette filter in about two gallons of water is lethal to water fleas, a tiny crustacean found in freshwater and saltwater. Wildlife also easily confuses them for food and ingests them. </h2> <h2> In 2017, cigarette filters were the biggest source of plastic pollution on beaches, with 1,863,838 collected. </h2>",
-		"Model":	"Models/CigeretteStub.ply",
+		"Model":	"Models/CigaretteStub.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":2,
