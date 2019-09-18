@@ -12,6 +12,7 @@ uniform float3 Fog_Colour;
 uniform float3 Fog_WorldPosition;
 uniform bool DebugFogCenter;
 
+const bool Debug_ForceColour = false;
 
 float Range(float Min,float Max,float Value)
 {
@@ -45,6 +46,12 @@ float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 
 void main()
 {
+	if ( Debug_ForceColour )
+	{
+		gl_FragColor = float4(0,1,1,1);
+		return;
+	}
+	
 	if ( length(TriangleUvIndex.xy) > CircleRadius )
 		discard;
 
