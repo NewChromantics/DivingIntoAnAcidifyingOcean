@@ -6,8 +6,8 @@
 		"Model":	"Models/pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1.7,
-        "TriangleScale":0.001398
+		"Scale":1.3,
+        "TriangleScale":0.0008
 	},
 	
 	"Jellyfish":
@@ -17,8 +17,8 @@
 		"Model":	"Models/jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
-		"Scale":1.2,
-        "TriangleScale":0.002393
+		"Scale":1,
+        "TriangleScale":0.0017
 
 	},
 
@@ -29,7 +29,7 @@
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":1.6,
+        "Scale":0.5,
         "TriangleScale":0.0027
 
 	},
@@ -53,7 +53,7 @@
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":4,
+		"Scale":0.1,
         "TriangleScale":0.002
 
 	},
@@ -65,8 +65,8 @@
 		"Model":	"Models/Anemone.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":1.5,
-        "TriangleScale":0.007
+		"Scale":1,
+        "TriangleScale":0.005
 
 	},
 	"Larvae":
@@ -76,8 +76,8 @@
 		"Model":	"Models/FishLava.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":7,
-        "TriangleScale":0.0017
+		"Scale":0.1,
+        "TriangleScale":0.001
 
 	},
 	"Urchin":
@@ -87,6 +87,7 @@
 		"Model":	"Models/SeaUrchin.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
+		"Scale":0.4,
 		"TriangleScale":0.002
 
 	},
@@ -97,8 +98,8 @@
 		"Model":	"Models/cockle_v1.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":2,
-        "TriangleScale":0.0016
+		"Scale":1.2,
+        "TriangleScale":0.0010
 
 	},
 	"AlgalBloom":
@@ -108,7 +109,7 @@
 		"Model":	"Models/AlgalBloom.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":5,
+		"Scale":1,
         "TriangleScale":0.0017
 
 	},
@@ -119,8 +120,8 @@
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
-		"Scale":1.8,
-        "TriangleScale":0.001995
+		"Scale":0.4,
+        "TriangleScale":0.0018
 
 	},
 	"Krill":
@@ -130,8 +131,8 @@
 		"Model":	"Models/AntarcticKrill.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":6,
-        "TriangleScale":0.00199
+		"Scale":0.1,
+        "TriangleScale":0.001
 
 	},
 	"CorallineAlgae":
@@ -141,6 +142,7 @@
 		"Model":	"Models/CooralineAlgue.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
+		"Scale":0.5,
         "TriangleScale":0.00199
 
 	},
@@ -151,8 +153,8 @@
 		"Model":	"Models/NodulariaSpumi.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.5,
-        "TriangleScale":0.001
+		"Scale":0.15,
+        "TriangleScale":0.0006
 
 	},
 	"Kelp":
@@ -162,7 +164,8 @@
 		"Model":	"Models/KelpForest.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.1
+		"Scale":1.2,
+        "TriangleScale":0.0015
 
 	},
 	"DeepSeaCrab":
@@ -172,7 +175,8 @@
 		"Model":	"Models/DeepSeaCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.7
+		"Scale":0.2,
+        "TriangleScale":0.001
 
 	},
 	"Shark":
@@ -182,8 +186,8 @@
 		"Model":	".random",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.2,
-        "TriangleScale":0.00657
+		"Scale":1,
+        "TriangleScale":0.001
 
 	},
 	"Cephalopod":
@@ -193,7 +197,7 @@
 		"Model":	"Models/cephalopod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":5,
+		"Scale":4,
         "TriangleScale":0.00358
 
 	},
@@ -204,7 +208,7 @@
 		"Model":	"Models/DeepseaCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":0.7,
+        "Scale":1,
         "TriangleScale":0.00438
 
 	},
@@ -215,7 +219,7 @@
 		"Model":	"Models/BubbleGumCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.3,
+		"Scale":1,
         "TriangleScale":0.00238
 
 	},
@@ -226,6 +230,7 @@
 		"Model":	"Models/Lobster.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
+        "Scale":0.3,
         "TriangleScale":0.00139
 
 	},
@@ -236,7 +241,7 @@
 		"Model":	"Models/JuvenilleBivalve.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":2,
+		"Scale":0.05,
         "TriangleScale":0.0009
 
 	},
@@ -247,7 +252,7 @@
 		"Model":	"Models/BlueKingCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":2,
+		"Scale":1,
         "TriangleScale":0.001
 
 	},
@@ -269,6 +274,7 @@
 		"Model":	"Models/YellowTuna.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
+		"Scale":0.1,
         "TriangleScale":0.00279
 
 	},
@@ -279,7 +285,8 @@
 		"Model":	"Models/Cobia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-        "TriangleScale":0.00338
+		"Scale":0.4,
+        "TriangleScale":0.0015
 
 	},
 	"Phytoplankton":
@@ -289,7 +296,8 @@
 		"Model":	"Models/Phlytoplankton.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":6
+		"Scale":0.1,
+        "TriangleScale":0.0005
 
 	},
 	"Mussels":
@@ -299,8 +307,8 @@
 		"Model":	"Models/Mussel_v002.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":2.4,
-        "TriangleScale":0.0008
+		"Scale":0.1,
+        "TriangleScale":0.001
 
 	},
 	"Menidia":
@@ -310,8 +318,8 @@
 		"Model":	"Models/MenidaMenida.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":1.7,
-        "TriangleScale":0.001597
+		"Scale":0.3,
+        "TriangleScale":0.0018
 
 	},
 	"Crab":
@@ -321,7 +329,7 @@
 		"Model":	"Models/BrachyuranCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":2,
+		"Scale":0.3,
         "TriangleScale":0.0018
 
 	},
@@ -332,7 +340,7 @@
 		"Model":	"Models/BrittleStar.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":0.7,
+        "Scale":0.2,
         "TriangleScale":0.002592
 
 	},
@@ -343,7 +351,7 @@
 		"Model":	"Models/CoralCorrectTexture.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-        "TriangleScale":0.002592
+        "TriangleScale":0.002
 
 	},
 		"Clownfish":
@@ -353,7 +361,7 @@
 		"Model":	".random",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":2,
+		"Scale":1,
         "TriangleScale":0.0014	
 
 	},"Microplastic":
@@ -363,8 +371,8 @@
 		"Model":	"Models/MicroPlastic.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":8,
-        "TriangleScale":0.02
+		"Scale":0.8,
+        "TriangleScale":0.003
 
 	},
 		"Bottle":
@@ -373,7 +381,8 @@
 		"Description":	"<h1> 1 million plastic bottles are bought around the world every minute. That number will jump another 20% by 2021, creating an environmental crisis some predict will be as serious as climate change. </h1> <h2> More than 480 billion plastic drinking bottles were sold in 2016 across the world, up from about 300 billion a decade ago. </h2> <h2> If placed end to end, they would extend more than halfway to the sun. By 2021 this will increase to 583.3 billion, according to the most up-to-date estimates from Euromonitor International’s global packaging trends report. </h2> <h2> Fewer than half of the bottles bought in 2016 were collected for recycling and just 7% of those collected were turned into new bottles. </h2> <h2> Between 5 million and 13 million tonnes of plastic leaks into the world’s oceans each year to be ingested by sea birds, fish and other organisms, and by 2050 the ocean will contain more plastic by weight than fish. </h2>",
 		"Model":	"Models/PlasticBottle.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+        "TriangleScale":0.003
 
 	},
 		"Can":
@@ -382,7 +391,8 @@
 		"Description":	"<h1> The aluminium can can be fully recycled. Yet in the oceans it's found everywhere, injuring some marine animals and being consumed by others who confuse them for food with deadly effect. </h1> <h2> The global production of aluminium can amounts to 180 billion annually. </h2> <h2> If an aluminium can goes to landfill, it will stay there for 500 years before it oxidises. Recycling aluminium takes 95% less energy than producing it from its raw materials. The recycling process also generates only 5% of the greenhouse gas emissions. </h2>",
 		"Model":	"Models/BeerCan.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+        "TriangleScale":0.003
 
 	},
 		"Straw":
@@ -391,7 +401,8 @@
 		"Description":	"<h1> Most plastic straws are too lightweight to make it through the mechanical recycling sorter and, even though they could be recycled, they aren't accepted by most recycling programs. So they usually end up in landfills and the ocean. </h1> <h2> In the U.S.A alone, 500 million straws are used every day, an amount that could fill over 127 school buses each day, or more than 46,400 school buses every year. </h2>",
 		"Model":	"Models/PlasticStraw.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+        "TriangleScale":0.003
 
 	},
 		"Bag":
@@ -401,7 +412,8 @@
 		"Model":	"Models/PlasticBag.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":2
+		"Scale":1,
+        "TriangleScale":0.003
 
 	},
 		"Assorbente":
@@ -411,8 +423,8 @@
 		"Model":	"Models/SanitaryPad.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.5,
-        "TriangleScale":0.02
+		"Scale":0.05,
+        "TriangleScale":0.003
 
 	},
 		"Plastic":
@@ -421,7 +433,9 @@
 		"Description":	"<h1> More than 8 million tons of plastic are dumped in the oceans every year. </h1> <h2> 1 in 3 species of marine mammals have been found entangled in marine litter. </h2> <h2> Over 90% of all seabirds have pieces of plastic in their stomachs, and every year 1 million seabirds die from plastic pollution. </h2> <h2> It's predicted that in 2050 99% of ALL SPECIES will have ingested plastic. </h2>",
 		"Model":	"Models/PiecesOfPlastic.ply",
 		"AfterYear":	1956,
-		"Categorys" : [ "Nasty_Animal_" ]
+		"Categorys" : [ "Nasty_Animal_" ],
+		"Scale":0.5,
+        "TriangleScale":0.003
 
 	},
 		"FoodContainer":
@@ -431,7 +445,7 @@
 		"Model":	"Models/PlasticContainer.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":3.5
+		"Scale":1
 
 	},
 		"Cigarette":
@@ -441,8 +455,8 @@
 		"Model":	"Models/CigaretteStub.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":2,
-        "TriangleScale":0.02
+		"Scale":0.5,
+        "TriangleScale":0.003
 
 	},
 		"Net":
@@ -452,7 +466,7 @@
 		"Model":	"Models/FishingNet.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.2,
+		"Scale":1,
         "TriangleScale":0.003
 
 	}
