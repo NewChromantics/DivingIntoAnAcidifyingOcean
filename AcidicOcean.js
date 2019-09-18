@@ -1042,6 +1042,8 @@ function LoadCameraScene(Filename)
 				let BoundsCenter = Math.Lerp3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min, 0.5 );
 				let BoundsScale = Math.Subtract3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min );
 				
+				BoundsScale = Math.Multiply3( BoundsScale, [0.5,0.5,0.5] );
+				
 				LocalScale = BoundsScale;
 				WorldPos = Math.Add3( WorldPos, BoundsCenter );
 				ActorNode.BoundingBox.Max = [1,1,1];
