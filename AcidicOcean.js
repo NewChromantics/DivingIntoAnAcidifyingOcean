@@ -41,6 +41,7 @@ var Debug_HighlightActors = [];
 const AutoTriangleMeshCount = 256*512;	//	130k
 const InvalidColour = [0,1,0];
 
+const ShowDefaultActors = Pop.GetExeArguments().includes('ShowDefaultActors');
 const OceanActorPrefix = 'Ocean_surface_';
 const DebrisActorPrefix = 'Water_';
 const NastyAnimalPrefix = 'Nasty_Animal_';
@@ -978,11 +979,18 @@ function LoadCameraScene(Filename)
 		
 		//	there are some new objects with no bounding boxes or geo,
 		//	but they're not ones we want to turn to animals anyway
-		const IsAnimalActor = IsActorSelectable(Actor);
+		let IsAnimalActor = IsActorSelectable(Actor);
 		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
 		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
 		
-		if ( IsAnimalActor || IsDebrisActor || IsOceanActor )
+		
+		if ( ShowDefaultActors )
+			IsAnimalActor = false;
+		
+		const IsParticleActor = IsAnimalActor || IsDebrisActor || IsOceanActor;
+		
+		//if ( !ShowDefaultActors && IsParticleActor )
+		if ( IsParticleActor )
 		{
 			//let LocalScale = ActorNode.Scale;
 			let WorldPos = ActorNode.Position;
