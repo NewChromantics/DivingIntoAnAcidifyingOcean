@@ -148,6 +148,10 @@ function GetAnimalMeta(Actor)
 	if ( Actor && Actor.Animal && Actor.Animal.Scale !== undefined )
 		Meta.LocalScale = Actor.Animal.Scale;
 	
+	Meta.LocalFlip = false;
+	if ( Actor && Actor.Animal && Actor.Animal.LocalFlip !== undefined )
+		Meta.LocalFlip = Actor.Animal.Flip;
+
 	Meta.VertShader = AnimalParticleVertShader;
 	Meta.FragShader = AnimalParticleFragShader;
 	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
@@ -613,6 +617,7 @@ Params.Turbulence_Persistence = 0.20;
 Params.Turbulence_TimeScalar = 0.14;
 
 Params.AnimalScale = 1.0;
+Params.AnimalFlip = false;
 Params.AnimalDebugParticleColour = false;
 
 let OnParamsChanged = function(Params,ChangedParamName)
@@ -731,6 +736,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
 
 	ParamsWindow.AddParam('AnimalScale',0,2);
+	ParamsWindow.AddParam('AnimalFlip');
 	ParamsWindow.AddParam('AnimalDebugParticleColour');
 }
 
@@ -937,8 +943,16 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 
 	this.GetLocalToWorldTransform = function()
 	{
-		let Scale = GetMeta(this).LocalScale;
-		let ScaleMtx = Math.CreateScaleMatrix( Scale );
+		const Meta = GetMeta(this);
+		let Scale = Meta.LocalScale;
+		let Scale3 = [Scale,Scale,Scale];
+		if ( Meta.LocalFlip )
+			Scale3[1] *= -1;
+		//	allow flip of the flip
+		if ( Params.AnimalFlip )
+			Scale3[1] *= -1;
+		let ScaleMtx = Math.CreateScaleMatrix( ...Scale3 );
+		
 		let Transform = Math.MatrixMultiply4x4( this.LocalToWorldTransform, ScaleMtx );
 		return Transform;
 	}

@@ -122,7 +122,6 @@
 		"Categorys" : [ "Animal_","Bigbang_"  ],
 		"Scale":0.4,
         "TriangleScale":0.0018
-
 	},
 	"Krill":
 	{
@@ -132,7 +131,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.1,
-        "TriangleScale":0.001
+        "TriangleScale":0.001,
+		"Flip":true
 
 	},
 	"CorallineAlgae":
@@ -165,7 +165,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1.2,
-        "TriangleScale":0.0015
+        "TriangleScale":0.0015,
+		"Flip":true
 
 	},
 	"DeepSeaCrab":
