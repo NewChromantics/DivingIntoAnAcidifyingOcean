@@ -672,6 +672,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('TestRayDistance',-1,1);
 	ParamsWindow.AddParam('TestRaySize',0,10);
 	ParamsWindow.AddParam('DrawTestRay');
+	ParamsWindow.AddParam('DrawHighlightedActors');
 	ParamsWindow.AddParam('EnablePhysicsIteration');
 	ParamsWindow.AddParam('DebugPhysicsTextures');
 	ParamsWindow.AddParam('BillboardTriangles');
