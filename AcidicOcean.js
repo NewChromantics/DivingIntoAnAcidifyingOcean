@@ -613,6 +613,7 @@ Params.Turbulence_Persistence = 0.20;
 Params.Turbulence_TimeScalar = 0.14;
 
 Params.AnimalScale = 1.0;
+Params.AnimalDebugParticleColour = false;
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -730,6 +731,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
 
 	ParamsWindow.AddParam('AnimalScale',0,2);
+	ParamsWindow.AddParam('AnimalDebugParticleColour');
 }
 
 
@@ -923,6 +925,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		
 			Shader.SetUniform('Colours', Colours );
 			Shader.SetUniform('ColourCount', Colours.length );
+			Shader.SetUniform('Debug_ForceColour',Params.AnimalDebugParticleColour);
 		}
 		
 		//	limit number of triangles

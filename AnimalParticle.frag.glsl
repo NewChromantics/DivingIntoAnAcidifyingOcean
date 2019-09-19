@@ -12,7 +12,7 @@ uniform float3 Fog_Colour;
 uniform float3 Fog_WorldPosition;
 uniform bool DebugFogCenter;
 
-const bool Debug_ForceColour = false;
+uniform bool Debug_ForceColour;
 
 float Range(float Min,float Max,float Value)
 {
