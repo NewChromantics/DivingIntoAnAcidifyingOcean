@@ -1417,9 +1417,12 @@ Acid.GetFogParams = function()
 	const FogParams = {};
 	const CameraPos = Acid.GetCameraPosition();
 
-	FogParams.WorldPosition = Math.LerpArray( CameraPos, TargetPos, Acid.FogLerp );
-	FogParams.MinDistance = Math.Lerp( Params.FogMinDistance, Params.FogHighlightMinDistance, Acid.FogLerp );
-	FogParams.MaxDistance = Math.Lerp( Params.FogMaxDistance, Params.FogHighlightMaxDistance, Acid.FogLerp );
+	//FogParams.WorldPosition = Math.LerpArray( CameraPos, TargetPos, Acid.FogLerp );
+	//FogParams.MinDistance = Math.Lerp( Params.FogMinDistance, Params.FogHighlightMinDistance, Acid.FogLerp );
+	//FogParams.MaxDistance = Math.Lerp( Params.FogMaxDistance, Params.FogHighlightMaxDistance, Acid.FogLerp );
+	FogParams.WorldPosition = CameraPos;
+	FogParams.MinDistance = Params.FogMinDistance;
+	FogParams.MaxDistance = Params.FogMaxDistance;
 	return FogParams;
 }
 
