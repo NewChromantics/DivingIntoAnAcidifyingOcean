@@ -29,7 +29,7 @@
 		"Model":	"Models/PinkSalmon.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":0.5,
+        "Scale":0.25,
         "TriangleScale":0.0027
 
 	},
