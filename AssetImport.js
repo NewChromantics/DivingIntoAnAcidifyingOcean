@@ -763,13 +763,17 @@ function CreatePackedImage(Contents)
 	return PackedImage;
 }
 
+
 function GetImageAsPopImage(Img)
 {
-	if ( Img.constructor == Pop.Image )
+	//	.constructor for jscore engine
+	//	==Image() for web/v8
+	if ( Img.constructor == Pop.Image || Img.constructor == Pop.Image.constructor )
 		return Img;
-
+	
 	//	html5 image
-	if ( Img.constructor == HTMLImageElement )
+	const WebApi_HtmlImageElement = Pop.Global.hasOwnProperty('HTMLImageElement') ? Pop.Global['HTMLImageElement'] : null;
+	if ( Img.constructor == WebApi_HtmlImageElement )
 	{
 		//	gr: is this really the best way :/
 		const Canvas = document.createElement('canvas');
@@ -782,9 +786,11 @@ function GetImageAsPopImage(Img)
 		const ImageData = Context.getImageData(0, 0, Width, Height);
 		const Buffer = ImageData.data;
 		const PopImage = new Pop.Image();
+		//	gr: I checked pixels manually, canvas is always RGBA [in chrome]
 		PopImage.WritePixels( Width, Height, Buffer, 'RGBA' );
 		return PopImage;
 	}
+
 	
 	Pop.Debug("Dont know how to get pixels from ",Img);
 	
@@ -823,6 +829,21 @@ function ResizeTypedArray(Array,NewSize)
 	for ( let i=0;	i<MinSize;	i++ )
 		NewArray[i] = Array[i];
 	return NewArray;
+}
+
+
+function IsFloatFormat(Format)
+{
+	switch(Format)
+	{
+		case 'Float1':
+		case 'Float2':
+		case 'Float3':
+		case 'Float4':
+			return true;
+		default:
+			return false;
+	}
 }
 
 function LoadPackedImage(Image)
@@ -871,7 +892,7 @@ function LoadPackedImage(Image)
 		const FloatFormat = 'Float' + Channels;
 
 		//	gr: save mem/resources by reusing buffer
-		const InputIsFloat = Format.startsWith('Float');
+		const InputIsFloat = IsFloatFormat;
 		//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
 		const PixelFloats = new Float32Array( Width*Height*Channels );
 

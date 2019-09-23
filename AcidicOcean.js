@@ -1804,13 +1804,20 @@ function Update(FrameDurationSecs)
 	Hud.Stats_Ph.SetValue( Stats_Ph );
 	
 	Hud.Debug_State.SetValue( "State: " + Acid.StateMachine.CurrentState );
-	const TextureHeapCount = Window.TextureHeap.AllocCount;
-	const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
-	Hud.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
-	const GeometryHeapCount = Window.GeometryHeap.AllocCount;
-	const GeometryHeapSizeMb = Window.GeometryHeap.AllocSize / 1024 / 1024;
-	Hud.Debug_GeometryHeap.SetValue("Geometry x" + GeometryHeapCount + " " + GeometryHeapSizeMb.toFixed(2) + "mb" );
 	
+	try
+	{
+		const TextureHeapCount = Window.TextureHeap.AllocCount;
+		const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
+		Hud.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
+		const GeometryHeapCount = Window.GeometryHeap.AllocCount;
+		const GeometryHeapSizeMb = Window.GeometryHeap.AllocSize / 1024 / 1024;
+		Hud.Debug_GeometryHeap.SetValue("Geometry x" + GeometryHeapCount + " " + GeometryHeapSizeMb.toFixed(2) + "mb" );
+	}
+	catch(e)
+	{
+		//Pop.Debug(e);
+	}
 	
 	//	update some huds
 	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
