@@ -892,7 +892,7 @@ function LoadPackedImage(Image)
 		const FloatFormat = 'Float' + Channels;
 
 		//	gr: save mem/resources by reusing buffer
-		const InputIsFloat = IsFloatFormat;
+		const InputIsFloat = IsFloatFormat();
 		//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
 		const PixelFloats = new Float32Array( Width*Height*Channels );
 
