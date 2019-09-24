@@ -108,6 +108,8 @@ function TTimeline(OrigKeyframes)
 
 	this.GetTimeSliceForUniform = function(Time,UniformName)
 	{
+		if ( !this.Keyframes.length )
+			return null;
 		let Slice = {};
 		Slice.StartIndex = undefined;
 		Slice.EndIndex = undefined;
@@ -148,6 +150,9 @@ function TTimeline(OrigKeyframes)
 	
 	this.GetTimeSlice = function(Time)
 	{
+		if ( !this.Keyframes.length )
+			return null;
+		
 		let Slice = {};
 		Slice.StartIndex = 0;
 		
@@ -174,6 +179,8 @@ function TTimeline(OrigKeyframes)
 	this.GetUniform = function(Time,Key)
 	{
 		let Slice = this.GetTimeSliceForUniform( Time, Key );
+		if ( Slice == null )
+			return undefined;
 		const UniformsA = this.Keyframes[Slice.StartIndex].Uniforms;
 		const UniformsB = this.Keyframes[Slice.EndIndex].Uniforms;
 
@@ -192,6 +199,8 @@ function TTimeline(OrigKeyframes)
 	this.EnumUniforms = function(Time,EnumUniform)
 	{
 		let Slice = this.GetTimeSlice( Time );
+		if ( Slice == null )
+			return;
 		let UniformsA = this.Keyframes[Slice.StartIndex].Uniforms;
 		let UniformsB = this.Keyframes[Slice.EndIndex].Uniforms;
 		let UniformKeys = Object.keys(UniformsA);

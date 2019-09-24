@@ -306,6 +306,10 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 		return;
 	
 	HideLogoElements();
+	
+	if ( Pop.GetExeArguments().includes('PhysicsEditor') )
+		return 'PhysicsEditor';
+
 	return 'Experience';
 }
 

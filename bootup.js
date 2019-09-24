@@ -158,7 +158,8 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 let StateMap =
 {
 	'Logo':	'Update_Logo',
-	'Experience': 'Update_Experience'
+	'Experience': 'Update_Experience',
+	'PhysicsEditor': 'Update_PhysicsEditor'
 };
 
 let StateMachine = new Pop.StateMachine( StateMap );
@@ -184,3 +185,17 @@ Window.OnKeyDown = OnKeyPress;
 
 const Params = {};
 Params.EnablePhysicsIteration = true;
+
+
+
+
+function Update_PhysicsEditor(FirstUpdate)
+{
+	if ( FirstUpdate )
+	{
+		let Source = Pop.LoadFileAsString('PhysicsEditor.js');
+		Pop.CompileAndRun( Source, 'PhysicsEditor.js' );
+	}
+}
+
+

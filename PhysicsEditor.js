@@ -7,16 +7,11 @@ Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopFrameCounter.js');
+Pop.Include('PopEngineCommon/PopCamera.js');
 
-//Pop.Include('AssetManager.js');
-Pop.Include('AudioManager.js');
-//	already included
-//Pop.Include('Timeline.js');
-//Pop.Include('Animals.js');
 
 const EnableVoiceOver = Pop.GetExeArguments().includes('EnableVoiceOver');
 const BoldMode = Pop.GetExeArguments().includes('Bold');
-const AnimalTest = Pop.GetExeArguments().includes('AnimalTest');
 
 const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
 const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
@@ -144,7 +139,7 @@ function GetAnimalMeta(Actor)
 {
 	const Meta = {};
 	
-	Meta.LocalScale = Params.AnimalScale;
+	Meta.LocalScale = 1;
 	if ( Actor && Actor.Animal && Actor.Animal.Scale !== undefined )
 		Meta.LocalScale = Actor.Animal.Scale;
 	
@@ -236,8 +231,6 @@ function GetVoiceVolume()	{	return Params.VoiceVolume;	}
 function GetSoundVolume()	{	return Params.SoundVolume;	}
 
 var AppTime = null;
-var Hud = {};
-var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
 
 var LastMouseRay = null;	//	gr: this isn't getting updated any more
@@ -482,11 +475,9 @@ function GetActorIntersections(CameraScreenUv)
 	//Pop.Debug(CameraScreenUv);
 	const Time = Params.TimelineYear;
 	const Viewport = [0,0,Rect[2],Rect[3]];
-	const Camera = GetTimelineCamera();
 	
 	const Ray = GetMouseRay( CameraScreenUv );
 	
-	//const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
 	const IsActorVisible = function(Actor)
 	{
 		if ( Actor.IsVisible === undefined )
@@ -631,7 +622,7 @@ ParamsWindow.OnParamChanged = function(){};
 
 if ( IsDebugEnabled() )
 {
-	const ParamsWindowRect = [800,20,350,200];
+	const ParamsWindowRect = [1200,20,350,200];
 	ParamsWindow = new CreateParamsWindow(Params,OnParamsChanged,ParamsWindowRect);
 	ParamsWindow.AddParam('TimelineYear',TimelineMinYear,TimelineMaxYear);	//	can no longer clean as we move timeline in float
 	ParamsWindow.AddParam('YearsPerSecond',0,10);
@@ -944,7 +935,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.GetLocalToWorldTransform = function()
 	{
 		const Meta = GetMeta(this);
-		let Scale = Meta.LocalScale;
+		let Scale = Meta.LocalScale * Params.AnimalScale;
 		let Scale3 = [Scale,Scale,Scale];
 		if ( Meta.LocalFlip )
 			Scale3[1] *= -1;
@@ -1081,62 +1072,26 @@ function LoadCameraScene(Filename)
 		Scene.push( Actor );
 	}
 	
-	const CachedFilename = GetCachedFilename(Filename,'scene');
-	if ( Pop.FileExists(CachedFilename) )
-		Filename = CachedFilename;
-	const FileScene = LoadSceneFile(Filename);
-	
-	FileScene.Actors.forEach( OnActor );
-	
-	const Timeline = new TTimeline( FileScene.Keyframes );
-	GetCameraTimelineAndUniform = function()
-	{
-		return [Timeline,'CameraPosition'];
-	}
-	
+	//	create a dumb actor
+	let PreviewActorNode = {};
+	//PreviewActorNode.Name = BigBangAnimalPrefix + "Kelp";
+	PreviewActorNode.Name = "Animal_xxx";
+	PreviewActorNode.BoundingBox = {};
+	PreviewActorNode.BoundingBox.Min = [-10,-10,-10];
+	PreviewActorNode.BoundingBox.Max = [10,10,10];
+	PreviewActorNode.Scale = [1,1,1];
+	PreviewActorNode.Position = [0,0,0];
+
+	OnActor( PreviewActorNode );
+
 	return Scene;
-}
-
-
-//	default reads from default timeline
-let GetCameraTimelineAndUniform = function()
-{
-	return [Timeline,'Timeline_CameraPosition'];
-}
-
-function GetCameraPath()
-{
-	const TimelineAndUniform = GetCameraTimelineAndUniform();
-	const Timeline = TimelineAndUniform[0];
-	const CameraUniform = TimelineAndUniform[1];
-	const CameraPositions = [];
-	for ( let i=0;	i<Params.DebugCameraPositionCount;	i++ )
-	{
-		let t = i / Params.DebugCameraPositionCount;
-		let Year = Math.lerp( TimelineMinYear, TimelineMaxYear, t );
-		let Pos = Timeline.GetUniform( Year, CameraUniform );
-		CameraPositions.push( Pos );
-	}
-	return CameraPositions;
-}
-
-function GetTimelineCameraPosition(Year)
-{
-	const TimelineAndUniform = GetCameraTimelineAndUniform();
-	const Timeline = TimelineAndUniform[0];
-	const CameraUniform = TimelineAndUniform[1];
-	let Pos = Timeline.GetUniform( Year, CameraUniform );
-	return Pos;
 }
 
 function GetTimelineCamera()
 {
 	let Camera = new Pop.Camera();
-	Camera.Position = Acid.GetCameraPosition();
-	
-	//	camera always faces forward now
-	Camera.LookAt = Camera.Position.slice();
-	Camera.LookAt[2] -= 1.0;
+	Camera.Position = [0,0,1.0];
+	Camera.LookAt = [0,0,0];
 	
 	Camera.NearDistance = Params.CameraNearDistance;
 	Camera.FarDistance = Params.CameraFarDistance;
@@ -1301,8 +1256,6 @@ function GetRenderScene(Time,VisibleFilter)
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
-	const CameraPositions = GetCameraPath();
-	CameraPositions.forEach( PushCameraPosActor );
 	
 	if ( Params.UseDebugCamera )
 	{
@@ -1398,51 +1351,14 @@ function Init()
 }
 
 var Acid = {};
-
-//	use a string if function not yet declared
-Acid.State_Intro = 'Intro';
-Acid.State_Fly = 'Fly';
-Acid.State_ShowAnimal = 'ShowAnimal';
-Acid.State_BigBang = 'BigBang';
-Acid.State_Outro = 'Outro';
-Acid.State_Solution = 'Solution';
 Acid.StateMap =
 {
-	'Intro':		Update_Intro,
-	'BigBang':		Update_BigBang,
-	'Fly':			Update_Fly,
-	'ShowAnimal':	Update_ShowAnimal,
-	'Outro':		Update_Outro,
-	'Solution':		Update_Solution
+	'Init':		Update_Init,
+	'Physics':	Update_Physics,
 };
-Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, false );
-Acid.SelectedActor = null;
-Acid.SkipSelectedAnimal = false;
-Acid.FogLerp = 0;
-Acid.FogTargetPosition = null;
-Acid.UserSetYear = null;
-Acid.CameraPosition = null;	//	current pos for lerping depending on state
-Acid.GetCameraPosition = function()
-{
-	if ( !Acid.CameraPosition )
-		throw "this should have been set before use";
-	return Acid.CameraPosition;
-}
-Acid.GetFogParams = function()
-{
-	let TargetPos = Acid.FogTargetPosition || [0,0,0];
-	
-	const FogParams = {};
-	const CameraPos = Acid.GetCameraPosition();
+Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, 'Init', 'Init', false );
 
-	//FogParams.WorldPosition = Math.LerpArray( CameraPos, TargetPos, Acid.FogLerp );
-	//FogParams.MinDistance = Math.Lerp( Params.FogMinDistance, Params.FogHighlightMinDistance, Acid.FogLerp );
-	//FogParams.MaxDistance = Math.Lerp( Params.FogMaxDistance, Params.FogHighlightMaxDistance, Acid.FogLerp );
-	FogParams.WorldPosition = CameraPos;
-	FogParams.MinDistance = Params.FogMinDistance;
-	FogParams.MaxDistance = Params.FogMaxDistance;
-	return FogParams;
-}
+
 
 function GetActorWorldPos(Actor)
 {
@@ -1450,336 +1366,60 @@ function GetActorWorldPos(Actor)
 	return Math.GetMatrixTranslation( Transform );
 }
 
-function UpdateFog(FrameDuration)
+
+function Update_Init(FirstUpdate,FrameDuration,StateTime)
 {
-	if ( Acid.SelectedActor )
+	//	reload scene which generates a new actor
+	CameraScene = LoadCameraScene();
+	
+	const Scene = GetActorScene();
+	function InitActor(Actor)
 	{
-		//	update position in case user quickly switches
-		let ActorPos = GetActorWorldPos( Acid.SelectedActor );
-		if ( !Acid.FogTargetPosition )
-			Acid.FogTargetPosition = ActorPos;
-		
-		Acid.FogTargetPosition = Math.LerpArray( Acid.FogTargetPosition, ActorPos, Params.FogTargetLerpSpeed );
-		Acid.FogLerp += Params.FogParamsLerpSpeed;
+		Actor.ResetPhysicsTextures();
+		Actor.UpdatePhysics = true;
 	}
-	else
-	{
-		Acid.FogLerp -= Params.FogParamsLerpSpeed;
-	}
-	Acid.FogLerp = Math.clamp( 0, 1, Acid.FogLerp );
+	Scene.forEach(InitActor);
+	return 'Physics';
 }
 
-function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
-{
-	UpdateFog(FrameDuration);
-	
-	if ( FirstUpdate )
-	{
-		//	update hud to the current animal
-		//	move/offset camera to focus on it
-		const Animal = Acid.SelectedActor.Animal;
-		if ( !Animal )
-			throw "No selected animal";
-
-		//	no longer selectable
-		Acid.SelectedActor.AnimalHasBeenExploded = true;
-		
-		Hud.Animal_Card.SetVisible(true);
-		Hud.Animal_Title.SetValue( Animal.Name );
-		Hud.Animal_Description.SetValue( Animal.Description );
-		
-		Acid.SkipSelectedAnimal = false;
-		Hud.Animal_ContinueButton.OnClicked = function()
-		{
-			if ( AnimalTest )
-			{
-				Acid.SelectedActor.ResetPhysicsTextures();
-			}
-			Acid.SkipSelectedAnimal = true;
-		}
-		
-		//	play a nosie!
-		AudioManager.PlaySound( AnimalSelectedSoundFilename );
-	}
-	
-	Update( FrameDuration );
-
-	//	lerp camera to pos
-	let TargetCameraPos = GetActorWorldPos(Acid.SelectedActor);
-	//	apply offset
-	const TargetOffset = [ Params.ShowAnimal_CameraOffsetX, Params.ShowAnimal_CameraOffsetY, Params.ShowAnimal_CameraOffsetZ ];
-	TargetCameraPos = Math.Add3( TargetCameraPos, TargetOffset );
-	//	move camera
-	Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpInSpeed );
-	
-	
-	
-	if ( StateTime > Params.ShowAnimal_ExplodeSecs )
-	{
-		if ( !Acid.SelectedActor.UpdatePhysics )
-		{
-			Acid.SelectedActor.UpdatePhysics = true;
-			AudioManager.PlaySound( AnimalDissolveSoundFilename );
-		}
-	}
-	
-	//	never exit
-	if ( AnimalTest )
-		return;
-	
-	let Finished = false;
-	if ( StateTime > Params.ShowAnimal_Duration )
-		Finished = true;
-
-	if ( Acid.SkipSelectedAnimal )
-		Finished = true;
-	
-	if ( !Finished )
-		return;
-	
-	//	hide hud
-	Hud.Animal_Card.SetVisible(false);
-	
-	return Acid.State_Fly;
-}
-
-
-
-function Update_Intro(FirstUpdate,FrameDuration,StateTime)
+function Update_Physics(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		//	init very first camera pos
-		if ( !Acid.CameraPosition )
-		{
-			Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
-		}
 	}
-	
-	Update( FrameDuration );
-	UpdateYearTime( FrameDuration );
 
-	//	move camera
-	{
-		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
-		let TargetCameraPos = TimelineCameraPos;
-		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
-	}
+	Update( FrameDuration );
 	
 	UpdateFog(FrameDuration);
 	
-	//	fly until we hit big bang
-	if ( Params.TimelineYear >= TimelineBigBangYear )
-		return Acid.State_BigBang;
-	
-	//	stay flying
-	return null;
+	if ( StateTime > 5 )
+		return 'Init';
 }
 
-function UpdateYearTime(FrameDuration)
+function UpdateAudio()
 {
-	const YearsPerFrame = FrameDuration * Params.YearsPerSecond;
-	Params.TimelineYear += YearsPerFrame;
-	if ( ParamsWindow )
-		ParamsWindow.OnParamChanged('TimelineYear');
-}
-
-function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
-{
-	if ( FirstUpdate )
-	{
-		//	explode all bigbang nodes
-		function IsBigBangActor(Actor)
-		{
-			return Actor.Name.startsWith( BigBangAnimalPrefix );
-		}
-		const BigBangActors = GetActorScene( IsBigBangActor );
-		function Explode(Actor)
-		{
-			Actor.UpdatePhysics = true;
-			Actor.AnimalHasBeenExploded = true;
-		}
-		BigBangActors.forEach( Explode );
-		
-		//	play a big bang sound
-		AudioManager.PlaySound( ExplosionSoundFilename );
-	}
-	
-	UpdateFog( FrameDuration );
-	Update( FrameDuration );
-	UpdateYearTime( FrameDuration );
-
-	
-	if ( StateTime < BigBangDuration )
-		return null;
-	
-	return Acid.State_Fly;
-}
-
-
-function Update_Outro(FirstUpdate,FrameDuration,StateTime)
-{
-	if ( FirstUpdate )
-	{
-		
-	}
-	
-	Update( FrameDuration );
-	
-	//	move time along
-	UpdateYearTime( FrameDuration );
-	
-	//	move camera
-	{
-		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
-		let TargetCameraPos = TimelineCameraPos;
-		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
-	}
-	
-	Acid.SelectedActor = null;
-	
-	UpdateFog(FrameDuration);
-	
-	//	fly until we reach end of timeline
-	if ( Params.TimelineYear >= TimelineSolutionYear )
-		return Acid.State_Solution;
-	
-	//	stay flying
-	return null;
-}
-
-function Update_Solution(FirstUpdate,FrameDuration,StateTime)
-{
-	if ( FirstUpdate )
-	{
-		const SolutionHud = new Pop.Hud.Label('Solution');
-		SolutionHud.SetVisible(true);
-	}
-
-	Update(FrameDuration);
-}
-
-function Update_Fly(FirstUpdate,FrameDuration,StateTime)
-{
-	if ( FirstUpdate )
-	{
-		//	init very first camera pos
-		if ( !Acid.CameraPosition )
-		{
-			Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
-		}
-	}
-
-	Update( FrameDuration );
-	
-	//	move time along
-	if ( Acid.UserSetYear !== null )
-	{
-		//	pop user's year
-		Params.TimelineYear = Acid.UserSetYear;
-		Acid.UserSetYear = null;
-		if ( ParamsWindow )
-			ParamsWindow.OnParamChanged('TimelineYear');
-	}
-	else
-	{
-		UpdateYearTime( FrameDuration );
-	}
-
-	//	move camera
-	{
-		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
-		let TargetCameraPos = TimelineCameraPos;
-		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
-	}
-	
-	//	check for animal selection
-	function CompareNearest(IntersectionA,IntersectionB)
-	{
-		const za = IntersectionA.Position[2];
-		const zb = IntersectionB.Position[2];
-		if ( za < zb )	return -1;
-		if ( za > zb )	return 1;
-		return 0;
-	}
-
-	function GetActorFromUv(uv)
-	{
-		if ( !LastMouseRayUv )
-			return null;
-		
-		const IntersectedActors = GetActorIntersections(uv);
-		if ( IntersectedActors.length == 0 )
-			return null;
-		//	sort by nearest!
-		IntersectedActors.sort( CompareNearest );
-		let ActorSelectedActor = IntersectedActors[0].Actor;
-		return ActorSelectedActor;
-	}
-	
-	//	update highlight
-	let HighlightedActor = GetActorFromUv( LastMouseRayUv );
-	let HighlightedActorClicked = false;
-	if ( LastMouseClicks.length > 0 )
-	{
-		let LastClickUv =  LastMouseClicks[LastMouseClicks.length-1];
-		LastMouseClicks.length = 0;
-		let LastClickActor = GetActorFromUv( LastClickUv );
-		if ( LastClickActor )
-		{
-			HighlightedActor = LastClickActor;
-			HighlightedActorClicked = true;
-		}
-	}
-
-	Acid.SelectedActor = HighlightedActor;
-	
-	UpdateFog(FrameDuration);
-	
-	
-	if ( HighlightedActorClicked )
-	{
-		return Acid.State_ShowAnimal;
-	}
-	
-	//	fly until we reach end of timeline
-	if ( Params.TimelineYear >= TimelineMaxInteractiveYear )
-		return Acid.State_Outro;
-	
-	//	stay flying
-	return null;
-}
-
-function Update(FrameDurationSecs)
-{
-	if ( AppTime === null )
-		Init();
-	
-	//	gr: continue physics even if paused
-	//AppTime += FrameDurationSecs;
-	AppTime += 1/60;
-
-	const Time = Params.TimelineYear;
-	
 	//	update audio
 	const CurrentMusic = Timeline.GetUniform( Time, 'Music' );
 	AudioManager.SetMusic( Params.EnableMusic ? CurrentMusic : null );
 	
 	const CurrentMusic2 = Timeline.GetUniform( Time, 'Music2' );
 	AudioManager.SetMusic2( Params.EnableMusic ? CurrentMusic2 : null );
-
+	
 	if ( EnableVoiceOver )
 	{
 		const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
 		AudioManager.PlayVoice( CurrentVoice );
 	}
 	AudioManager.Update( FrameDurationSecs );
+}
 
-	//	update some stuff from timeline
-	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
-	if ( ParamsWindow )
-		ParamsWindow.OnParamChanged('FogColour');
+function UpdateFog(FrameDurationSecs)
+{
 	
+}
+
+function UpdateHud()
+{
 	//	update hud
 	Hud.YearLabel.SetValue( Math.floor(Params.TimelineYear) );
 	Hud.YearSlider.SetValue( Params.TimelineYear );
@@ -1792,7 +1432,7 @@ function Update(FrameDurationSecs)
 	Hud.VoiceLabel.SetValue( VoiceDebug );
 	Hud.SubtitleLabel.SetValue( Subtitle );
 	Hud.SubtitleLabel.SetVisible( Subtitle.length > 0 );
-
+	
 	const DecimalPlaces = 2;
 	const Stats_Temp = Timeline.GetUniform( Time, 'Stats_Temp' ).toFixed(DecimalPlaces);
 	const Stats_Co2 = Timeline.GetUniform( Time, 'Stats_Co2' ).toFixed(DecimalPlaces);
@@ -1828,14 +1468,14 @@ function Update(FrameDurationSecs)
 	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible );
 	Hud.Stats.SetVisible( Stats_Visible );
 	Hud.Timeline.SetVisible( Timeline_Visible );
-
+	
 	//	update colours
 	if ( !Params.CustomiseWaterColours )
 	{
 		const UpdateReflection = true;	//	gr: thought this might be a hit updating the dom, but it's not
 		const DebrisColours = Timeline.GetUniform( Time, 'DebrisColours' );
 		const OceanColours = Timeline.GetUniform( Time, 'OceanColours' );
-
+		
 		function CopyValue(Value,Index,NamePrefix)
 		{
 			let Name = NamePrefix + Index;
@@ -1859,6 +1499,27 @@ function Update(FrameDurationSecs)
 		ParamsWindow.OnParamChanged('YearsPerSecond');
 	}
 	
+}
+
+function Update(FrameDurationSecs)
+{
+	if ( AppTime === null )
+		Init();
+	
+	//	gr: continue physics even if paused
+	//AppTime += FrameDurationSecs;
+	AppTime += 1/60;
+
+	const Time = Params.TimelineYear;
+
+	//UpdateAudio();
+	//UpdateHud();
+/*
+	//	update some stuff from timeline
+	Params.FogColour = Timeline.GetUniform( Time, 'FogColour' );
+	if ( ParamsWindow )
+		ParamsWindow.OnParamChanged('FogColour');
+	*/
 	UpdateSceneVisibility(Time);
 }
 
@@ -1922,11 +1583,21 @@ function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
 	RenderTarget.RenderToRenderTarget( Texture, RenderNoise );
 }
 
+function GetFogParams()
+{
+	let FogParams = {};
+	FogParams.WorldPosition = GetRenderCamera().Position;
+	FogParams.MinDistance = Params.FogMinDistance;
+	FogParams.MaxDistance = Params.FogMaxDistance;
+	return FogParams;
+}
+
+
 function Render(RenderTarget)
 {
 	//	update app logic
 	let DurationSecs = Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
-	
+
 	//	stop div by zero
 	DurationSecs = Math.max( DurationSecs, 0.001 );
 	
@@ -1981,7 +1652,7 @@ function Render(RenderTarget)
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 	
-	const FogParams = Acid.GetFogParams();
+	const FogParams = GetFogParams();
 	
 	
 	let RenderSceneActor = function(Actor,ActorIndex)
@@ -2010,13 +1681,13 @@ function Render(RenderTarget)
 			Object.keys( Actor.Uniforms ).forEach( SetUniform );
 		}
 		
-		try
+		//try
 		{
 			Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
 		}
-		catch(e)
+		//catch(e)
 		{
-			Pop.Debug("Error rendering actor", Actor.Name,e);
+		//	Pop.Debug("Error rendering actor", Actor.Name,e);
 		}
 	}
 	
@@ -2051,15 +1722,21 @@ function Render(RenderTarget)
 
 	
 	//	debug stats
-	
-	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
 	RenderFrameCounter.Add();
 
-	const Stats = "Batches: " + Pop.Opengl.BatchesDrawn + " Triangles: " + Pop.Opengl.TrianglesDrawn;
-	Hud.Debug_RenderStats.SetValue(Stats);
+	try
+	{
+		Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
+		const Stats = "Batches: " + Pop.Opengl.BatchesDrawn + " Triangles: " + Pop.Opengl.TrianglesDrawn;
+		Hud.Debug_RenderStats.SetValue(Stats);
+	}
+	catch(e)
+	{
+		
+	};
 	Pop.Opengl.BatchesDrawn = 0;
 	Pop.Opengl.TrianglesDrawn = 0;
-	
+
 }
 
 
@@ -2092,9 +1769,9 @@ function SwitchToDebugCamera(ForceAutoGrab)
 }
 
 
-const CameraScene = LoadCameraScene('CameraSpline.dae.json');
+let CameraScene = LoadCameraScene();
 
-const Timeline = LoadTimeline('Timeline.json');
+const Timeline = new TTimeline( [] );
 
 
 
