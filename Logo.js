@@ -6,7 +6,7 @@ Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('AssetImport.js');
 Pop.Include('Animals.js');
 
-
+const EnableLogoParams = false;
 const EnableInteractiveLogo = Pop.GetExeArguments().includes('Logo');
 
 const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
@@ -70,7 +70,7 @@ function TLogoState()
 	this.Params.SampleWeightSigma = 4;
 	this.Params.DebugPhysicsTextures = false;
 	this.Params.EnablePhysicsIteration = true;
-	if ( IsDebugEnabled() )
+	if ( EnableLogoParams && IsDebugEnabled() )
 	{
 		this.LogoParamsWindow = new CreateParamsWindow( this.Params, this.OnParamsChanged.bind(this), ParamsWindowRect );
 		this.LogoParamsWindow.AddParam('SdfMin',0,1);
