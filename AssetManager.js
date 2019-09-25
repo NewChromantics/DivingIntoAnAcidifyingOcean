@@ -39,6 +39,7 @@ Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPorts[0])
 			this.Socket.Send( Peer, MessageJson );
 		}
 		const Peers = this.Socket.GetPeers();
+		Pop.Debug("Notifying peers of asset change",Peers,MessageJson);
 		Peers.forEach( Send.bind(this) );
 	}
 
@@ -153,12 +154,71 @@ catch(e)
 	AssetClient = new Pop.AssetClient('localhost',Pop.AssetSync.DefaultPorts);
 }
 
+
+const FileMonitors = {};
+
+function MonitorAssetFile(Filename)
+{
+	//	not supported
+	if ( !Pop.FileMonitor )
+	{
+		Pop.Debug("Pop.FileMonitor not supported");
+		return;
+	}
+	
+	//	todo: should each watch be a promise and we just recreate it
+	//		when we've handled a change?
+	//	already have a watch
+	if ( FileMonitors.hasOwnProperty(Filename) )
+	{
+		Pop.Debug("Already watching",Filename);
+		return;
+	}
+	
+	//	create a new one
+	const Monitor = new Pop.FileMonitor( Filename );
+	Monitor.OnChanged = function()	{	InvalidateAsset(Filename);	};
+	FileMonitors[Filename] = Monitor;
+	Pop.Debug("Now monitoring",Filename);
+}
+
+Pop.AssetManager = function()
+{
+	this.AssetChangedPromises = {};
+	
+	//	re-work this so it's a general async load
+	this.WaitForAssetChange = async function(Filename)
+	{
+		if ( !this.AssetChangedPromises.hasOwnProperty(Filename) )
+			this.AssetChangedPromises[Filename] = new Pop.PromiseQueue();
+		const Queue = this.AssetChangedPromises[Filename];
+		return Queue.Allocate();
+	}
+	
+	this.OnAssetChanged = function(Filename)
+	{
+		//	trigger promise queues
+		//	no queue
+		if ( !this.AssetChangedPromises.hasOwnProperty(Filename) )
+			return;
+		const Queue = this.AssetChangedPromises[Filename];
+		Queue.Resolve();
+	}
+}
+
 function OnAssetChanged(Filename)
 {
+	//	relay to clients if an asset changes
 	if ( AssetServer )
 	{
 		AssetServer.OnAssetChanged( Filename );
 	}
+	
+	//	watch for file changes
+	MonitorAssetFile( Filename );
+	
+	//	external watchers
+	AssetManager.OnAssetChanged( Filename );
 }
 
 
@@ -323,19 +383,41 @@ function CreateCubeGeometry(RenderTarget,Min=-1,Max=1)
 
 
 
-var Assets = [];
-var AssetFetchFunctions = [];
+var Assets = {};
+var AssetFetchFunctions = {};
+var AssetManager = new Pop.AssetManager();
+
 AssetFetchFunctions['Cube'] = CreateCubeGeometry;
 AssetFetchFunctions['Quad'] = GetQuadGeometry;
 AssetFetchFunctions['SmallCube'] = function(rt)	{	return CreateCubeGeometry(rt,-0.1,0.1);	};
 AssetFetchFunctions['Cube01'] = function(rt)	{	return CreateCubeGeometry(rt,0,1);	};
 
 
+function InvalidateAsset(Filename)
+{
+	Pop.Debug("InvalidateAsset",Filename);
+	function InvalidateAssetInContext(Context)
+	{
+		const ContextKey = GetUniqueHash( Context );
+		const ContextAssets = Assets[ContextKey];
+		if ( !ContextAssets.hasOwnProperty(Filename) )
+		{
+			Pop.Debug("Context",Context," doesnt have asset for ",Filename,Object.keys(ContextAssets));
+			return;
+		}
+		//	delete existing asset
+		delete ContextAssets[Filename];
+		Pop.Debug("Invalidated ",Filename,"on",Context);
+	}
+	const AssetContexts = Object.keys(Assets);
+	AssetContexts.forEach( InvalidateAssetInContext );
+}
+
 function GetAsset(Name,RenderContext)
 {
 	let ContextKey = GetUniqueHash( RenderContext );
 	if ( !Assets.hasOwnProperty(ContextKey) )
-		Assets[ContextKey] = [];
+		Assets[ContextKey] = {};
 	
 	let ContextAssets = Assets[ContextKey];
 	
@@ -345,6 +427,7 @@ function GetAsset(Name,RenderContext)
 	if ( !AssetFetchFunctions.hasOwnProperty(Name) )
 		throw "No known asset named "+ Name;
 	
+	Pop.Debug("Generating asset",Name);
 	ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
 	OnAssetChanged( Name );
 	return ContextAssets[Name];
