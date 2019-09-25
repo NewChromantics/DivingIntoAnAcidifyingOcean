@@ -559,8 +559,9 @@ Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 25;
 Params.DrawBoundingBoxes = true;
 Params.DrawBoundingBoxesFilled = false;
-Params.DrawHighlightedActors = false;
-Params.ScrollFlySpeed = 50;
+Params.DrawHighlightedActors = true;
+Params.DebugIntersectionSize = 0.08;
+Params.ScrollFlySpeed = 2;
 
 Params.BigBang_Damping = 0.01;
 Params.BigBang_NoiseScale = 0.01;
@@ -1278,7 +1279,7 @@ function GetRenderScene(Time,VisibleFilter)
 		PushActorBoundingBox( Intersection.Actor, true );
 		//Pop.Debug("Selected",Intersection.Actor.Name);
 		let Pos = Math.CreateTranslationMatrix( ...Intersection.Position );
-		let TestSize = Params.TestRaySize / 2;
+		let TestSize = Params.DebugIntersectionSize / 2;
 		let Min = [-TestSize,-TestSize,-TestSize];
 		let Max = [TestSize,TestSize,TestSize];
 		PushActorBox( Pos, Min, Max, true );
@@ -1376,7 +1377,7 @@ function Update_Init(FirstUpdate,FrameDuration,StateTime)
 	function InitActor(Actor)
 	{
 		Actor.ResetPhysicsTextures();
-		Actor.UpdatePhysics = true;
+		//Actor.UpdatePhysics = true;
 	}
 	Scene.forEach(InitActor);
 	return 'Physics';
