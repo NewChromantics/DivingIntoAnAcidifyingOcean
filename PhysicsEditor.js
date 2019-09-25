@@ -1296,6 +1296,9 @@ function GetAudioGetCrossFadeDuration()
 	return Params.AudioCrossFadeDurationSecs;
 }
 
+
+var Hud = {};
+
 //	need a better place for this, app state!
 function Init()
 {

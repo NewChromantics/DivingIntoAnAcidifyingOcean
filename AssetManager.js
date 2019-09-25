@@ -4,6 +4,136 @@ Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 
 
+//	some globals
+Pop.AssetSync = {};
+Pop.AssetSync.DefaultPort = 9000;
+Pop.AssetSync.Command = {};
+Pop.AssetSync.Command.OnAssetChanged = 'OnAssetChanged';
+Pop.AssetSync.Command.OnAssetContent = 'OnAssetContent';
+
+
+Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPort)
+{
+	//	gr: replace with async system!
+	this.Socket = null;
+
+	this.OnMessage = function(Message)
+	{
+		if ( typeof Message == 'string' )
+			Pop.Debug("Asset server got message", Message );
+		else
+			Pop.Debug("Asset server got binary message", Message, "x" + Message.length +"bytes" );
+	}
+	
+	//	notify clients that an asset has changed
+	this.OnAssetChanged = function(Filename)
+	{
+		const Message = {};
+		Message.Type = Pop.AssetSync.Command.OnAssetChanged;
+		Message.Filenames = [Filename];
+		const MessageJson = JSON.stringify(Message);
+
+		//	send to all peers
+		function Send(Peer)
+		{
+			this.Socket.Send( Peer, MessageJson );
+		}
+		const Peers = this.Socket.GetPeers();
+		Peers.forEach( Send.bind(this) );
+	}
+
+	this.Socket = new Pop.Websocket.Server(Port);
+	Pop.Debug("Opened asset server",this.Socket.GetAddress());
+	this.Socket.OnMessage = this.OnMessage.bind(this);
+}
+
+Pop.AssetClient = function(ServerAddress='localhost:'+Pop.AssetSync.DefaultPort)
+{
+	//	gr: I made this async for bluetooth, so we should do the same
+	this.Loop = async function()
+	{
+		while ( true )
+		{
+			try
+			{
+				const Socket = await Pop.Websocket.Connect(ServerAddress);
+				await this.SocketLoop(Socket);
+			}
+			catch (e)
+			{
+				Pop.Debug("Socket error",e,"Waiting 5 secs to reconnect");
+				await Pop.Yield(5000);
+			}
+		}
+	}
+	
+	this.SocketLoop = async function(Socket)
+	{
+		while ( true )
+		{
+			//	wait for command
+			const NewCommandJson = await Socket.WaitForMessage();
+			Pop.Debug("Got websocket command",NewCommandJson);
+			
+			//	first message should be JSON
+			//	this should either be "something's changed", or "there's an asset comming"
+			const NewCommand = JSON.parse( NewCommandJson );
+			
+			
+			//	mark some assets as dirty and fetch if they've been loaded
+			//	otherwise change file-fetcher to come from here
+			if ( NewCommand.Command == Pop.AssetSync.OnAssetChanged )
+			{
+				Pop.Debug("Asset changed");
+				continue;
+			}
+			
+			//	new asset data incoming
+			if ( NewCommand.Command == Pop.AssetSync.OnAssetContent )
+			{
+				const NewAssetContet = await Socket.WaitForMessage();
+				//	replace filesystem/cache content with this message's contentt
+				continue;
+			}
+			
+			throw "Unhandled asset system command; " + NewCommand.Command;
+		}
+	}
+	
+	this.OnError = function(Error)
+	{
+		Pop.Debug("Pop.AssetClient error",Error);
+	}
+	
+	//	should never really end
+	this.Loop().then(Pop.Debug).catch(this.OnError.bind(this));
+}
+
+//	todo: AssetWatch which has a platform.filewatch to reload assets when they change
+//			that then notifies Pop.AssetServer to tell clients they can get a new asset
+//			they can fetch assets if any are in use
+var AssetServer = null;
+var AssetClient = null;
+
+try
+{
+	AssetServer = new Pop.AssetServer();
+}
+catch(e)
+{
+	Pop.Debug("Failed to create asset server",e,"Creating client...");
+	AssetClient = new Pop.AssetClient();
+}
+
+function OnAssetChanged(Filename)
+{
+	if ( AssetServer )
+	{
+		AssetServer.OnAssetChanged( Filename );
+	}
+}
+
+
 
 //	gr: should change this to specific noise algos
 //	this creates with normalised xyz around 0.5,0.5,0.5
@@ -188,6 +318,7 @@ function GetAsset(Name,RenderContext)
 		throw "No known asset named "+ Name;
 	
 	ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
+	OnAssetChanged( Name );
 	return ContextAssets[Name];
 }
 
