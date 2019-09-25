@@ -765,8 +765,30 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.Geometry = 'AutoTriangleMesh';
 	this.VertShader = Meta.VertShader;
 	this.FragShader = Meta.FragShader;
-	
+	this.UpdateVelocityShader = Meta.VelocityShader;
+	this.UpdatePositionShader = Meta.PositionShader;
+	this.UpdatePhysics = false;
+
+	if ( Meta.FitToBoundingBox )
 	{
+		//	box is local space, but world size
+		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
+		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
+		//	points are 0-1 so we need to move our offset (and bounds)
+		let BoxOffset = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
+		Position = Math.Subtract3( Position, BoxOffset );
+		let Scale = BoxScale;
+		this.LocalToWorldTransform = Math.CreateTranslationScaleMatrix( Position, Scale );
+		//	bounds match mesh!
+		this.BoundingBox.Min = [0,0,0];
+		this.BoundingBox.Max = [1,1,1];
+		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
+	}
+	
+	this.LoadAssets = function()
+	{
+		Pop.Debug("Loading assets for ",Filename,"-----------------------------_");
+		
 		//	handle array for animation
 		if ( Array.isArray(Filename) )
 		{
@@ -788,34 +810,21 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
 			this.TextureBuffers = GetAsset( Filename, FakeRenderTarget );
 		}
+		
+		if ( !Meta.FitToBoundingBox )
+		{
+			//	update bounding box to use geo
+			if ( this.TextureBuffers.BoundingBox )
+				this.BoundingBox = this.TextureBuffers.BoundingBox;
+		}
+		
+		//	invalidate caches
+		this.PositionTexture = null;
+
+		//	reload if changes
+		AssetManager.WaitForAssetChange(Filename).then( this.LoadAssets );
 	}
-	
-	this.UpdateVelocityShader = Meta.VelocityShader;
-	this.UpdatePositionShader = Meta.PositionShader;
-	this.UpdatePhysics = false;
-	
-	if ( Meta.FitToBoundingBox )
-	{
-		//	box is local space, but world size
-		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
-		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
-		//	points are 0-1 so we need to move our offset (and bounds)
-		let BoxOffset = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
-		Position = Math.Subtract3( Position, BoxOffset );
-		let Scale = BoxScale;
-		this.LocalToWorldTransform = Math.CreateTranslationScaleMatrix( Position, Scale );
-		//	bounds match mesh!
-		this.BoundingBox.Min = [0,0,0];
-		this.BoundingBox.Max = [1,1,1];
-		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
-	}
-	else
-	{
-		//	update bounding box to use geo
-		if ( this.TextureBuffers.BoundingBox )
-			this.BoundingBox = this.TextureBuffers.BoundingBox;
-	}
-	
+	this.LoadAssets();
 	
 	
 	this.GetPositionTexture = function(Time)
@@ -844,17 +853,13 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			throw "Not ready to setup physics yet, no texture buffers";
 		
 		//	make copy of original reference!
-		Pop.Debug("Copy original position texture");
 		this.PositionTexture = new Pop.Image();
 		this.PositionTexture.Copy( this.TextureBuffers.PositionTexture );
-		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
 		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
 		this.VelocityTexture = new Pop.Image(Size,'Float3');
 		this.ScratchTexture = new Pop.Image(Size,'Float3');
-		//this.PositionOrigTexture = new Pop.Image();
 		this.PositionOrigTexture = this.TextureBuffers.PositionTexture;
-		//this.PositionOrigTexture.Copy( this.PositionTexture );
 	}
 	
 	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
