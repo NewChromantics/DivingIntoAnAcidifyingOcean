@@ -9,6 +9,7 @@ Pop.AssetSync = {};
 Pop.AssetSync.DefaultPorts = [9000,9001,9002,9003,9004];
 Pop.AssetSync.Command = {};
 Pop.AssetSync.Command.OnAssetChanged = 'OnAssetChanged';
+Pop.AssetSync.Command.GetAssetContent = 'GetAssetContent';
 Pop.AssetSync.Command.OnAssetContent = 'OnAssetContent';
 
 
@@ -17,19 +18,48 @@ Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPorts[0])
 	//	gr: replace with async system!
 	this.Socket = null;
 
-	this.OnMessage = function(Message)
+	this.OnMessage = function(Message,Peer)
 	{
-		if ( typeof Message == 'string' )
-			Pop.Debug("Asset server got message", Message );
-		else
-			Pop.Debug("Asset server got binary message", Message, "x" + Message.length +"bytes" );
+		if ( typeof Message != 'string' )
+		{
+			Pop.Debug("unhandled Asset server binary message", Message, "x" + Message.length +"bytes" );
+			return;
+		}
+		
+		//	assume command
+		const Command = JSON.parse(Message);
+		if ( !Command.Filename || !Command.Command )
+			throw "Asset server got invalid command;"+Message;
+		
+		if ( Command.Command == Pop.AssetSync.Command.GetAssetContent )
+		{
+			this.SendAssetToPeer( Command.Filename, Peer );
+			return;
+		}
+		
+		throw "Unhandled Asset server message " + Message;
+	}
+	
+	this.SendAssetToPeer = function(Filename,Peer)
+	{
+		//	is this file text or binary... maybe need to deal with that other side?
+		const Contents = Pop.LoadFileAsArrayBuffer( Filename );
+		const Command = {};
+		Command.Command = Pop.AssetSync.Command.OnAssetContent;
+		Command.Filename = Filename;
+		const CommandJson = JSON.stringify( Command );
+		
+		//	need to send messages explicitly one after another...
+		//	adapt api? (send array) or make a queue?
+		this.Socket.Send( Peer, CommandJson );
+		this.Socket.Send( Peer, Contents );
 	}
 	
 	//	notify clients that an asset has changed
 	this.OnAssetChanged = function(Filename)
 	{
 		const Message = {};
-		Message.Type = Pop.AssetSync.Command.OnAssetChanged;
+		Message.Command = Pop.AssetSync.Command.OnAssetChanged;
 		Message.Filenames = [Filename];
 		const MessageJson = JSON.stringify(Message);
 
@@ -88,17 +118,22 @@ Pop.AssetClient = function(Hostname='localhost',Ports=Pop.AssetSync.DefaultPorts
 			
 			//	mark some assets as dirty and fetch if they've been loaded
 			//	otherwise change file-fetcher to come from here
-			if ( NewCommand.Command == Pop.AssetSync.OnAssetChanged )
+			if ( NewCommand.Command == Pop.AssetSync.Command.OnAssetChanged )
 			{
-				Pop.Debug("Asset changed");
+				function Load(Filename)
+				{
+					this.OnRemoteAssetChanged( Filename, Socket );
+				}
+				NewCommand.Filenames.forEach( Load.bind(this) );
 				continue;
 			}
 			
 			//	new asset data incoming
-			if ( NewCommand.Command == Pop.AssetSync.OnAssetContent )
+			if ( NewCommand.Command == Pop.AssetSync.Command.OnAssetContent )
 			{
-				const NewAssetContet = await Socket.WaitForMessage();
-				//	replace filesystem/cache content with this message's contentt
+				const NewAssetContent = await Socket.WaitForMessage();
+				//	replace filesystem/cache content with this message's content
+				this.OnRemoteAssetContent( NewCommand.Filename, NewAssetContent );
 				continue;
 			}
 			
@@ -109,6 +144,34 @@ Pop.AssetClient = function(Hostname='localhost',Ports=Pop.AssetSync.DefaultPorts
 	this.OnError = function(Error)
 	{
 		Pop.Debug("Pop.AssetClient error",Error);
+	}
+	
+	this.OnRemoteAssetChanged = function(Filename,Socket)
+	{
+		//	current system:
+		//	request new file, when it comes, update the file system, THEN invalidate
+		const Command = {};
+		Command.Filename = Filename;
+		Command.Command = Pop.AssetSync.Command.GetAssetContent;
+		const CommandJson = JSON.stringify( Command );
+
+		Pop.Debug("Requesting new asset contents",CommandJson);
+		Socket.Send( CommandJson );
+	}
+	
+	this.OnRemoteAssetContent = function(Filename,Contents)
+	{
+		Pop.Debug("Got new asset content",Filename,Contents);
+		//	current system
+		//	request new file, when it comes, update the file system cache, THEN invalidate
+		//	this only applies to web API... need a better intermediate layer for others
+		Pop.Debug("Updating web file cache");
+		if ( !Pop._AssetCache )
+			throw "No Pop._AssetCache currently this is web-only";
+		Pop._AssetCache[Filename] = Contents;
+		
+		//	now invalidate local asset cache
+		InvalidateAsset(Filename);
 	}
 	
 	//	should never really end
