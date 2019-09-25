@@ -6,13 +6,13 @@ Pop.Include('PopEngineCommon/PopMath.js');
 
 //	some globals
 Pop.AssetSync = {};
-Pop.AssetSync.DefaultPort = 9000;
+Pop.AssetSync.DefaultPorts = [9000,9001,9002,9003,9004];
 Pop.AssetSync.Command = {};
 Pop.AssetSync.Command.OnAssetChanged = 'OnAssetChanged';
 Pop.AssetSync.Command.OnAssetContent = 'OnAssetContent';
 
 
-Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPort)
+Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPorts[0])
 {
 	//	gr: replace with async system!
 	this.Socket = null;
@@ -47,22 +47,27 @@ Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPort)
 	this.Socket.OnMessage = this.OnMessage.bind(this);
 }
 
-Pop.AssetClient = function(ServerAddress='localhost:'+Pop.AssetSync.DefaultPort)
+Pop.AssetClient = function(Hostname='localhost',Ports=Pop.AssetSync.DefaultPorts[0])
 {
 	//	gr: I made this async for bluetooth, so we should do the same
 	this.Loop = async function()
 	{
+		let PortIndex = 0;
 		while ( true )
 		{
+			const Port = Ports[PortIndex%Ports.length];
+			const ServerAddress = Hostname + ':' + Port;
 			try
 			{
 				const Socket = await Pop.Websocket.Connect(ServerAddress);
+				Pop.Debug("Connected to asset server",ServerAddress);
 				await this.SocketLoop(Socket);
 			}
 			catch (e)
 			{
-				Pop.Debug("Socket error",e,"Waiting 5 secs to reconnect");
-				await Pop.Yield(5000);
+				Pop.Debug("Socket error connecting to " + ServerAddress,e,"Waiting 1 secs to reconnect");
+				await Pop.Yield(1000);
+				PortIndex++;
 			}
 		}
 	}
@@ -109,6 +114,29 @@ Pop.AssetClient = function(ServerAddress='localhost:'+Pop.AssetSync.DefaultPort)
 	this.Loop().then(Pop.Debug).catch(this.OnError.bind(this));
 }
 
+
+//	try multiple ports
+function CreateAssetServer()
+{
+	let Error = "Failed to create asset server";
+	const Ports = Pop.AssetSync.DefaultPorts;
+	for ( let i=0;	i<Ports.length;	i++ )
+	{
+		const Port = Ports[i];
+		try
+		{
+			const Server = new Pop.AssetServer(Port);
+			return Server;
+		}
+		catch(e)
+		{
+			Error = e;
+		}
+	}
+	
+	throw Error;
+}
+
 //	todo: AssetWatch which has a platform.filewatch to reload assets when they change
 //			that then notifies Pop.AssetServer to tell clients they can get a new asset
 //			they can fetch assets if any are in use
@@ -117,12 +145,12 @@ var AssetClient = null;
 
 try
 {
-	AssetServer = new Pop.AssetServer();
+	AssetServer = CreateAssetServer();
 }
 catch(e)
 {
 	Pop.Debug("Failed to create asset server",e,"Creating client...");
-	AssetClient = new Pop.AssetClient();
+	AssetClient = new Pop.AssetClient('localhost',Pop.AssetSync.DefaultPorts);
 }
 
 function OnAssetChanged(Filename)
