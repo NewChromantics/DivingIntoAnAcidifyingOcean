@@ -249,14 +249,20 @@ function TLogoState()
 		
 		if ( !this.StartButton )
 		{
-			let OnClicked = function()
+			let OnClickedStart = function()
 			{
+				Params.XrMode = false;
+				this.StartButtonPressed = true;
+			}
+			let OnClickedStartXr = function()
+			{
+				Params.XrMode = true;
 				this.StartButtonPressed = true;
 			}
 			this.StartButton = new Pop.Hud.Button('Hint_Start');
-			this.StartButton.OnClicked = OnClicked.bind(this);
 			this.StartXrButton = new Pop.Hud.Button('Hint_StartXr');
-			this.StartXrButton.OnClicked = OnClicked.bind(this);
+			this.StartButton.OnClicked = OnClickedStart.bind(this);
+			this.StartXrButton.OnClicked = OnClickedStartXr.bind(this);
 		}
 		
 		//	show button when preloads done

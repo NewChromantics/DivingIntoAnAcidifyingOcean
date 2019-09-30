@@ -1376,6 +1376,78 @@ function Init()
 	{
 		Hud.Debug_FrameRate.SetValue( CountPerSec.toFixed(2) + " fps" );
 	}
+	
+	
+	//	setup window (we do it here so we know update has happened first)
+	Window.OnRender = Render;
+	
+	Window.OnMouseDown = function(x,y,Button)
+	{
+		if ( Button == 0 )
+		{
+			QueueSceneClick( x, y );
+		}
+		
+		Window.OnMouseMove( x, y, Button, true );
+	}
+	
+	Window.OnMouseMove = function(x,y,Button,FirstClick=false)
+	{
+		UpdateMouseMove( x, y );
+		
+		if ( Button == 0 )
+		{
+			x *= Params.ScrollFlySpeed;
+			y *= Params.ScrollFlySpeed;
+			SwitchToDebugCamera();
+			DebugCamera.OnCameraPanLocal( x, 0, -y, FirstClick );
+		}
+		if ( Button == 2 )
+		{
+			x *= Params.ScrollFlySpeed;
+			y *= Params.ScrollFlySpeed;
+			SwitchToDebugCamera(true);
+			DebugCamera.OnCameraPanLocal( x, y, 0, FirstClick );
+		}
+		if ( Button == 1 )
+		{
+			SwitchToDebugCamera(true);
+			DebugCamera.OnCameraOrbit( x, y, 0, FirstClick );
+		}
+	}
+	
+	Window.OnMouseScroll = function(x,y,Button,Delta)
+	{
+		let Fly = Delta[1] * 10;
+		Fly *= Params.ScrollFlySpeed;
+		
+		SwitchToDebugCamera(true);
+		DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
+		DebugCamera.OnCameraPanLocal( 0, 0, Fly, false );
+	}
+	
+	async function XrLoop()
+	{
+		const Device = await Pop.Xr.CreateDevice( Window );
+		
+		//	re-use render func
+		Device.OnRender = Render;
+	}
+	
+	function OnExitXr(Error)
+	{
+		console.logError("XR exited; ",Error);
+		//	todo: handle this error/exit and put back a button to
+		//	allow player to try and enter again
+		Params.XrMode = false;
+	}
+	
+	//	init XR mode
+	if ( Params.XrMode )
+	{
+		XrLoop().then( OnExitXr ).catch( OnExitXr );
+	}
+
 }
 
 var Acid = {};
@@ -1396,7 +1468,7 @@ Acid.StateMap =
 	'Outro':		Update_Outro,
 	'Solution':		Update_Solution
 };
-Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, false );
+Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, true );
 Acid.SelectedActor = null;
 Acid.SkipSelectedAnimal = false;
 Acid.FogLerp = 0;
@@ -1895,6 +1967,21 @@ function Update(FrameDurationSecs)
 	}
 	
 	UpdateSceneVisibility(Time);
+	
+	//	reset render stats
+	let Stats = "Batches: " + Pop.Opengl.BatchesDrawn;
+	Stats += " Triangles: " + Pop.Opengl.TrianglesDrawn;
+	Stats += " Geo Binds: " + Pop.Opengl.GeometryBinds;
+	Stats += " Shader Binds: " + Pop.Opengl.ShaderBinds;
+	Hud.Debug_RenderStats.SetValue(Stats);
+	Pop.Opengl.BatchesDrawn = 0;
+	Pop.Opengl.TrianglesDrawn = 0;
+	Pop.Opengl.GeometryBinds = 0;
+	Pop.Opengl.ShaderBinds = 0;
+	
+	//
+	FirstRenderThisFrame = true;
+	RenderFrameDurationSecs = FrameDurationSecs;
 }
 
 //	set the actor visibility for this frame
@@ -1956,23 +2043,33 @@ function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
 	RenderTarget.RenderToRenderTarget( Texture, RenderNoise );
 }
 
-function Render(RenderTarget)
+var FirstRenderThisFrame = true;
+var RenderFrameDurationSecs = false;
+
+function Render(RenderTarget,RenderCamera)
 {
-	//	update app logic
-	let DurationSecs = Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
+	const IsXrRender = (RenderCamera != null);
 	
+	Pop.Debug("Render with camera",RenderCamera);
+	
+	//	if we don't have a camera from XR, use the normal system
+	if ( !RenderCamera )
+	{
+		RenderCamera = GetRenderCamera();
+		//	skip render in xr mode atm
+		if ( Params.XrMode )
+			return;
+	}
+	
+	//	update app logic
+	//let DurationSecs = Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
 	//	stop div by zero
-	DurationSecs = Math.max( DurationSecs, 0.001 );
+	//DurationSecs = Math.max( DurationSecs, 0.001 );
+	const DurationSecs = RenderFrameDurationSecs;
+	
 	
 	const Time = Params.TimelineYear;
 
-	
-	const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
-	UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceFragShader, NoiseTime );
-	
-
-	
-	const RenderCamera = GetRenderCamera();
 	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera() : RenderCamera;
 	const Viewport = RenderTarget.GetRenderTargetRect();
 	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
@@ -2002,11 +2099,24 @@ function Render(RenderTarget)
 		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 	}
 	
-	//	update physics
-	if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
+	
+	function GpuUpdate()
 	{
-		Scene.forEach( UpdateActorPhysics );
-		PhsyicsUpdateCount++;
+		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
+		UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceFragShader, NoiseTime );
+
+		//	update physics
+		if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
+		{
+			Scene.forEach( UpdateActorPhysics );
+			PhsyicsUpdateCount++;
+		}
+	}
+	
+	//	one-frame GPU updates
+	if ( FirstRenderThisFrame )
+	{
+		GpuUpdate();
 	}
 	
 	RenderTarget.ClearColour( ...Params.FogColour );
@@ -2075,7 +2185,7 @@ function Render(RenderTarget)
 	}
 	
 	const DebugTextures = [];
-	if ( Params.DebugNoiseTextures )
+	if ( Params.DebugNoiseTextures && !IsXrRender )
 	{
 		DebugTextures.push( OceanColourTexture );
 		DebugTextures.push( DebrisColourTexture );
@@ -2089,20 +2199,14 @@ function Render(RenderTarget)
 
 	
 	//	debug stats
-	
-	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
-	RenderFrameCounter.Add();
+	if ( FirstRenderThisFrame )
+	{
+		Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
+		RenderFrameCounter.Add();
 
-	let Stats = "Batches: " + Pop.Opengl.BatchesDrawn;
-	Stats += " Triangles: " + Pop.Opengl.TrianglesDrawn;
-	Stats += " Geo Binds: " + Pop.Opengl.GeometryBinds;
-	Stats += " Shader Binds: " + Pop.Opengl.ShaderBinds;
-	Hud.Debug_RenderStats.SetValue(Stats);
-	Pop.Opengl.BatchesDrawn = 0;
-	Pop.Opengl.TrianglesDrawn = 0;
-	Pop.Opengl.GeometryBinds = 0;
-	Pop.Opengl.ShaderBinds = 0;
+	}
 
+	FirstRenderThisFrame = false;
 }
 
 
@@ -2138,55 +2242,4 @@ function SwitchToDebugCamera(ForceAutoGrab)
 const CameraScene = LoadCameraScene('CameraSpline.dae.json');
 
 const Timeline = LoadTimeline('Timeline.json');
-
-
-
-//	now in bootup
-//const Window = new Pop.Opengl.Window("Tarqunder the sea");
-Window.OnRender = Render;
-
-Window.OnMouseDown = function(x,y,Button)
-{
-	if ( Button == 0 )
-	{
-		QueueSceneClick( x, y );
-	}
-
-	Window.OnMouseMove( x, y, Button, true );
-}
-
-Window.OnMouseMove = function(x,y,Button,FirstClick=false)
-{
-	UpdateMouseMove( x, y );
-
-	if ( Button == 0 )
-	{
-		x *= Params.ScrollFlySpeed;
-		y *= Params.ScrollFlySpeed;
-		SwitchToDebugCamera();
-		DebugCamera.OnCameraPanLocal( x, 0, -y, FirstClick );
-	}
-	if ( Button == 2 )
-	{
-		x *= Params.ScrollFlySpeed;
-		y *= Params.ScrollFlySpeed;
-		SwitchToDebugCamera(true);
-		DebugCamera.OnCameraPanLocal( x, y, 0, FirstClick );
-	}
-	if ( Button == 1 )
-	{
-		SwitchToDebugCamera(true);
-		DebugCamera.OnCameraOrbit( x, y, 0, FirstClick );
-	}
-}
-
-Window.OnMouseScroll = function(x,y,Button,Delta)
-{
-	let Fly = Delta[1] * 10;
-	Fly *= Params.ScrollFlySpeed;
-	
-	SwitchToDebugCamera(true);
-	DebugCamera.OnCameraPanLocal( 0, 0, 0, true );
-	DebugCamera.OnCameraPanLocal( 0, 0, Fly, false );
-}
 

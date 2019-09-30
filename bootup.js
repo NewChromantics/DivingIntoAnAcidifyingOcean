@@ -136,21 +136,17 @@ Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
 		Pop.Debug('OnStateMachineError',Error);
 	}
 
-	if ( AutoUpdate )
+	
+	if ( AutoUpdate && !Pop.Global.requestAnimationFrame )
+		AutoUpdate = 'Async';
+	
+	if ( AutoUpdate == 'Async' )
 	{
-		//	async or via animation...
-		let AysncUpdate = Pop.GetExeArguments().includes('AysncUpdate');
-		if ( !Pop.Global.requestAnimationFrame )
-			AysncUpdate = true;
-		
-		if ( AysncUpdate )
-		{
-			this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
-		}
-		else
-		{
-			this.LoopAnimation();
-		}
+		this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
+	}
+	else if ( AutoUpdate )
+	{
+		this.LoopAnimation();
 	}
 }
 
@@ -185,7 +181,7 @@ Window.OnKeyDown = OnKeyPress;
 
 const Params = {};
 Params.EnablePhysicsIteration = true;
-
+Params.XrMode = false;
 
 
 
