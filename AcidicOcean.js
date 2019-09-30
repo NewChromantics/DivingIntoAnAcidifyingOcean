@@ -64,6 +64,9 @@ SetupFileAssets();
 const FogColour = Pop.Colour.HexToRgbf(0x000000);
 const LightColour = [0.86,0.95,0.94];
 
+var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
+var OceanColourTexture = new Pop.Image();
+var DebrisColourTexture = new Pop.Image();
 
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
@@ -123,19 +126,9 @@ function GetDebrisMeta(Actor)
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 
 	Meta.TriangleScale = Params.Debris_TriangleScale;
-	Meta.Colours =
-	[
-	 Params.Debris_Colour0,
-	 Params.Debris_Colour1,
-	 Params.Debris_Colour2,
-	 Params.Debris_Colour3,
-	 Params.Debris_Colour4,
-	 Params.Debris_Colour5,
-	 Params.Debris_Colour6,
-	 Params.Debris_Colour7,
-	 Params.Debris_Colour8,
-	 Params.Debris_Colour9,
-	];
+	if ( DebrisColourTexture.Pixels )
+		Meta.OverridingColourTexture = DebrisColourTexture;
+
 	Meta.FitToBoundingBox = true;
 	return Meta;
 }
@@ -160,7 +153,7 @@ function GetAnimalMeta(Actor)
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
-	Meta.PhysicsUniforms.Noise = Noise_Turbulence;
+	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
 	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
 	
 	Meta.TriangleScale = Params.Animal_TriangleScale;
@@ -219,14 +212,8 @@ function GetOceanMeta()
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	Meta.TriangleScale = Params.Ocean_TriangleScale;
-	Meta.Colours =
-	[
-	 Params.Ocean_Colour0,
-	 Params.Ocean_Colour1,
-	 Params.Ocean_Colour2,
-	 Params.Ocean_Colour3,
-	 Params.Ocean_Colour4,
-	];
+	if ( OceanColourTexture.Pixels )
+		Meta.OverridingColourTexture = OceanColourTexture;
 	return Meta;
 }
 
@@ -588,6 +575,7 @@ Params.Debris_PhysicsDamping = 0.04;
 Params.Debris_PhysicsNoiseScale = 9.9;
 
 Params.CustomiseWaterColours = false;
+Params.UpdateColourTextureFrequencySecs = 0.3;
 Params.Debris_Colour0 = InvalidColour;
 Params.Debris_Colour1 = InvalidColour;
 Params.Debris_Colour2 = InvalidColour;
@@ -702,6 +690,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
 	ParamsWindow.AddParam('CustomiseWaterColours');
+	ParamsWindow.AddParam('UpdateColourTextureFrequencySecs',0,4);
 	
 	ParamsWindow.AddParam('Debris_Colour0','Colour');
 	ParamsWindow.AddParam('Debris_Colour1','Colour');
@@ -899,13 +888,18 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
 		const PositionTexture = this.GetPositionTexture(Time);
-		const ColourTexture = this.TextureBuffers.ColourTexture;
+		let ColourTexture = this.TextureBuffers.ColourTexture;
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.GetLocalToWorldTransform();
 		
 		const Meta = GetMeta(this);
-		const Colours = Meta.Colours;
+		if ( Meta.OverridingColourTexture )
+			ColourTexture = Meta.OverridingColourTexture;
+
+		if ( !ColourTexture )
+			ColourTexture = RandomTexture;
 		
+
 		const SetUniforms = function(Shader)
 		{
 			SetGlobalUniforms( Shader );
@@ -917,20 +911,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
 			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
 			Shader.SetUniform('TriangleScale', Meta.TriangleScale );
-			if ( ColourTexture )
-			{
-				Shader.SetUniform('ColourImage',ColourTexture);
-				Shader.SetUniform('ColourImageValid', true );
-			}
-			else
-			{
-				//	NOT setting this image was cause of crash on some intel graphics cards (macbook air 2015, intel graphics 6000)
-				Shader.SetUniform('ColourImage',RandomTexture);
-				Shader.SetUniform('ColourImageValid', false );
-			}
-		
-			Shader.SetUniform('Colours', Colours );
-			Shader.SetUniform('ColourCount', Colours.length );
+			Shader.SetUniform('ColourImage',ColourTexture);
 			Shader.SetUniform('Debug_ForceColour',Params.AnimalDebugParticleColour);
 		}
 		
@@ -1750,6 +1731,57 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	return null;
 }
 
+const LastUpdateColourTextureElapsed = {};
+function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
+{
+	if ( LastUpdateColourTextureElapsed[ColourNamePrefix] !== undefined )
+	{
+		LastUpdateColourTextureElapsed[ColourNamePrefix] += FrameDuration;
+		if ( !Params.CustomiseWaterColours )
+			if ( LastUpdateColourTextureElapsed[ColourNamePrefix] < Params.UpdateColourTextureFrequencySecs )
+				return;
+	}
+	else
+	{
+		LastUpdateColourTextureElapsed[ColourNamePrefix] = 0;
+	}
+	
+	//	get all the values
+	let Colours = [];
+	let ColourSize = 3;
+	
+	for ( let i=0;	i<20;	i++ )
+	{
+		const ParamName = ColourNamePrefix + i;
+		if ( !Params.hasOwnProperty(ParamName) )
+			break;
+		Colours.push( ...Params[ParamName] );
+		ColourSize = Params[ParamName].length;
+	}
+	//	as bytes
+	Colours = Colours.map( c => c*255 );
+	
+	
+	//	pad to pow2
+	let ColourCount = Colours.length / ColourSize;
+	let PaddedColourCount = Math.GetNextPowerOf2(ColourCount);
+	for ( let i=ColourCount;	i<PaddedColourCount;	i++ )
+	{
+		let c = (i%ColourCount)*3;
+		Colours.push( Colours[c+0] );
+		Colours.push( Colours[c+1] );
+		Colours.push( Colours[c+2] );
+	}
+	
+	Texture.SetLinearFilter(true);
+	Colours = new Uint8Array(Colours);
+	ColourCount = Colours.length / ColourSize;
+	const Height = 1;
+	Texture.WritePixels( ColourCount, Height, Colours, 'RGB' );
+}
+
+
+
 function Update(FrameDurationSecs)
 {
 	if ( AppTime === null )
@@ -1852,6 +1884,9 @@ function Update(FrameDurationSecs)
 		CopyValues( OceanColours, 'Ocean_Colour' );
 	}
 	
+	UpdateColourTexture( FrameDurationSecs, OceanColourTexture, 'Ocean_Colour' );
+	UpdateColourTexture( FrameDurationSecs, DebrisColourTexture, 'Debris_Colour' );
+
 	//	update frame rate
 	if ( !Params.CustomYearsPerSecond )
 	{
@@ -1897,7 +1932,6 @@ function UpdateSceneVisibility(Time)
 }
 
 
-var Noise_Turbulence = new Pop.Image( [512,512], 'Float4' );
 
 function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
 {
@@ -1934,7 +1968,7 @@ function Render(RenderTarget)
 
 	
 	const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
-	UpdateNoiseTexture( RenderTarget, Noise_Turbulence, Noise_TurbulenceFragShader, NoiseTime );
+	UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceFragShader, NoiseTime );
 	
 
 	
@@ -2023,6 +2057,8 @@ function Render(RenderTarget)
 	
 	function RenderTextureQuad(Texture,TextureIndex)
 	{
+		if ( !Texture.Pixels )
+			return;
 		const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
 		const Quad = GetAsset('Quad',RenderTarget);
 		
@@ -2041,8 +2077,10 @@ function Render(RenderTarget)
 	const DebugTextures = [];
 	if ( Params.DebugNoiseTextures )
 	{
+		DebugTextures.push( OceanColourTexture );
+		DebugTextures.push( DebrisColourTexture );
 		DebugTextures.push( RandomTexture );
-		DebugTextures.push( Noise_Turbulence );
+		DebugTextures.push( Noise_TurbulenceTexture );
 	}
 	
 	//	render

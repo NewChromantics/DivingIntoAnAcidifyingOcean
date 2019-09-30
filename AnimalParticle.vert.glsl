@@ -20,14 +20,10 @@ uniform vec3 LocalPositions[3];/* = vec3[3](
 								vec3( 1,-1,0 ),
 								vec3( 0,1,0 )
 								);*/
-//#define TEST_ONE_COLOUR
+//#define TEST_ONE_COLOUR	vec4(0,1,0,1)
 
 #if !defined(TEST_ONE_COLOUR)
 uniform sampler2D	ColourImage;
-#define MAX_COLOURS	8
-uniform bool		ColourImageValid;
-uniform float3		Colours[MAX_COLOURS];
-uniform int			ColourCount;
 #endif
 
 uniform float TriangleScale;// = 0.06;
@@ -70,18 +66,12 @@ int modi(int Value,int Size)
 vec4 GetTriangleColour(int TriangleIndex)
 {
 #if defined(TEST_ONE_COLOUR)
-	return float4(0,1,0,1);
+	return TEST_ONE_COLOUR;
 #else
-	//	gr: grabbing both is currently the fastest mix
-	//		we may want to split into two shaders, but then thats two batches...
 	float Lod = 0.0;
 	float2 uv = GetTriangleUv( TriangleIndex );
 	float4 ColourImageColour = textureLod( ColourImage, uv, Lod );
-	
-	TriangleIndex = modi( TriangleIndex, ColourCount );
-	float4 ColourTableColour = float4( Colours[TriangleIndex], 1 );
-	
-	return mix( ColourTableColour, ColourImageColour, ColourImageValid ? 1.0 : 0.0 );
+	return float4(ColourImageColour.xyz,1);
 #endif
 }
 
