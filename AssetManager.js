@@ -366,7 +366,13 @@ function GetAutoTriangleIndexes(IndexCount)
 var Auto_auto_vt_Buffer = [];
 function GetAuto_AutoVtBuffer(TriangleCount)
 {
-	const VertexSize = 2;
+	const LocalPositions =
+	[
+		[-1,-1],
+	 	[1,-1],
+	 	[0,1]
+	];
+	const VertexSize = 3;
 	const IndexCount = VertexSize * TriangleCount * 3;
 	while ( Auto_auto_vt_Buffer.length < IndexCount )
 	{
@@ -376,12 +382,18 @@ function GetAuto_AutoVtBuffer(TriangleCount)
 			let Index = t * 3;
 			Index += v;
 			Index *= VertexSize;
-			Auto_auto_vt_Buffer[Index+0] = v;
-			Auto_auto_vt_Buffer[Index+1] = t;
+			Auto_auto_vt_Buffer[Index+0] = LocalPositions[v][0];
+			Auto_auto_vt_Buffer[Index+1] = LocalPositions[v][1];
+			if ( VertexSize >= 3 )
+				Auto_auto_vt_Buffer[Index+2] = t;
+			if ( VertexSize >= 4 )
+				Auto_auto_vt_Buffer[Index+3] = v;
 		}
 	}
 	//Pop.Debug('Auto_auto_vt_Buffer',Auto_auto_vt_Buffer);
-	return new Float32Array( Auto_auto_vt_Buffer, 0, IndexCount );
+	let Array = new Float32Array( Auto_auto_vt_Buffer, 0, IndexCount );
+	Array.VertexSize = VertexSize;
+	return Array;
 }
 
 function CreateCubeGeometry(RenderTarget,Min=-1,Max=1)
@@ -505,10 +517,10 @@ function GetAutoTriangleMesh(RenderTarget,TriangleCount)
 	
 	//	vertex stuff
 	//	we should get these from geo for assets WITH a vertex buffer
-	let VertexSize = 2;
-	let VertexAttributeName = 'Vertex';
+	let VertexAttributeName = 'LocalUv_TriangleIndex';
 
 	let VertexBuffer = GetAuto_AutoVtBuffer(TriangleCount);
+	VertexSize = VertexBuffer.VertexSize;
 	
 	const IndexCount = TriangleCount * 3;
 	let TriangleIndexes = GetAutoTriangleIndexes( IndexCount );
@@ -528,6 +540,7 @@ function GetAutoTriangleMesh(RenderTarget,TriangleCount)
 
 function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 {
+	Pop.Debug("LoadPointMeshFromFile",Filename);
 	const CachedFilename = GetCachedFilename(Filename,'geometry');
 	if ( Pop.FileExists(CachedFilename) )
 		Filename = CachedFilename;
