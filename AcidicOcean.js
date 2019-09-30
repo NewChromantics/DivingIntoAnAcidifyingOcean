@@ -2093,11 +2093,16 @@ function Render(RenderTarget)
 	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
 	RenderFrameCounter.Add();
 
-	const Stats = "Batches: " + Pop.Opengl.BatchesDrawn + " Triangles: " + Pop.Opengl.TrianglesDrawn;
+	let Stats = "Batches: " + Pop.Opengl.BatchesDrawn;
+	Stats += " Triangles: " + Pop.Opengl.TrianglesDrawn;
+	Stats += " Geo Binds: " + Pop.Opengl.GeometryBinds;
+	Stats += " Shader Binds: " + Pop.Opengl.ShaderBinds;
 	Hud.Debug_RenderStats.SetValue(Stats);
 	Pop.Opengl.BatchesDrawn = 0;
 	Pop.Opengl.TrianglesDrawn = 0;
-	
+	Pop.Opengl.GeometryBinds = 0;
+	Pop.Opengl.ShaderBinds = 0;
+
 }
 
 
