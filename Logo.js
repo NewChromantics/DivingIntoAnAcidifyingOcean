@@ -255,11 +255,14 @@ function TLogoState()
 			}
 			this.StartButton = new Pop.Hud.Button('Hint_Start');
 			this.StartButton.OnClicked = OnClicked.bind(this);
+			this.StartXrButton = new Pop.Hud.Button('Hint_StartXr');
+			this.StartXrButton.OnClicked = OnClicked.bind(this);
 		}
 		
 		//	show button when preloads done
 		//	gr: due to above, this may disable itself again
 		this.StartButton.SetVisible( AllPreloadsFinished );
+		this.StartXrButton.SetVisible( AllPreloadsFinished && Pop.Xr.IsSupported() );
 	}
 }
 

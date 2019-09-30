@@ -29,6 +29,11 @@
 	visibility:	hidden;
 }
 
+#Hint_StartXr
+{
+	visibility:	hidden;
+}
+
 #Hint_Start
 {
 	visibility:	hidden;
@@ -130,7 +135,7 @@
 	overflow:	hidden;
 }
 
-#Hint_Start
+#Hint_Start, #Hint_StartXr
 {
 	/* put on top of the rest of the hud so it's clickable */
 	z-index:	2;
@@ -153,6 +158,11 @@
 
 	border-radius: 0.7em;
   	border: 0.1em solid white;
+}
+
+#Hint_StartXr
+{
+	top:		74.35vh;
 }
 
 #Hint_Headphones
