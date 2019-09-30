@@ -3,6 +3,7 @@ Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 
+const EnableAssetSync = Pop.GetExeArguments().includes('AssetSync');
 
 //	some globals
 Pop.AssetSync = {};
@@ -207,16 +208,18 @@ function CreateAssetServer()
 var AssetServer = null;
 var AssetClient = null;
 
-try
+if ( EnableAssetSync )
 {
-	AssetServer = CreateAssetServer();
+	try
+	{
+		AssetServer = CreateAssetServer();
+	}
+	catch(e)
+	{
+		Pop.Debug("Failed to create asset server",e,"Creating client...");
+		AssetClient = new Pop.AssetClient('localhost',Pop.AssetSync.DefaultPorts);
+	}
 }
-catch(e)
-{
-	Pop.Debug("Failed to create asset server",e,"Creating client...");
-	AssetClient = new Pop.AssetClient('localhost',Pop.AssetSync.DefaultPorts);
-}
-
 
 const FileMonitors = {};
 
