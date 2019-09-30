@@ -31,6 +31,8 @@ const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
 const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
 const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_ShellDissolution.mp3';
 
+//	for debugging opengl stuff
+const EnableColourTextureUpdate = false;
 
 //	temp turning off and just having dummy actors
 const PhysicsEnabled = !Pop.GetExeArguments().includes('PhysicsDisabled');
@@ -883,9 +885,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
 		const Actor = this;
+		const RenderContext = RenderTarget.GetRenderContext();
 		
-		const Geo = GetAsset( this.Geometry, RenderTarget );
-		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
+		const Geo = GetAsset( this.Geometry, RenderContext );
+		const Shader = Pop.GetShader( RenderContext, this.FragShader, this.VertShader );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
 		const PositionTexture = this.GetPositionTexture(Time);
 		let ColourTexture = this.TextureBuffers.ColourTexture;
@@ -1148,8 +1151,9 @@ function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
 	{
-		const Geo = GetAsset( this.Geometry, RenderTarget );
-		const Shader = Pop.GetShader( RenderTarget, this.FragShader, this.VertShader );
+		const RenderContext = RenderTarget.GetRenderContext();
+		const Geo = GetAsset( this.Geometry, RenderContext );
+		const Shader = Pop.GetShader( RenderContext, this.FragShader, this.VertShader );
 		const LocalToWorldTransform = this.GetLocalToWorldTransform();
 		
 		const SetUniforms = function(Shader)
@@ -1432,11 +1436,18 @@ function Init()
 		
 		//	re-use render func
 		Device.OnRender = Render;
+		
+		//	stay in loop here before exiting
+		//	request controller poses, this should error if there's a problem and we'll revert to non xr mode
+		while ( true )
+		{
+			await Pop.Yield(100000);
+		}
 	}
 	
 	function OnExitXr(Error)
 	{
-		console.logError("XR exited; ",Error);
+		console.error("XR exited; ",Error);
 		//	todo: handle this error/exit and put back a button to
 		//	allow player to try and enter again
 		Params.XrMode = false;
@@ -1810,8 +1821,12 @@ function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
 	{
 		LastUpdateColourTextureElapsed[ColourNamePrefix] += FrameDuration;
 		if ( !Params.CustomiseWaterColours )
+		{
 			if ( LastUpdateColourTextureElapsed[ColourNamePrefix] < Params.UpdateColourTextureFrequencySecs )
 				return;
+			if ( !EnableColourTextureUpdate )
+				return;
+		}
 	}
 	else
 	{
@@ -2023,8 +2038,9 @@ function UpdateSceneVisibility(Time)
 function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
 {
 	//Pop.Debug("UpdateNoiseTexture",Texture,Time);
-	const Shader = Pop.GetShader( RenderTarget, NoiseShader, QuadVertShader );
-	const Quad = GetAsset('Quad',RenderTarget);
+	const RenderContext = RenderTarget.GetRenderContext();
+	const Shader = Pop.GetShader( RenderContext, NoiseShader, QuadVertShader );
+	const Quad = GetAsset('Quad',RenderContext);
 
 	const RenderNoise = function(RenderTarget)
 	{
@@ -2048,17 +2064,40 @@ var RenderFrameDurationSecs = false;
 
 function Render(RenderTarget,RenderCamera)
 {
+	const RenderContext = RenderTarget.GetRenderContext();
 	const IsXrRender = (RenderCamera != null);
-	
-	Pop.Debug("Render with camera",RenderCamera);
 	
 	//	if we don't have a camera from XR, use the normal system
 	if ( !RenderCamera )
 	{
 		RenderCamera = GetRenderCamera();
 		//	skip render in xr mode atm
-		if ( Params.XrMode )
-			return;
+		if ( Params.XrMode )	return;
+	}
+	else
+	{
+		//	turn the XR camera setup into a pop camera
+		const Camera = new Pop.Camera();
+		Object.assign( Camera, RenderCamera );
+		Camera.Position[0] = RenderCamera.Transform.position.x;
+		Camera.Position[1] = RenderCamera.Transform.position.y;
+		Camera.Position[2] = RenderCamera.Transform.position.z;
+		//Pop.Debug("Render with xr camera",Camera);
+		
+		RenderCamera = Camera;
+	}
+
+	if ( false )
+	{
+		Pop.Debug("render",RenderCamera);
+		if ( RenderCamera.Name == 'Left' )
+			RenderTarget.ClearColour( 1,0,0 );
+		else if ( RenderCamera.Name == 'Right' )
+			RenderTarget.ClearColour( 0,1,0 );
+		else
+			//RenderTarget.ClearColour( ...Params.FogColour );
+			RenderTarget.ClearColour( 0,0,1 );
+		return;
 	}
 	
 	//	update app logic
@@ -2119,8 +2158,14 @@ function Render(RenderTarget,RenderCamera)
 		GpuUpdate();
 	}
 	
-	RenderTarget.ClearColour( ...Params.FogColour );
-	
+	if ( RenderCamera.Name == 'Left' )
+		RenderTarget.ClearColour( [1,0,0] );
+	else if ( RenderCamera.Name == 'Right' )
+		RenderTarget.ClearColour( [0,1,0] );
+	else
+		//RenderTarget.ClearColour( ...Params.FogColour );
+		RenderTarget.ClearColour( [0,0,1] );
+
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
@@ -2154,14 +2199,16 @@ function Render(RenderTarget,RenderCamera)
 			Object.keys( Actor.Uniforms ).forEach( SetUniform );
 		}
 		
-		try
+		//try
 		{
 			Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
 		}
+		/*
 		catch(e)
 		{
 			Pop.Debug("Error rendering actor", Actor.Name,e);
 		}
+		 */
 	}
 	
 	
@@ -2169,8 +2216,8 @@ function Render(RenderTarget,RenderCamera)
 	{
 		if ( !Texture.Pixels )
 			return;
-		const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
-		const Quad = GetAsset('Quad',RenderTarget);
+		const BlitShader = Pop.GetShader( RenderContext, BlitCopyShader, QuadVertShader );
+		const Quad = GetAsset('Quad',RenderContext);
 		
 		let w = 0.1;
 		let h = 0.2;
