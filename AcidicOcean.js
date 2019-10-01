@@ -248,9 +248,9 @@ Params.YearsPerSecond = 1;
 Params.CustomYearsPerSecond = false;
 Params.ShowAnimal_ExplodeSecs = 3;
 Params.ShowAnimal_Duration = 40;
-Params.ShowAnimal_CameraOffsetX = 0.32;
-Params.ShowAnimal_CameraOffsetY = 0.44;
-Params.ShowAnimal_CameraOffsetZ = 3.52;
+Params.ShowAnimal_CameraOffsetX = 0.0;
+Params.ShowAnimal_CameraOffsetY = 0.0;
+Params.ShowAnimal_CameraOffsetZ = 0.41;
 Params.ShowAnimal_CameraLerpInSpeed = 0.275;
 Params.ShowAnimal_CameraLerpOutSpeed = 0.10;
 Params.AnimalBufferLod = 1.0;
@@ -695,14 +695,18 @@ function GetRenderScene(GetActorScene,Time)
 				return;
 		
 		//	has no bounds!
-		const BoundingBox = Actor.GetBoundingBox();
-		if ( !BoundingBox )
+		const LocalBoundingBox = Actor.GetBoundingBox();
+		if ( !LocalBoundingBox )
 		{
 			Pop.Debug("Actor has no bounds",Actor);
 			return;
 		}
 		
-		PushActorBox( Actor.GetLocalToWorldTransform(), BoundingBox.Min, BoundingBox.Max );
+		//PushActorBox( Actor.GetLocalToWorldTransform(), LocalBoundingBox.Min, LocalBoundingBox.Max );
+
+		//	test world bounding box calculation
+		const WorldBoundingBox = GetActorWorldBoundingBox(Actor);
+		PushActorBox( Math.CreateIdentityMatrix(), WorldBoundingBox.Min, WorldBoundingBox.Max );
 	}
 	
 	let PushDebugCameraActor = function()
@@ -1011,12 +1015,16 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	Update( FrameDuration );
 
-	//	lerp camera to pos
-	let TargetCameraPos = GetActorWorldPos(Acid.SelectedActor);
-	//	apply offset
-	const TargetOffset = [ Params.ShowAnimal_CameraOffsetX, Params.ShowAnimal_CameraOffsetY, Params.ShowAnimal_CameraOffsetZ ];
-	TargetCameraPos = Math.Add3( TargetCameraPos, TargetOffset );
-	//	move camera
+	const AnimalBounds = GetActorWorldBoundingBox(Acid.SelectedActor);
+	
+	//	target the near side of the bounds (this helps for meshes which are offset, as well as size)
+	const TargetCameraPos = Math.Lerp3( AnimalBounds.Min, AnimalBounds.Max, 0.5 );
+	TargetCameraPos[2] = AnimalBounds.Max[2];
+	TargetCameraPos[0] += Params.ShowAnimal_CameraOffsetX;
+	TargetCameraPos[1] += Params.ShowAnimal_CameraOffsetY;
+	TargetCameraPos[2] += Params.ShowAnimal_CameraOffsetZ;
+	
+	//	lerp camera
 	Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpInSpeed );
 	
 	
