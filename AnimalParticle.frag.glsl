@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 varying vec4 Rgba;
 varying vec3 TriangleUvIndex;
 varying vec3 FragWorldPos;
