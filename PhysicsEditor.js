@@ -16,6 +16,10 @@ var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
 
 
+Params.DrawBoundingBoxes = true;
+Params.DrawHighlightedActors = true;
+
+
 function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 {
 	OnClicked = OnClicked || function(){};

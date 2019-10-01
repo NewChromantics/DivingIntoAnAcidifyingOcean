@@ -65,7 +65,8 @@ const OceanActorPrefix = 'Ocean_surface_';
 const DebrisActorPrefix = 'Water_';
 const NastyAnimalPrefix = 'Nasty_Animal_';
 const BigBangAnimalPrefix = 'Bigbang_';
-const AnimalActorPrefixs = ['Animal_',BigBangAnimalPrefix,NastyAnimalPrefix];
+const NormalAnimalPrefix = 'Animal_';
+const AnimalActorPrefixs = [NormalAnimalPrefix,BigBangAnimalPrefix,NastyAnimalPrefix];
 
 
 //	store this somewhere else so the preload matches

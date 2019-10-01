@@ -32,21 +32,19 @@ var PhsyicsUpdateCount = 0;	//	gotta do one
 
 var Debug_HighlightActors = [];
 
+
+
 const ShowDefaultActors = Pop.GetExeArguments().includes('ShowDefaultActors');
 const IgnoreActorPrefixs = ['Camera_Spline'];
-//const IgnoreActorPrefixs = ['Camera_Spline',OceanActorPrefix,DebrisActorPrefix];	//	nocrash?
-//const IgnoreActorPrefixs = ['Camera_Spline',DebrisActorPrefix];	//	crash
-//const IgnoreActorPrefixs = ['Camera_Spline',OceanActorPrefix];	//	crash
+//const IgnoreActorPrefixs = ['Camera_Spline',DebrisActorPrefix,NastyAnimalPrefix,BigBangAnimalPrefix,NormalAnimalPrefix];
 
-
-
-//	colours from colorbrewer2.org
-const FogColour = Pop.Colour.HexToRgbf(0x000000);
-const LightColour = [0.86,0.95,0.94];
 
 var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
+
+var RenderFrameDurationSecs = false;
+var GpuJobs = [];
 
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
@@ -178,17 +176,8 @@ function UpdateMouseMove(x,y)
 }
 
 
-function GetActorIntersections(CameraScreenUv)
+function GetActorScene_OnlySelectable()
 {
-	const Rect = Window.GetScreenRect();
-	
-	//Pop.Debug(CameraScreenUv);
-	const Time = Params.TimelineYear;
-	const Viewport = [0,0,Rect[2],Rect[3]];
-	const Camera = GetTimelineCamera();
-	
-	const Ray = GetMouseRay( CameraScreenUv );
-	
 	//const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
 	const IsActorVisible = function(Actor)
 	{
@@ -205,8 +194,37 @@ function GetActorIntersections(CameraScreenUv)
 		return true;
 	}
 	
-	//	find actor
 	const Scene = GetActorScene( FilterActor );
+	return Scene;
+}
+
+function GetActorScene_OnlyVisible()
+{
+	//const IsActorVisible = GetCameraActorCullingFilter( Camera, Viewport );
+	const IsActorVisible = function(Actor)
+	{
+		if ( Actor.IsVisible === undefined )
+			return true;
+		return Actor.IsVisible === true;
+	}
+	
+	const Scene = GetActorScene( IsActorVisible );
+	return Scene;
+}
+
+function GetActorIntersections(CameraScreenUv)
+{
+	const Rect = Window.GetScreenRect();
+	
+	//Pop.Debug(CameraScreenUv);
+	const Time = Params.TimelineYear;
+	const Viewport = [0,0,Rect[2],Rect[3]];
+	const Camera = GetTimelineCamera();
+	
+	const Ray = GetMouseRay( CameraScreenUv );
+
+	//	find actor
+	const Scene = GetActorScene_OnlySelectable();
 	const SelectedActors = GetIntersectingActors( Ray, Scene );
 	
 	return SelectedActors;
@@ -257,10 +275,9 @@ Params.FogMinDistance = 8.0;
 Params.FogMaxDistance = BoldMode ? 999 : 20.0;
 Params.FogHighlightMinDistance = 0.8;
 Params.FogHighlightMaxDistance = 2.7;
-Params.FogColour = FogColour;
+Params.FogColour = [0,1,0];
 Params.FogParamsLerpSpeed = 0.1;
 Params.FogTargetLerpSpeed = 0.2;
-Params.LightColour = LightColour;
 Params.DebugPhysicsTextures = false;
 Params.DebugNoiseTextures = IsDebugEnabled();
 Params.BillboardTriangles = true;
@@ -269,9 +286,6 @@ Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 24;	//	under 20 and keeps clipping too easily
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 25;
-Params.DrawBoundingBoxes = false;
-Params.DrawBoundingBoxesFilled = false;
-Params.DrawHighlightedActors = false;
 
 Params.BigBang_Damping = 0.01;
 Params.BigBang_NoiseScale = 0.01;
@@ -356,7 +370,6 @@ if ( IsDebugEnabled() )
 
 	ParamsWindow.AddParam('AutoGrabDebugCamera');
 	ParamsWindow.AddParam('FogColour','Colour');
-	ParamsWindow.AddParam('LightColour','Colour');
 
 	ParamsWindow.AddParam('FogMinDistance',0,50);
 	ParamsWindow.AddParam('FogMaxDistance',0,50);
@@ -447,6 +460,7 @@ if ( IsDebugEnabled() )
 
 function LoadCameraScene(Filename)
 {
+	Pop.Debug("LoadCameraScene",Filename);
 	let Scene = [];
 	
 	let OnActor = function(ActorNode)
@@ -641,7 +655,7 @@ function GetActorScene(Filter)
 
 
 //	get scene graph
-function GetRenderScene(GetActorScene,Time,VisibleFilter)
+function GetRenderScene(GetActorScene,Time)
 {
 	let Scene = [];
 	
@@ -716,7 +730,7 @@ function GetRenderScene(GetActorScene,Time,VisibleFilter)
 		Scene.push( Actor );
 	}
 	
-	const ActorScene = GetActorScene( VisibleFilter );
+	const ActorScene = GetActorScene();
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
@@ -1416,21 +1430,60 @@ function Update(FrameDurationSecs)
 		ParamsWindow.OnParamChanged('YearsPerSecond');
 	}
 	
+	//	mark actors visible this frame
 	UpdateSceneVisibility(Time);
 	
-	//	reset render stats
-	let Stats = "Batches: " + Pop.Opengl.BatchesDrawn;
-	Stats += " Triangles: " + Pop.Opengl.TrianglesDrawn;
-	Stats += " Geo Binds: " + Pop.Opengl.GeometryBinds;
-	Stats += " Shader Binds: " + Pop.Opengl.ShaderBinds;
-	Hud.Debug_RenderStats.SetValue(Stats);
-	Pop.Opengl.BatchesDrawn = 0;
-	Pop.Opengl.TrianglesDrawn = 0;
-	Pop.Opengl.GeometryBinds = 0;
-	Pop.Opengl.ShaderBinds = 0;
 	
+	//	reset stats once per frame
+	const ResetRenderStats = function()
+	{
+		//	reset render stats
+		let Stats = "Batches: " + Pop.Opengl.BatchesDrawn;
+		Stats += " Triangles: " + Pop.Opengl.TrianglesDrawn;
+		Stats += " Geo Binds: " + Pop.Opengl.GeometryBinds;
+		Stats += " Shader Binds: " + Pop.Opengl.ShaderBinds;
+		Hud.Debug_RenderStats.SetValue(Stats);
+		Pop.Opengl.BatchesDrawn = 0;
+		Pop.Opengl.TrianglesDrawn = 0;
+		Pop.Opengl.GeometryBinds = 0;
+		Pop.Opengl.ShaderBinds = 0;
+	}
+	ResetRenderStats();
+
 	//
-	FirstRenderThisFrame = true;
+	const UpdateNoise = function(RenderTarget)
+	{
+		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
+		UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceShader, NoiseTime );
+		
+	}
+	GpuJobs.push( UpdateNoise );
+	
+	const UpdateActorPhysics = function(RenderTarget)
+	{
+		const UpdateActorPhysics = function(Actor)
+		{
+			//	only update actors visible
+			//	gr: maybe do this with the actors in scene from GetRenderScene?
+			const UpdatePhysicsUniforms = function(Shader)
+			{
+				const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
+				Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
+			}
+			Actor.PhysicsIteration( FrameDurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
+		}
+		
+		const Scene = GetActorScene_OnlyVisible();
+		
+		//	update physics
+		if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
+		{
+			Scene.forEach( UpdateActorPhysics );
+			PhsyicsUpdateCount++;
+		}
+	}
+	GpuJobs.push( UpdateActorPhysics );
+	
 	RenderFrameDurationSecs = FrameDurationSecs;
 }
 
@@ -1468,11 +1521,17 @@ function UpdateSceneVisibility(Time)
 	Hud.Debug_VisibleActors.SetValue("Visible Actors: " + VisibleActorCount + "/" + Actors.length );
 }
 
+function FlushGpuJobs(RenderTarget)
+{
+	const RunJob = function(Job)
+	{
+		Job( RenderTarget );
+	}
+	GpuJobs.forEach( RunJob );
+	
+	GpuJobs.length = 0;
+}
 
-
-
-var FirstRenderThisFrame = true;
-var RenderFrameDurationSecs = false;
 
 function Render(RenderTarget,RenderCamera)
 {
@@ -1498,92 +1557,31 @@ function Render(RenderTarget,RenderCamera)
 		
 		RenderCamera = Camera;
 	}
+	
+	FlushGpuJobs( RenderTarget );
 
-	if ( false )
-	{
-		Pop.Debug("render",RenderCamera);
-		if ( RenderCamera.Name == 'Left' )
-			RenderTarget.ClearColour( 1,0,0 );
-		else if ( RenderCamera.Name == 'Right' )
-			RenderTarget.ClearColour( 0,1,0 );
-		else
-			//RenderTarget.ClearColour( ...Params.FogColour );
-			RenderTarget.ClearColour( 0,0,1 );
-		return;
-	}
-	
-	//	update app logic
-	//let DurationSecs = Acid.StateMachine.LoopIteration( !Params.ExperiencePlaying );
-	//	stop div by zero
-	//DurationSecs = Math.max( DurationSecs, 0.001 );
-	const DurationSecs = RenderFrameDurationSecs;
-	
-	
 	const Time = Params.TimelineYear;
-
-	const CullingCamera = Params.DebugCullTimelineCamera ? GetTimelineCamera() : RenderCamera;
-	const Viewport = RenderTarget.GetRenderTargetRect();
-	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
-	//const IsActorVisible = GetCameraActorCullingFilter( CullingCamera, Viewport );
-	const IsActorVisible = function(Actor)
-	{
-		if ( Actor.IsVisible === undefined )
-			return true;
-		return Actor.IsVisible === true;
-	}
 
 	//	grab scene first, we're only going to update physics on visible items
 	//	todo: just do them all?
-	const Scene = GetRenderScene( GetActorScene, Time, IsActorVisible );
+	const DurationSecs = RenderFrameDurationSecs;
+	const Scene = GetRenderScene( GetActorScene_OnlyVisible, Time );
+	
 
-	const UpdateActorPhysics = function(Actor)
-	{
-		//	only update actors visible
-		//	gr: maybe do this with the actors in scene from GetRenderScene?
-		if ( !IsActorVisible(Actor) )
-			return;
-		const UpdatePhysicsUniforms = function(Shader)
-		{
-			const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
-			Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
-		}
-		Actor.PhysicsIteration( DurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
-	}
-	
-	
-	function GpuUpdate()
-	{
-		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
-		UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceShader, NoiseTime );
-
-		//	update physics
-		if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
-		{
-			Scene.forEach( UpdateActorPhysics );
-			PhsyicsUpdateCount++;
-		}
-	}
-	
-	//	one-frame GPU updates
-	if ( FirstRenderThisFrame )
-	{
-		GpuUpdate();
-	}
-	
+	//	clear target
 	if ( RenderCamera.Name == 'Left' )
-		RenderTarget.ClearColour( [1,0,0] );
+		RenderTarget.ClearColour( 1,0,0 );
 	else if ( RenderCamera.Name == 'Right' )
-		RenderTarget.ClearColour( [0,1,0] );
+		RenderTarget.ClearColour( 0,1,0 );
 	else
-		//RenderTarget.ClearColour( ...Params.FogColour );
-		RenderTarget.ClearColour( [0,0,1] );
+		RenderTarget.ClearColour( ...Params.FogColour );
 
+	const Viewport = RenderTarget.GetRenderTargetRect();
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
 	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
 	
 	const FogParams = Acid.GetFogParams();
-	
 	
 	
 	let GlobalUniforms = Object.assign( {}, FogParams );
@@ -1593,65 +1591,26 @@ function Render(RenderTarget,RenderCamera)
 	GlobalUniforms['Fog_Colour'] = Params.FogColour;
 	GlobalUniforms['Fog_WorldPosition'] = FogParams.WorldPosition;
 
-	/*
-	GlobalUniforms[Fog_MinDistance',FogParams.MinDistance);
-	Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
-	Shader.SetUniform('Fog_Colour',Params.FogColour);
-	Shader.SetUniform('Fog_WorldPosition', FogParams.WorldPosition );
-	Shader.SetUniform('Light_Colour', Params.LightColour );
-	Shader.SetUniform('Light_MinPower', 0.1 );
-	Shader.SetUniform('Light_MaxPower', 1.0 );
-	 */
-	/*
-	let RenderSceneActor = function(Actor,ActorIndex)
-	{
-		const SetGlobalUniforms = function(Shader)
-		{
-			Shader.SetUniform('WorldToCameraTransform', WorldToCameraTransform );
-			Shader.SetUniform('CameraToWorldTransform', CameraToWorldTransform );
-			Shader.SetUniform('CameraProjectionTransform', CameraProjectionTransform );
-			Shader.SetUniform('Fog_MinDistance',FogParams.MinDistance);
-			Shader.SetUniform('Fog_MaxDistance',FogParams.MaxDistance);
-			Shader.SetUniform('Fog_Colour',Params.FogColour);
-			Shader.SetUniform('Fog_WorldPosition', FogParams.WorldPosition );
-			Shader.SetUniform('Light_Colour', Params.LightColour );
-			Shader.SetUniform('Light_MinPower', 0.1 );
-			Shader.SetUniform('Light_MaxPower', 1.0 );
-		
-			Timeline.EnumUniforms( Time, Shader.SetUniform.bind(Shader) );
-		
-			//	actor specific
-			let SetUniform = function(Key)
-			{
-				let Value = Actor.Uniforms[Key];
-				Shader.SetUniform( Key, Value );
-			}
-			Object.keys( Actor.Uniforms ).forEach( SetUniform );
-		}
-		
-		Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
-	}
-	*/
 	
 	function RenderTextureQuad(Texture,TextureIndex)
 	{
 		if ( !Texture.Pixels )
 			return;
-		const BlitShader = GetAsset( BlitCopyShader, RenderContext );
-		const Quad = GetAsset('Quad',RenderContext);
-		
+
 		let w = 0.1;
 		let h = 0.2;
 		let x = 0.1;
-		let y = 0.1 + (TextureIndex*h*1.10);
-		const SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [x, y, w, h ] );
-			Shader.SetUniform('Texture',Texture);
-		};
-		RenderTarget.DrawGeometry( Quad, BlitShader, SetUniforms );
+		let y = 0.1 + (TextureIndex * h * 1.10);
+
+		const Uniforms = {};
+		Uniforms['VertexRect'] = [x, y, w, h ];
+		Uniforms['Texture'] = Texture;
+		
+		const Actor = new TActor( null, 'Quad', BlitCopyShader, Uniforms );
+		Scene.push( Actor );
 	}
 	
+	//	make debug actors
 	const DebugTextures = [];
 	if ( Params.DebugNoiseTextures && !IsXrRender )
 	{
@@ -1660,22 +1619,14 @@ function Render(RenderTarget,RenderCamera)
 		DebugTextures.push( RandomTexture );
 		DebugTextures.push( Noise_TurbulenceTexture );
 	}
-	
-	//	render
-	RenderScene( Scene, RenderTarget, RenderCamera, Time, GlobalUniforms );
-	//Scene.forEach( RenderSceneActor );
 	DebugTextures.forEach( RenderTextureQuad );
 
+	//	render
+	RenderScene( Scene, RenderTarget, RenderCamera, Time, GlobalUniforms );
 	
 	//	debug stats
-	if ( FirstRenderThisFrame )
-	{
-		Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
-		RenderFrameCounter.Add();
-
-	}
-
-	FirstRenderThisFrame = false;
+	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
+	RenderFrameCounter.Add();
 }
 
 

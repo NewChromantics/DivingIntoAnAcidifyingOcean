@@ -185,10 +185,11 @@ Params.EnablePhysicsIteration = true;
 Params.XrMode = false;
 Params.ScrollFlySpeed = 10;
 Params.AnimalDebugParticleColour = false;
-Params.FogColour = [1,0,0];
+//Params.FogColour = [1,0,0];
 Params.AnimalBufferLod = 1;
-Params.DrawBoundingBoxes = true;
+Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
+Params.DrawHighlightedActors = false;
 
 let Editor = null;
 
