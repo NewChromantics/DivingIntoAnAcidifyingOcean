@@ -10,6 +10,7 @@ Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //Pop.Include('AssetManager.js');
 Pop.Include('AudioManager.js');
+Pop.Include('ParticleActor.js');
 //	already included
 //Pop.Include('Timeline.js');
 //Pop.Include('Animals.js');
@@ -17,15 +18,6 @@ Pop.Include('AudioManager.js');
 const EnableVoiceOver = Pop.GetExeArguments().includes('EnableVoiceOver');
 const BoldMode = Pop.GetExeArguments().includes('Bold');
 const AnimalTest = Pop.GetExeArguments().includes('AnimalTest');
-
-const GeoVertShader = Pop.LoadFileAsString('Geo.vert.glsl');
-const ColourFragShader = Pop.LoadFileAsString('Colour.frag.glsl');
-const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
-
-const AnimalParticleVertShader = Pop.LoadFileAsString('AnimalParticle.vert.glsl');
-const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl');
-
-const Noise_TurbulenceFragShader = Pop.LoadFileAsString('Noise/TurbulencePerlin.frag.glsl');
 
 const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
 const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
@@ -54,12 +46,6 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 //const IgnoreActorPrefixs = ['Camera_Spline',DebrisActorPrefix];	//	crash
 //const IgnoreActorPrefixs = ['Camera_Spline',OceanActorPrefix];	//	crash
 
-function SetupFileAssets()
-{
-	AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAutoTriangleMesh( RenderTarget, AutoTriangleMeshCount );	};
-}
-SetupFileAssets();
-
 
 
 //	colours from colorbrewer2.org
@@ -81,7 +67,7 @@ function IsAutoClearTextureActor(Actor)
 {
 	if ( Actor.Name.startsWith(OceanActorPrefix) )
 	{
-		//return false;
+		return false;
 	}
 	
 	return true;
@@ -117,10 +103,9 @@ function GetDebrisMeta(Actor)
 	Meta.LocalScale = 1;
 	
 	Meta.Filename = '.random';
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
-	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
-	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
+	Meta.RenderShader = AnimalParticleShader;
+	Meta.VelocityShader = UpdateVelocityShader;
+	Meta.PositionShader = UpdatePositionShader;
 	
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
@@ -147,10 +132,9 @@ function GetAnimalMeta(Actor)
 	if ( Actor && Actor.Animal && Actor.Animal.LocalFlip !== undefined )
 		Meta.LocalFlip = Actor.Animal.Flip;
 
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
-	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
-	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
+	Meta.RenderShader = AnimalParticleShader;
+	Meta.VelocityShader = UpdateVelocityShader;
+	Meta.PositionShader = UpdatePositionShader;
 
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
@@ -170,8 +154,8 @@ function GetNastyAnimalMeta(Actor)
 {
 	let Meta = GetAnimalMeta(Actor);
 	
-	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocityPulse;
-	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
+	Meta.VelocityShader = UpdateVelocityPulseShader;
+	Meta.PositionShader = UpdatePositionShader;
 
 	Meta.PhysicsUniforms.NoiseScale = Params.NastyAnimal_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.SpringScale = Params.NastyAnimal_PhysicsSpringScale;
@@ -209,8 +193,7 @@ function GetOceanMeta()
 	const Meta = {};
 	Meta.LocalScale = 1;
 	Meta.Filename = OceanFilenames;
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
+	Meta.RenderShader = AnimalParticleShader;
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	Meta.TriangleScale = Params.Ocean_TriangleScale;
@@ -228,11 +211,9 @@ var AppTime = null;
 var Hud = {};
 var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
-
 var LastMouseRay = null;	//	gr: this isn't getting updated any more
 var LastMouseRayUv = null;
 var LastMouseClicks = [];	//	array of queued uvs
-
 
 var RenderFrameCounter = new Pop.FrameCounter();
 
@@ -252,76 +233,6 @@ function IsActorSelectable(Actor)
 		return false;
 	
 	return true;
-}
-
-//	move this to TActor once everything derives from it
-function GetActorWorldBoundingBox(Actor)
-{
-	const LocalTransform = Actor.GetLocalToWorldTransform();
-	const Scale = Math.GetMatrixScale( LocalTransform );
-	const BoundingBoxLocal = Actor.GetBoundingBox();
-	const Position = Math.GetMatrixTranslation( LocalTransform );
-	
-	//	todo: we should mult without rotating, or rotate and then get new min/max
-	const BoundingBoxWorld = {};
-	BoundingBoxWorld.Min = Math.Multiply3( BoundingBoxLocal.Min, Scale );
-	BoundingBoxWorld.Max = Math.Multiply3( BoundingBoxLocal.Max, Scale );
-
-	BoundingBoxWorld.Min = Math.Add3( BoundingBoxWorld.Min, Position );
-	BoundingBoxWorld.Max = Math.Add3( BoundingBoxWorld.Max, Position );
-
-	return BoundingBoxWorld;
-}
-
-function GetActorWorldBoundingBoxCorners(BoundingBoxWorld,IncludeBothX=true,IncludeBothY=true,IncludeBothZ=true)
-{
-	const Corners = [];
-	const Min = BoundingBoxWorld.Min;
-	const Max = BoundingBoxWorld.Max;
-	
-	//	save some processing time by only including things we need
-	if ( IncludeBothZ && !IncludeBothX && !IncludeBothY )
-	{
-		const Mid = Math.Lerp3( Min, Max, 0.5 );
-		Corners.push( [Mid[0], Mid[1], Min[2]] );
-		Corners.push( [Mid[0], Mid[1], Max[2]] );
-		return Corners;
-	}
-	
-	Corners.push( [Min[0], Min[1], Min[2]] );
-	Corners.push( [Max[0], Min[1], Min[2]] );
-	Corners.push( [Max[0], Max[1], Min[2]] );
-	Corners.push( [Min[0], Max[1], Min[2]] );
-	Corners.push( [Min[0], Min[1], Max[2]] );
-	Corners.push( [Max[0], Min[1], Max[2]] );
-	Corners.push( [Max[0], Max[1], Max[2]] );
-	Corners.push( [Min[0], Max[1], Max[2]] );
-	
-	return Corners;
-}
-
-function GetIntersectingActors(Ray,Scene)
-{
-	const Intersections = [];
-	
-	function TestIntersecting(Actor)
-	{
-		if ( !IsActorSelectable(Actor) )
-			return;
-		
-		const BoundingBox = GetActorWorldBoundingBox( Actor );
-		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, BoundingBox.Min, BoundingBox.Max );
-		if ( !IntersectionPos )
-			return;
-		
-		let Intersection = {};
-		Intersection.Position = IntersectionPos;
-		Intersection.Actor = Actor;
-		Intersections.push( Intersection );
-	}
-	Scene.forEach( TestIntersecting );
-	
-	return Intersections;
 }
 
 
@@ -356,50 +267,6 @@ function GetMouseRay(uv)
 	return Ray;
 }
 
-//	return the filter function
-function GetCameraActorCullingFilter(Camera,Viewport)
-{
-	//	get a matrix to convert world space to camera frustum space (-1..1)
-	const WorldToFrustum = Camera.GetWorldToFrustumTransform(Viewport);
-	
-	const IsVisibleFunction = function(Actor)
-	{
-		const TestBounds = true;
-		
-		const IsWorldPositionVisible = function(WorldPosition)
-		{
-			//const WorldPosition = Math.GetMatrixTranslation( ActorTransform, true );
-			const PosInWorldMtx = Math.CreateTranslationMatrix( ...WorldPosition );
-			const PosInFrustumMtx = Math.MatrixMultiply4x4( WorldToFrustum,  PosInWorldMtx );
-			const PosInFrustumPos = Math.GetMatrixTranslation(  PosInFrustumMtx, true );
-			
-			if ( Params.FrustumCullTestX && !Math.InsideMinusOneToOne( PosInFrustumPos[0] ) )	return false;
-			if ( Params.FrustumCullTestY && !Math.InsideMinusOneToOne( PosInFrustumPos[1] ) )	return false;
-			if ( Params.FrustumCullTestZ && !Math.InsideMinusOneToOne( PosInFrustumPos[2] ) )	return false;
-			
-			return true;
-		}
-		
-		if ( TestBounds )
-		{
-			const WorldBounds = GetActorWorldBoundingBox( Actor );
-			if ( Math.PositionInsideBoxXZ( Camera.Position, WorldBounds ) )
-				return true;
-			
-			const WorldBoundsCorners = GetActorWorldBoundingBoxCorners( WorldBounds, Params.FrustumCullTestX, Params.FrustumCullTestY, Params.FrustumCullTestZ );
-			return WorldBoundsCorners.some( IsWorldPositionVisible );
-		}
-		else
-		{
-			const ActorTransform = Actor.GetLocalToWorldTransform();
-			const ActorPosition = Math.GetMatrixTranslation( ActorTransform );
-			return IsWorldPositionVisible( ActorPosition );
-		}
-		
-	}
-
-	return IsVisibleFunction;
-}
 
 function QueueSceneClick(x,y)
 {
@@ -694,236 +561,6 @@ if ( IsDebugEnabled() )
 }
 
 
-function LoadAssetGeoTextureBuffer(RenderTarget)
-{
-	let Filename = this;
-	const MaxPositions = AutoTriangleMeshCount;
-
-	//	load texture buffer formats
-	const CachedTextureBufferFilename = GetCachedFilename(Filename,'texturebuffer.png');
-	if ( Pop.FileExists(CachedTextureBufferFilename) )
-	{
-		const Contents = Pop.LoadFileAsImage(CachedTextureBufferFilename);
-		const GeoTextureBuffers = LoadPackedImage( Contents );
-		return GeoTextureBuffers;
-	}
-	
-	const CachedGeoFilename = GetCachedFilename(Filename,'geometry');
-	if ( Pop.FileExists(CachedGeoFilename) )
-		Filename = CachedGeoFilename;
-	
-	//	load positions, colours
-	const Geo = LoadGeometryFile( Filename );
-	const GeoTextureBuffers = LoadGeometryToTextureBuffers( Geo, MaxPositions );
-	return GeoTextureBuffers;
-}
-
-const FakeRenderTarget = {};
-
-function SetupAnimalTextureBufferActor(Filename,GetMeta)
-{
-	const Meta = GetMeta(this);
-	this.Geometry = 'AutoTriangleMesh';
-	this.VertShader = Meta.VertShader;
-	this.FragShader = Meta.FragShader;
-	
-	{
-		//	handle array for animation
-		if ( Array.isArray(Filename) )
-		{
-			const LoadFrame = function(Filename)
-			{
-				AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
-				const Buffers = GetAsset( Filename, FakeRenderTarget );
-				
-				//	set at least one to grab colours
-				this.TextureBuffers = Buffers;
-				this.PositionAnimationTextures.push( Buffers.PositionTexture );
-			}
-			this.PositionAnimationTextures = [];
-			Filename.forEach( LoadFrame.bind(this) );
-		}
-		else
-		{
-			//	setup the fetch func on demand, if already cached, won't make a difference
-			AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
-			this.TextureBuffers = GetAsset( Filename, FakeRenderTarget );
-		}
-	}
-	
-	this.UpdateVelocityShader = Meta.VelocityShader;
-	this.UpdatePositionShader = Meta.PositionShader;
-	this.UpdatePhysics = false;
-	
-	if ( Meta.FitToBoundingBox )
-	{
-		//	box is local space, but world size
-		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
-		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
-		//	points are 0-1 so we need to move our offset (and bounds)
-		let BoxOffset = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
-		Position = Math.Subtract3( Position, BoxOffset );
-		let Scale = BoxScale;
-		this.LocalToWorldTransform = Math.CreateTranslationScaleMatrix( Position, Scale );
-		//	bounds match mesh!
-		this.BoundingBox.Min = [0,0,0];
-		this.BoundingBox.Max = [1,1,1];
-		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
-	}
-	else
-	{
-		//	update bounding box to use geo
-		if ( this.TextureBuffers.BoundingBox )
-			this.BoundingBox = this.TextureBuffers.BoundingBox;
-	}
-	
-	
-	
-	this.GetPositionTexture = function(Time)
-	{
-		//	is animation
-		if ( this.PositionAnimationTextures )
-		{
-			let FrameDuration = 1 / Params.OceanAnimationFrameRate;
-			let AnimDuration = this.PositionAnimationTextures.length * FrameDuration;
-			let NormalisedTime = (Time % AnimDuration) / AnimDuration;
-			let FrameIndex = Math.floor( NormalisedTime * this.PositionAnimationTextures.length );
-			//Pop.Debug("FrameIndex",FrameIndex,this.PositionAnimationTextures.length);
-			return this.PositionAnimationTextures[FrameIndex];
-		}
-		
-		//	position texture is copy from original source
-		if ( this.PositionTexture )
-			return this.PositionTexture;
-
-		return this.TextureBuffers.PositionTexture;
-	}
-
-	this.ResetPhysicsTextures = function()
-	{
-		if ( !this.TextureBuffers )
-			throw "Not ready to setup physics yet, no texture buffers";
-		
-		//	make copy of original reference!
-		Pop.Debug("Copy original position texture");
-		this.PositionTexture = new Pop.Image();
-		this.PositionTexture.Copy( this.TextureBuffers.PositionTexture );
-		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
-		//	need to init these to zero?
-		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
-		this.VelocityTexture = new Pop.Image(Size,'Float3');
-		this.ScratchTexture = new Pop.Image(Size,'Float3');
-		//this.PositionOrigTexture = new Pop.Image();
-		this.PositionOrigTexture = this.TextureBuffers.PositionTexture;
-		//this.PositionOrigTexture.Copy( this.PositionTexture );
-	}
-	
-	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
-	{
-		if ( !this.UpdatePhysics )
-			return;
-
-		if ( !this.VelocityTexture )
-		{
-			this.ResetPhysicsTextures();
-		}
-		
-		const Meta = GetMeta(this);
-		const SetAnimalPhysicsUniforms = function(Shader)
-		{
-			SetPhysicsUniforms(Shader);
-			
-			function ApplyUniform(UniformName)
-			{
-				const Value = Meta.PhysicsUniforms[UniformName];
-				Shader.SetUniform( UniformName, Value );
-			}
-			Object.keys( Meta.PhysicsUniforms ).forEach( ApplyUniform );
-		}
-		
-		PhysicsIteration( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
-	}
-	
-	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
-	{
-		const Actor = this;
-		const RenderContext = RenderTarget.GetRenderContext();
-		
-		const Geo = GetAsset( this.Geometry, RenderContext );
-		const Shader = Pop.GetShader( RenderContext, this.FragShader, this.VertShader );
-		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
-		const PositionTexture = this.GetPositionTexture(Time);
-		let ColourTexture = this.TextureBuffers.ColourTexture;
-		const AlphaTexture = this.TextureBuffers.AlphaTexture;
-		const LocalToWorldTransform = this.GetLocalToWorldTransform();
-		
-		const Meta = GetMeta(this);
-		if ( Meta.OverridingColourTexture )
-			ColourTexture = Meta.OverridingColourTexture;
-
-		if ( !ColourTexture )
-			ColourTexture = RandomTexture;
-		
-
-		const SetUniforms = function(Shader)
-		{
-			SetGlobalUniforms( Shader );
-			Shader.SetUniform('ShowClippedParticle', Params.ShowClippedParticle );
-			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
-			Shader.SetUniform('LocalPositions', LocalPositions );
-			Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
-			Shader.SetUniform('WorldPositions',PositionTexture);
-			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
-			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
-			Shader.SetUniform('TriangleScale', Meta.TriangleScale );
-			Shader.SetUniform('ColourImage',ColourTexture);
-			Shader.SetUniform('Debug_ForceColour',Params.AnimalDebugParticleColour);
-		}
-		
-		//	limit number of triangles
-		//	gr: why is this triangle count so much bigger than the buffer?
-		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount ) || AutoTriangleMeshCount;
-		TriangleCount = Math.floor( TriangleCount * Params.AnimalBufferLod );
-		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
-	}
-
-	this.GetLocalToWorldTransform = function()
-	{
-		const Meta = GetMeta(this);
-		let Scale = Meta.LocalScale;
-		let Scale3 = [Scale,Scale,Scale];
-		if ( Meta.LocalFlip )
-			Scale3[1] *= -1;
-		//	allow flip of the flip
-		if ( Params.AnimalFlip )
-			Scale3[1] *= -1;
-		let ScaleMtx = Math.CreateScaleMatrix( ...Scale3 );
-		
-		let Transform = Math.MatrixMultiply4x4( this.LocalToWorldTransform, ScaleMtx );
-		return Transform;
-	}
-
-	this.ClearOpenglTextures = function()
-	{
-		function ClearTexture(Image)
-		{
-			if ( !Image )
-				return;
-			Image.DeleteOpenglTexture();
-		}
-		
-		if ( this.PositionAnimationTextures )
-			this.PositionAnimationTextures.forEach(ClearTexture);
-		
-		ClearTexture( this.PositionTexture );
-		ClearTexture( this.VelocityTexture );
-		ClearTexture( this.ScratchTexture );
-		//ClearTexture( this.PositionOrigTexture );
-	}
-
-}
-
-
 
 function LoadCameraScene(Filename)
 {
@@ -1020,8 +657,7 @@ function LoadCameraScene(Filename)
 			
 			Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPosMtx, LocalScaleMtx );
 			
-			Actor.VertShader = GeoVertShader;
-			Actor.FragShader = ColourFragShader;
+			Actor.RenderShader = GeoColourShader;
 			Actor.BoundingBox = ActorNode.BoundingBox;
 		}
 		Scene.push( Actor );
@@ -1098,50 +734,6 @@ function GetRenderCamera()
 }
 
 
-function TActor(Transform,Geometry,VertShader,FragShader,Uniforms)
-{
-	this.LocalToWorldTransform = Transform;
-	this.Geometry = Geometry;
-	this.VertShader = VertShader;
-	this.FragShader = FragShader;
-	this.Uniforms = Uniforms || [];
-	this.BoundingBox = null;
-	
-	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
-	{
-	}
-	
-	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)
-	{
-		const RenderContext = RenderTarget.GetRenderContext();
-		const Geo = GetAsset( this.Geometry, RenderContext );
-		const Shader = Pop.GetShader( RenderContext, this.FragShader, this.VertShader );
-		const LocalToWorldTransform = this.GetLocalToWorldTransform();
-		
-		const SetUniforms = function(Shader)
-		{
-			SetGlobalUniforms( Shader );
-			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
-		}
-		
-		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms );
-	}
-	
-	this.GetLocalToWorldTransform = function()
-	{
-		return this.LocalToWorldTransform;
-	}
-	
-	this.GetBoundingBox = function()
-	{
-		return this.BoundingBox;
-	}
-	
-	this.ClearOpenglTextures = function()
-	{
-		
-	}
-}
 
 
 
@@ -1189,8 +781,7 @@ function GetRenderScene(Time,VisibleFilter)
 		const BoundsLocalScale = []
 		BoundsActor.LocalToWorldTransform = BoundsMatrix;
 		BoundsActor.Geometry = 'Cube';
-		BoundsActor.VertShader = GeoVertShader;
-		BoundsActor.FragShader = EdgeFragShader;
+		BoundsActor.RenderShader = GeoEdgeShader;
 		BoundsActor.Uniforms['ChequerFrontAndBack'] = Filled;
 		BoundsActor.Uniforms['ChequerSides'] = Filled;
 		BoundsActor.Uniforms['LineWidth'] = 0.05;
@@ -1222,8 +813,7 @@ function GetRenderScene(Time,VisibleFilter)
 		const LocalScale = Params.DebugCameraPositionScale;
 		Actor.LocalToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix();
 		Actor.Geometry = 'Cube';
-		Actor.VertShader = GeoVertShader;
-		Actor.FragShader = EdgeFragShader;
+		Actor.RenderShader = GeoEdgeShader;
 		Actor.Uniforms['ChequerFrontAndBack'] = true;
 		Actor.Uniforms['ChequerSides'] = false;
 		Actor.Uniforms['LineWidth'] = 0.01;
@@ -1239,8 +829,7 @@ function GetRenderScene(Time,VisibleFilter)
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix(...Position);
 		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( Actor.LocalToWorldTransform, Math.CreateScaleMatrix(LocalScale) );
 		Actor.Geometry = 'Cube';
-		Actor.VertShader = GeoVertShader;
-		Actor.FragShader = ColourFragShader;
+		Actor.RenderShader = GeoColourShader;
 		Scene.push( Actor );
 	}
 	
@@ -1294,6 +883,13 @@ function Init()
 {
 	AppTime = 0;
 	
+	
+	CameraScene = LoadCameraScene('CameraSpline.dae.json');
+	Timeline = LoadTimeline('Timeline.json');
+	
+	//	init very first camera pos
+	Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
+
 	Hud.MusicLabel = new Pop.Hud.Label('AudioMusicLabel');
 	Hud.Music2Label = new Pop.Hud.Label('AudioMusic2Label');
 	Hud.VoiceLabel = new Pop.Hud.Label('AudioVoiceLabel');
@@ -1470,11 +1066,10 @@ Acid.GetFogParams = function()
 	return FogParams;
 }
 
-function GetActorWorldPos(Actor)
-{
-	const Transform = Actor.GetLocalToWorldTransform();
-	return Math.GetMatrixTranslation( Transform );
-}
+var CameraScene = null;
+var Timeline = null;
+
+
 
 function UpdateFog(FrameDuration)
 {
@@ -1575,11 +1170,6 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		//	init very first camera pos
-		if ( !Acid.CameraPosition )
-		{
-			Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
-		}
 	}
 	
 	Update( FrameDuration );
@@ -1997,29 +1587,6 @@ function UpdateSceneVisibility(Time)
 
 
 
-function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
-{
-	//Pop.Debug("UpdateNoiseTexture",Texture,Time);
-	const RenderContext = RenderTarget.GetRenderContext();
-	const Shader = Pop.GetShader( RenderContext, NoiseShader, QuadVertShader );
-	const Quad = GetAsset('Quad',RenderContext);
-
-	const RenderNoise = function(RenderTarget)
-	{
-		RenderTarget.ClearColour(0,0,1);
-		const SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('Time', Time );
-			Shader.SetUniform('_Frequency',Params.Turbulence_Frequency);
-			Shader.SetUniform('_Amplitude',Params.Turbulence_Amplitude);
-			Shader.SetUniform('_Lacunarity',Params.Turbulence_Lacunarity);
-			Shader.SetUniform('_Persistence',Params.Turbulence_Persistence);
-		}
-		RenderTarget.DrawGeometry( Quad, Shader, SetUniforms );
-	}
-	RenderTarget.RenderToRenderTarget( Texture, RenderNoise );
-}
 
 var FirstRenderThisFrame = true;
 var RenderFrameDurationSecs = false;
@@ -2104,7 +1671,7 @@ function Render(RenderTarget,RenderCamera)
 	function GpuUpdate()
 	{
 		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
-		UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceFragShader, NoiseTime );
+		UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceShader, NoiseTime );
 
 		//	update physics
 		if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
@@ -2178,7 +1745,7 @@ function Render(RenderTarget,RenderCamera)
 	{
 		if ( !Texture.Pixels )
 			return;
-		const BlitShader = Pop.GetShader( RenderContext, BlitCopyShader, QuadVertShader );
+		const BlitShader = GetAsset( BlitCopyShader, RenderContext );
 		const Quad = GetAsset('Quad',RenderContext);
 		
 		let w = 0.1;
@@ -2248,7 +1815,4 @@ function SwitchToDebugCamera(ForceAutoGrab)
 }
 
 
-const CameraScene = LoadCameraScene('CameraSpline.dae.json');
-
-const Timeline = LoadTimeline('Timeline.json');
 

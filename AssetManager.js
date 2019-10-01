@@ -737,3 +737,20 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 
 
 
+//	this returns the "asset name"
+function RegisterShaderAssetFilename(FragFilename,VertFilename)
+{
+	function LoadAndCompileShader(RenderContext)
+	{
+		const FragShaderContents = Pop.LoadFileAsString(FragFilename);
+		const VertShaderContents = Pop.LoadFileAsString(VertFilename);
+		const Shader = Pop.GetShader( RenderContext, FragShaderContents, VertShaderContents );
+		return Shader;
+	}
+	
+	const AssetName = FragFilename;
+	if ( AssetFetchFunctions.hasOwnProperty(AssetName) )
+		throw "Shader asset name clash, need to change the name we use";
+	AssetFetchFunctions[AssetName] = LoadAndCompileShader;
+	return AssetName;
+}

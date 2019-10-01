@@ -20,7 +20,6 @@ const EdgeFragShader = Pop.LoadFileAsString('Edge.frag.glsl');
 const AnimalParticleVertShader = Pop.LoadFileAsString('AnimalParticle.vert.glsl');
 const AnimalParticleFragShader = Pop.LoadFileAsString('AnimalParticle.frag.glsl');
 
-const Noise_TurbulenceFragShader = Pop.LoadFileAsString('Noise/TurbulencePerlin.frag.glsl');
 
 const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
 const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
@@ -79,136 +78,6 @@ function IsAutoClearTextureActor(Actor)
 
 
 
-
-function GetDebrisMeta(Actor)
-{
-	const Meta = {};
-	
-	Meta.LocalScale = 1;
-	
-	Meta.Filename = '.random';
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
-	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
-	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
-	
-	Meta.PhysicsUniforms = {};
-	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
-	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
-	Meta.PhysicsUniforms.Noise = RandomTexture;
-
-	Meta.TriangleScale = Params.Debris_TriangleScale;
-	Meta.Colours =
-	[
-	 Params.Debris_Colour0,
-	 Params.Debris_Colour1,
-	 Params.Debris_Colour2,
-	 Params.Debris_Colour3,
-	 Params.Debris_Colour4,
-	 Params.Debris_Colour5,
-	 Params.Debris_Colour6,
-	 Params.Debris_Colour7,
-	 Params.Debris_Colour8,
-	 Params.Debris_Colour9,
-	];
-	Meta.FitToBoundingBox = true;
-	return Meta;
-}
-
-function GetAnimalMeta(Actor)
-{
-	const Meta = {};
-	
-	Meta.LocalScale = 1;
-	if ( Actor && Actor.Animal && Actor.Animal.Scale !== undefined )
-		Meta.LocalScale = Actor.Animal.Scale;
-	
-	Meta.LocalFlip = false;
-	if ( Actor && Actor.Animal && Actor.Animal.LocalFlip !== undefined )
-		Meta.LocalFlip = Actor.Animal.Flip;
-
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
-	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocity;
-	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
-
-	Meta.PhysicsUniforms = {};
-	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
-	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
-	Meta.PhysicsUniforms.Noise = Noise_Turbulence;
-	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
-	
-	Meta.TriangleScale = Params.Animal_TriangleScale;
-	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
-		Meta.TriangleScale = Actor.Animal.TriangleScale;
-
-	Meta.Colours = [InvalidColour];
-	return Meta;
-}
-
-function GetNastyAnimalMeta(Actor)
-{
-	let Meta = GetAnimalMeta(Actor);
-	
-	Meta.VelocityShader = ParticlePhysicsIteration_UpdateVelocityPulse;
-	Meta.PositionShader = ParticlePhysicsIteration_UpdatePosition;
-
-	Meta.PhysicsUniforms.NoiseScale = Params.NastyAnimal_PhysicsNoiseScale;
-	Meta.PhysicsUniforms.SpringScale = Params.NastyAnimal_PhysicsSpringScale;
-	Meta.PhysicsUniforms.Damping = Params.NastyAnimal_PhysicsDamping;
-	Meta.PhysicsUniforms.ExplodeScale = Params.NastyAnimal_PhysicsExplodeScale;
-
-	return Meta;
-}
-
-
-function GetBigBangAnimalMeta(Actor)
-{
-	let Meta = GetAnimalMeta(Actor);
-	
-	Meta.PhysicsUniforms.Noise = RandomTexture;
-	Meta.PhysicsUniforms.Damping = Params.BigBang_Damping;
-	Meta.PhysicsUniforms.NoiseScale = Params.BigBang_NoiseScale;
-	Meta.PhysicsUniforms.TinyNoiseScale = Params.BigBang_TinyNoiseScale;
-	
-	return Meta;
-}
-
-
-
-//	store this somewhere else so the preload matches
-var OceanFilenames = [];
-let LoadOceanFrames = 96;
-if ( Pop.GetExeArguments().includes('ShortOcean') )
-	LoadOceanFrames = 4;
-for ( let i=1;	i<=LoadOceanFrames;	i++ )
-	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
-
-function GetOceanMeta()
-{
-	const Meta = {};
-	Meta.LocalScale = 1;
-	Meta.Filename = OceanFilenames;
-	Meta.VertShader = AnimalParticleVertShader;
-	Meta.FragShader = AnimalParticleFragShader;
-	Meta.PhysicsNoiseScale = 0;
-	Meta.PhysicsDamping = 1;
-	Meta.TriangleScale = Params.Ocean_TriangleScale;
-	Meta.Colours =
-	[
-	 Params.Ocean_Colour0,
-	 Params.Ocean_Colour1,
-	 Params.Ocean_Colour2,
-	 Params.Ocean_Colour3,
-	 Params.Ocean_Colour4,
-	];
-	return Meta;
-}
-
-function GetMusicVolume()	{	return Params.MusicVolume;	}
-function GetMusic2Volume()	{	return Params.Music2Volume;	}
-function GetVoiceVolume()	{	return Params.VoiceVolume;	}
-function GetSoundVolume()	{	return Params.SoundVolume;	}
 
 var AppTime = null;
 
@@ -1511,28 +1380,6 @@ function UpdateSceneVisibility(Time)
 
 var Noise_Turbulence = new Pop.Image( [512,512], 'Float4' );
 
-function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
-{
-	//Pop.Debug("UpdateNoiseTexture",Texture,Time);
-	const Shader = Pop.GetShader( RenderTarget, NoiseShader, QuadVertShader );
-	const Quad = GetAsset('Quad',RenderTarget);
-
-	const RenderNoise = function(RenderTarget)
-	{
-		RenderTarget.ClearColour(0,0,1);
-		const SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('Time', Time );
-			Shader.SetUniform('_Frequency',Params.Turbulence_Frequency);
-			Shader.SetUniform('_Amplitude',Params.Turbulence_Amplitude);
-			Shader.SetUniform('_Lacunarity',Params.Turbulence_Lacunarity);
-			Shader.SetUniform('_Persistence',Params.Turbulence_Persistence);
-		}
-		RenderTarget.DrawGeometry( Quad, Shader, SetUniforms );
-	}
-	RenderTarget.RenderToRenderTarget( Texture, RenderNoise );
-}
 
 function GetFogParams()
 {
@@ -1556,7 +1403,7 @@ function Render(RenderTarget)
 
 	
 	const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
-	UpdateNoiseTexture( RenderTarget, Noise_Turbulence, Noise_TurbulenceFragShader, NoiseTime );
+	UpdateNoiseTexture( RenderTarget, Noise_Turbulence, Noise_TurbulenceShader, NoiseTime );
 	
 
 	
@@ -1645,7 +1492,7 @@ function Render(RenderTarget)
 	
 	function RenderTextureQuad(Texture,TextureIndex)
 	{
-		const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
+		const BlitShader = GetAsset( BlitCopyShader, RenderContext );
 		const Quad = GetAsset('Quad',RenderTarget);
 		
 		let w = 0.1;

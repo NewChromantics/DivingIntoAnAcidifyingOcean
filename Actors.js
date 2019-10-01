@@ -1,12 +1,16 @@
 
-const BlitCopyShader = Pop.LoadFileAsString('BlitCopy.frag.glsl');
-const ParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocity.frag.glsl');
-const ParticlePhysicsIteration_UpdateVelocityPulse = Pop.LoadFileAsString('PhysicsIteration_UpdateVelocityPulse.frag.glsl');
-const ParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('PhysicsIteration_UpdatePosition.frag.glsl');
-const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
-const ParticleTrianglesVertShader = Pop.LoadFileAsString('ParticleTriangles.vert.glsl');
 
+const BlitCopyShader = RegisterShaderAssetFilename('BlitCopy.frag.glsl','Quad.vert.glsl');
+const UpdateVelocityShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocity.frag.glsl','Quad.vert.glsl');
+const UpdateVelocityPulseShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocityPulse.frag.glsl','Quad.vert.glsl');
+const UpdatePositionShader = RegisterShaderAssetFilename('PhysicsIteration_UpdatePosition.frag.glsl','Quad.vert.glsl');
 
+const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
+
+const AnimalParticleShader = RegisterShaderAssetFilename('AnimalParticle.frag.glsl','AnimalParticle.vert.glsl');
+
+const GeoColourShader = RegisterShaderAssetFilename('Colour.frag.glsl','Geo.vert.glsl');
+const GeoEdgeShader = RegisterShaderAssetFilename('Edge.frag.glsl','Geo.vert.glsl');
 
 
 function TPhysicsActor(Meta)
@@ -18,9 +22,9 @@ function TPhysicsActor(Meta)
 	this.Meta = Meta;
 	
 	if ( !this.Meta.UpdateVelocityShader )
-		this.Meta.UpdateVelocityShader = ParticlePhysicsIteration_UpdateVelocity;
+		this.Meta.UpdateVelocityShader = UpdateVelocityShader;
 	if ( !this.Meta.UpdatePositionShader )
-		this.Meta.UpdatePositionShader = ParticlePhysicsIteration_UpdatePosition;
+		this.Meta.UpdatePositionShader = UpdatePositionShader;
 	
 	this.IndexMap = null;
 	this.GetIndexMap = function(Positions)
@@ -124,7 +128,7 @@ function TPhysicsActor(Meta)
 
 
 
-function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,ScratchTexture,PositionOrigTexture,UpdateVelocityShader,UpdatePositionShader,SetPhysicsUniforms)
+function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,ScratchTexture,PositionOrigTexture,UpdateVelocityShaderAsset,UpdatePositionShaderAsset,SetPhysicsUniforms)
 {
 	if ( !Params.EnablePhysicsIteration )
 		return;
@@ -132,10 +136,10 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 	SetPhysicsUniforms = SetPhysicsUniforms || function(){};
 	
 	const PhysicsStep = FrameDuration;
-	let CopyShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
-	UpdateVelocityShader = Pop.GetShader( RenderTarget, UpdateVelocityShader, QuadVertShader );
-	UpdatePositionShader = Pop.GetShader( RenderTarget, UpdatePositionShader, QuadVertShader );
-	let Quad = GetAsset('Quad',RenderTarget);
+	const CopyShader = GetAsset( BlitCopyShader, RenderTarget );
+	const UpdateVelocityShader = GetAsset( UpdateVelocityShaderAsset, RenderTarget );
+	const UpdatePositionShader = GetAsset( UpdatePositionShaderAsset, RenderTarget );
+	const Quad = GetAsset('Quad',RenderTarget);
 	
 	//	copy old velocitys
 	let CopyVelcoityToScratch = function(RenderTarget)

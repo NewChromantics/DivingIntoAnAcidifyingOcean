@@ -1,6 +1,6 @@
 Pop.Include('PopEngineCommon/PopCollada.js');
-Pop.Include('Actors.js');
 Pop.Include('AssetManager.js');
+Pop.Include('Actors.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('AssetImport.js');
@@ -14,6 +14,7 @@ const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
 const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
 const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdatePosition.frag.glsl');
 const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
+const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
 
 
 const MinimumLogoSecs = 0.1;
@@ -343,7 +344,7 @@ function LogoRenderTriangleBufferActor(RenderTarget,Actor,ActorIndex,SetGlobalUn
 	const PositionsTexture = Actor.GetPositionsTexture();
 	const PositionOriginalTexture = Actor.GetPositionOrigTexture();
 	const VelocitysTexture = Actor.GetVelocitysTexture();
-	const BlitShader = Pop.GetShader( RenderTarget, BlitCopyShader, QuadVertShader );
+	const BlitShader = GetAsset( BlitCopyShader, RenderContext );
 	const Shader = Pop.GetShader( RenderTarget, LogoParticleFrag, LogoParticleVert );
 	const TriangleBuffer = Actor.GetTriangleBuffer(RenderTarget);
 	const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
