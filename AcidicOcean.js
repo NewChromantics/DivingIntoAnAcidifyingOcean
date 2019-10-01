@@ -1567,8 +1567,10 @@ function Render(RenderTarget,RenderCamera)
 	//	clear target
 	if ( RenderCamera.Name == 'Left' )
 		RenderTarget.ClearColour( 1,0,0 );
-	else if ( RenderCamera.Name == 'Right' )
-		RenderTarget.ClearColour( 0,1,0 );
+	else if (RenderCamera.Name == 'Right')
+		RenderTarget.ClearColour(0, 1, 0);
+	else if (RenderCamera.Name == 'none')
+		RenderTarget.ClearColour(0, 0, 1);
 	else
 		RenderTarget.ClearColour( ...Params.FogColour );
 
