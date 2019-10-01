@@ -356,44 +356,6 @@ function GetMouseRay(uv)
 	return Ray;
 }
 
-//	returns signed distance, so if negative, point is behind plane.
-Math.GetDistanceToPlane = function(Plane4,Position3)
-{
-	//	plane should be normalised
-	const Distance = Math.Dot3( Position3, Plane4 ) + Plane4[3];
-	return Distance;
-	/*
-	// n must be normalized
-	return dot(p,n.xyz) + n.w;
-	
-	const a = Plane4[0];
-	const b = Plane4[1];
-	const c = Plane4[2];
-	const d = Plane4[3];
-	const x = Position3[0];
-	const y = Position3[1];
-	const z = Position3[2];
-	const Distance = (a * x + b * y + c * z + d);
-	return Distance;
-	*/
-}
-
-Math.InsideMinusOneToOne = function(f)
-{
-	return ( f>=-1 && f<= 1 );
-}
-
-Math.PositionInsideBoxXZ = function(Position3,Box3)
-{
-	if ( Position3[0] < Box3.Min[0] )	return false;
-	//if ( Position3[1] < Box3.Min[1] )	return false;
-	if ( Position3[2] < Box3.Min[2] )	return false;
-	if ( Position3[0] > Box3.Max[0] )	return false;
-	//if ( Position3[1] > Box3.Max[1] )	return false;
-	if ( Position3[2] > Box3.Max[2] )	return false;
-	return true;
-}
-
 //	return the filter function
 function GetCameraActorCullingFilter(Camera,Viewport)
 {
