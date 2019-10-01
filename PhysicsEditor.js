@@ -76,7 +76,7 @@ function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 }
 
 
-function GetRenderScene(GetActorScene,Time,VisibleFilter)
+function GetRenderScene(GetActorScene,Time)
 {
 	let Scene = [];
 	
@@ -124,20 +124,6 @@ function GetRenderScene(GetActorScene,Time,VisibleFilter)
 		PushActorBox( Actor.GetLocalToWorldTransform(), BoundingBox.Min, BoundingBox.Max );
 	}
 	
-	let PushDebugCameraActor = function()
-	{
-		let Camera = GetTimelineCamera();
-		const Actor = new TActor();
-		const LocalScale = Params.DebugCameraPositionScale;
-		Actor.LocalToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix();
-		Actor.Geometry = 'Cube';
-		Actor.RenderShader = GeoEdgeShader;
-		Actor.Uniforms['ChequerFrontAndBack'] = true;
-		Actor.Uniforms['ChequerSides'] = false;
-		Actor.Uniforms['LineWidth'] = 0.01;
-		
-		Scene.push( Actor );
-	}
 	
 	
 	let PushCameraPosActor = function(Position)
@@ -151,42 +137,11 @@ function GetRenderScene(GetActorScene,Time,VisibleFilter)
 		Scene.push( Actor );
 	}
 	
-	const ActorScene = GetActorScene( VisibleFilter );
+	const ActorScene = GetActorScene();
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
-	//const CameraPositions = GetCameraPath();
-	//CameraPositions.forEach( PushCameraPosActor );
 	
-	if ( Params.UseDebugCamera )
-	{
-		PushDebugCameraActor();
-	}
-	/*
-	if ( LastMouseRayUv && Params.DrawTestRay )
-	{
-		const Ray = GetMouseRay( LastMouseRayUv );
-		let RayEnd = Math.CreateTranslationMatrix( ...Ray.End );
-		let TestSize = Params.TestRaySize / 2;
-		let Min = [-TestSize,-TestSize,-TestSize];
-		let Max = [TestSize,TestSize,TestSize];
-		PushActorBox( RayEnd, Min, Max, true );
-	}
-	
-	//	draw intersections
-	let DrawIntersection = function(Intersection)
-	{
-		PushActorBoundingBox( Intersection.Actor, true );
-		//Pop.Debug("Selected",Intersection.Actor.Name);
-		let Pos = Math.CreateTranslationMatrix( ...Intersection.Position );
-		let TestSize = Params.TestRaySize / 2;
-		let Min = [-TestSize,-TestSize,-TestSize];
-		let Max = [TestSize,TestSize,TestSize];
-		PushActorBox( Pos, Min, Max, true );
-	}
-	if ( Params.DrawHighlightedActors )
-		Debug_HighlightActors.forEach( DrawIntersection );
-	*/
 	return Scene;
 }
 
@@ -197,12 +152,8 @@ function GetEditorRenderScene(ActorScene,Time)
 	{
 		return ActorScene;
 	}
-	function IsVisible()
-	{
-		return true;
-	}
 	
-	const RenderScene = GetRenderScene( GetActorScene, Time, IsVisible );
+	const RenderScene = GetRenderScene( GetActorScene, Time );
 	return RenderScene;
 }
 

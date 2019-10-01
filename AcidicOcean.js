@@ -43,6 +43,8 @@ var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
 
+const LastUpdateColourTextureElapsed = {};
+
 var RenderFrameDurationSecs = false;
 var GpuJobs = [];
 
@@ -914,6 +916,10 @@ function Init()
 		XrLoop().then( OnExitXr ).catch( OnExitXr );
 	}
 
+	
+	//	show hud
+	let Div = new Pop.Hud.Label('Experience');
+	Div.SetVisible(true);
 }
 
 var Acid = {};
@@ -937,8 +943,6 @@ Acid.StateMap =
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, true );
 Acid.SelectedActor = null;
 Acid.SkipSelectedAnimal = false;
-Acid.FogLerp = 0;
-Acid.FogTargetPosition = null;
 Acid.UserSetYear = null;
 Acid.CameraPosition = null;	//	current pos for lerping depending on state
 Acid.GetCameraPosition = function()
@@ -949,14 +953,9 @@ Acid.GetCameraPosition = function()
 }
 Acid.GetFogParams = function()
 {
-	let TargetPos = Acid.FogTargetPosition || [0,0,0];
-	
 	const FogParams = {};
 	const CameraPos = Acid.GetCameraPosition();
 
-	//FogParams.WorldPosition = Math.LerpArray( CameraPos, TargetPos, Acid.FogLerp );
-	//FogParams.MinDistance = Math.Lerp( Params.FogMinDistance, Params.FogHighlightMinDistance, Acid.FogLerp );
-	//FogParams.MaxDistance = Math.Lerp( Params.FogMaxDistance, Params.FogHighlightMaxDistance, Acid.FogLerp );
 	FogParams.WorldPosition = CameraPos;
 	FogParams.MinDistance = Params.FogMinDistance;
 	FogParams.MaxDistance = Params.FogMaxDistance;
@@ -974,17 +973,7 @@ function UpdateFog(FrameDuration)
 	{
 		//	update position in case user quickly switches
 		let ActorPos = GetActorWorldPos( Acid.SelectedActor );
-		if ( !Acid.FogTargetPosition )
-			Acid.FogTargetPosition = ActorPos;
-		
-		Acid.FogTargetPosition = Math.LerpArray( Acid.FogTargetPosition, ActorPos, Params.FogTargetLerpSpeed );
-		Acid.FogLerp += Params.FogParamsLerpSpeed;
 	}
-	else
-	{
-		Acid.FogLerp -= Params.FogParamsLerpSpeed;
-	}
-	Acid.FogLerp = Math.clamp( 0, 1, Acid.FogLerp );
 }
 
 function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
@@ -1263,7 +1252,6 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	return null;
 }
 
-const LastUpdateColourTextureElapsed = {};
 function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
 {
 	if ( LastUpdateColourTextureElapsed[ColourNamePrefix] !== undefined )

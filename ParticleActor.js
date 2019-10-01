@@ -448,7 +448,6 @@ function RenderScene(Scene,RenderTarget,Camera,Time,GlobalUniforms)
 	
 	function RenderSceneActor(Actor,ActorIndex)
 	{
-		Pop.Debug("Render Actor",Actor);
 		const SetGlobalUniforms = function(Shader)
 		{
 			let SetUniformOfThisArray = function(Key)

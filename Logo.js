@@ -31,11 +31,6 @@ function ShowLogoElements()
 	Div.SetVisible(true);
 }
 
-function ShowExperienceElements()
-{
-	let Div = new Pop.Hud.Label('Experience');
-	Div.SetVisible(true);
-}
 
 function TLogoState()
 {
@@ -330,8 +325,6 @@ function Update_Experience(FirstUpdate)
 	{
 		let Source = Pop.LoadFileAsString('AcidicOcean.js');
 		Pop.CompileAndRun( Source, 'AcidicOcean.js' );
-		
-		ShowExperienceElements();
 	}
 }
 
