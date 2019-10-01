@@ -17,7 +17,7 @@ const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
 
 
-const MinimumLogoSecs = 0.1;
+const MinimumLogoSecs = 0.01;
 
 function HideLogoElements()
 {

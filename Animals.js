@@ -59,3 +59,121 @@ function GetAnimalAssetFilenames()
 }
 
 
+
+
+const OceanActorPrefix = 'Ocean_surface_';
+const DebrisActorPrefix = 'Water_';
+const NastyAnimalPrefix = 'Nasty_Animal_';
+const BigBangAnimalPrefix = 'Bigbang_';
+const AnimalActorPrefixs = ['Animal_',BigBangAnimalPrefix,NastyAnimalPrefix];
+
+
+//	store this somewhere else so the preload matches
+var OceanFilenames = [];
+let LoadOceanFrames = 96;
+if ( Pop.GetExeArguments().includes('ShortOcean') )
+	LoadOceanFrames = 4;
+for ( let i=1;	i<=LoadOceanFrames;	i++ )
+	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
+
+
+
+function GetDebrisMeta(Actor)
+{
+	const Meta = {};
+	
+	Meta.LocalScale = 1;
+	
+	Meta.Filename = '.random';
+	Meta.RenderShader = AnimalParticleShader;
+	Meta.VelocityShader = UpdateVelocityShader;
+	Meta.PositionShader = UpdatePositionShader;
+	
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
+	Meta.PhysicsUniforms.Noise = RandomTexture;
+	
+	Meta.TriangleScale = Params.Debris_TriangleScale;
+	if ( DebrisColourTexture.Pixels )
+		Meta.OverridingColourTexture = DebrisColourTexture;
+	
+	Meta.FitToBoundingBox = true;
+	return Meta;
+}
+
+function GetAnimalMeta(Actor)
+{
+	const Meta = {};
+	
+	Meta.LocalScale = Params.AnimalScale;
+	if ( Actor && Actor.Animal && Actor.Animal.Scale !== undefined )
+		Meta.LocalScale = Actor.Animal.Scale;
+	
+	Meta.LocalFlip = false;
+	if ( Actor && Actor.Animal && Actor.Animal.LocalFlip !== undefined )
+		Meta.LocalFlip = Actor.Animal.Flip;
+	
+	Meta.RenderShader = AnimalParticleShader;
+	Meta.VelocityShader = UpdateVelocityShader;
+	Meta.PositionShader = UpdatePositionShader;
+	
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
+	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
+	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
+	
+	Meta.TriangleScale = Params.Animal_TriangleScale;
+	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
+		Meta.TriangleScale = Actor.Animal.TriangleScale;
+	
+	Meta.Colours = [InvalidColour];
+	return Meta;
+}
+
+function GetNastyAnimalMeta(Actor)
+{
+	let Meta = GetAnimalMeta(Actor);
+	
+	Meta.VelocityShader = UpdateVelocityPulseShader;
+	Meta.PositionShader = UpdatePositionShader;
+	
+	Meta.PhysicsUniforms.NoiseScale = Params.NastyAnimal_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.SpringScale = Params.NastyAnimal_PhysicsSpringScale;
+	Meta.PhysicsUniforms.Damping = Params.NastyAnimal_PhysicsDamping;
+	Meta.PhysicsUniforms.ExplodeScale = Params.NastyAnimal_PhysicsExplodeScale;
+	
+	return Meta;
+}
+
+
+function GetBigBangAnimalMeta(Actor)
+{
+	let Meta = GetAnimalMeta(Actor);
+	
+	Meta.PhysicsUniforms.Noise = RandomTexture;
+	Meta.PhysicsUniforms.Damping = Params.BigBang_Damping;
+	Meta.PhysicsUniforms.NoiseScale = Params.BigBang_NoiseScale;
+	Meta.PhysicsUniforms.TinyNoiseScale = Params.BigBang_TinyNoiseScale;
+	
+	return Meta;
+}
+
+function GetOceanMeta()
+{
+	const Meta = {};
+	Meta.LocalScale = 1;
+	Meta.Filename = OceanFilenames;
+	Meta.RenderShader = AnimalParticleShader;
+	Meta.PhysicsNoiseScale = 0;
+	Meta.PhysicsDamping = 1;
+	Meta.TriangleScale = Params.Ocean_TriangleScale;
+	if ( OceanColourTexture.Pixels )
+		Meta.OverridingColourTexture = OceanColourTexture;
+	return Meta;
+}
+
+
+
+

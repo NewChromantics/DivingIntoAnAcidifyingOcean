@@ -1,10 +1,13 @@
 
+const AutoTriangleMeshCount = 256*512;	//	130k
+const InvalidColour = [0,1,0];
 
-function SetupFileAssets()
-{
-	AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAutoTriangleMesh( RenderTarget, AutoTriangleMeshCount );	};
-}
-SetupFileAssets();
+//	setup global assets
+AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAutoTriangleMesh( RenderTarget, AutoTriangleMeshCount );	};
+
+
+
+
 
 
 
@@ -429,3 +432,47 @@ function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
 	}
 	RenderTarget.RenderToRenderTarget( Texture, RenderNoise );
 }
+
+
+
+function RenderScene(Scene,RenderTarget,Camera,Time,GlobalUniforms)
+{
+	const Viewport = RenderTarget.GetRenderTargetRect();
+	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
+	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
+	
+	GlobalUniforms['WorldToCameraTransform'] = WorldToCameraTransform;
+	GlobalUniforms['CameraToWorldTransform'] = CameraToWorldTransform;
+	GlobalUniforms['CameraProjectionTransform'] = CameraProjectionTransform;
+	
+	function RenderSceneActor(Actor,ActorIndex)
+	{
+		Pop.Debug("Render Actor",Actor);
+		const SetGlobalUniforms = function(Shader)
+		{
+			let SetUniformOfThisArray = function(Key)
+			{
+				let Value = this[Key];
+				Shader.SetUniform( Key, Value );
+			}
+			Object.keys( GlobalUniforms ).forEach( SetUniformOfThisArray.bind(GlobalUniforms) );
+			Object.keys( Actor.Uniforms ).forEach( SetUniformOfThisArray.bind(Actor.Uniforms) );
+		}
+		
+		//try
+		{
+			Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
+		}
+		/*
+		 catch(e)
+		 {
+		 Pop.Debug("Error rendering actor", Actor.Name,e);
+		 }
+		 */
+	}
+	
+	Scene.forEach( RenderSceneActor );
+}
+
+

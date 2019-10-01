@@ -179,19 +179,29 @@ const Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = BootupRender;
 Window.OnKeyDown = OnKeyPress;
 
+//	global params...
 const Params = {};
 Params.EnablePhysicsIteration = true;
 Params.XrMode = false;
+Params.ScrollFlySpeed = 10;
+Params.AnimalDebugParticleColour = false;
+Params.FogColour = [1,0,0];
+Params.AnimalBufferLod = 1;
+Params.DrawBoundingBoxes = true;
+Params.DrawBoundingBoxesFilled = false;
 
+let Editor = null;
 
-
-function Update_PhysicsEditor(FirstUpdate)
+function Update_PhysicsEditor(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
 		let Source = Pop.LoadFileAsString('PhysicsEditor.js');
 		Pop.CompileAndRun( Source, 'PhysicsEditor.js' );
+		Editor = new TAssetEditor("Hello");
 	}
+	
+	Editor.Update( FrameDuration, StateTime );
 }
 
 
