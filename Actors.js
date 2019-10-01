@@ -134,12 +134,13 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 		return;
 	
 	SetPhysicsUniforms = SetPhysicsUniforms || function(){};
-	
+
+	const RenderContext = RenderTarget.GetRenderContext();
 	const PhysicsStep = FrameDuration;
-	const CopyShader = GetAsset( BlitCopyShader, RenderTarget );
-	const UpdateVelocityShader = GetAsset( UpdateVelocityShaderAsset, RenderTarget );
-	const UpdatePositionShader = GetAsset( UpdatePositionShaderAsset, RenderTarget );
-	const Quad = GetAsset('Quad',RenderTarget);
+	const CopyShader = GetAsset(BlitCopyShader, RenderContext );
+	const UpdateVelocityShader = GetAsset(UpdateVelocityShaderAsset, RenderContext );
+	const UpdatePositionShader = GetAsset(UpdatePositionShaderAsset, RenderContext );
+	const Quad = GetAsset('Quad', RenderContext);
 	
 	//	copy old velocitys
 	let CopyVelcoityToScratch = function(RenderTarget)
