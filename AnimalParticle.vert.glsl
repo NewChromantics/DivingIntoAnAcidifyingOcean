@@ -11,6 +11,8 @@ uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
 
+uniform int TriangleCount;
+
 uniform mat4 CameraToWorldTransform;
 uniform mat4 LocalToWorldTransform;
 uniform mat4 WorldToCameraTransform;
@@ -44,7 +46,7 @@ vec2 GetTriangleUvf(float TriangleIndex)
 	float y = (t-x) * WidthInv;
 	float u = x * WidthInv;
 	float v = y / float(WorldPositionsHeight);
-	
+		
 	float2 uv = float2(u,v);
 	return uv;
 }
@@ -116,7 +118,13 @@ void main_BillBoardCameraSpace()
 
 	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
 	gl_Position = ProjectionPos;
-	
+	/*
+	if ( TriangleIndexf >= float(TriangleCount) )
+	{
+		Rgba = float4(0,1,0,1);
+		//gl_Position = float4(0,0,0,0);
+	}
+	*/
 	FragWorldPos = WorldPos.xyz;
 	TriangleUvIndex = float3( Localuv, TriangleIndexf );
 }

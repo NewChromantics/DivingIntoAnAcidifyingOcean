@@ -297,6 +297,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		if ( !ColourTexture )
 			ColourTexture = RandomTexture;
 		
+		//	limit number of triangles
+		let TriangleCount = Math.min(AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount) || AutoTriangleMeshCount;
+		TriangleCount = Math.floor(TriangleCount * Params.AnimalBufferLod);
+		Pop.Debug("TriangleCount", TriangleCount);
 		
 		const SetUniforms = function(Shader)
 		{
@@ -310,13 +314,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
 			Shader.SetUniform('TriangleScale', Meta.TriangleScale );
 			Shader.SetUniform('ColourImage',ColourTexture);
-			Shader.SetUniform('Debug_ForceColour',Params.AnimalDebugParticleColour);
+			Shader.SetUniform('Debug_ForceColour', Params.AnimalDebugParticleColour);
+			Shader.SetUniform('TriangleCount', TriangleCount);
 		}
 		
-		//	limit number of triangles
-		//	gr: why is this triangle count so much bigger than the buffer?
-		let TriangleCount = Math.min( AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount ) || AutoTriangleMeshCount;
-		TriangleCount = Math.floor( TriangleCount * Params.AnimalBufferLod );
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
 	}
 	
