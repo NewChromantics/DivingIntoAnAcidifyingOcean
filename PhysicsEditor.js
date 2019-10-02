@@ -19,6 +19,12 @@ var DebrisColourTexture = new Pop.Image();
 Params.DrawBoundingBoxes = true;
 Params.DrawHighlightedActors = true;
 
+var EditorParams = {};
+EditorParams.BackgroundColour = [0,0,0.3];
+//EditorParams.ActorNodeName = 'Animal_XXX';
+//EditorParams.ActorNodeName = OceanActorPrefix + 'x';
+EditorParams.ActorNodeName = BigBangAnimalPrefix + 'xxx';
+
 
 function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 {
@@ -164,13 +170,41 @@ function CreateEditorActorScene()
 	
 	let OnActor = function(ActorNode)
 	{
+		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 	
+		let IsAnimalActor = true;//IsActorSelectable(Actor);
+		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
+		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
+		
 		let WorldPos = ActorNode.Position;
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 		Actor.BoundingBox = ActorNode.BoundingBox;
-			
+		
+		
+		if ( IsOceanActor )
+		{
+			SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
+		}
+		else if ( IsDebrisActor )
+		{
+			SetupAnimalTextureBufferActor.call( Actor, GetDebrisMeta().Filename, GetDebrisMeta );
+		}
+		else
+		{
+			const Animal = GetRandomAnimal( ActorNode.Name );
+			Actor.Animal = Animal;
+			Actor.Name += " " + Animal.Name;
+			let GetMeta = GetAnimalMeta;
+			if ( ActorNode.Name.startsWith( NastyAnimalPrefix ) )
+				GetMeta = GetNastyAnimalMeta;
+			if ( ActorNode.Name.startsWith( BigBangAnimalPrefix ) )
+				GetMeta = GetBigBangAnimalMeta;
+			SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetMeta );
+		}
+		
+		/*
 		const Animal = GetRandomAnimal( ActorNode.Name );
 		Actor.Animal = Animal;
 		Actor.Name += " " + Animal.Name;
@@ -180,12 +214,13 @@ function CreateEditorActorScene()
 		if ( ActorNode.Name.startsWith( BigBangAnimalPrefix ) )
 			GetMeta = GetBigBangAnimalMeta;
 		SetupAnimalTextureBufferActor.call( Actor, Animal.Model, GetMeta );
+		 */
 		Scene.push( Actor );
 	}
 	
 	//	create a dumb actor
 	let PreviewActorNode = {};
-	PreviewActorNode.Name = "Animal_xxx";
+	PreviewActorNode.Name = EditorParams.ActorNodeName;
 	PreviewActorNode.BoundingBox = {};
 	PreviewActorNode.BoundingBox.Min = [-10,-10,-10];
 	PreviewActorNode.BoundingBox.Max = [10,10,10];
@@ -205,6 +240,8 @@ class TAssetEditor
 		this.Window.OnRender = this.Render.bind(this);
 		this.Camera = CreateDebugCamera(this.Window);
 		this.Scene = CreateEditorActorScene();
+
+		this.CreateEditorParamsWindow();
 	}
 	
 	Update(FrameDurationSecs,Time)
@@ -219,7 +256,7 @@ class TAssetEditor
 		const Scene = GetEditorRenderScene( this.Scene, this.Time );
 		
 		//Pop.Debug("Render",RenderTarget);
-		RenderTarget.ClearColour(0,1,0);
+		RenderTarget.ClearColour( ...EditorParams.BackgroundColour );
 		
 		const GlobalUniforms = {};
 		GlobalUniforms['Fog_MinDistance'] = 100;
@@ -228,7 +265,18 @@ class TAssetEditor
 		GlobalUniforms['Fog_WorldPosition'] = this.Camera.Position;
 
 		RenderScene( Scene, RenderTarget, this.Camera, this.Time, GlobalUniforms );
-
+	}
+	
+	CreateEditorParamsWindow()
+	{
+		const ParamsWindowRect = [1100,20,350,450];
+		this.ParamsWindow = CreateParamsWindow( EditorParams, this.OnEditorParamsChanged.bind(this), ParamsWindowRect );
+		this.ParamsWindow.AddParam('BackgroundColour','Colour');
+	}
+	
+	OnEditorParamsChanged(Params,ChangedParamName)
+	{
+		Pop.Debug("Param changed",ChangedParamName);
 	}
 	
 }
