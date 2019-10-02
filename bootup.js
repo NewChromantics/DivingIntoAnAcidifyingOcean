@@ -179,6 +179,9 @@ const Window = new Pop.Opengl.Window("Tarqunder the sea");
 Window.OnRender = BootupRender;
 Window.OnKeyDown = OnKeyPress;
 
+
+const BoldMode = Pop.GetExeArguments().includes('Bold');
+
 //	global params...
 const Params = {};
 Params.EnablePhysicsIteration = true;
@@ -190,6 +193,32 @@ Params.AnimalBufferLod = 1;
 Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
+
+Params.BigBang_Damping = 0.01;
+Params.BigBang_NoiseScale = 0.01;
+Params.BigBang_TinyNoiseScale = 0.5;
+
+Params.Animal_TriangleScale = 0.01;
+Params.Animal_PhysicsDamping = 0.12;
+Params.Animal_PhysicsNoiseScale = 16.0;
+Params.NastyAnimal_PhysicsNoiseScale = 0.45;
+Params.NastyAnimal_PhysicsSpringScale = 0.65;
+Params.NastyAnimal_PhysicsDamping = 0.01;
+Params.NastyAnimal_PhysicsExplodeScale = 3.1;
+
+Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.025;
+Params.Debris_PhysicsDamping = 0.04;
+Params.Debris_PhysicsNoiseScale = 9.9;
+
+Params.Turbulence_Frequency = 4.0;
+Params.Turbulence_Amplitude = 1.0;
+Params.Turbulence_Lacunarity = 0.10;
+Params.Turbulence_Persistence = 0.20;
+Params.Turbulence_TimeScalar = 0.14;
+Params.AnimalScale = 1.0;
+Params.AnimalFlip = false;
+
+
 
 let Editor = null;
 

@@ -16,7 +16,6 @@ Pop.Include('ParticleActor.js');
 //Pop.Include('Animals.js');
 
 const EnableVoiceOver = Pop.GetExeArguments().includes('EnableVoiceOver');
-const BoldMode = Pop.GetExeArguments().includes('Bold');
 const AnimalTest = Pop.GetExeArguments().includes('AnimalTest');
 
 const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
@@ -291,22 +290,6 @@ Params.CameraFarDistance = 24;	//	under 20 and keeps clipping too easily
 Params.AudioCrossFadeDurationSecs = 2;
 Params.OceanAnimationFrameRate = 25;
 
-Params.BigBang_Damping = 0.01;
-Params.BigBang_NoiseScale = 0.01;
-Params.BigBang_TinyNoiseScale = 0.5;
-
-Params.Animal_TriangleScale = 0.01;
-Params.Animal_PhysicsDamping = 0.12;
-Params.Animal_PhysicsNoiseScale = 16.0;
-Params.NastyAnimal_PhysicsNoiseScale = 0.45;
-Params.NastyAnimal_PhysicsSpringScale = 0.65;
-Params.NastyAnimal_PhysicsDamping = 0.01;
-Params.NastyAnimal_PhysicsExplodeScale = 3.1;
-
-Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.025;
-Params.Debris_PhysicsDamping = 0.04;
-Params.Debris_PhysicsNoiseScale = 9.9;
-
 Params.CustomiseWaterColours = false;
 Params.UpdateColourTextureFrequencySecs = 0.3;
 Params.Debris_Colour0 = InvalidColour;
@@ -331,14 +314,7 @@ Params.Ocean_Colour7 = InvalidColour;
 Params.Ocean_Colour8 = InvalidColour;
 Params.Ocean_Colour9 = InvalidColour;
 
-Params.Turbulence_Frequency = 4.0;
-Params.Turbulence_Amplitude = 1.0;
-Params.Turbulence_Lacunarity = 0.10;
-Params.Turbulence_Persistence = 0.20;
-Params.Turbulence_TimeScalar = 0.14;
 
-Params.AnimalScale = 1.0;
-Params.AnimalFlip = false;
 Params.XrInvertRotation = true;
 Params.XrTrackTimelineCamera = true;
 Params.DebugCameraClearColour = false;

@@ -15,15 +15,28 @@ var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
 
+const GpuJobs = [];
+
+const PhysicsEnabled = true;
+var PhsyicsUpdateCount = 0;	//	gotta do one
+
 
 Params.DrawBoundingBoxes = true;
 Params.DrawHighlightedActors = true;
 
-var EditorParams = {};
+//var EditorParams = {};
+const EditorParams = Params;
 EditorParams.BackgroundColour = [0,0,0.3];
 //EditorParams.ActorNodeName = 'Animal_XXX';
 //EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = BigBangAnimalPrefix + 'xxx';
+EditorParams.EnablePhysicsAfterSecs = 2;
+
+EditorParams.Turbulence_Frequency = 4.0;
+EditorParams.Turbulence_Amplitude = 1.0;
+EditorParams.Turbulence_Lacunarity = 0.10;
+EditorParams.Turbulence_Persistence = 0.20;
+EditorParams.Turbulence_TimeScalar = 0.14;
 
 
 function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
@@ -79,6 +92,18 @@ function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 	}
 	
 	return Camera;
+}
+
+
+function FlushGpuJobs(RenderTarget)
+{
+	const RunJob = function(Job)
+	{
+		Job( RenderTarget );
+	}
+	GpuJobs.forEach( RunJob );
+	
+	GpuJobs.length = 0;
 }
 
 
@@ -232,6 +257,8 @@ function CreateEditorActorScene()
 	return Scene;
 }
 
+
+
 class TAssetEditor
 {
 	constructor(Name)
@@ -239,7 +266,9 @@ class TAssetEditor
 		this.Window = new Pop.Opengl.Window(Name);
 		this.Window.OnRender = this.Render.bind(this);
 		this.Camera = CreateDebugCamera(this.Window);
+		this.Time = 0;
 		this.Scene = CreateEditorActorScene();
+		this.SceneInitTime = this.Time;
 
 		this.CreateEditorParamsWindow();
 	}
@@ -248,11 +277,56 @@ class TAssetEditor
 	{
 		this.Time = Time;
 		//Pop.Debug("Update",FrameDurationSecs);
+		
+		const SceneTime = ( this.Time - this.SceneInitTime );
+		if ( SceneTime > EditorParams.EnablePhysicsAfterSecs )
+		{
+			this.Scene[0].UpdatePhysics = true;
+		}
+		
+		
+		const AppTime = Time;
+		const Params = EditorParams;
+		
+		const UpdateNoise = function(RenderTarget)
+		{
+			const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
+			UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceShader, NoiseTime );
+		}
+		
+		const Scene = this.Scene;
+		const UpdateActorPhysics = function(RenderTarget)
+		{
+			const UpdateActorPhysics = function(Actor)
+			{
+				//	only update actors visible
+				//	gr: maybe do this with the actors in scene from GetRenderScene?
+				const UpdatePhysicsUniforms = function(Shader)
+				{
+					const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
+					Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
+				}
+				Actor.PhysicsIteration( FrameDurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
+			}
+			
+			
+			//	update physics
+			if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
+			{
+				Scene.forEach( UpdateActorPhysics );
+				PhsyicsUpdateCount++;
+			}
+		}
+		
+		GpuJobs.push( UpdateNoise );
+		GpuJobs.push( UpdateActorPhysics );
 	}
 	
 
 	Render(RenderTarget)
 	{
+		FlushGpuJobs( RenderTarget );
+
 		const Scene = GetEditorRenderScene( this.Scene, this.Time );
 		
 		//Pop.Debug("Render",RenderTarget);
@@ -273,6 +347,7 @@ class TAssetEditor
 		this.ParamsWindow = CreateParamsWindow( EditorParams, this.OnEditorParamsChanged.bind(this), ParamsWindowRect );
 		this.ParamsWindow.AddParam('BackgroundColour','Colour');
 		this.ParamsWindow.AddParam('ActorNodeName');
+		this.ParamsWindow.AddParam('EnablePhysicsAfterSecs',0,10);
 	}
 	
 	OnEditorParamsChanged(Params,ChangedParamName)
@@ -281,7 +356,10 @@ class TAssetEditor
 		
 		//	reload scene if actor changes
 		if ( ChangedParamName == 'ActorNodeName' )
+		{
 			this.Scene = CreateEditorActorScene();
+			this.SceneInitTime = this.Time;
+		}
 	}
 	
 }
