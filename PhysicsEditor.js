@@ -272,11 +272,16 @@ class TAssetEditor
 		const ParamsWindowRect = [1100,20,350,450];
 		this.ParamsWindow = CreateParamsWindow( EditorParams, this.OnEditorParamsChanged.bind(this), ParamsWindowRect );
 		this.ParamsWindow.AddParam('BackgroundColour','Colour');
+		this.ParamsWindow.AddParam('ActorNodeName');
 	}
 	
 	OnEditorParamsChanged(Params,ChangedParamName)
 	{
 		Pop.Debug("Param changed",ChangedParamName);
+		
+		//	reload scene if actor changes
+		if ( ChangedParamName == 'ActorNodeName' )
+			this.Scene = CreateEditorActorScene();
 	}
 	
 }
