@@ -300,7 +300,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		//	limit number of triangles
 		let TriangleCount = Math.min(AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount) || AutoTriangleMeshCount;
 		TriangleCount = Math.floor(TriangleCount * Params.AnimalBufferLod);
-		Pop.Debug("TriangleCount", TriangleCount);
+		//Pop.Debug("TriangleCount", TriangleCount);
 		
 		const SetUniforms = function(Shader)
 		{

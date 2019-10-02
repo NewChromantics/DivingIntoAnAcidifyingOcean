@@ -32,6 +32,8 @@ var PhsyicsUpdateCount = 0;	//	gotta do one
 
 var Debug_HighlightActors = [];
 
+//	for debugging, keep a copy of the old cameras
+const LastXrCameras = {};
 
 
 const ShowDefaultActors = Pop.GetExeArguments().includes('ShowDefaultActors');
@@ -337,6 +339,11 @@ Params.Turbulence_TimeScalar = 0.14;
 
 Params.AnimalScale = 1.0;
 Params.AnimalFlip = false;
+Params.XrInvertRotation = true;
+Params.XrTrackTimelineCamera = true;
+Params.DebugCameraClearColour = false;
+
+
 
 let OnParamsChanged = function(Params,ChangedParamName)
 {
@@ -456,6 +463,9 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('AnimalScale',0,2);
 	ParamsWindow.AddParam('AnimalFlip');
 	ParamsWindow.AddParam('AnimalDebugParticleColour');
+	ParamsWindow.AddParam('XrInvertRotation');
+	ParamsWindow.AddParam('XrTrackTimelineCamera');
+	ParamsWindow.AddParam('DebugCameraClearColour');
 }
 
 
@@ -709,9 +719,8 @@ function GetRenderScene(GetActorScene,Time)
 		PushActorBox( Math.CreateIdentityMatrix(), WorldBoundingBox.Min, WorldBoundingBox.Max );
 	}
 	
-	let PushDebugCameraActor = function()
+	let PushDebugCameraActor = function(Camera)
 	{
-		let Camera = GetTimelineCamera();
 		const Actor = new TActor();
 		const LocalScale = Params.DebugCameraPositionScale;
 		Actor.LocalToWorldTransform = Camera.GetLocalToWorldFrustumTransformMatrix();
@@ -723,7 +732,6 @@ function GetRenderScene(GetActorScene,Time)
 		
 		Scene.push( Actor );
 	}
-	
 	
 	let PushCameraPosActor = function(Position)
 	{
@@ -745,7 +753,10 @@ function GetRenderScene(GetActorScene,Time)
 	
 	if ( Params.UseDebugCamera )
 	{
-		PushDebugCameraActor();
+		let TimelineCamera = GetTimelineCamera();
+		PushDebugCameraActor(TimelineCamera);
+
+		Object.keys( LastXrCameras ).forEach( Name => PushDebugCameraActor(LastXrCameras[Name]) );
 	}
 	
 	if ( LastMouseRayUv && Params.DrawTestRay )
@@ -1539,19 +1550,46 @@ function Render(RenderTarget,RenderCamera)
 	{
 		RenderCamera = GetRenderCamera();
 		//	skip render in xr mode atm
-		if ( Params.XrMode )	return;
+		if ( Params.XrMode )
+		{
+			if ( !Params.UseDebugCamera )
+				return;
+		}
 	}
 	else
 	{
+		//Pop.Debug("Render with xr camera",Camera);
 		//	turn the XR camera setup into a pop camera
 		const Camera = new Pop.Camera();
 		Object.assign( Camera, RenderCamera );
 		Camera.Position[0] = RenderCamera.Transform.position.x;
 		Camera.Position[1] = RenderCamera.Transform.position.y;
 		Camera.Position[2] = RenderCamera.Transform.position.z;
-		//Pop.Debug("Render with xr camera",Camera);
+
+		if ( Params.XrTrackTimelineCamera )
+		{
+			//	todo: use getOffsetReferenceSpace to find out where head should be,
+			//		we currently are setting the camera head pos with the XR pose (which is like 6foot out)
+			//	todo: this may need to align forward
+			const TimelinePosition = Acid.GetCameraPosition();
+			Camera.Position = Math.Add3( Camera.Position, TimelinePosition );
+		}
+		
+		
+		//	get rotation from pose
+		//	gr: seems to be inverted in mozilla emulator
+		const RotationMatrix = RenderCamera.Transform.matrix;
+		Camera.Rotation4x4 = Params.XrInvertRotation ? Math.MatrixInverse4x4( RotationMatrix ) : Array.from( RotationMatrix );
+		Math.SetMatrixTranslation( Camera.Rotation4x4, 0, 0, 0 );
+		
+		LastXrCameras[Camera.Name] = Camera;
 		
 		RenderCamera = Camera;
+		
+		//	skip rendering if debug camera is on
+		//	todo: don't do this if rendering to device
+		if ( Params.UseDebugCamera )
+			return;
 	}
 	
 	FlushGpuJobs( RenderTarget );
@@ -1565,15 +1603,20 @@ function Render(RenderTarget,RenderCamera)
 	
 
 	//	clear target
-	if ( RenderCamera.Name == 'Left' )
-		RenderTarget.ClearColour( 1,0,0 );
-	else if (RenderCamera.Name == 'Right')
-		RenderTarget.ClearColour(0, 1, 0);
-	else if (RenderCamera.Name == 'none')
-		RenderTarget.ClearColour(0, 0, 1);
+	if ( Params.DebugCameraClearColour )
+	{
+		if ( RenderCamera.Name == 'Left' )
+			RenderTarget.ClearColour( 1,0,0 );
+		else if (RenderCamera.Name == 'Right')
+			RenderTarget.ClearColour(0, 1, 0);
+		else
+			RenderTarget.ClearColour(0, 0, 1);
+	}
 	else
+	{
 		RenderTarget.ClearColour( ...Params.FogColour );
-
+	}
+	
 	const Viewport = RenderTarget.GetRenderTargetRect();
 	const CameraProjectionTransform = RenderCamera.GetProjectionMatrix(Viewport);
 	const WorldToCameraTransform = RenderCamera.GetWorldToCameraMatrix();
