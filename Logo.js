@@ -302,7 +302,9 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	}
 	
 	//	wait for button to be pressed
-	if ( !Pop.GetExeArguments().includes('AutoStart') )
+	const EditorMode = Pop.GetExeArguments().includes('Editor');
+	const AutoStart = Pop.GetExeArguments().includes('AutoStart') || EditorMode;
+	if ( !AutoStart )
 		if ( !LogoState.StartButtonPressed )
 			return;
 	
@@ -312,8 +314,8 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	
 	HideLogoElements();
 	
-	if ( Pop.GetExeArguments().includes('PhysicsEditor') )
-		return 'PhysicsEditor';
+	if ( EditorMode )
+		return 'Editor';
 
 	return 'Experience';
 }

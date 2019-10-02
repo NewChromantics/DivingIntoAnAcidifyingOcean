@@ -155,7 +155,7 @@ let StateMap =
 {
 	'Logo':	'Update_Logo',
 	'Experience': 'Update_Experience',
-	'PhysicsEditor': 'Update_PhysicsEditor'
+	'Editor': 'Update_Editor'
 };
 
 let StateMachine = new Pop.StateMachine( StateMap );
@@ -193,12 +193,12 @@ Params.DrawHighlightedActors = false;
 
 let Editor = null;
 
-function Update_PhysicsEditor(FirstUpdate,FrameDuration,StateTime)
+function Update_Editor(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		let Source = Pop.LoadFileAsString('PhysicsEditor.js');
-		Pop.CompileAndRun( Source, 'PhysicsEditor.js' );
+		let Source = Pop.LoadFileAsString('Editor.js');
+		Pop.CompileAndRun( Source, 'Editor.js' );
 		Editor = new TAssetEditor("Hello");
 	}
 	
