@@ -3,8 +3,8 @@ Pop.Include('AssetManager.js');
 Pop.Include('Actors.js');
 Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
-Pop.Include('AssetImport.js');
-Pop.Include('Animals.js');
+//Pop.Include('AssetImport.js');
+//Pop.Include('Animals.js');
 
 const EnableLogoParams = false;
 const EnableInteractiveLogo = Pop.GetExeArguments().includes('Logo');

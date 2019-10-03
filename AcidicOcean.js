@@ -1342,21 +1342,6 @@ function Update(FrameDurationSecs)
 	UpdateSceneVisibility(Time);
 	
 	
-	//	reset stats once per frame
-	const ResetRenderStats = function()
-	{
-		//	reset render stats
-		let Stats = "Batches: " + Pop.Opengl.BatchesDrawn;
-		Stats += " Triangles: " + Pop.Opengl.TrianglesDrawn;
-		Stats += " Geo Binds: " + Pop.Opengl.GeometryBinds;
-		Stats += " Shader Binds: " + Pop.Opengl.ShaderBinds;
-		Hud.Debug_RenderStats.SetValue(Stats);
-		Pop.Opengl.BatchesDrawn = 0;
-		Pop.Opengl.TrianglesDrawn = 0;
-		Pop.Opengl.GeometryBinds = 0;
-		Pop.Opengl.ShaderBinds = 0;
-	}
-	ResetRenderStats();
 
 	//
 	const UpdateNoise = function(RenderTarget)

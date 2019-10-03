@@ -169,6 +169,34 @@ function GetRenderScene(GetActorScene,Time)
 		Scene.push( Actor );
 	}
 	
+	function RenderTextureQuad(Texture,TextureIndex)
+	{
+		if ( !Texture.Pixels )
+			return;
+		
+		let w = 0.1;
+		let h = 0.2;
+		let x = 0.1;
+		let y = 0.1 + (TextureIndex * h * 1.10);
+		
+		const Uniforms = {};
+		Uniforms['VertexRect'] = [x, y, w, h ];
+		Uniforms['Texture'] = Texture;
+		
+		const Actor = new TActor( null, 'Quad', BlitCopyShader, Uniforms );
+		Scene.push( Actor );
+	}
+	
+	const DebugTextures = [];
+	//if ( Params.DebugNoiseTextures )
+	{
+		DebugTextures.push( OceanColourTexture );
+		DebugTextures.push( DebrisColourTexture );
+		DebugTextures.push( RandomTexture );
+		DebugTextures.push( Noise_TurbulenceTexture );
+	}
+	DebugTextures.forEach( RenderTextureQuad );
+	
 	const ActorScene = GetActorScene();
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );

@@ -1,5 +1,5 @@
-Pop.Include('AssetImport.js');
-Pop.Include('Animals.js');
+//Pop.Include('AssetImport.js');
+//Pop.Include('Animals.js');
 
 
 
@@ -46,7 +46,8 @@ function ConvertTextureBufferFile(Filename,Index)
 		return;
 	}
 	const Geo = LoadGeometryFile( Filename );
-	const MaxPositons = 128*1024;
+	const MaxPositons = 1024*1024;
+	Pop.Debug("Converting "+Filename+" geo to Texture Buffer",Geo);
 	
 	const PositionFormat = IsOceanFilename ? 'Float3' : 'RGB';
 	const ScaleToBounds = { Min:[0,0,0], Max:[1,1,1] };
@@ -106,4 +107,4 @@ Pop.Debug( TextureBufferFiles );
 
 TextureBufferFiles.forEach( ConvertTextureBufferFile );
 SceneFiles.forEach( ConvertSceneFile );
-GeoFiles.forEach( ConvertGeometryFile );
+//GeoFiles.forEach( ConvertGeometryFile );

@@ -13,9 +13,13 @@ function SetGlobal()
 SetGlobal.call(this);
 
 
+
+Pop.Include('PopEngineCommon/PopApi.js');
+Pop.Include('AssetImport.js');
+Pop.Include('Animals.js');
 try
 {
-	//Pop.Include('ConvertAssets.js');
+	Pop.Include('ConvertAssets.js');
 }
 catch(e)
 {
@@ -270,7 +274,7 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 
-	ParamsWindow.AddParam('Turbulence_Frequency',0,4);
+	ParamsWindow.AddParam('Turbulence_Frequency',0,20);
 	ParamsWindow.AddParam('Turbulence_Amplitude',0,4);
 	ParamsWindow.AddParam('Turbulence_Lacunarity',0,4);
 	ParamsWindow.AddParam('Turbulence_Persistence',0,4);

@@ -542,7 +542,8 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,P
 	Buffers.PositionTexture = PositionImage;
 	Buffers.ColourTexture = ColourImage;
 	Buffers.AlphaTexture = AlphaImage;
-	Buffers.TriangleCount = Positions.length;
+	//	gr: positions are unrolled, so need to reduce
+	Buffers.TriangleCount = Positions.length / PositionSize;
 	
 	return Buffers;
 }
@@ -686,7 +687,7 @@ function PadArray(Bytes,Stride,PaddingString)
 //	first line is meta, which describes contents of the following lines
 function CreatePackedImage(Contents)
 {
-	Pop.Debug("Creating packed image",Contents);
+	Pop.Debug("Creating packed image",Object.keys(Contents));
 	
 	//	extract meta & non-meta
 	let Meta = {};
@@ -715,7 +716,7 @@ function CreatePackedImage(Contents)
 		const Content = Contents[Name];
 		if ( !Content )
 			return;
-		if ( Content.constructor == Pop.Image )
+		if ( IsObjectInstanceOf(Content,Pop.Image) )
 			PushImage( Name, Content );
 		else
 			PushMeta( Name, Content );
@@ -737,6 +738,7 @@ function CreatePackedImage(Contents)
 	//	write meta
 	Pixels.push( ...MetaBytes );
 	//	write each image
+	Pop.Debug("Packing images: x"+ Images.length);
 	for ( let i=0;	i<Images.length;	i++ )
 	{
 		const Image = Images[i];
@@ -766,9 +768,7 @@ function CreatePackedImage(Contents)
 
 function GetImageAsPopImage(Img)
 {
-	//	.constructor for jscore engine
-	//	==Image() for web/v8
-	if ( Img.constructor == Pop.Image || Img.constructor == Pop.Image.constructor )
+	if ( IsObjectInstanceOf(Img,Pop.Image) )
 		return Img;
 	
 	//	html5 image
