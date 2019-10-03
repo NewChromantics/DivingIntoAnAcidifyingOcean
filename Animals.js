@@ -43,6 +43,10 @@ function GetRandomAnimal(NodeName)
 	let AnimalNames = Object.keys(AnimalDatabase);
 	AnimalNames = AnimalNames.filter( FilterByCategory );
 	
+	//	if no matches, pick any
+	if ( AnimalNames.length == 0 )
+		AnimalNames = Object.keys(AnimalDatabase);
+	
 	const AnimalIndex = Math.floor( Math.random() * AnimalNames.length );
 	//const AnimalIndex = (AnimalUsageCounter++) % AnimalNames.length;
 	const AnimalName = AnimalNames[AnimalIndex];

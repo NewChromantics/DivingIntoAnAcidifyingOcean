@@ -256,6 +256,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		if ( !this.UpdatePhysics )
 			return;
 		
+		//	has no physics!
+		if ( !this.UpdateVelocityShader || !this.UpdatePositionShader )
+			return;
+		
 		if ( !this.VelocityTexture )
 		{
 			this.ResetPhysicsTextures();
@@ -286,6 +290,11 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const Shader = GetAsset( this.RenderShader, RenderContext );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
 		const PositionTexture = this.GetPositionTexture(Time);
+		if ( !PositionTexture )
+		{
+			Pop.Debug("Actor has no position texture",Actor);
+			return;
+		}
 		let ColourTexture = this.TextureBuffers.ColourTexture;
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.GetLocalToWorldTransform();
@@ -476,3 +485,41 @@ function RenderScene(Scene,RenderTarget,Camera,Time,GlobalUniforms)
 }
 
 
+
+function InitDebugHud(Hud)
+{
+	if ( IsDebugEnabled() )
+	{
+		let DebugHud = new Pop.Hud.Label('Debug');
+		DebugHud.SetVisible(true);
+	}
+	Hud.Debug_State = new Pop.Hud.Label('Debug_State');
+	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
+	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
+	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
+	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
+	Hud.Debug_TextureHeap = new Pop.Hud.Label('Debug_TextureHeap');
+	Hud.Debug_GeometryHeap = new Pop.Hud.Label('Debug_GeometryHeap');
+	
+	Window.RenderFrameCounter.Report = function(CountPerSec)
+	{
+		Hud.Debug_FrameRate.SetValue( CountPerSec.toFixed(2) + " fps" );
+	}
+}
+
+function UpdateDebugHud(Hud)
+{
+	try
+	{
+		const TextureHeapCount = Window.TextureHeap.AllocCount;
+		const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
+		Hud.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
+		const GeometryHeapCount = Window.GeometryHeap.AllocCount;
+		const GeometryHeapSizeMb = Window.GeometryHeap.AllocSize / 1024 / 1024;
+		Hud.Debug_GeometryHeap.SetValue("Geometry x" + GeometryHeapCount + " " + GeometryHeapSizeMb.toFixed(2) + "mb" );
+	}
+	catch(e)
+	{
+		//Pop.Debug(e);
+	}
+}

@@ -26,10 +26,8 @@ Params.DrawHighlightedActors = true;
 
 //var EditorParams = {};
 const EditorParams = Params;
-EditorParams.BackgroundColour = [0,0,0.3];
 //EditorParams.ActorNodeName = 'Animal_XXX';
-//EditorParams.ActorNodeName = OceanActorPrefix + 'x';
-EditorParams.ActorNodeName = BigBangAnimalPrefix + 'xxx';
+EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.EnablePhysicsAfterSecs = 2;
 
 EditorParams.Turbulence_Frequency = 4.0;
@@ -38,6 +36,9 @@ EditorParams.Turbulence_Lacunarity = 0.10;
 EditorParams.Turbulence_Persistence = 0.20;
 EditorParams.Turbulence_TimeScalar = 0.14;
 
+
+var Hud = {};
+InitDebugHud(Hud);
 
 function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 {
@@ -330,7 +331,7 @@ class TAssetEditor
 		const Scene = GetEditorRenderScene( this.Scene, this.Time );
 		
 		//Pop.Debug("Render",RenderTarget);
-		RenderTarget.ClearColour( ...EditorParams.BackgroundColour );
+		RenderTarget.ClearColour( ...EditorParams.FogColour );
 		
 		const GlobalUniforms = {};
 		GlobalUniforms['Fog_MinDistance'] = 100;
@@ -339,16 +340,21 @@ class TAssetEditor
 		GlobalUniforms['Fog_WorldPosition'] = this.Camera.Position;
 
 		RenderScene( Scene, RenderTarget, this.Camera, this.Time, GlobalUniforms );
+		
+		Window.RenderFrameCounter.Add();
+		UpdateDebugHud(Hud);
 	}
 	
 	CreateEditorParamsWindow()
 	{
 		const ParamsWindowRect = [1100,20,350,450];
 		this.ParamsWindow = CreateParamsWindow( EditorParams, this.OnEditorParamsChanged.bind(this), ParamsWindowRect );
-		this.ParamsWindow.AddParam('BackgroundColour','Colour');
+		
 		this.ParamsWindow.AddParam('ActorNodeName');
 		this.ParamsWindow.AddParam('Reload','Button');
 		this.ParamsWindow.AddParam('EnablePhysicsAfterSecs',0,10);
+
+		EditorParams.InitParamsWindow( this.ParamsWindow );
 	}
 	
 	OnEditorParamsChanged(Params,ChangedParamName)

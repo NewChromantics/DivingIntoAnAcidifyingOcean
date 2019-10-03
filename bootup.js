@@ -174,8 +174,12 @@ function OnKeyPress(Key)
 	}
 }
 
+Pop.Include('PopEngineCommon/PopFrameCounter.js');
+
 //	window now shared from bootup
 const Window = new Pop.Opengl.Window("Tarqunder the sea");
+Window.RenderFrameCounter = new Pop.FrameCounter();
+
 Window.OnRender = BootupRender;
 Window.OnKeyDown = OnKeyPress;
 
@@ -194,6 +198,10 @@ Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
 
+Params.FogColour = [0,0,0.2];
+Params.FogMinDistance = 8.0;
+Params.FogMaxDistance = BoldMode ? 999 : 20.0;
+
 Params.BigBang_Damping = 0.01;
 Params.BigBang_NoiseScale = 0.01;
 Params.BigBang_TinyNoiseScale = 0.5;
@@ -201,6 +209,9 @@ Params.BigBang_TinyNoiseScale = 0.5;
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.12;
 Params.Animal_PhysicsNoiseScale = 16.0;
+Params.AnimalScale = 1.0;
+Params.AnimalFlip = false;
+
 Params.NastyAnimal_PhysicsNoiseScale = 0.45;
 Params.NastyAnimal_PhysicsSpringScale = 0.65;
 Params.NastyAnimal_PhysicsDamping = 0.01;
@@ -210,13 +221,63 @@ Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.025;
 Params.Debris_PhysicsDamping = 0.04;
 Params.Debris_PhysicsNoiseScale = 9.9;
 
+Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
+Params.OceanAnimationFrameRate = 25;
+
 Params.Turbulence_Frequency = 4.0;
 Params.Turbulence_Amplitude = 1.0;
 Params.Turbulence_Lacunarity = 0.10;
 Params.Turbulence_Persistence = 0.20;
 Params.Turbulence_TimeScalar = 0.14;
-Params.AnimalScale = 1.0;
-Params.AnimalFlip = false;
+
+Params.XrInvertRotation = true;
+Params.XrTrackTimelineCamera = true;
+Params.DebugCameraClearColour = false;
+
+
+Params.InitParamsWindow = function(ParamsWindow)
+{
+	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
+	ParamsWindow.AddParam('XrInvertRotation');
+	ParamsWindow.AddParam('XrTrackTimelineCamera');
+	ParamsWindow.AddParam('DebugCameraClearColour');
+
+	ParamsWindow.AddParam('FogColour','Colour');
+	ParamsWindow.AddParam('FogMinDistance',0,50);
+	ParamsWindow.AddParam('FogMaxDistance',0,50);
+
+	ParamsWindow.AddParam('AnimalBufferLod',0,1);
+	ParamsWindow.AddParam('AnimalScale',0,2);
+	ParamsWindow.AddParam('AnimalFlip');
+	ParamsWindow.AddParam('AnimalDebugParticleColour');
+	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
+	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,20);
+
+	ParamsWindow.AddParam('NastyAnimal_PhysicsNoiseScale',0,10);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsSpringScale',0,1);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsExplodeScale',0,10);
+	ParamsWindow.AddParam('NastyAnimal_PhysicsDamping',0,1);
+	
+	ParamsWindow.AddParam('BigBang_Damping',0,1);
+	ParamsWindow.AddParam('BigBang_NoiseScale',0,5);
+	ParamsWindow.AddParam('BigBang_TinyNoiseScale',0,20);
+	
+	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
+	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
+	
+	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
+
+	ParamsWindow.AddParam('Turbulence_Frequency',0,4);
+	ParamsWindow.AddParam('Turbulence_Amplitude',0,4);
+	ParamsWindow.AddParam('Turbulence_Lacunarity',0,4);
+	ParamsWindow.AddParam('Turbulence_Persistence',0,4);
+	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
+
+}
+
 
 
 

@@ -101,9 +101,6 @@ var LastMouseRay = null;	//	gr: this isn't getting updated any more
 var LastMouseRayUv = null;
 var LastMouseClicks = [];	//	array of queued uvs
 
-var RenderFrameCounter = new Pop.FrameCounter();
-
-
 
 function IsActorSelectable(Actor)
 {
@@ -274,11 +271,8 @@ Params.VoiceVolume = 1;
 Params.SoundVolume = 1;
 Params.DebugCameraPositionCount = 0;
 Params.DebugCameraPositionScale = 0.15;
-Params.FogMinDistance = 8.0;
-Params.FogMaxDistance = BoldMode ? 999 : 20.0;
 Params.FogHighlightMinDistance = 0.8;
 Params.FogHighlightMaxDistance = 2.7;
-Params.FogColour = [0,1,0];
 Params.FogParamsLerpSpeed = 0.1;
 Params.FogTargetLerpSpeed = 0.2;
 Params.DebugPhysicsTextures = false;
@@ -288,7 +282,6 @@ Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = 24;	//	under 20 and keeps clipping too easily
 Params.AudioCrossFadeDurationSecs = 2;
-Params.OceanAnimationFrameRate = 25;
 
 Params.CustomiseWaterColours = false;
 Params.UpdateColourTextureFrequencySecs = 0.3;
@@ -302,7 +295,6 @@ Params.Debris_Colour6 = InvalidColour;
 Params.Debris_Colour7 = InvalidColour;
 Params.Debris_Colour8 = InvalidColour;
 Params.Debris_Colour9 = InvalidColour;
-Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
 Params.Ocean_Colour0 = InvalidColour;
 Params.Ocean_Colour1 = InvalidColour;
 Params.Ocean_Colour2 = InvalidColour;
@@ -315,9 +307,6 @@ Params.Ocean_Colour8 = InvalidColour;
 Params.Ocean_Colour9 = InvalidColour;
 
 
-Params.XrInvertRotation = true;
-Params.XrTrackTimelineCamera = true;
-Params.DebugCameraClearColour = false;
 
 
 
@@ -351,13 +340,9 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ShowAnimal_CameraLerpInSpeed',0,1);
 	ParamsWindow.AddParam('ShowAnimal_CameraLerpOutSpeed',0,1);
 	ParamsWindow.AddParam('DebugNoiseTextures');
-	ParamsWindow.AddParam('AnimalBufferLod',0,1);
 
 	ParamsWindow.AddParam('AutoGrabDebugCamera');
-	ParamsWindow.AddParam('FogColour','Colour');
 
-	ParamsWindow.AddParam('FogMinDistance',0,50);
-	ParamsWindow.AddParam('FogMaxDistance',0,50);
 	ParamsWindow.AddParam('FogHighlightMinDistance',0,50);
 	ParamsWindow.AddParam('FogHighlightMaxDistance',0,50);
 	ParamsWindow.AddParam('FogParamsLerpSpeed',0,1);
@@ -365,7 +350,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('DrawBoundingBoxes');
 	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 	ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
-	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 
 	ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
 	ParamsWindow.AddParam('DebugCameraPositionScale',0,1);
@@ -385,22 +369,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ShowClippedParticle');
 	ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
 	ParamsWindow.AddParam('CameraFarDistance', 1, 100);
-	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 	
-	
-	ParamsWindow.AddParam('NastyAnimal_PhysicsNoiseScale',0,10);
-	ParamsWindow.AddParam('NastyAnimal_PhysicsSpringScale',0,1);
-	ParamsWindow.AddParam('NastyAnimal_PhysicsExplodeScale',0,10);
-	ParamsWindow.AddParam('NastyAnimal_PhysicsDamping',0,1);
-
-	ParamsWindow.AddParam('BigBang_Damping',0,1);
-	ParamsWindow.AddParam('BigBang_NoiseScale',0,5);
-	ParamsWindow.AddParam('BigBang_TinyNoiseScale',0,20);
-
-	
-	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
-	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
-	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
 	ParamsWindow.AddParam('CustomiseWaterColours');
 	ParamsWindow.AddParam('UpdateColourTextureFrequencySecs',0,4);
 	
@@ -414,7 +383,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Debris_Colour7','Colour');
 	ParamsWindow.AddParam('Debris_Colour8','Colour');
 	ParamsWindow.AddParam('Debris_Colour9','Colour');
-	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Ocean_Colour0','Colour');
 	ParamsWindow.AddParam('Ocean_Colour1','Colour');
 	ParamsWindow.AddParam('Ocean_Colour2','Colour');
@@ -426,22 +394,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Ocean_Colour8','Colour');
 	ParamsWindow.AddParam('Ocean_Colour9','Colour');
 
-	
-	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
-	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
-	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,20);
-	ParamsWindow.AddParam('Turbulence_Frequency',0,4);
-	ParamsWindow.AddParam('Turbulence_Amplitude',0,4);
-	ParamsWindow.AddParam('Turbulence_Lacunarity',0,4);
-	ParamsWindow.AddParam('Turbulence_Persistence',0,4);
-	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
-
-	ParamsWindow.AddParam('AnimalScale',0,2);
-	ParamsWindow.AddParam('AnimalFlip');
-	ParamsWindow.AddParam('AnimalDebugParticleColour');
-	ParamsWindow.AddParam('XrInvertRotation');
-	ParamsWindow.AddParam('XrTrackTimelineCamera');
-	ParamsWindow.AddParam('DebugCameraClearColour');
+	Params.InitParamsWindow( ParamsWindow );
 }
 
 
@@ -768,11 +721,11 @@ function GetAudioGetCrossFadeDuration()
 	return Params.AudioCrossFadeDurationSecs;
 }
 
+
 //	need a better place for this, app state!
 function Init()
 {
 	AppTime = 0;
-	
 	
 	CameraScene = LoadCameraScene('CameraSpline.dae.json');
 	Timeline = LoadTimeline('Timeline.json');
@@ -805,29 +758,12 @@ function Init()
 	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');
 	Hud.Animal_ContinueButton = new Pop.Hud.Button('Continue');
 
-	if ( IsDebugEnabled() )
-	{
-		let DebugHud = new Pop.Hud.Label('Debug');
-		DebugHud.SetVisible(true);
-	}
-	Hud.Debug_State = new Pop.Hud.Label('Debug_State');
-	Hud.Debug_VisibleActors = new Pop.Hud.Label('Debug_VisibleActors');
-	Hud.Debug_RenderedActors = new Pop.Hud.Label('Debug_RenderedActors');
-	Hud.Debug_RenderStats = new Pop.Hud.Label('Debug_RenderStats');
-	Hud.Debug_FrameRate = new Pop.Hud.Label('Debug_FrameRate');
-	Hud.Debug_TextureHeap = new Pop.Hud.Label('Debug_TextureHeap');
-	Hud.Debug_GeometryHeap = new Pop.Hud.Label('Debug_GeometryHeap');
+	InitDebugHud(Hud);
 
 	Hud.Animal_Card.SetVisible(false);
 	
 	Hud.Hint_ClickAnimal = new Pop.Hud.Label('Hint_ClickAnimal');
 	Hud.Hint_DragTimeline = new Pop.Hud.Label('Hint_DragTimeline');
-
-	
-	RenderFrameCounter.Report = function(CountPerSec)
-	{
-		Hud.Debug_FrameRate.SetValue( CountPerSec.toFixed(2) + " fps" );
-	}
 	
 	
 	//	setup window (we do it here so we know update has happened first)
@@ -1356,19 +1292,8 @@ function Update(FrameDurationSecs)
 	
 	Hud.Debug_State.SetValue( "State: " + Acid.StateMachine.CurrentState );
 	
-	try
-	{
-		const TextureHeapCount = Window.TextureHeap.AllocCount;
-		const TextureHeapSizeMb = Window.TextureHeap.AllocSize / 1024 / 1024;
-		Hud.Debug_TextureHeap.SetValue("Textures x" + TextureHeapCount + " " + TextureHeapSizeMb.toFixed(2) + "mb" );
-		const GeometryHeapCount = Window.GeometryHeap.AllocCount;
-		const GeometryHeapSizeMb = Window.GeometryHeap.AllocSize / 1024 / 1024;
-		Hud.Debug_GeometryHeap.SetValue("Geometry x" + GeometryHeapCount + " " + GeometryHeapSizeMb.toFixed(2) + "mb" );
-	}
-	catch(e)
-	{
-		//Pop.Debug(e);
-	}
+	UpdateDebugHud(Hud);
+
 	
 	//	update some huds
 	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
@@ -1643,7 +1568,7 @@ function Render(RenderTarget,RenderCamera)
 	
 	//	debug stats
 	Hud.Debug_RenderedActors.SetValue("Rendered Actors: " + Scene.length);
-	RenderFrameCounter.Add();
+	Window.RenderFrameCounter.Add();
 }
 
 
