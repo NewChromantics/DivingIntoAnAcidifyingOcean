@@ -347,6 +347,7 @@ class TAssetEditor
 		this.ParamsWindow = CreateParamsWindow( EditorParams, this.OnEditorParamsChanged.bind(this), ParamsWindowRect );
 		this.ParamsWindow.AddParam('BackgroundColour','Colour');
 		this.ParamsWindow.AddParam('ActorNodeName');
+		this.ParamsWindow.AddParam('Reload','Button');
 		this.ParamsWindow.AddParam('EnablePhysicsAfterSecs',0,10);
 	}
 	
@@ -355,7 +356,7 @@ class TAssetEditor
 		Pop.Debug("Param changed",ChangedParamName);
 		
 		//	reload scene if actor changes
-		if ( ChangedParamName == 'ActorNodeName' )
+		if ( ChangedParamName == 'ActorNodeName' || ChangedParamName == 'Reload' )
 		{
 			this.Scene = CreateEditorActorScene();
 			this.SceneInitTime = this.Time;
