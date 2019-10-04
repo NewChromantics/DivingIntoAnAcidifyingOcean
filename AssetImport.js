@@ -141,7 +141,7 @@ function LoadSceneFile(Filename)
 	const Scene = {};
 	Scene.Actors = [];
 	Scene.Keyframes = null;
-	
+	Scene.Splines = [];
 	
 	const OnActor = function(Actor)
 	{
@@ -150,6 +150,8 @@ function LoadSceneFile(Filename)
 	
 	const OnSpline = function(Spline)
 	{
+		Scene.Splines.push( Spline );
+		
 		//	need to do merging
 		if ( Scene.Keyframes != null )
 			throw "Scene already has keyframes, handle multiple";

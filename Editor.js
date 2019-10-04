@@ -11,6 +11,9 @@ Pop.Include('PopEngineCommon/PopCamera.js');
 
 Pop.Include('ParticleActor.js');
 
+const SceneFilename = 'CameraSpline.dae.json';
+
+
 var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
@@ -28,6 +31,8 @@ Params.DrawHighlightedActors = true;
 const EditorParams = Params;
 //EditorParams.ActorNodeName = 'Animal_XXX';
 EditorParams.ActorNodeName = OceanActorPrefix + 'x';
+EditorParams.ActorNodeName = SceneFilename;
+
 EditorParams.EnablePhysicsAfterSecs = 2;
 
 EditorParams.Turbulence_Frequency = 4.0;
@@ -39,6 +44,9 @@ EditorParams.Turbulence_TimeScalar = 0.14;
 
 var Hud = {};
 InitDebugHud(Hud);
+
+
+
 
 function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 {
@@ -217,6 +225,57 @@ function GetEditorRenderScene(ActorScene,Time)
 	return RenderScene;
 }
 
+function CreateCubeActor(ActorNode,Solid=false)
+{
+	let Actor = new TActor();
+	Actor.Name = ActorNode.Name;
+	
+	let LocalScale = ActorNode.Scale;
+	let WorldPos = ActorNode.Position;
+	Actor.Geometry = 'Cube';
+	
+	//	some nodes have no geometry, so no bounding box
+	if ( !ActorNode.BoundingBox )
+	{
+		ActorNode.BoundingBox = {};
+		ActorNode.BoundingBox.Min = [0,0,0];
+		ActorNode.BoundingBox.Max = [1,1,1];
+	}
+	
+	const RenderAsBounds = true;
+	if ( RenderAsBounds )
+	{
+		//	undo the bounds scale and render the cube at the bounds scale
+		//	but that'll scale bounds too, so undo that (just to 0..1)
+		let BoundsCenter = Math.Lerp3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min, 0.5 );
+		let BoundsScale = Math.Subtract3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min );
+		
+		BoundsScale = Math.Multiply3( BoundsScale, [0.5,0.5,0.5] );
+		
+		LocalScale = BoundsScale;
+		WorldPos = Math.Add3( WorldPos, BoundsCenter );
+		ActorNode.BoundingBox.Max = [1,1,1];
+		ActorNode.BoundingBox.Min = [-1,-1,-1];
+		Pop.Debug( ActorNode.Name, "BoundsScale", BoundsScale, "ActorNode.Scale", ActorNode.Scale );
+	}
+	
+	let LocalScaleMtx = Math.CreateScaleMatrix( ...LocalScale );
+	let WorldPosMtx = Math.CreateTranslationMatrix( ...WorldPos );
+	
+	Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPosMtx, LocalScaleMtx );
+	
+	Actor.RenderShader = (Solid===true) ? GeoColourShader : GeoEdgeShader;
+	Actor.BoundingBox = ActorNode.BoundingBox;
+	
+	return Actor;
+}
+
+
+function CreateSplineActor(Spline)
+{
+	//	turn into bezier
+	Pop.Debug("Spline",Spline);
+}
 
 function CreateEditorActorScene()
 {
@@ -224,6 +283,12 @@ function CreateEditorActorScene()
 	
 	let OnActor = function(ActorNode)
 	{
+		if ( ActorNode.Name == SceneFilename )
+		{
+			GetDebugSceneActors( SceneFilename, a => Scene.push(a) );
+			return;
+		}
+		
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
@@ -235,7 +300,6 @@ function CreateEditorActorScene()
 		let WorldPos = ActorNode.Position;
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 		Actor.BoundingBox = ActorNode.BoundingBox;
-		
 		
 		if ( IsOceanActor )
 		{
@@ -275,6 +339,7 @@ function CreateEditorActorScene()
 	//	create a dumb actor
 	let PreviewActorNode = {};
 	PreviewActorNode.Name = EditorParams.ActorNodeName;
+	
 	PreviewActorNode.BoundingBox = {};
 	PreviewActorNode.BoundingBox.Min = [-10,-10,-10];
 	PreviewActorNode.BoundingBox.Max = [10,10,10];
@@ -283,9 +348,32 @@ function CreateEditorActorScene()
 	
 	OnActor( PreviewActorNode );
 	
+	Scene = Scene.filter( a => (a!=null) );
+	
 	return Scene;
 }
 
+
+
+function GetDebugSceneActors(Filename,EnumActor)
+{
+	const FileScene = LoadSceneFile(Filename);
+	//	ignore the actors
+	const CubeActors = FileScene.Actors.map( CreateCubeActor );
+	CubeActors.forEach( EnumActor );
+	
+	//	draw splines
+	const SplineActors = FileScene.Splines.map( CreateSplineActor );
+	SplineActors.forEach( EnumActor );
+	
+	/*
+	 const Timeline = new TTimeline( FileScene.Keyframes );
+	 GetCameraTimelineAndUniform = function()
+	 {
+	 return [Timeline,'CameraPosition'];
+	 }
+	 */
+}
 
 
 class TAssetEditor
