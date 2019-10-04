@@ -245,6 +245,8 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('XrInvertRotation');
 	ParamsWindow.AddParam('XrTrackTimelineCamera');
 	ParamsWindow.AddParam('DebugCameraClearColour');
+	ParamsWindow.AddParam('DrawBoundingBoxes');
+	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 
 	ParamsWindow.AddParam('FogColour','Colour');
 	ParamsWindow.AddParam('FogMinDistance',0,50);

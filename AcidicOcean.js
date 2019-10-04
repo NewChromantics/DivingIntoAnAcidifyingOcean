@@ -347,8 +347,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('FogHighlightMaxDistance',0,50);
 	ParamsWindow.AddParam('FogParamsLerpSpeed',0,1);
 	ParamsWindow.AddParam('EnableMusic');
-	ParamsWindow.AddParam('DrawBoundingBoxes');
-	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 	ParamsWindow.AddParam('AudioCrossFadeDurationSecs',0,10);
 
 	ParamsWindow.AddParam('DebugCameraPositionCount',0,200,Math.floor);
