@@ -70,6 +70,8 @@ const DebrisActorPrefix = 'Water_';
 const NastyAnimalPrefix = 'Nasty_Animal_';
 const BigBangAnimalPrefix = 'Bigbang_';
 const NormalAnimalPrefix = 'Animal_';
+const SwirlActorPrefix = 'Swirl_';
+const DustActorPrefix = 'Dust';
 const AnimalActorPrefixs = [NormalAnimalPrefix,BigBangAnimalPrefix,NastyAnimalPrefix];
 
 
@@ -179,6 +181,34 @@ function GetOceanMeta()
 	return Meta;
 }
 
+
+function GetDustMeta(Actor)
+{
+	const Meta = {};
+	
+	Meta.LocalScale = 1;
+	
+	Meta.Filename = '.random';
+	Meta.RenderShader = DustParticleShader;
+	//Meta.VelocityShader = UpdateVelocityShader;
+	//Meta.PositionShader = UpdatePositionShader;
+	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.ShiftDustParticles = Params.ShiftDustParticles;
+	Meta.RenderUniforms.DustParticlesBounds = [Params.DustParticles_BoundsX,Params.DustParticles_BoundsY,Params.DustParticles_BoundsZ];
+	Meta.RenderUniforms.DustParticlesOffset = Params.DustParticles_OffsetZ;
+	
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
+	Meta.PhysicsUniforms.Noise = RandomTexture;
+	
+	Meta.TriangleScale = Params.Debris_TriangleScale;
+	if ( DebrisColourTexture.Pixels )
+		Meta.OverridingColourTexture = DebrisColourTexture;
+	
+	Meta.FitToBoundingBox = false;
+	return Meta;
+}
 
 
 

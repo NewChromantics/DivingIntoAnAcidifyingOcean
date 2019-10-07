@@ -314,6 +314,16 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const SetUniforms = function(Shader)
 		{
 			SetGlobalUniforms( Shader );
+
+			function SetUniform(Key)
+			{
+				Shader.SetUniform(Key,this[Key]);
+			}
+			if ( Meta.RenderUniforms )
+			{
+				Object.keys(Meta.RenderUniforms).forEach( SetUniform.bind(Meta.RenderUniforms) );
+			}
+			
 			Shader.SetUniform('ShowClippedParticle', Params.ShowClippedParticle );
 			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
 			Shader.SetUniform('LocalPositions', LocalPositions );

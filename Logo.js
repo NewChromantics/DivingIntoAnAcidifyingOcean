@@ -116,7 +116,8 @@ function TLogoState()
 		'PhysicsIteration_UpdateVelocityPulse.frag.glsl',
 	 
 	 	'AnimalParticle.frag.glsl',
-		'AnimalParticle.vert.glsl',
+	 'AnimalParticle.vert.glsl',
+	 'DustParticle.vert.glsl',
 	 	'Noise/TurbulencePerlin.frag.glsl',
 
 

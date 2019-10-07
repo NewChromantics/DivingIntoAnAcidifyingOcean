@@ -194,7 +194,7 @@ const BoldMode = Pop.GetExeArguments().includes('Bold');
 const Params = {};
 Params.EnablePhysicsIteration = true;
 Params.XrMode = false;
-Params.ScrollFlySpeed = 10;
+Params.ScrollFlySpeed = 1;
 Params.AnimalDebugParticleColour = false;
 //Params.FogColour = [1,0,0];
 Params.AnimalBufferLod = 1;
@@ -224,6 +224,13 @@ Params.NastyAnimal_PhysicsExplodeScale = 3.1;
 Params.Debris_TriangleScale = BoldMode ? 0.09 : 0.025;
 Params.Debris_PhysicsDamping = 0.04;
 Params.Debris_PhysicsNoiseScale = 9.9;
+Params.ShiftDustParticles = false;
+Params.DustParticles_BoundsX = 4;
+Params.DustParticles_BoundsY = 2;
+Params.DustParticles_BoundsZ = 7.4;
+Params.DustParticles_OffsetZ = 2.8;
+
+
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
 Params.OceanAnimationFrameRate = 25;
@@ -272,7 +279,12 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Debris_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('Debris_PhysicsDamping',0,1);
 	ParamsWindow.AddParam('Debris_PhysicsNoiseScale',0,1);
-	
+	ParamsWindow.AddParam('ShiftDustParticles');
+	ParamsWindow.AddParam('DustParticles_BoundsX',0.01,20);
+	ParamsWindow.AddParam('DustParticles_BoundsY',0.01,20);
+	ParamsWindow.AddParam('DustParticles_BoundsZ',0.01,20);
+	ParamsWindow.AddParam('DustParticles_OffsetZ',-5,5);
+
 	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 

@@ -13,7 +13,6 @@ Pop.Include('ParticleActor.js');
 
 const SceneFilename = 'CameraSpline.dae.json';
 
-
 var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
@@ -32,6 +31,7 @@ const EditorParams = Params;
 //EditorParams.ActorNodeName = 'Animal_XXX';
 EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
+EditorParams.ActorNodeName = DustActorPrefix;
 
 EditorParams.EnablePhysicsAfterSecs = 2;
 
@@ -40,7 +40,6 @@ EditorParams.Turbulence_Amplitude = 1.0;
 EditorParams.Turbulence_Lacunarity = 0.10;
 EditorParams.Turbulence_Persistence = 0.20;
 EditorParams.Turbulence_TimeScalar = 0.14;
-
 
 var Hud = {};
 InitDebugHud(Hud);
@@ -288,20 +287,30 @@ function CreateEditorActorScene()
 			GetDebugSceneActors( SceneFilename, a => Scene.push(a) );
 			return;
 		}
-		
+	
 		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 	
 		let IsAnimalActor = true;//IsActorSelectable(Actor);
 		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
+		const IsDustActor = ActorNode.Name.startsWith(DustActorPrefix);
 		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
+		const IsSwirlActor = ActorNode.Name.startsWith(SwirlActorPrefix);
 		
 		let WorldPos = ActorNode.Position;
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 		Actor.BoundingBox = ActorNode.BoundingBox;
 		
-		if ( IsOceanActor )
+		if ( IsSwirlActor )
+		{
+			SetupAnimalTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
+		}
+		else if ( IsDustActor )
+		{
+			SetupAnimalTextureBufferActor.call( Actor, GetDustMeta().Filename, GetDustMeta );
+		}
+		else if ( IsOceanActor )
 		{
 			SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
 		}
