@@ -244,7 +244,19 @@ function LoadGeometryFile(Filename)
 		Geo = ParseGeometryFile( null, GenerateRandomVertexes );
 		return Geo;
 	}
-	
+
+	//	check for a function with the same name
+	if ( Filename.endsWith('()') )
+	{
+		const FunctionName = Filename.substring(0,Filename.length-2);
+		const Func = Pop.Global[FunctionName];
+		if ( !(Func instanceof Function) )
+			throw "Filename " + Filename + "/" + FunctionName + " is not a function in the global";
+
+		Geo = ParseGeometryFile( null, Func );
+		return Geo;
+	}
+
 	const Contents = Pop.LoadFileAsString(Filename);
 	const FilenameLower = Filename.toLowerCase();
 	if ( FilenameLower.endsWith('.ply') )
