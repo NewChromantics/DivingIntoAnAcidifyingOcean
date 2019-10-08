@@ -47,12 +47,13 @@ EditorParams.Turbulence_Persistence = 0.20;
 EditorParams.Turbulence_TimeScalar = 0.14;
 
 EditorParams.Swirl_NodeCount = 10;
+EditorParams.Swirl_PathLoop = true;
 EditorParams.Swirl_PointCount = 90000;
 EditorParams.Swirl_LinearTest = false;
 EditorParams.Swirl_NodeDistance = 1.00;
 EditorParams.Swirl_ShowPathNodePoints = false;
 
-const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_NodeCount','Swirl_PointCount','Swirl_LinearTest','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
+const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_NodeCount','Swirl_PointCount','Swirl_PathLoop','Swirl_LinearTest','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
 
 var Hud = {};
 InitDebugHud(Hud);
@@ -226,6 +227,8 @@ function GetRenderScene(GetActorScene,Time)
 	//	show all the actor positions
 	function PushActorPositionTexture(Actor)
 	{
+		if ( !Actor.GetPositionTexture )
+			return;
 		const PositionTexture = Actor.GetPositionTexture();
 		DebugTextures.push( PositionTexture );
 	}
@@ -371,8 +374,7 @@ function CreateRandomSplinePath(NodeCount,PointCount,NodePoints=[])
 	for ( let i=0;	i<PointCount;	i++ )
 	{
 		let t = i / (PointCount-1);
-		t *= Nodes.length - 1;
-		const Pos = Math.GetCatmullPathPosition( Nodes, t );
+		const Pos = Math.GetCatmullPathPosition( Nodes, t, EditorParams.Swirl_PathLoop );
 		PathPoints.push( Pos );
 	}
 
@@ -444,10 +446,10 @@ function CreateSplineActors(PushActor)
 	let PathNodes = [];
 	let PathPoints = CreateRandomSplinePath( EditorParams.Swirl_NodeCount, EditorParams.Swirl_PointCount, PathNodes );
 	
-	PathPoints.forEach( a => PushSplinePointActor( Pos, 0, 0.01 ) );
+	PathPoints.forEach( Pos => PushSplinePointActor( Pos, 0, 0.01 ) );
 	
 	if ( EditorParams.Swirl_ShowPathNodePoints )
-		PathNodes.forEach( a => PushSplinePointActor(a,0,0.03) );
+		PathNodes.forEach( Pos => PushSplinePointActor(Pos,0,0.03) );
 }
 
 function CreateSplineActor(Spline)
@@ -678,6 +680,7 @@ class TAssetEditor
 		this.ParamsWindow.AddParam('ReloadAfterSecs',0,300);
 		this.ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
 		this.ParamsWindow.AddParam('Swirl_PointCount',1,90000,Math.floor);
+		this.ParamsWindow.AddParam('Swirl_PathLoop');
 		this.ParamsWindow.AddParam('Swirl_LinearTest');
 		this.ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
 		this.ParamsWindow.AddParam('Swirl_ShowPathNodePoints');
@@ -689,7 +692,9 @@ class TAssetEditor
 	{
 		Pop.Debug("Param changed",ChangedParamName);
 		
-		if ( ChangedParamName == 'Swirl_NodeCount' || ChangedParamName == 'Swirl_NodeDistance' )
+		if ( ChangedParamName == 'Swirl_NodeCount' ||
+			ChangedParamName == 'Swirl_NodeDistance' ||
+			ChangedParamName == 'Swirl_PathLoop' )
 		{
 			SplineRandomPointSet = null;
 		}
