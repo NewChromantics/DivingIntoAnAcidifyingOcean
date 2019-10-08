@@ -45,14 +45,13 @@ EditorParams.Turbulence_Lacunarity = 0.10;
 EditorParams.Turbulence_Persistence = 0.20;
 EditorParams.Turbulence_TimeScalar = 0.14;
 
-EditorParams.Swirl_BezierNodeCount = 15;
-EditorParams.Swirl_BezierPointCount = 500;
-EditorParams.Swirl_BezierLinearTest = false;
-EditorParams.Swirl_Test_ControlPoint = true;
+EditorParams.Swirl_NodeCount = 15;
+EditorParams.Swirl_PointCount = 500;
+EditorParams.Swirl_LinearTest = false;
 EditorParams.Swirl_NodeDistance = 0.15;
 EditorParams.Swirl_ShowPathNodePoints = false;
 
-const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_BezierNodeCount','Swirl_BezierPointCount','Swirl_BezierLinearTest','Swirl_Test_ControlPoint','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
+const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_NodeCount','Swirl_PointCount','Swirl_LinearTest','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
 
 var Hud = {};
 InitDebugHud(Hud);
@@ -349,7 +348,7 @@ function GetSwirlMeta(Actor)
 	
 	Meta.LocalScale = 1;
 	
-	Meta.Filename = '.random';
+	Meta.Filename = '.SplinePath';
 	Meta.RenderShader = AnimalParticleShader;
 	Meta.VelocityShader = UpdateVelocityShader;
 	Meta.PositionShader = UpdatePositionShader;
@@ -386,18 +385,16 @@ function CreateSplineActors(PushActor)
 	//	keep points persistent so we can modify some values for testing
 	if ( !SplineRandomPointSet )
 	{
-		SplineRandomPointSet = GetBrownianSwirlPath(EditorParams.Swirl_BezierNodeCount);
+		SplineRandomPointSet = GetBrownianSwirlPath(EditorParams.Swirl_NodeCount);
 	}
 	const PathPoints = SplineRandomPointSet;
 	
-	Pop.Debug("Fill bezier");
-	
 	//	now fill bezier inbetween
 	const BezierPoints = [];
-	for ( let i=0;	i<EditorParams.Swirl_BezierPointCount;	i++ )
+	for ( let i=0;	i<EditorParams.Swirl_PointCount;	i++ )
 	{
-		let t = i / (EditorParams.Swirl_BezierPointCount-1);
-		t *= EditorParams.Swirl_BezierNodeCount - 1;
+		let t = i / (EditorParams.Swirl_PointCount-1);
+		t *= EditorParams.Swirl_NodeCount - 1;
 		const Pos = Math.GetCatmullPathPosition( PathPoints, t );
 		PushSplinePointActor( Pos, 0, 0.01 );
 	}
@@ -621,10 +618,9 @@ class TAssetEditor
 		this.ParamsWindow.AddParam('ActorNodeName');
 		this.ParamsWindow.AddParam('Reload','Button');
 		this.ParamsWindow.AddParam('EnablePhysicsAfterSecs',0,10);
-		this.ParamsWindow.AddParam('Swirl_BezierNodeCount',4,200,Math.floor);
-		this.ParamsWindow.AddParam('Swirl_BezierPointCount',1,500,Math.floor);
-		this.ParamsWindow.AddParam('Swirl_BezierLinearTest');
-		this.ParamsWindow.AddParam('Swirl_Test_ControlPoint');
+		this.ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
+		this.ParamsWindow.AddParam('Swirl_PointCount',1,500,Math.floor);
+		this.ParamsWindow.AddParam('Swirl_LinearTest');
 		this.ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
 		this.ParamsWindow.AddParam('Swirl_ShowPathNodePoints');
 		
@@ -635,7 +631,7 @@ class TAssetEditor
 	{
 		Pop.Debug("Param changed",ChangedParamName);
 		
-		if ( ChangedParamName == 'Swirl_BezierNodeCount' || ChangedParamName == 'Swirl_NodeDistance' )
+		if ( ChangedParamName == 'Swirl_NodeCount' || ChangedParamName == 'Swirl_NodeDistance' )
 		{
 			SplineRandomPointSet = null;
 		}
