@@ -46,10 +46,10 @@ EditorParams.Turbulence_Lacunarity = 0.10;
 EditorParams.Turbulence_Persistence = 0.20;
 EditorParams.Turbulence_TimeScalar = 0.14;
 
-EditorParams.Swirl_NodeCount = 15;
-EditorParams.Swirl_PointCount = 500;
+EditorParams.Swirl_NodeCount = 10;
+EditorParams.Swirl_PointCount = 90000;
 EditorParams.Swirl_LinearTest = false;
-EditorParams.Swirl_NodeDistance = 0.15;
+EditorParams.Swirl_NodeDistance = 1.00;
 EditorParams.Swirl_ShowPathNodePoints = false;
 
 const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_NodeCount','Swirl_PointCount','Swirl_LinearTest','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
@@ -401,13 +401,26 @@ function GetSwirlMeta(Actor)
 	Meta.PhysicsUniforms.Damping = Params.Swirl_Physics_Damping;
 	Meta.PhysicsUniforms.SpringScale = Params.Swirl_Physics_SpringScale;
 	Meta.PhysicsUniforms.MaxSpringForce = Params.Swirl_Physics_MaxSpringForce;
-	Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
-	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;	
+	if ( Params.Swirl_Physics_CustomSplineTime )
+	{
+		Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
+	}
+	else
+	{
+		Meta.PhysicsUniforms.SplineTime = Pop.GetTimeNowMs() / 1000 * Params.Swirl_Physics_SplineTimeSpeed;
+		Meta.PhysicsUniforms.SplineTime %= 1;
+	}
+	
+	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;
 	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
 	Meta.PhysicsUniforms.NoiseScale = Params.Swirl_Physics_NoiseScale;
+	Meta.PhysicsUniforms.SplineNoiseScale = Params.Swirl_Physics_SplineNoiseScale;
 
-	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
+	Meta.TriangleScale = Params.Swirl_TriangleScale;
+
+	Meta.OverridingColourTexture = Noise_TurbulenceTexture;
+
 	//Meta.FitToBoundingBox = true;
 	return Meta;
 }
@@ -664,7 +677,7 @@ class TAssetEditor
 		this.ParamsWindow.AddParam('EnablePhysicsAfterSecs',0,10);
 		this.ParamsWindow.AddParam('ReloadAfterSecs',0,300);
 		this.ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
-		this.ParamsWindow.AddParam('Swirl_PointCount',1,9000,Math.floor);
+		this.ParamsWindow.AddParam('Swirl_PointCount',1,90000,Math.floor);
 		this.ParamsWindow.AddParam('Swirl_LinearTest');
 		this.ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
 		this.ParamsWindow.AddParam('Swirl_ShowPathNodePoints');

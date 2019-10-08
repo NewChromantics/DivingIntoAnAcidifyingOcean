@@ -13,6 +13,7 @@ uniform float PhysicsStep;// = 1.0/60.0;
 uniform float Damping;
 
 uniform float NoiseScale;
+uniform float SplineNoiseScale;
 
 uniform float SpringScale;// = 0.1;
 uniform float MaxSpringForce;
@@ -58,7 +59,7 @@ float2 PositionIndexToUv(float TriangleIndex)
 	return uv;
 }
 
-float3 GetSpringTargetPos(float2 uv)
+float3 GetSpringTargetPos(float2 uv,float2 NoiseUv)
 {
 	//	retarget uv
 	//	uv -> index
@@ -77,13 +78,20 @@ float3 GetSpringTargetPos(float2 uv)
 	Index = Normal * PositionCount;
 	uv = PositionIndexToUv( Index );
 	
-	return texture2D( OrigPositions, uv ).xyz;
+	float3 SplinePos = texture2D( OrigPositions, uv ).xyz;
+	
+	float3 Noise = texture2D( Noise, NoiseUv ).xyz;
+	float3 NoiseScale3 = float3(SplineNoiseScale,SplineNoiseScale,SplineNoiseScale) * 0.5;
+	Noise = mix( -NoiseScale3, NoiseScale3, Noise );
+	SplinePos += Noise;
+	
+	return SplinePos;
 }
 
 
 float3 GetSpringForce(float2 uv)
 {
-	vec3 OrigPos = GetSpringTargetPos( uv );
+	vec3 OrigPos = GetSpringTargetPos( uv, uv.yx );
 	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
 	
 	float3 Force = (OrigPos - LastPos) * SpringScale;
