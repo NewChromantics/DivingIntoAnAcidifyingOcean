@@ -266,6 +266,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		}
 		
 		const Meta = GetMeta(this);
+		const TriangleCount = this.TextureBuffers.TriangleCount;
 		const SetAnimalPhysicsUniforms = function(Shader)
 		{
 			SetPhysicsUniforms(Shader);
@@ -276,6 +277,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 				Shader.SetUniform( UniformName, Value );
 			}
 			Object.keys( Meta.PhysicsUniforms ).forEach( ApplyUniform );
+			
+			Shader.SetUniform('PositionCount',TriangleCount);
 		}
 		
 		PhysicsIteration( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );

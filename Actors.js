@@ -3,6 +3,7 @@
 const BlitCopyShader = RegisterShaderAssetFilename('BlitCopy.frag.glsl','Quad.vert.glsl');
 const UpdateVelocityShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocity.frag.glsl','Quad.vert.glsl');
 const UpdateVelocityPulseShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocityPulse.frag.glsl','Quad.vert.glsl');
+const UpdateVelocitySwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocitySwirl.frag.glsl','Quad.vert.glsl');
 const UpdatePositionShader = RegisterShaderAssetFilename('PhysicsIteration_UpdatePosition.frag.glsl','Quad.vert.glsl');
 
 const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
@@ -167,6 +168,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 			Shader.SetUniform('LastVelocitys',ScratchTexture);
 			Shader.SetUniform('OrigPositions',PositionOrigTexture);
 			Shader.SetUniform('LastPositions', PositionTexture );
+			Shader.SetUniform('OrigPositionsWidthHeight', [PositionOrigTexture.GetWidth(),PositionOrigTexture.GetHeight()] );
 			SetPhysicsUniforms( Shader );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );

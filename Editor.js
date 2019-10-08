@@ -37,7 +37,8 @@ EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
 //EditorParams.ActorNodeName = SplineActorPrefix;
 
-EditorParams.EnablePhysicsAfterSecs = 2;
+EditorParams.ReloadAfterSecs = 300;
+EditorParams.EnablePhysicsAfterSecs = 1;
 
 EditorParams.Turbulence_Frequency = 4.0;
 EditorParams.Turbulence_Amplitude = 1.0;
@@ -190,12 +191,14 @@ function GetRenderScene(GetActorScene,Time)
 	
 	function RenderTextureQuad(Texture,TextureIndex)
 	{
+		if ( !Texture )
+			return;
 		if ( !Texture.Pixels )
 			return;
 		
 		let w = 0.1;
 		let h = 0.2;
-		let x = 0.1;
+		let x = 0.2;
 		let y = 0.1 + (TextureIndex * h * 1.10);
 		
 		const Uniforms = {};
@@ -207,6 +210,7 @@ function GetRenderScene(GetActorScene,Time)
 	}
 	
 	const DebugTextures = [];
+	
 	//if ( Params.DebugNoiseTextures )
 	{
 		DebugTextures.push( OceanColourTexture );
@@ -214,13 +218,22 @@ function GetRenderScene(GetActorScene,Time)
 		DebugTextures.push( RandomTexture );
 		DebugTextures.push( Noise_TurbulenceTexture );
 	}
-	DebugTextures.forEach( RenderTextureQuad );
 	
 	const ActorScene = GetActorScene();
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
+	//	show all the actor positions
+	function PushActorPositionTexture(Actor)
+	{
+		const PositionTexture = Actor.GetPositionTexture();
+		DebugTextures.push( PositionTexture );
+	}
+	ActorScene.forEach( PushActorPositionTexture );
 	
+	//
+	DebugTextures.reverse().forEach( RenderTextureQuad );
+
 	return Scene;
 }
 
@@ -381,13 +394,14 @@ function GetSwirlMeta(Actor)
 	
 	Meta.Filename = 'GenerateRandomSplinePathVertexes()';
 	Meta.RenderShader = AnimalParticleShader;
-	//Meta.VelocityShader = UpdateVelocityShader;
-	//Meta.PositionShader = UpdatePositionShader;
+	Meta.VelocityShader = UpdateVelocitySwirlShader;
+	Meta.PositionShader = UpdatePositionShader;
 	
 	Meta.PhysicsUniforms = {};
-	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
-	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
-	Meta.PhysicsUniforms.Noise = RandomTexture;
+	Meta.PhysicsUniforms.Damping = Params.Swirl_Physics_Damping;
+	Meta.PhysicsUniforms.SpringScale = Params.Swirl_Physics_SpringScale;
+	Meta.PhysicsUniforms.MaxSpringForce = Params.Swirl_Physics_MaxSpringForce;
+	Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
 	
 	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
@@ -569,6 +583,14 @@ class TAssetEditor
 			this.Scene[0].UpdatePhysics = true;
 		}
 		
+		if ( SceneTime > EditorParams.ReloadAfterSecs )
+		{
+			SplineRandomPointSet = null;
+			this.Scene = CreateEditorActorScene();
+			this.SceneInitTime = this.Time;
+			return;
+		}
+		
 		
 		const AppTime = Time;
 		const Params = EditorParams;
@@ -637,8 +659,9 @@ class TAssetEditor
 		this.ParamsWindow.AddParam('ActorNodeName');
 		this.ParamsWindow.AddParam('Reload','Button');
 		this.ParamsWindow.AddParam('EnablePhysicsAfterSecs',0,10);
+		this.ParamsWindow.AddParam('ReloadAfterSecs',0,300);
 		this.ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
-		this.ParamsWindow.AddParam('Swirl_PointCount',1,500,Math.floor);
+		this.ParamsWindow.AddParam('Swirl_PointCount',1,9000,Math.floor);
 		this.ParamsWindow.AddParam('Swirl_LinearTest');
 		this.ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
 		this.ParamsWindow.AddParam('Swirl_ShowPathNodePoints');
