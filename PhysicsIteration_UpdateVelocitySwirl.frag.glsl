@@ -7,13 +7,17 @@ uniform sampler2D LastPositions;
 uniform float PositionCount;
 uniform float2 OrigPositionsWidthHeight;
 
+uniform sampler2D Noise;
+
 uniform float PhysicsStep;// = 1.0/60.0;
 uniform float Damping;
+
+uniform float NoiseScale;
 
 uniform float SpringScale;// = 0.1;
 uniform float MaxSpringForce;
 uniform float SplineTime;
-const float SlineTimeRange = 0.1;	//	+/-
+uniform float SplineTimeRange;
 
 float Range(float Min,float Max,float Value)
 {
@@ -66,7 +70,9 @@ float3 GetSpringTargetPos(float2 uv)
 
 	//Normal += SplineTime;
 	//Normal = fract(Normal);
-	Normal = mix( SplineTime, SplineTime+SlineTimeRange, Normal );
+	float Min = max( 0.0, SplineTime-SplineTimeRange );
+	float Max = min( 1.0, SplineTime+SplineTimeRange );
+	Normal = mix( Min, Max, Normal );
 	
 	Index = Normal * PositionCount;
 	uv = PositionIndexToUv( Index );
@@ -87,11 +93,19 @@ float3 GetSpringForce(float2 uv)
 	return Force;
 }
 
+float3 GetNoiseForce(float2 uv)
+{
+	float3 Noise = texture2D( Noise, uv ).xyz;
+	float3 NoiseScale3 = float3(NoiseScale,NoiseScale,NoiseScale) * 0.5;
+	Noise = mix( -NoiseScale3, NoiseScale3, Noise );
+	return Noise;
+}
+	
 void main()
 {
 	vec4 Vel = texture( LastVelocitys, uv );
 	
-	//Vel.xyz += GetNoise(uv) * PhysicsStep;
+	Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
 	Vel.xyz += GetSpringForce(uv) * PhysicsStep;
 	
 	//	damping

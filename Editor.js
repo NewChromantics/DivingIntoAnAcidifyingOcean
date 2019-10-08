@@ -402,7 +402,10 @@ function GetSwirlMeta(Actor)
 	Meta.PhysicsUniforms.SpringScale = Params.Swirl_Physics_SpringScale;
 	Meta.PhysicsUniforms.MaxSpringForce = Params.Swirl_Physics_MaxSpringForce;
 	Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
-	
+	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;	
+	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
+	Meta.PhysicsUniforms.NoiseScale = Params.Swirl_Physics_NoiseScale;
+
 	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
 	//Meta.FitToBoundingBox = true;

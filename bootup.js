@@ -236,6 +236,8 @@ Params.Swirl_Physics_SpringScale = 20.0;
 Params.Swirl_Physics_MaxSpringForce = 20.0;
 Params.Swirl_Physics_Damping = 0.01;
 Params.Swirl_Physics_SplineTime = 0.0;
+Params.Swirl_Physics_SplineTimeRange = 0.1;
+Params.Swirl_Physics_NoiseScale = 0.5;
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
@@ -299,6 +301,8 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Swirl_Physics_MaxSpringForce',0,100);
 	ParamsWindow.AddParam('Swirl_Physics_Damping',0.001,1);
 	ParamsWindow.AddParam('Swirl_Physics_SplineTime',0,1);
+	ParamsWindow.AddParam('Swirl_Physics_SplineTimeRange',0,1);
+	ParamsWindow.AddParam('Swirl_Physics_NoiseScale',0,50);
 
 	
 	ParamsWindow.AddParam('Turbulence_Frequency',0,20);
