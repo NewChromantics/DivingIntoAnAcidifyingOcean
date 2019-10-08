@@ -35,7 +35,7 @@ EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
 EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
-EditorParams.ActorNodeName = SplineActorPrefix;
+//EditorParams.ActorNodeName = SplineActorPrefix;
 
 EditorParams.EnablePhysicsAfterSecs = 2;
 
@@ -340,7 +340,38 @@ function GetBrownianSwirlPath(Count)
 	return Positions;
 }
 
+function CreateRandomSplinePath(NodeCount,PointCount,NodePoints=[])
+{
+	//	keep points persistent so we can modify some values for testing
+	if ( SplineRandomPointSet && SplineRandomPointSet.length != NodeCount )
+		SplineRandomPointSet = null;
+	
+	if ( !SplineRandomPointSet )
+		SplineRandomPointSet = GetBrownianSwirlPath(NodeCount);
 
+	const Nodes = SplineRandomPointSet;
+	if ( NodePoints )
+		NodePoints.push( ...Nodes );
+	
+	//	now fill bezier inbetween
+	const PathPoints = [];
+	for ( let i=0;	i<PointCount;	i++ )
+	{
+		let t = i / (PointCount-1);
+		t *= Nodes.length - 1;
+		const Pos = Math.GetCatmullPathPosition( Nodes, t );
+		PathPoints.push( Pos );
+	}
+
+	return PathPoints;
+}
+
+function GenerateRandomSplinePathVertexes(Contents,OnVertex,OnMeta)
+{
+	Pop.Debug("GenerateRandomSplinePathVertexes");
+	const Positions = CreateRandomSplinePath( EditorParams.Swirl_NodeCount, EditorParams.Swirl_PointCount );
+	Positions.forEach( Pos => OnVertex(...Pos) );
+}
 
 function GetSwirlMeta(Actor)
 {
@@ -348,21 +379,19 @@ function GetSwirlMeta(Actor)
 	
 	Meta.LocalScale = 1;
 	
-	Meta.Filename = '.SplinePath';
+	Meta.Filename = 'GenerateRandomSplinePathVertexes()';
 	Meta.RenderShader = AnimalParticleShader;
-	Meta.VelocityShader = UpdateVelocityShader;
-	Meta.PositionShader = UpdatePositionShader;
+	//Meta.VelocityShader = UpdateVelocityShader;
+	//Meta.PositionShader = UpdatePositionShader;
 	
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 	
-	Meta.TriangleScale = Params.Debris_TriangleScale;
-	if ( DebrisColourTexture.Pixels )
-		Meta.OverridingColourTexture = DebrisColourTexture;
+	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
-	Meta.FitToBoundingBox = true;
+	//Meta.FitToBoundingBox = true;
 	return Meta;
 }
 
@@ -381,26 +410,14 @@ function CreateSplineActors(PushActor)
 		const Actor = CreateCubeActor( Node, true );
 		PushActor(Actor);
 	}
+
+	let PathNodes = [];
+	let PathPoints = CreateRandomSplinePath( EditorParams.Swirl_NodeCount, EditorParams.Swirl_PointCount, PathNodes );
 	
-	//	keep points persistent so we can modify some values for testing
-	if ( !SplineRandomPointSet )
-	{
-		SplineRandomPointSet = GetBrownianSwirlPath(EditorParams.Swirl_NodeCount);
-	}
-	const PathPoints = SplineRandomPointSet;
-	
-	//	now fill bezier inbetween
-	const BezierPoints = [];
-	for ( let i=0;	i<EditorParams.Swirl_PointCount;	i++ )
-	{
-		let t = i / (EditorParams.Swirl_PointCount-1);
-		t *= EditorParams.Swirl_NodeCount - 1;
-		const Pos = Math.GetCatmullPathPosition( PathPoints, t );
-		PushSplinePointActor( Pos, 0, 0.01 );
-	}
+	PathPoints.forEach( a => PushSplinePointActor( Pos, 0, 0.01 ) );
 	
 	if ( EditorParams.Swirl_ShowPathNodePoints )
-		PathPoints.forEach( a => PushSplinePointActor(a,0,0.03) );
+		PathNodes.forEach( a => PushSplinePointActor(a,0,0.03) );
 }
 
 function CreateSplineActor(Spline)
@@ -411,6 +428,8 @@ function CreateSplineActor(Spline)
 
 function CreateEditorActorScene()
 {
+	InvalidateAsset('GenerateRandomSplinePathVertexes()');
+	
 	let Scene = [];
 	
 	let OnActor = function(ActorNode)

@@ -231,6 +231,7 @@ Params.DustParticles_BoundsY = 2;
 Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
+Params.Swirl_TriangleScale = 0.09;
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
@@ -289,6 +290,9 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Ocean_TriangleScale',0.001,0.2);
 	ParamsWindow.AddParam('OceanAnimationFrameRate',1,60);
 
+	ParamsWindow.AddParam('Swirl_TriangleScale',0.001,0.2);
+	
+	
 	ParamsWindow.AddParam('Turbulence_Frequency',0,20);
 	ParamsWindow.AddParam('Turbulence_Amplitude',0,4);
 	ParamsWindow.AddParam('Turbulence_Lacunarity',0,4);
