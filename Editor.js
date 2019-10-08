@@ -22,6 +22,8 @@ const GpuJobs = [];
 const PhysicsEnabled = true;
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
+//	test spline actor
+const SplineActorPrefix = 'Spline';
 
 Params.DrawBoundingBoxes = true;
 Params.DrawHighlightedActors = true;
@@ -33,6 +35,7 @@ EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
 EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
+EditorParams.ActorNodeName = SplineActorPrefix;
 
 EditorParams.EnablePhysicsAfterSecs = 2;
 
@@ -42,12 +45,14 @@ EditorParams.Turbulence_Lacunarity = 0.10;
 EditorParams.Turbulence_Persistence = 0.20;
 EditorParams.Turbulence_TimeScalar = 0.14;
 
-EditorParams.Swirl_BezierNodeCount = 5;
-EditorParams.Swirl_BezierPointCount = 100;
+EditorParams.Swirl_BezierNodeCount = 15;
+EditorParams.Swirl_BezierPointCount = 500;
 EditorParams.Swirl_BezierLinearTest = false;
 EditorParams.Swirl_Test_ControlPoint = true;
+EditorParams.Swirl_NodeDistance = 0.15;
+EditorParams.Swirl_ShowPathNodePoints = false;
 
-const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_BezierNodeCount','Swirl_BezierPointCount','Swirl_BezierLinearTest','Swirl_Test_ControlPoint'];
+const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_BezierNodeCount','Swirl_BezierPointCount','Swirl_BezierLinearTest','Swirl_Test_ControlPoint','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
 
 var Hud = {};
 InitDebugHud(Hud);
@@ -280,135 +285,93 @@ function CreateCubeActor(ActorNode,Solid=false)
 }
 
 
-//	gr: this isn't quadratic, which type is it?
-Math.GetBezierPosition = function(Start,Middle,End,Time)
+function GetRandomSwirlPath(Count)
 {
-	Pop.Debug("Time",Time);
-	//	expecting time here to be 0-1
-	//	linear test
-	const LinearTest = EditorParams.Swirl_BezierLinearTest;
+	const Positions = [];
 	
-	function GetBezier(p0,p1,p2,t)
+	Positions.push([0,0,0]);
+	
+	//	make some random points for the bezier
+	for ( let p=1;	p<Count;	p++ )
 	{
-		const oneMinusT = 1 - t;
-		const oneMinusTsq = oneMinusT * oneMinusT;
-		const tsq = t*t;
-		return (p0*oneMinusTsq) + (p1 * 4.0 * t * oneMinusT) + (p2 * tsq);
+		let x = Math.random();
+		let y = Math.random();
+		let z = Math.random();
+		Positions.push([x,y,z]);
 	}
+	return Positions;
+}
+
+function GetBrownianSwirlPath(Count)
+{
+	//	calc 2 random points
+	const Positions = GetRandomSwirlPath(2);
 	
-	//	calculate the middle control point so it goes through middle
-	//	https://stackoverflow.com/a/6712095/355753
-	//const ControlMiddle_x = GetBezier(Start[0], Middle[0], End[0], 0.5 );
-	//const ControlMiddle_y = GetBezier(Start[1], Middle[1], End[1], 0.5 );
-	//const ControlMiddle_z = GetBezier(Start[2], Middle[2], End[2], 0.5 );
-	const GetControl = function(a,b,c,Index)
+	const MaxDist3 = [EditorParams.Swirl_NodeDistance,EditorParams.Swirl_NodeDistance,EditorParams.Swirl_NodeDistance];
+	//	cap first distance - gr: could use lerp3 here
+	Positions[1] = Math.Normalise3( Positions[1], EditorParams.Swirl_NodeDistance );
+	
+	//	now add more vaguely in the correct direction
+	while ( Positions.length < Count )
 	{
-		const p0 = a[Index];
-		const p1 = b[Index];
-		const p2 = c[Index];
+		const LastIndex = Positions.length-1;
+		let Dir = Math.Subtract3( Positions[LastIndex], Positions[LastIndex-1] );
+		Dir = Math.Normalise3( Dir );
 		
-		//	x(t) = x0 * (1-t)^2 + 2 * x1 * t * (1 - t) + x2 * t^2
-		//	x(t=1/2) = xt = x0 * 1/4 + 2 * x1 * 1/4 + x2 * 1/4
-		//	x1/2 = xt - (x0 + x2)/4
-		let pc = p1 - ((p0 + p2)/4);
-		return pc;
-
-		//	need to work out what p1/middle/control point should be when
-		//	t=0.5 == p1
-		//	https://stackoverflow.com/a/9719997/355753
-		//const pc = 2 * (p1 - (p0 + p2)/2);
-		//return pc;
-	}
-	const ControlMiddle_x = GetControl( Start, Middle, End, 0 );
-	const ControlMiddle_y = GetControl( Start, Middle, End, 1 );
-	const ControlMiddle_z = GetControl( Start, Middle, End, 2 );
-	const ControlMiddle = [ ControlMiddle_x, ControlMiddle_y, ControlMiddle_z ];
-	
-	function GetLinear(p0,p1,p2,t)
-	{
-		if ( t <= 0.5 )
+		let x = Math.random() - 0.5;
+		let y = Math.random() - 0.5;
+		let z = Math.random() - 0.5;
+		let Delta = [x,y,z];
+		
+		//	flip if going in the wrong direction (up to 90 degrees - lets make this more clever)
+		Delta = Math.Normalise3(Delta);
+		const Dot = Math.Dot3( Dir, Delta );
+		if ( Dot < 0 )
 		{
-			t /= 0.5;
-			return p0 + ((p1-p0)*t);
+			Delta = Math.Multiply3( Delta, [-1,-1,-1] );
 		}
-		else
-		{
-			t -= 0.5;
-			t /= 0.5;
-			return p1 + ((p2-p1)*t);
-		}
+		
+		//	cap length
+		Delta = Math.Multiply3( Delta, MaxDist3 );
+		
+		Delta = Math.Add3( Positions[LastIndex], Delta );
+		Positions.push( Delta );
 	}
 	
-	
-	let Position = [];
-	for ( let i=0;	i<Start.length;	i++ )
-	{
-		let p0 = Start[i];
-		let p2 = End[i];
-
-		if ( LinearTest )
-		{
-			let p1 = Params.Swirl_Test_ControlPoint ? ControlMiddle[i] : Middle[i];
-			Position[i] = GetLinear( p0, p1, p2, Time );
-		}
-		else
-		{
-			let p1 = ControlMiddle[i];
-			Position[i] = GetBezier( p0, p1, p2, Time );
-		}
-	}
-	return Position;
-}
-
-//	https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
-Math.GetBezierPathPosition3 = function(Path,Time)
-{
-	if ( Path.length < 3 )
-		throw "Bezier path must have at least 3 points (this has "+ Path.length + ")";
-
-	//Time *= Path.length-1;
-	
-	//	get index from time
-	let Middle = Math.round( Time );
-	let Start = Middle-1;
-	
-	//	clamp
-	if ( Start < 0 )
-	{
-		Start = 0;
-	}
-	
-	Middle = Start + 1;
-	let End = Middle + 1;
-	
-	//	clamp
-	if ( End >= Path.length )
-	{
-		End = Path.length-1;
-		Middle = End-1;
-		Start = Middle-1;
-	}
-
-	//	turn lerp middle->end to start->end
-	//	gr: could just be *= 0.5?
-	Lerp = Math.range( Start, End, Time );
-	
-	if ( Middle != Start+1 )	throw "Start/Middle/End error " + String.join( ...arguments );
-	if ( End != Middle+1 )	throw "Start/Middle/End error " + String.join( ...arguments );
-	
-
-	const Pos = Math.GetBezierPosition( Path[Start], Path[Middle], Path[End], Lerp );
-	return Pos;
+	return Positions;
 }
 
 
 
-
-let FirstRandomSet = null;
-
-function CreateSwirlActors(PushActor)
+function GetSwirlMeta(Actor)
 {
-	function PushBezierPointActor(xyz,Index,Size)
+	const Meta = {};
+	
+	Meta.LocalScale = 1;
+	
+	Meta.Filename = '.random';
+	Meta.RenderShader = AnimalParticleShader;
+	Meta.VelocityShader = UpdateVelocityShader;
+	Meta.PositionShader = UpdatePositionShader;
+	
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
+	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
+	Meta.PhysicsUniforms.Noise = RandomTexture;
+	
+	Meta.TriangleScale = Params.Debris_TriangleScale;
+	if ( DebrisColourTexture.Pixels )
+		Meta.OverridingColourTexture = DebrisColourTexture;
+	
+	Meta.FitToBoundingBox = true;
+	return Meta;
+}
+
+let SplineRandomPointSet = null;
+
+function CreateSplineActors(PushActor)
+{
+	function PushSplinePointActor(xyz,Index,Size)
 	{
 		if ( !xyz )
 			return;
@@ -420,19 +383,12 @@ function CreateSwirlActors(PushActor)
 		PushActor(Actor);
 	}
 	
-	if ( !FirstRandomSet )
+	//	keep points persistent so we can modify some values for testing
+	if ( !SplineRandomPointSet )
 	{
-		FirstRandomSet = [];
-		//	make some random points for the bezier
-		for ( let p=0;	p<EditorParams.Swirl_BezierNodeCount;	p++ )
-		{
-			let x = Math.random();
-			let y = Math.random();
-			let z = Math.random();
-			FirstRandomSet.push([x,y,z]);
-		}
+		SplineRandomPointSet = GetBrownianSwirlPath(EditorParams.Swirl_BezierNodeCount);
 	}
-	const PathPoints = FirstRandomSet;
+	const PathPoints = SplineRandomPointSet;
 	
 	Pop.Debug("Fill bezier");
 	
@@ -443,10 +399,11 @@ function CreateSwirlActors(PushActor)
 		let t = i / (EditorParams.Swirl_BezierPointCount-1);
 		t *= EditorParams.Swirl_BezierNodeCount - 1;
 		const Pos = Math.GetCatmullPathPosition( PathPoints, t );
-		PushBezierPointActor( Pos, 0, 0.01 );
+		PushSplinePointActor( Pos, 0, 0.01 );
 	}
 	
-	PathPoints.forEach( a => PushBezierPointActor(a,0,0.03) );
+	if ( EditorParams.Swirl_ShowPathNodePoints )
+		PathPoints.forEach( a => PushSplinePointActor(a,0,0.03) );
 }
 
 function CreateSplineActor(Spline)
@@ -476,10 +433,11 @@ function CreateEditorActorScene()
 		const IsDustActor = ActorNode.Name.startsWith(DustActorPrefix);
 		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
 		const IsSwirlActor = ActorNode.Name.startsWith(SwirlActorPrefix);
+		const IsSplineActor = ActorNode.Name.startsWith(SplineActorPrefix);
 		
-		if ( IsSwirlActor )
+		if ( IsSplineActor )
 		{
-			CreateSwirlActors( a => Scene.push(a) );
+			CreateSplineActors( a => Scene.push(a) );
 			return;
 		}
 		
@@ -667,8 +625,9 @@ class TAssetEditor
 		this.ParamsWindow.AddParam('Swirl_BezierPointCount',1,500,Math.floor);
 		this.ParamsWindow.AddParam('Swirl_BezierLinearTest');
 		this.ParamsWindow.AddParam('Swirl_Test_ControlPoint');
+		this.ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
+		this.ParamsWindow.AddParam('Swirl_ShowPathNodePoints');
 		
-
 		EditorParams.InitParamsWindow( this.ParamsWindow );
 	}
 	
@@ -676,9 +635,9 @@ class TAssetEditor
 	{
 		Pop.Debug("Param changed",ChangedParamName);
 		
-		if ( ChangedParamName == 'Swirl_BezierNodeCount' )
+		if ( ChangedParamName == 'Swirl_BezierNodeCount' || ChangedParamName == 'Swirl_NodeDistance' )
 		{
-			FirstRandomSet = null;
+			SplineRandomPointSet = null;
 		}
 
 		
