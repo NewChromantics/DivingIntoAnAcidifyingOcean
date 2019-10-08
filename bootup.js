@@ -159,7 +159,8 @@ let StateMap =
 {
 	'Logo':	'Update_Logo',
 	'Experience': 'Update_Experience',
-	'Editor': 'Update_Editor'
+	'Editor': 'Update_Editor',
+	'AssetServer': Update_AssetServer
 };
 
 let StateMachine = new Pop.StateMachine( StateMap );
@@ -313,4 +314,12 @@ function Update_Editor(FirstUpdate,FrameDuration,StateTime)
 	Editor.Update( FrameDuration, StateTime );
 }
 
+
+function Update_AssetServer(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
+		Pop.Debug("Running asset server");
+	}
+}
 

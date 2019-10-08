@@ -229,6 +229,9 @@ function TLogoState()
 		Types.forEach( t => AssetFilenames.push( GetCachedFilename(Filename,t) ) );
 		AssetFilenames.push(Filename);
 		Load.call( this, AssetFilenames );
+		
+		if ( MonitorAssetFile )
+			AssetFilenames.forEach( MonitorAssetFile );
 	}
 	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png','geometry'] ) );
 	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, ['scene'] ) );
@@ -303,8 +306,9 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 	}
 	
 	//	wait for button to be pressed
+	const AssetServerMode = Pop.GetExeArguments().includes('AssetServer');
 	const EditorMode = Pop.GetExeArguments().includes('Editor');
-	const AutoStart = Pop.GetExeArguments().includes('AutoStart') || EditorMode;
+	const AutoStart = Pop.GetExeArguments().includes('AutoStart') || AssetServerMode || EditorMode;
 	if ( !AutoStart )
 		if ( !LogoState.StartButtonPressed )
 			return;
@@ -314,6 +318,9 @@ function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
 		return;
 	
 	HideLogoElements();
+	
+	if ( AssetServerMode )
+		return 'AssetServer';
 	
 	if ( EditorMode )
 		return 'Editor';

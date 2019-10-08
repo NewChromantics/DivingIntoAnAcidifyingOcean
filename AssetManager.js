@@ -3,7 +3,7 @@ Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 
-const EnableAssetSync = Pop.GetExeArguments().includes('AssetSync');
+const EnableAssetSync = Pop.GetExeArguments().includes('AssetSync') || Pop.GetExeArguments().includes('AssetServer');
 
 //	some globals
 Pop.AssetSync = {};
@@ -191,6 +191,7 @@ function CreateAssetServer()
 		try
 		{
 			const Server = new Pop.AssetServer(Port);
+			Pop.Debug("Opened asset server",Port);
 			return Server;
 		}
 		catch(e)
@@ -748,7 +749,7 @@ function RegisterShaderAssetFilename(FragFilename,VertFilename)
 		return Shader;
 	}
 	
-	const AssetName = FragFilename;
+	const AssetName = FragFilename+"x"+VertFilename;
 	if ( AssetFetchFunctions.hasOwnProperty(AssetName) )
 		throw "Shader asset name clash, need to change the name we use";
 	AssetFetchFunctions[AssetName] = LoadAndCompileShader;
