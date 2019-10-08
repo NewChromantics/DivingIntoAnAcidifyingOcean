@@ -268,7 +268,7 @@ function TLogoState()
 		//	show button when preloads done
 		//	gr: due to above, this may disable itself again
 		this.StartButton.SetVisible( AllPreloadsFinished );
-		this.StartXrButton.SetVisible( AllPreloadsFinished && Pop.Xr.IsSupported() );
+		this.StartXrButton.SetVisible( AllPreloadsFinished && Pop.Xr && Pop.Xr.IsSupported() );
 	}
 }
 
