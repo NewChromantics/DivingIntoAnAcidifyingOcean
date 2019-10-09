@@ -13,6 +13,10 @@ Pop.AssetSync.Command.OnAssetChanged = 'OnAssetChanged';
 Pop.AssetSync.Command.GetAssetContent = 'GetAssetContent';
 Pop.AssetSync.Command.OnAssetContent = 'OnAssetContent';
 
+//	for shaders (later more files?) multiple-filenames => asset name need to be identifiable/split/joined but we
+//	need to distinguish them from valid filename chars. Not much in unix/osx is invalid...
+const AssetFilenameJoinString = ':';
+
 
 Pop.AssetServer = function(Port=Pop.AssetSync.DefaultPorts[0])
 {
@@ -224,6 +228,19 @@ if ( EnableAssetSync )
 
 const FileMonitors = {};
 
+function OnFileChanged(Filename)
+{
+	//	report to client
+	if ( AssetServer )
+	{
+		Pop.Debug("AssetServer.OnAssetChanged",Filename);
+		AssetServer.OnAssetChanged( Filename );
+	}
+	
+	//	invalidate local
+	InvalidateAsset(Filename);
+}
+
 function MonitorAssetFile(Filename)
 {
 	//	not supported
@@ -244,7 +261,7 @@ function MonitorAssetFile(Filename)
 	
 	//	create a new one
 	const Monitor = new Pop.FileMonitor( Filename );
-	Monitor.OnChanged = function()	{	InvalidateAsset(Filename);	};
+	Monitor.OnChanged = function()	{	OnFileChanged(Filename);	};
 	FileMonitors[Filename] = Monitor;
 	Pop.Debug("Now monitoring",Filename);
 }
@@ -479,14 +496,29 @@ function InvalidateAsset(Filename)
 	{
 		const ContextKey = GetUniqueHash( Context );
 		const ContextAssets = Assets[ContextKey];
-		if ( !ContextAssets.hasOwnProperty(Filename) )
+		
+		//	gr: cope with assetnames containing multiple filenames
+		function ShouldInvalidateKey(AssetName)
 		{
-			Pop.Debug("Context",Context," doesnt have asset for ",Filename,Object.keys(ContextAssets));
+			const Filenames = AssetName.split(AssetFilenameJoinString);
+			const AnyMatches = Filenames.some( f => f == Filename );
+			return AnyMatches;
+		}
+		
+		const InvalidateKeys = Object.keys( ContextAssets ).filter( ShouldInvalidateKey );
+		if ( !InvalidateKeys.length )
+		{
+			Pop.Debug("Context",Context," has no matching assets for ",Filename,Object.keys(ContextAssets));
 			return;
 		}
-		//	delete existing asset
-		delete ContextAssets[Filename];
-		Pop.Debug("Invalidated ",Filename,"on",Context);
+		
+		function InvalidateKey(AssetName)
+		{
+			//	delete existing asset
+			delete ContextAssets[AssetName];
+			Pop.Debug("Invalidated ",AssetName,"on",Context);
+		}
+		InvalidateKeys.forEach( InvalidateKey );
 	}
 	const AssetContexts = Object.keys(Assets);
 	AssetContexts.forEach( InvalidateAssetInContext );
@@ -737,7 +769,6 @@ function LoadPointMeshFromFile(RenderTarget,Filename,GetIndexMap,ScaleToBounds)
 }
 
 
-
 //	this returns the "asset name"
 function RegisterShaderAssetFilename(FragFilename,VertFilename)
 {
@@ -749,7 +780,8 @@ function RegisterShaderAssetFilename(FragFilename,VertFilename)
 		return Shader;
 	}
 	
-	const AssetName = FragFilename+"x"+VertFilename;
+	//	we use / as its not a valid filename char
+	const AssetName = FragFilename+AssetFilenameJoinString+VertFilename;
 	if ( AssetFetchFunctions.hasOwnProperty(AssetName) )
 		throw "Shader asset name clash, need to change the name we use";
 	AssetFetchFunctions[AssetName] = LoadAndCompileShader;
