@@ -131,7 +131,7 @@ function TPhysicsActor(Meta)
 
 
 
-function PhysicsIteration_MultipleShaders(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,ScratchTexture,PositionOrigTexture,UpdateVelocityShaderAsset,UpdatePositionShaderAsset,SetPhysicsUniforms)
+function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,PositionScratchTexture,VelocityScratchTexture,PositionOrigTexture,UpdateVelocityShaderAsset,UpdatePositionShaderAsset,SetPhysicsUniforms)
 {
 	if ( !Params.EnablePhysicsIteration )
 		return;
@@ -141,21 +141,60 @@ function PhysicsIteration_MultipleShaders(RenderTarget,Time,FrameDuration,Positi
 	const RenderContext = RenderTarget.GetRenderContext();
 	const PhysicsStep = FrameDuration;
 	const CopyShader = GetAsset(BlitCopyShader, RenderContext );
+	const CopyMultiShader = GetAsset(BlitCopyMultipleShader, RenderContext );
 	const UpdateVelocityShader = GetAsset(UpdateVelocityShaderAsset, RenderContext );
 	const UpdatePositionShader = GetAsset(UpdatePositionShaderAsset, RenderContext );
 	const Quad = GetAsset('Quad', RenderContext);
 	
-	//	copy old velocitys
-	let CopyVelcoityToScratch = function(RenderTarget)
+	
+	const CopyMrt = true;
+	
+	if ( CopyMrt )
 	{
-		let SetUniforms = function(Shader)
+		//	copy old positions
+		let CopyToScratch = function(RenderTarget)
 		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('Texture',VelocityTexture);
+			let SetUniforms = function(Shader)
+			{
+				Shader.SetUniform('VertexRect', [0,0,1,1] );
+				Shader.SetUniform('Texture0',PositionTexture);
+				Shader.SetUniform('Texture1',VelocityTexture);
+			}
+			RenderTarget.DrawGeometry( Quad, CopyMultiShader, SetUniforms );
 		}
-		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+		RenderTarget.RenderToRenderTarget( [PositionScratchTexture,VelocityScratchTexture], CopyToScratch );
+
 	}
-	RenderTarget.RenderToRenderTarget( ScratchTexture, CopyVelcoityToScratch );
+	else
+	{
+		throw "xx";
+		//	copy old velocitys
+		let CopyVelcoityToScratch = function(RenderTarget)
+		{
+			let SetUniforms = function(Shader)
+			{
+				Shader.SetUniform('VertexRect', [0,0,1,1] );
+				Shader.SetUniform('Texture',VelocityTexture);
+			}
+			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+		}
+		RenderTarget.RenderToRenderTarget( VelocityScratchTexture, CopyVelcoityToScratch );
+
+		//	copy old positions
+		let CopyPositionsToScratch = function(RenderTarget)
+		{
+			let SetUniforms = function(Shader)
+			{
+				Shader.SetUniform('VertexRect', [0,0,1,1] );
+				Shader.SetUniform('Texture',PositionTexture);
+			}
+			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+		}
+		RenderTarget.RenderToRenderTarget( PositionScratchTexture, CopyPositionsToScratch );
+	}
+	
+	
+	
 	
 	//	update velocitys
 	let UpdateVelocitys = function(RenderTarget)
@@ -166,7 +205,7 @@ function PhysicsIteration_MultipleShaders(RenderTarget,Time,FrameDuration,Positi
 			Shader.SetUniform('PhysicsStep', PhysicsStep );
 			Shader.SetUniform('Gravity', 0 );
 			Shader.SetUniform('Noise', RandomTexture);
-			Shader.SetUniform('LastVelocitys',ScratchTexture);
+			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
 			Shader.SetUniform('OrigPositions',PositionOrigTexture);
 			Shader.SetUniform('LastPositions', PositionTexture );
 			Shader.SetUniform('LastPositionsFlipped',false);	//	only in MRT mode
@@ -177,17 +216,6 @@ function PhysicsIteration_MultipleShaders(RenderTarget,Time,FrameDuration,Positi
 	}
 	RenderTarget.RenderToRenderTarget( VelocityTexture, UpdateVelocitys );
 	
-	//	copy old positions
-	let CopyPositionsToScratch = function(RenderTarget)
-	{
-		let SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('Texture',PositionTexture);
-		}
-		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
-	}
-	RenderTarget.RenderToRenderTarget( ScratchTexture, CopyPositionsToScratch );
 	
 	//	update positions
 	let UpdatePositions = function(RenderTarget)
@@ -197,7 +225,7 @@ function PhysicsIteration_MultipleShaders(RenderTarget,Time,FrameDuration,Positi
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('PhysicsStep', PhysicsStep );
 			Shader.SetUniform('Velocitys',VelocityTexture);
-			Shader.SetUniform('LastPositions',ScratchTexture);
+			Shader.SetUniform('LastPositions',PositionScratchTexture);
 			SetPhysicsUniforms( Shader );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdatePositionShader, SetUniforms );
@@ -206,72 +234,3 @@ function PhysicsIteration_MultipleShaders(RenderTarget,Time,FrameDuration,Positi
 	
 }
 
-
-//	multiple-render-target version which writes velocity and position at the same time
-function PhysicsIteration_SingleShader(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,PositionScratchTexture,VelocityScratchTexture,PositionOrigTexture,UpdateVelocityShaderAsset,UpdatePositionShaderAsset,SetPhysicsUniforms)
-{
-	if ( !Params.EnablePhysicsIteration )
-		return;
-
-	//if ( UpdateVelocityShaderAsset != null )
-	//	throw "PhysicsIteration_SingleShader expecting null UpdateVelocityShaderAsset";
-	
-	SetPhysicsUniforms = SetPhysicsUniforms || function(){};
-	
-	const RenderContext = RenderTarget.GetRenderContext();
-	const PhysicsStep = FrameDuration;
-	const CopyShader = GetAsset(BlitCopyMultipleShader, RenderContext );
-	const UpdateVelocityShader = GetAsset(UpdateVelocityShaderAsset, RenderContext );
-	const UpdatePositionShader = GetAsset(UpdatePositionShaderAsset, RenderContext );
-	const Quad = GetAsset('Quad', RenderContext);
-	
-	//	copy old buffers
-	let CopyToScratch = function(RenderTarget)
-	{
-		let SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('Texture0',VelocityTexture);
-			Shader.SetUniform('Texture1',PositionTexture);
-		}
-		RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
-	}
-	RenderTarget.RenderToRenderTarget( [VelocityScratchTexture,PositionScratchTexture], CopyToScratch );
-	
-	//	update velocitys
-	let UpdateVelocitys = function(RenderTarget)
-	{
-		let SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('PhysicsStep', PhysicsStep );
-			Shader.SetUniform('Gravity', 0 );
-			Shader.SetUniform('Noise', RandomTexture);
-			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
-			Shader.SetUniform('OrigPositions',PositionOrigTexture);
-			Shader.SetUniform('LastPositions', PositionScratchTexture );
-			Shader.SetUniform('LastPositionsFlipped',false);	//	only in MRT mode
-			Shader.SetUniform('OrigPositionsWidthHeight', [PositionOrigTexture.GetWidth(),PositionOrigTexture.GetHeight()] );
-			SetPhysicsUniforms( Shader );
-		}
-		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );
-	}
-	RenderTarget.RenderToRenderTarget( VelocityTexture, UpdateVelocitys );
-	
-	//	update positions
-	let UpdatePositions = function(RenderTarget)
-	{
-		let SetUniforms = function(Shader)
-		{
-			Shader.SetUniform('VertexRect', [0,0,1,1] );
-			Shader.SetUniform('PhysicsStep', PhysicsStep );
-			Shader.SetUniform('Velocitys',VelocityTexture);
-			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
-			//Shader.SetUniform('LastPositions',PositionScratchTexture);
-			SetPhysicsUniforms( Shader );
-		}
-		RenderTarget.DrawGeometry( Quad, UpdatePositionShader, SetUniforms );
-	}
-	RenderTarget.RenderToRenderTarget( PositionTexture, UpdatePositions );
-	
-}
