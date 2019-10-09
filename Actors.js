@@ -7,6 +7,9 @@ const UpdateVelocityPulseShader = RegisterShaderAssetFilename('PhysicsIteration_
 const UpdateVelocitySwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocitySwirl.frag.glsl','Quad.vert.glsl');
 const UpdatePositionShader = RegisterShaderAssetFilename('PhysicsIteration_UpdatePosition.frag.glsl','Quad.vert.glsl');
 
+//	pos+velocity
+const UpdateSwirlShader = null;//RegisterShaderAssetFilename('PhysicsIteration_UpdateSwirl.frag.glsl','Quad.vert.glsl');
+
 const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
 
 const AnimalParticleShader = RegisterShaderAssetFilename('AnimalParticle.frag.glsl','AnimalParticle.vert.glsl');
@@ -131,66 +134,69 @@ function TPhysicsActor(Meta)
 
 
 
-function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,PositionScratchTexture,VelocityScratchTexture,PositionOrigTexture,UpdateVelocityShaderAsset,UpdatePositionShaderAsset,SetPhysicsUniforms)
+function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,VelocityTexture,PositionScratchTexture,VelocityScratchTexture,PositionOrigTexture,UpdateVelocityShaderAsset,UpdatePositionShaderAsset,SetPhysicsUniforms,DoCopy)
 {
 	if ( !Params.EnablePhysicsIteration )
 		return;
-	
+
 	SetPhysicsUniforms = SetPhysicsUniforms || function(){};
 
 	const RenderContext = RenderTarget.GetRenderContext();
 	const PhysicsStep = FrameDuration;
 	const CopyShader = GetAsset(BlitCopyShader, RenderContext );
 	const CopyMultiShader = GetAsset(BlitCopyMultipleShader, RenderContext );
-	const UpdateVelocityShader = GetAsset(UpdateVelocityShaderAsset, RenderContext );
+	const UpdateVelocityShader = UpdateVelocityShaderAsset ? GetAsset(UpdateVelocityShaderAsset, RenderContext ) : null;
 	const UpdatePositionShader = GetAsset(UpdatePositionShaderAsset, RenderContext );
 	const Quad = GetAsset('Quad', RenderContext);
 	
-	
-	try
+	//	we don't copy if caller is double buffering
+	if ( DoCopy )
 	{
-		//	copy old positions
-		let CopyToScratch = function(RenderTarget)
+		try
 		{
-			let SetUniforms = function(Shader)
+			Pop.Debug("Physics iteration");
+			//	copy old positions
+			let CopyToScratch = function(RenderTarget)
 			{
-				Shader.SetUniform('VertexRect', [0,0,1,1] );
-				Shader.SetUniform('Texture0',PositionTexture);
-				Shader.SetUniform('Texture1',VelocityTexture);
+				let SetUniforms = function(Shader)
+				{
+					Shader.SetUniform('VertexRect', [0,0,1,1] );
+					Shader.SetUniform('Texture0',PositionTexture);
+					Shader.SetUniform('Texture1',VelocityTexture);
+				}
+				RenderTarget.DrawGeometry( Quad, CopyMultiShader, SetUniforms );
 			}
-			RenderTarget.DrawGeometry( Quad, CopyMultiShader, SetUniforms );
+			RenderTarget.RenderToRenderTarget( [PositionScratchTexture,VelocityScratchTexture], CopyToScratch );
 		}
-		RenderTarget.RenderToRenderTarget( [PositionScratchTexture,VelocityScratchTexture], CopyToScratch );
+		catch(e)
+		{
+			Pop.Debug("Error with MRT scratch copy",e);
+			//	MRT failed, assume not supported, fallback to 2 copys
+			//	copy old velocitys
+			let CopyVelcoityToScratch = function(RenderTarget)
+			{
+				let SetUniforms = function(Shader)
+				{
+					Shader.SetUniform('VertexRect', [0,0,1,1] );
+					Shader.SetUniform('Texture',VelocityTexture);
+				}
+				RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+			}
+			RenderTarget.RenderToRenderTarget( VelocityScratchTexture, CopyVelcoityToScratch );
 
-	}
-	catch(e)
-	{
-		//	MRT failed, assume not supported, fallback to 2 copys
-		//	copy old velocitys
-		let CopyVelcoityToScratch = function(RenderTarget)
-		{
-			let SetUniforms = function(Shader)
+			//	copy old positions
+			let CopyPositionsToScratch = function(RenderTarget)
 			{
-				Shader.SetUniform('VertexRect', [0,0,1,1] );
-				Shader.SetUniform('Texture',VelocityTexture);
+				let SetUniforms = function(Shader)
+				{
+					Shader.SetUniform('VertexRect', [0,0,1,1] );
+					Shader.SetUniform('Texture',PositionTexture);
+				}
+				RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 			}
-			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+			RenderTarget.RenderToRenderTarget( PositionScratchTexture, CopyPositionsToScratch );
 		}
-		RenderTarget.RenderToRenderTarget( VelocityScratchTexture, CopyVelcoityToScratch );
-
-		//	copy old positions
-		let CopyPositionsToScratch = function(RenderTarget)
-		{
-			let SetUniforms = function(Shader)
-			{
-				Shader.SetUniform('VertexRect', [0,0,1,1] );
-				Shader.SetUniform('Texture',PositionTexture);
-			}
-			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
-		}
-		RenderTarget.RenderToRenderTarget( PositionScratchTexture, CopyPositionsToScratch );
 	}
-	
 	
 	
 	
@@ -212,8 +218,10 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 		}
 		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );
 	}
-	RenderTarget.RenderToRenderTarget( VelocityTexture, UpdateVelocitys );
-	
+	if ( UpdateVelocityShader )
+	{
+		RenderTarget.RenderToRenderTarget( VelocityTexture, UpdateVelocitys );
+	}
 	
 	//	update positions
 	let UpdatePositions = function(RenderTarget)
@@ -222,15 +230,25 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('PhysicsStep', PhysicsStep );
-			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
 			Shader.SetUniform('LastPositions',PositionScratchTexture);
+			
+			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
 			Shader.SetUniform('OrigPositions',PositionOrigTexture);
-			Shader.SetUniform('Velocitys',VelocityTexture);
+			
+			if ( UpdateVelocityShader )
+				Shader.SetUniform('Velocitys',VelocityTexture);
+			else
+				Shader.SetUniform('Velocitys',VelocityScratchTexture);
+			
 			SetPhysicsUniforms( Shader );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdatePositionShader, SetUniforms );
 	}
-	RenderTarget.RenderToRenderTarget( PositionTexture, UpdatePositions );
+	//	if there's no velocity update, then we're rendering to two targets
+	const Targets = [PositionTexture];
+	if ( !UpdateVelocityShader )
+		Targets.push( VelocityTexture );
+	RenderTarget.RenderToRenderTarget( Targets, UpdatePositions );
 	
 }
 

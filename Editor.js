@@ -400,8 +400,18 @@ function GetSwirlMeta(Actor)
 	
 	Meta.Filename = 'GenerateRandomSplinePathVertexes()';
 	Meta.RenderShader = AnimalParticleShader;
-	Meta.VelocityShader = UpdateVelocitySwirlShader;
-	Meta.PositionShader = UpdatePositionShader;
+
+	//	single pass/MRT
+	if ( UpdateSwirlShader )
+	{
+		Meta.VelocityShader = null;
+		Meta.PositionShader = UpdateSwirlShader;
+	}
+	else
+	{
+		Meta.VelocityShader = UpdateVelocitySwirlShader;
+		Meta.PositionShader = UpdatePositionShader;
+	}
 	
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.Damping = Params.Swirl_Physics_Damping;

@@ -252,6 +252,8 @@ Params.Turbulence_Lacunarity = 0.10;
 Params.Turbulence_Persistence = 0.20;
 Params.Turbulence_TimeScalar = 0.14;
 
+Params.DoubleBufferPhysics = false;
+
 Params.XrInvertRotation = true;
 Params.XrTrackTimelineCamera = true;
 Params.DebugCameraClearColour = false;
@@ -318,6 +320,7 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Turbulence_Persistence',0,4);
 	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
 
+	ParamsWindow.AddParam('DoubleBufferPhysics');
 }
 
 
