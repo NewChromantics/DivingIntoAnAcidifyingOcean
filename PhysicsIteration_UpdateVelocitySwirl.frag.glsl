@@ -4,7 +4,6 @@ varying vec2 uv;
 uniform sampler2D LastVelocitys;
 uniform sampler2D OrigPositions;
 uniform sampler2D LastPositions;
-uniform bool LastPositionsFlipped;
 uniform float PositionCount;
 uniform float2 OrigPositionsWidthHeight;
 
@@ -94,11 +93,7 @@ float3 GetSpringTargetPos(float2 uv,float2 NoiseUv)
 float3 GetSpringForce(float2 uv)
 {
 	vec3 OrigPos = GetSpringTargetPos( uv, uv.yx );
-	//	in MRT mode, our copy of positions is upside down
-	//	not sure why
-	float2 Flipuv = uv;
-	Flipuv.y = LastPositionsFlipped ? 1.0 - Flipuv.y : Flipuv.y;
-	vec3 LastPos = texture2D( LastPositions, Flipuv ).xyz;
+	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
 	
 	float3 Force = (OrigPos - LastPos) * SpringScale;
 	float ForceMagnitude = length( Force );

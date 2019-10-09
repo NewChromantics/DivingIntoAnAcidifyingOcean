@@ -147,9 +147,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 	const Quad = GetAsset('Quad', RenderContext);
 	
 	
-	const CopyMrt = true;
-	
-	if ( CopyMrt )
+	try
 	{
 		//	copy old positions
 		let CopyToScratch = function(RenderTarget)
@@ -165,9 +163,9 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 		RenderTarget.RenderToRenderTarget( [PositionScratchTexture,VelocityScratchTexture], CopyToScratch );
 
 	}
-	else
+	catch(e)
 	{
-		throw "xx";
+		//	MRT failed, assume not supported, fallback to 2 copys
 		//	copy old velocitys
 		let CopyVelcoityToScratch = function(RenderTarget)
 		{
@@ -206,9 +204,9 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 			Shader.SetUniform('Gravity', 0 );
 			Shader.SetUniform('Noise', RandomTexture);
 			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
-			Shader.SetUniform('OrigPositions',PositionOrigTexture);
 			Shader.SetUniform('LastPositions', PositionTexture );
-			Shader.SetUniform('LastPositionsFlipped',false);	//	only in MRT mode
+			Shader.SetUniform('OrigPositions',PositionOrigTexture);
+			//Shader.SetUniform('LastPositions', PositionScratchTexture );	//	<--- causes problems
 			Shader.SetUniform('OrigPositionsWidthHeight', [PositionOrigTexture.GetWidth(),PositionOrigTexture.GetHeight()] );
 			SetPhysicsUniforms( Shader );
 		}
@@ -224,8 +222,10 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 		{
 			Shader.SetUniform('VertexRect', [0,0,1,1] );
 			Shader.SetUniform('PhysicsStep', PhysicsStep );
-			Shader.SetUniform('Velocitys',VelocityTexture);
+			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
 			Shader.SetUniform('LastPositions',PositionScratchTexture);
+			Shader.SetUniform('OrigPositions',PositionOrigTexture);
+			Shader.SetUniform('Velocitys',VelocityTexture);
 			SetPhysicsUniforms( Shader );
 		}
 		RenderTarget.DrawGeometry( Quad, UpdatePositionShader, SetUniforms );
