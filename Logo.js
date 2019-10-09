@@ -223,7 +223,14 @@ function TLogoState()
 		
 		this.PreloadPromises.push( Promise );
 	}
-	this.PreloadFilenames.forEach( Load.bind(this) );
+	
+	const LoadFile = function(Filename)
+	{
+		Load.call( this, Filename );
+		if ( MonitorAssetFile )
+			MonitorAssetFile( Filename );
+	}	
+	this.PreloadFilenames.forEach( LoadFile.bind(this) );
 	
 	const LoadAsset = function(Filename,Types)
 	{
