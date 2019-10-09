@@ -108,6 +108,7 @@ function TLogoState()
 		'Quad.vert.glsl',
 		'ParticleTriangles.vert.glsl',
 		'BlitCopy.frag.glsl',
+	 	'BlitCopyMultiple.frag.glsl',
 		'Geo.vert.glsl',
 		'Colour.frag.glsl',
 		'Edge.frag.glsl',
@@ -229,7 +230,7 @@ function TLogoState()
 		Load.call( this, Filename );
 		if ( MonitorAssetFile )
 			MonitorAssetFile( Filename );
-	}	
+	}
 	this.PreloadFilenames.forEach( LoadFile.bind(this) );
 	
 	const LoadAsset = function(Filename,Types)

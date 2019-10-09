@@ -231,7 +231,7 @@ Params.DustParticles_BoundsY = 2;
 Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
-Params.Swirl_TriangleScale = 0.002;
+Params.Swirl_TriangleScale = 0.052;
 Params.Swirl_Physics_SpringScale = 20.0;
 Params.Swirl_Physics_MaxSpringForce = 20.0;
 Params.Swirl_Physics_Damping = 0.02;

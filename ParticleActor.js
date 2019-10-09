@@ -244,8 +244,11 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
 		//	need to init these to zero?
 		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
-		this.VelocityTexture = new Pop.Image(Size,'Float3');
-		this.ScratchTexture = new Pop.Image(Size,'Float3');
+		const Format = this.PositionTexture.GetFormat();
+		Pop.Debug("this.PositionTexture.GetFormat() = "+Format);
+		this.VelocityTexture = new Pop.Image(Size,Format);
+		this.ScratchVelocityTexture = new Pop.Image(Size,Format);
+		this.ScratchPositionTexture = new Pop.Image(Size,Format);
 		//this.PositionOrigTexture = new Pop.Image();
 		this.PositionOrigTexture = this.TextureBuffers.PositionTexture;
 		//this.PositionOrigTexture.Copy( this.PositionTexture );
@@ -281,7 +284,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Shader.SetUniform('PositionCount',TriangleCount);
 		}
 		
-		PhysicsIteration( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
+		PhysicsIteration_MultipleShaders( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchVelocityTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
+		//PhysicsIteration_SingleShader( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchPositionTexture, this.ScratchVelocityTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms );
 	}
 	
 	this.Render = function(RenderTarget, ActorIndex, SetGlobalUniforms, Time)

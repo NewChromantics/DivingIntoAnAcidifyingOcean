@@ -4,6 +4,7 @@ varying vec2 uv;
 uniform sampler2D LastVelocitys;
 uniform sampler2D OrigPositions;
 uniform sampler2D LastPositions;
+uniform bool LastPositionsFlipped;
 uniform float PositionCount;
 uniform float2 OrigPositionsWidthHeight;
 
@@ -61,6 +62,7 @@ float2 PositionIndexToUv(float TriangleIndex)
 
 float3 GetSpringTargetPos(float2 uv,float2 NoiseUv)
 {
+	//return float3(0,0,0);
 	//	retarget uv
 	//	uv -> index
 	//	index -> normal
@@ -92,7 +94,11 @@ float3 GetSpringTargetPos(float2 uv,float2 NoiseUv)
 float3 GetSpringForce(float2 uv)
 {
 	vec3 OrigPos = GetSpringTargetPos( uv, uv.yx );
-	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
+	//	in MRT mode, our copy of positions is upside down
+	//	not sure why
+	float2 Flipuv = uv;
+	Flipuv.y = LastPositionsFlipped ? 1.0 - Flipuv.y : Flipuv.y;
+	vec3 LastPos = texture2D( LastPositions, Flipuv ).xyz;
 	
 	float3 Force = (OrigPos - LastPos) * SpringScale;
 	float ForceMagnitude = length( Force );
@@ -112,13 +118,14 @@ float3 GetNoiseForce(float2 uv)
 void main()
 {
 	vec4 Vel = texture( LastVelocitys, uv );
-	
-	Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
+
+	//Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
 	Vel.xyz += GetSpringForce(uv) * PhysicsStep;
-	
+ 
 	//	damping
 	Vel.xyz *= 1.0 - Damping;
 
+	//Vel = float4(0.4,0,0,1);
 	Vel.w = 1.0;
 	gl_FragColor = Vel;
 }

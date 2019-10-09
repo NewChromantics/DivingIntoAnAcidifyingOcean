@@ -230,7 +230,11 @@ function GetRenderScene(GetActorScene,Time)
 		if ( !Actor.GetPositionTexture )
 			return;
 		const PositionTexture = Actor.GetPositionTexture();
+		const VelocityTexture = Actor.VelocityTexture;
 		DebugTextures.push( PositionTexture );
+		DebugTextures.push( VelocityTexture );
+		DebugTextures.push( Actor.ScratchPositionTexture );
+		DebugTextures.push( Actor.ScratchVelocityTexture );
 	}
 	ActorScene.forEach( PushActorPositionTexture );
 	
