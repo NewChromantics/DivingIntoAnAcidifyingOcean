@@ -35,7 +35,7 @@ EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
 EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
-//EditorParams.ActorNodeName = SplineActorPrefix;
+EditorParams.ActorNodeName = SplineActorPrefix;
 
 EditorParams.ReloadAfterSecs = 300;
 EditorParams.EnablePhysicsAfterSecs = 1;
@@ -52,8 +52,19 @@ EditorParams.Swirl_PointCount = 90000;
 EditorParams.Swirl_LinearTest = false;
 EditorParams.Swirl_NodeDistance = 1.00;
 EditorParams.Swirl_ShowPathNodePoints = false;
+EditorParams.Spline_PointCount = 900;
+EditorParams.Spline_LerpToTarget = 0.3;
+EditorParams.Spline_ForwardDeviateX = 1;
+EditorParams.Spline_ForwardDeviateY = 1;
+EditorParams.Spline_ForwardDeviateZ = 1;
 
-const ReloadSceneOnParamChanged = ['ActorNodeName','Reload','Swirl_NodeCount','Swirl_PointCount','Swirl_PathLoop','Swirl_LinearTest','Swirl_NodeDistance','Swirl_ShowPathNodePoints'];
+
+const ReloadSceneOnParamChanged =
+[
+	'ActorNodeName','Reload',
+ 	'Swirl_NodeCount','Swirl_PointCount','Swirl_PathLoop','Swirl_LinearTest','Swirl_NodeDistance','Swirl_ShowPathNodePoints',
+ 	'Spline_PointCount','Spline_LerpToTarget','Spline_ForwardDeviateX','Spline_ForwardDeviateY','Spline_ForwardDeviateZ'
+];
 
 var Hud = {};
 InitDebugHud(Hud);
@@ -321,6 +332,42 @@ function GetRandomSwirlPath(Count)
 	return Positions;
 }
 
+
+function GetForwardSwirlPath(Count)
+{
+	//	start at 0,0,0
+	const Positions = [];
+	Positions.push( [0,0,0] );
+
+	//	randomly move forward but try and gravitate towards 0,0,1 if we go too far
+	for ( let i=1;	i<Count;	i++ )
+	{
+		const x = Params.Spline_ForwardDeviateX;
+		const y = Params.Spline_ForwardDeviateY;
+		const z = -Params.Spline_ForwardDeviateZ;
+
+		const LastPos = Positions[i-1];
+		let Pos = LastPos.slice();
+		const Target = Pos.slice();
+		Target[2] += z*2;
+		
+		//	random pos
+		Pos[0] += Math.lerp( -x, x, Math.random() );
+		Pos[1] += Math.lerp( -y, y, Math.random() );
+		Pos[2] += Math.lerp( 0, z*2, Math.random() );
+		
+		//	now gravitate towards the target
+		Pos = Math.Lerp3( Pos, Target, Params.Spline_LerpToTarget );
+		Pos = Math.Subtract3( Pos, LastPos );
+		Pos = Math.Normalise3( Pos, Params.Swirl_NodeDistance );
+		Pos = Math.Add3( Pos, LastPos );
+
+		Positions.push( Pos );
+	}
+	
+	return Positions;
+}
+
 function GetBrownianSwirlPath(Count)
 {
 	//	calc 2 random points
@@ -367,8 +414,11 @@ function CreateRandomSplinePath(NodeCount,PointCount,NodePoints=[])
 		SplineRandomPointSet = null;
 	
 	if ( !SplineRandomPointSet )
-		SplineRandomPointSet = GetBrownianSwirlPath(NodeCount);
-
+	{
+		//SplineRandomPointSet = GetBrownianSwirlPath(NodeCount);
+		SplineRandomPointSet = GetForwardSwirlPath(NodeCount);
+	}
+	
 	const Nodes = SplineRandomPointSet;
 	if ( NodePoints )
 		NodePoints.push( ...Nodes );
@@ -458,7 +508,7 @@ function CreateSplineActors(PushActor)
 	}
 
 	let PathNodes = [];
-	let PathPoints = CreateRandomSplinePath( EditorParams.Swirl_NodeCount, EditorParams.Swirl_PointCount, PathNodes );
+	let PathPoints = CreateRandomSplinePath( EditorParams.Swirl_NodeCount, EditorParams.Spline_PointCount, PathNodes );
 	
 	PathPoints.forEach( Pos => PushSplinePointActor( Pos, 0, 0.01 ) );
 	
@@ -685,7 +735,7 @@ class TAssetEditor
 	
 	CreateEditorParamsWindow()
 	{
-		const ParamsWindowRect = [1100,20,350,450];
+		const ParamsWindowRect = [1100,20,450,450];
 		this.ParamsWindow = CreateParamsWindow( EditorParams, this.OnEditorParamsChanged.bind(this), ParamsWindowRect );
 		
 		this.ParamsWindow.AddParam('ActorNodeName');
@@ -694,10 +744,15 @@ class TAssetEditor
 		this.ParamsWindow.AddParam('ReloadAfterSecs',0,300);
 		this.ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
 		this.ParamsWindow.AddParam('Swirl_PointCount',1,90000,Math.floor);
+		this.ParamsWindow.AddParam('Spline_PointCount',1,9000,Math.floor);
 		this.ParamsWindow.AddParam('Swirl_PathLoop');
 		this.ParamsWindow.AddParam('Swirl_LinearTest');
 		this.ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
 		this.ParamsWindow.AddParam('Swirl_ShowPathNodePoints');
+		this.ParamsWindow.AddParam('Spline_LerpToTarget',0,1);
+		this.ParamsWindow.AddParam('Spline_ForwardDeviateX',0,10);
+		this.ParamsWindow.AddParam('Spline_ForwardDeviateY',0,10);
+		this.ParamsWindow.AddParam('Spline_ForwardDeviateZ',0,10);
 		
 		EditorParams.InitParamsWindow( this.ParamsWindow );
 	}
@@ -708,7 +763,12 @@ class TAssetEditor
 		
 		if ( ChangedParamName == 'Swirl_NodeCount' ||
 			ChangedParamName == 'Swirl_NodeDistance' ||
-			ChangedParamName == 'Swirl_PathLoop' )
+			ChangedParamName == 'Swirl_PathLoop' ||
+			ChangedParamName == 'Spline_LerpToTarget' ||
+			ChangedParamName == 'Spline_ForwardDeviateX' ||
+			ChangedParamName == 'Spline_ForwardDeviateY' ||
+			ChangedParamName == 'Spline_ForwardDeviateZ' ||
+			false )
 		{
 			SplineRandomPointSet = null;
 		}

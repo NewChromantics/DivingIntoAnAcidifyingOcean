@@ -231,16 +231,16 @@ Params.DustParticles_BoundsY = 2;
 Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
-Params.Swirl_TriangleScale = 0.052;
-Params.Swirl_Physics_SpringScale = 20.0;
-Params.Swirl_Physics_MaxSpringForce = 20.0;
-Params.Swirl_Physics_Damping = 0.02;
+Params.Swirl_TriangleScale = 0.002;
+Params.Swirl_Physics_SpringScale = 50.0;
+Params.Swirl_Physics_MaxSpringForce = 50.0;
+Params.Swirl_Physics_Damping = 0.20;
 Params.Swirl_Physics_CustomSplineTime = false;
 Params.Swirl_Physics_SplineTime = 0.0;
-Params.Swirl_Physics_SplineTimeSpeed = 0.1;
-Params.Swirl_Physics_SplineTimeRange = 0.05;
+Params.Swirl_Physics_SplineTimeSpeed = 0.05;
+Params.Swirl_Physics_SplineTimeRange = 0.03;
 Params.Swirl_Physics_NoiseScale = 0.0;
-Params.Swirl_Physics_SplineNoiseScale = 0.48;
+Params.Swirl_Physics_SplineNoiseScale = 0.0;
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
