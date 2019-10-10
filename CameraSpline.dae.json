@@ -4,8 +4,8 @@
     "-version": "1.4.1",
     "asset": {
       "contributor": { "authoring_tool": "CINEMA4D 16.050 COLLADA Exporter" },
-      "created": "2019-09-17T07:07:01Z",
-      "modified": "2019-09-17T07:07:01Z",
+      "created": "2019-10-10T21:07:37Z",
+      "modified": "2019-10-10T21:07:37Z",
       "unit": {
         "-meter": "0.01",
         "-name": "centimeter"
@@ -11279,7 +11279,14 @@
         "-id": "ID884",
         "-name": "Camera",
         "optics": {
-          
+          "technique_common": {
+            "perspective": {
+              "xfov": "56.1301",
+              "aspect_ratio": "0.75",
+              "znear": "0.1",
+              "zfar": "4000"
+            }
+          }
         }
       }
     },
@@ -12843,7 +12850,7 @@
             "-name": "Nasty_Animal_Microplastic",
             "translate": {
               "-sid": "translate",
-              "#text": "-1.98033 -58.2807 -36161.6"
+              "#text": "-1.98033 -27.1745 -36798.4"
             },
             "rotate": [
               {
@@ -12870,7 +12877,7 @@
             "-name": "Nasty_Animal_Plastic",
             "translate": {
               "-sid": "translate",
-              "#text": "91.1868 -137.684 -33815.5"
+              "#text": "91.1868 -137.684 -34452.3"
             },
             "rotate": [
               {
@@ -12897,7 +12904,7 @@
             "-name": "Nasty_Animal_Cigarette",
             "translate": {
               "-sid": "translate",
-              "#text": "214.531 -133.232 -30530.8"
+              "#text": "214.531 -133.232 -31167.6"
             },
             "rotate": [
               {
@@ -12924,7 +12931,7 @@
             "-name": "Nasty_Animal_Assorbente",
             "translate": {
               "-sid": "translate",
-              "#text": "66.6263 -202.67 -30329.7"
+              "#text": "66.6263 -202.67 -30966.5"
             },
             "rotate": [
               {
@@ -12951,7 +12958,7 @@
             "-name": "Animal_Jellyfish",
             "translate": {
               "-sid": "translate",
-              "#text": "-18.3919 -59.245 -29474.3"
+              "#text": "-18.3919 -136.191 -30111.1"
             },
             "rotate": [
               {
@@ -12978,7 +12985,7 @@
             "-name": "Nasty_Animal_Bag",
             "translate": {
               "-sid": "translate",
-              "#text": "205.649 -4.32075 -27776.4"
+              "#text": "205.649 -4.32075 -28413.3"
             },
             "rotate": [
               {
@@ -13005,7 +13012,7 @@
             "-name": "Animal_Shark",
             "translate": {
               "-sid": "translate",
-              "#text": "-171.403 37.473 -26372.5"
+              "#text": "-35.824 -12.4555 -27009.4"
             },
             "rotate": [
               {
@@ -13032,7 +13039,7 @@
             "-name": "Nasty_Animal_Straw",
             "translate": {
               "-sid": "translate",
-              "#text": "165.624 98.4984 -25144.8"
+              "#text": "165.624 98.4984 -25781.6"
             },
             "rotate": [
               {
@@ -13059,7 +13066,7 @@
             "-name": "Nasty_Animal_Bottle",
             "translate": {
               "-sid": "translate",
-              "#text": "100.422 92.1077 -23883.3"
+              "#text": "100.422 92.1077 -24520.1"
             },
             "rotate": [
               {
@@ -13086,7 +13093,7 @@
             "-name": "Animal_Tuna",
             "translate": {
               "-sid": "translate",
-              "#text": "-15.983 126.442 -22722.2"
+              "#text": "-15.983 107.929 -23359"
             },
             "rotate": [
               {
@@ -13113,7 +13120,7 @@
             "-name": "Nasty_Animal_Can",
             "translate": {
               "-sid": "translate",
-              "#text": "217.122 -65.623 -18891.1"
+              "#text": "217.122 -41.4347 -19527.9"
             },
             "rotate": [
               {
@@ -13140,7 +13147,7 @@
             "-name": "Nasty_Animal_FoodContainer",
             "translate": {
               "-sid": "translate",
-              "#text": "-49.7118 -186.649 -18705"
+              "#text": "-49.7118 -87.2084 -18790.5"
             },
             "rotate": [
               {
@@ -13167,7 +13174,7 @@
             "-name": "Animal_Turtle",
             "translate": {
               "-sid": "translate",
-              "#text": "-252.668 35.3316 -16422.7"
+              "#text": "-106.842 -10.1392 -17059.6"
             },
             "rotate": [
               {
@@ -13194,7 +13201,7 @@
             "-name": "Nasty_Animal_Net",
             "translate": {
               "-sid": "translate",
-              "#text": "-104.146 19.1696 -15134.9"
+              "#text": "74.0858 59.4833 -15771.7"
             },
             "rotate": [
               {
@@ -13221,7 +13228,7 @@
             "-name": "Animal_Salmon",
             "translate": {
               "-sid": "translate",
-              "#text": "84.4307 117.586 -15021.1"
+              "#text": "-77.869 110.279 -15629.5"
             },
             "rotate": [
               {
@@ -13248,7 +13255,7 @@
             "-name": "Animal_Pollock",
             "translate": {
               "-sid": "translate",
-              "#text": "-39.61 90.6738 -12831.2"
+              "#text": "-39.61 70.4345 -13468.1"
             },
             "rotate": [
               {
@@ -13275,7 +13282,7 @@
             "-name": "Animal_Cobia",
             "translate": {
               "-sid": "translate",
-              "#text": "78.4594 99.3556 -11477.4"
+              "#text": "31.3465 80.2866 -12114.2"
             },
             "rotate": [
               {
@@ -13302,7 +13309,7 @@
             "-name": "Animal_Menidia",
             "translate": {
               "-sid": "translate",
-              "#text": "2.95228 60.5389 -10312.7"
+              "#text": "2.95228 72.3871 -11341.9"
             },
             "rotate": [
               {
@@ -13329,7 +13336,7 @@
             "-name": "Animal_Cephalopod",
             "translate": {
               "-sid": "translate",
-              "#text": "-36.5392 -33.5746 -9162.8"
+              "#text": "-36.5392 69.0084 -10647.7"
             },
             "rotate": [
               {
@@ -13356,7 +13363,7 @@
             "-name": "Animal_Clownfish",
             "translate": {
               "-sid": "translate",
-              "#text": "128.945 -169.179 -7974.57"
+              "#text": "128.945 20.6788 -10026.3"
             },
             "rotate": [
               {
@@ -13383,7 +13390,7 @@
             "-name": "Animal_Anemone",
             "translate": {
               "-sid": "translate",
-              "#text": "256.942 -198.773 -7761.4"
+              "#text": "-10.6844 13.2543 -9654.28"
             },
             "rotate": [
               {
@@ -13410,7 +13417,7 @@
             "-name": "Animal_Crab",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.0713458 -166.372 -6792.78"
+              "#text": "128.712 -86.4245 -9150.72"
             },
             "rotate": [
               {
@@ -13437,7 +13444,7 @@
             "-name": "Animal_Lobster",
             "translate": {
               "-sid": "translate",
-              "#text": "103.337 -197.339 -6123.16"
+              "#text": "-64.0811 -119.539 -8756.89"
             },
             "rotate": [
               {
@@ -13464,7 +13471,7 @@
             "-name": "Animal_DeepSeaCrab",
             "translate": {
               "-sid": "translate",
-              "#text": "80.0013 -357.742 -5953.89"
+              "#text": "80.0013 -205.663 -8377.82"
             },
             "rotate": [
               {
@@ -13491,7 +13498,7 @@
             "-name": "Animal_AlgalBloom",
             "translate": {
               "-sid": "translate",
-              "#text": "-102.169 -214.25 -5517.4"
+              "#text": "-72.1196 -136.254 -7848.32"
             },
             "rotate": [
               {
@@ -13518,7 +13525,7 @@
             "-name": "Animal_Urchin",
             "translate": {
               "-sid": "translate",
-              "#text": "3.64261 -200.059 -5005.75"
+              "#text": "3.64261 -97.1773 -7516.39"
             },
             "rotate": [
               {
@@ -13545,7 +13552,7 @@
             "-name": "Animal_BlueCrab",
             "translate": {
               "-sid": "translate",
-              "#text": "-88.0908 -318.291 -4544.78"
+              "#text": "163.239 -213.863 -6886.6"
             },
             "rotate": [
               {
@@ -13572,7 +13579,7 @@
             "-name": "Animal_BrittleStar",
             "translate": {
               "-sid": "translate",
-              "#text": "-100.861 -275.014 -4099.96"
+              "#text": "-126.617 -189.756 -6456.38"
             },
             "rotate": [
               {
@@ -13599,7 +13606,7 @@
             "-name": "Animal_Oyster",
             "translate": {
               "-sid": "translate",
-              "#text": "35.7378 -244.591 -3560.41"
+              "#text": "1.39555 -150.166 -6135.13"
             },
             "rotate": [
               {
@@ -13626,7 +13633,7 @@
             "-name": "Animal_BubblegumCoral",
             "translate": {
               "-sid": "translate",
-              "#text": "208.323 -785.187 -3308.34"
+              "#text": "163.056 -266.378 -5941.99"
             },
             "rotate": [
               {
@@ -13653,7 +13660,7 @@
             "-name": "Animal_Seagrass",
             "translate": {
               "-sid": "translate",
-              "#text": "-199.88 -910.386 -2729.45"
+              "#text": "-96.4108 -312.252 -5583.39"
             },
             "rotate": [
               {
@@ -13680,7 +13687,7 @@
             "-name": "Animal_Mussels",
             "translate": {
               "-sid": "translate",
-              "#text": "8.0511 -570.946 -2467.15"
+              "#text": "36.9339 -216.586 -5306.41"
             },
             "rotate": [
               {
@@ -13707,7 +13714,7 @@
             "-name": "Animal_DeepSeaCoral",
             "translate": {
               "-sid": "translate",
-              "#text": "242.155 -850.613 -2243.87"
+              "#text": "2.45518 -201.821 -4705.47"
             },
             "rotate": [
               {
@@ -13734,7 +13741,7 @@
             "-name": "Animal_CorallineAlgae",
             "translate": {
               "-sid": "translate",
-              "#text": "-62.123 -670.64 -2076.89"
+              "#text": "-139.393 -210.293 -4367.97"
             },
             "rotate": [
               {
@@ -13761,7 +13768,7 @@
             "-name": "Animal_Cockle",
             "translate": {
               "-sid": "translate",
-              "#text": "17.5972 -720.623 -1880.4"
+              "#text": "17.5972 -206.761 -4122.11"
             },
             "rotate": [
               {
@@ -13788,7 +13795,7 @@
             "-name": "Animal_Kelp",
             "translate": {
               "-sid": "translate",
-              "#text": "3.94276 -752.072 -1642.13"
+              "#text": "3.94276 -212.087 -3846.94"
             },
             "rotate": [
               {
@@ -13815,7 +13822,7 @@
             "-name": "Animal_Coral",
             "translate": {
               "-sid": "translate",
-              "#text": "120.747 -856.826 -1429.29"
+              "#text": "120.747 -348.208 -3631.76"
             },
             "rotate": [
               {
@@ -13842,7 +13849,7 @@
             "-name": "Animal_Phytoplankton",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.797719 -755.728 -1258.92"
+              "#text": "-0.797719 -368.57 -2882.36"
             },
             "rotate": [
               {
@@ -13869,7 +13876,7 @@
             "-name": "Animal_JuvenileBivalve",
             "translate": {
               "-sid": "translate",
-              "#text": "21.0679 -771.008 -1136.15"
+              "#text": "-30.6667 -566.795 -2452.7"
             },
             "rotate": [
               {
@@ -13896,7 +13903,7 @@
             "-name": "Animal_Larvae",
             "translate": {
               "-sid": "translate",
-              "#text": "50.6513 -668.635 -1040.42"
+              "#text": "24.784 -657.809 -2109.56"
             },
             "rotate": [
               {
@@ -13923,7 +13930,7 @@
             "-name": "Animal_Krill",
             "translate": {
               "-sid": "translate",
-              "#text": "-29.5159 -735.77 -933.076"
+              "#text": "-90.9508 -766.869 -1776.79"
             },
             "rotate": [
               {
@@ -13950,7 +13957,7 @@
             "-name": "Animal_Nodularia",
             "translate": {
               "-sid": "translate",
-              "#text": "44.3906 -710.633 -833.901"
+              "#text": "112.292 -766.438 -1399.59"
             },
             "rotate": [
               {
@@ -13977,7 +13984,7 @@
             "-name": "Animal_Pteropod",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.887713 -681.592 -728.757"
+              "#text": "-0.887713 -773.641 -1055"
             },
             "rotate": [
               {
@@ -14247,12 +14254,12 @@
             "-name": "Camera",
             "translate": {
               "-sid": "translate",
-              "#text": "0 -700.546 -612.529"
+              "#text": "0 -6.75446 -9166.46"
             },
             "rotate": [
               {
                 "-sid": "rotateY",
-                "#text": "0 1 0 -0"
+                "#text": "0 1 0 360"
               },
               {
                 "-sid": "rotateX",

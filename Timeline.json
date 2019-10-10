@@ -36,61 +36,56 @@
 		]
 	},
 
-	"1803":
+	"1802":
 	{
 		"Subtitle":"Every second breath we take comes from the ocean."
 	},
-	"1806":
+	"1805":
 	{
 		"Subtitle":" "
 	},
-	"1808":
+	"1807":
 	{
-		"Subtitle":"But this won’t be for much longer."
+		"Subtitle":"But this won’t be much longer."
 	},
-	"1813":
+	"1812":
 	{
 		"Subtitle":" "
 	},
 
-	"1820":
+	"1814":
 	{
-		"Subtitle":"We’re in the process of killing around 96% of ocean life."
+		"Subtitle":"We’re in the process of killing 96% of ocean life."
 	},
 
-	"1828":
+	"1818":
 	{
 		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
 		"Subtitle":" "
 	},
 	
-	"1830":
+	"1820":
 	{
-		"Subtitle":"In our lifetime, we are releasing enormous amounts of carbon dioxide, or CO2, into the atmosphere."
+		"Subtitle":"That’s what happened some 252 million years ago in an event known as “The Great Dying”,  where a massive release of carbon dioxide (CO2) and other gases caused extreme global warming that depleted the oceans of oxygen and acidified the waters."
 	},
 
-	"1838":
+	"1839":
 	{
-		"Subtitle":"This is absorbed by the oceans and acidifies the water."
-	},
-
-	"1842":
-	{
-		"Subtitle":"It decreases our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life."
+		"Subtitle":"Today we are doing the same."
 	},
 	
-	"1850":
+	"1843":
 	{
-		"Subtitle":"Shells and skeletons dissolve, and marine animals’ physiology changes. "
+		"Subtitle":"But rather than taking tens of thousands of years, we are doing it in a little bit more than one single lifetime."
 	},
 	
-	"1855":
+	"1851":
 	{
 		"Subtitle":"If we fail to act, what will happen to them… and to us?"
 	},
-	"1860":
+	"1858":
 	{
-		"Subtitle":""
+		"Subtitle":"Select the animals to discover."
 	},
 	
 	
@@ -109,7 +104,8 @@
 		"Stats_Temp":0,
 		"Stats_Co2":0,
 		"Stats_Oxygen":0,
-		"Stats_Ph":0
+		"Stats_Ph":0,
+		"Subtitle":""
 	},
 
 	"1863":
@@ -122,6 +118,11 @@
 		"YearsPerSecond":0.5,
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
 		"Subtitle":""
+	},
+
+	"1876":
+	{
+		"Subtitle":"Carbon Dioxide (CO2) is absorbed by the world’s oceans and acidifies the water through a chemical process called Ocean Acidification."
 	},
 	
 	"1880":

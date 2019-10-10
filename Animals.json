@@ -6,8 +6,8 @@
 		"Model":	"Models/Pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
-        "TriangleScale":0.0008
+		"Scale":0.5,
+        "TriangleScale":0.0013
 	},
 	
 	"Jellyfish":
@@ -17,8 +17,8 @@
 		"Model":	"Models/Jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
-		"Scale":1,
-        "TriangleScale":0.0017
+		"Scale":0.5,
+        "TriangleScale":0.0015
 
 	},
 
@@ -30,7 +30,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
-        "TriangleScale":0.0027
+        "TriangleScale":0.002
 
 	},
 
@@ -42,7 +42,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.0027
+        "TriangleScale":0.003
 
 	},
 
@@ -53,7 +53,7 @@
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
+		"Scale":0.7,
         "TriangleScale":0.002
 
 	},
@@ -66,7 +66,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.005
+        "TriangleScale":0.003
 
 	},
 	"Larvae":
@@ -77,7 +77,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.001
+        "TriangleScale":0.002
 
 	},
 	"Urchin":
@@ -98,8 +98,8 @@
 		"Model":	"Models/Cockle.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
-        "TriangleScale":0.0010
+		"Scale":0.5,
+        "TriangleScale":0.0012
 
 	},
 	"AlgalBloom":
@@ -109,8 +109,8 @@
 		"Model":	"Models/AlgalBloom.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":1,
-        "TriangleScale":0.0017
+		"Scale":0.4,
+        "TriangleScale":0.001
 
 	},
 	"Pollock":
@@ -121,7 +121,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
 		"Scale":1,
-        "TriangleScale":0.0018
+        "TriangleScale":0.002
 	},
 	"Krill":
 	{
@@ -130,9 +130,8 @@
 		"Model":	"Models/Krill.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
-        "TriangleScale":0.001,
-		"Flip":true
+		"Scale":0.4,
+        "TriangleScale":0.0015
 
 	},
 	"CorallineAlgae":
@@ -142,8 +141,8 @@
 		"Model":	"Models/CorallineAlgae.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":1,
-        "TriangleScale":0.00199
+		"Scale":0.6,
+        "TriangleScale":0.002
 
 	},
 	"Nodularia":
@@ -153,8 +152,8 @@
 		"Model":	"Models/Nodularia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.0006
+		"Scale":0.4,
+        "TriangleScale":0.0009
 
 	},
 	"Kelp":
@@ -164,9 +163,8 @@
 		"Model":	"Models/Kelp.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.0015,
-		"Flip":true
+		"Scale":0.8,
+        "TriangleScale":0.002
 
 	},
 	"DeepSeaCrab":
@@ -176,8 +174,8 @@
 		"Model":	"Models/DeepSeaCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.001
+		"Scale":0.8,
+        "TriangleScale":0.002
 
 	},
 	"Shark":
@@ -187,8 +185,8 @@
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":1,
-        "TriangleScale":0.001
+		"Scale":0.6,
+        "TriangleScale":0.002
 
 	},
 	"Cephalopod":
@@ -198,8 +196,8 @@
 		"Model":	"Models/Cephalopod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
-        "TriangleScale":0.00358
+		"Scale":0.8,
+        "TriangleScale":0.002
 
 	},
 	"DeepSeaCoral":
@@ -210,7 +208,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
-        "TriangleScale":0.00438
+        "TriangleScale":0.002
 
 	},
 	"BubblegumCoral":
@@ -220,8 +218,8 @@
 		"Model":	"Models/BubblegumCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.00238
+		"Scale":0.6,
+        "TriangleScale":0.002
 
 	},
 	"Lobster":
@@ -232,7 +230,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
-        "TriangleScale":0.00139
+        "TriangleScale":0.002
 
 	},
 	"JuvenileBivalve":
@@ -242,8 +240,8 @@
 		"Model":	"Models/JuvenileBivalve.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.0009
+		"Scale":0.5,
+        "TriangleScale":0.0015
 
 	},
 	"BlueCrab":
@@ -253,8 +251,8 @@
 		"Model":	"Models/BlueCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.001
+		"Scale":0.7,
+        "TriangleScale":0.002
 
 	},
 	"Turtle":
@@ -265,7 +263,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.0039
+        "TriangleScale":0.002
 
 	},
 	"Tuna":
@@ -276,7 +274,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.00279
+        "TriangleScale":0.002
 
 	},
 	"Cobia":
@@ -287,7 +285,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":1,
-        "TriangleScale":0.0015
+        "TriangleScale":0.002
 
 	},
 	"Phytoplankton":
@@ -297,7 +295,7 @@
 		"Model":	"Models/Phytoplankton.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1,
+		"Scale":0.3,
         "TriangleScale":0.0005
 
 	},
@@ -308,8 +306,8 @@
 		"Model":	"Models/Mussels.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
-        "TriangleScale":0.001
+		"Scale":1.2,
+        "TriangleScale":0.0015
 
 	},
 	"Menidia":
@@ -319,8 +317,8 @@
 		"Model":	"Models/Menidia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":1,
-        "TriangleScale":0.0018
+		"Scale":1.2,
+        "TriangleScale":0.002
 
 	},
 	"Crab":
@@ -330,8 +328,8 @@
 		"Model":	"Models/Crab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":1,
-        "TriangleScale":0.0018
+		"Scale":0.6,
+        "TriangleScale":0.002
 
 	},
 		"BrittleStar":
@@ -341,8 +339,8 @@
 		"Model":	"Models/BrittleStar.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":1,
-        "TriangleScale":0.002592
+        "Scale":0.55,
+        "TriangleScale":0.0015
 
 	},
 		"Coral":
@@ -352,7 +350,8 @@
 		"Model":	"Models/Coral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-        "TriangleScale":0.002
+        "Scale":0.6,
+        "TriangleScale":0.0015
 
 	},
 		"Clownfish":
@@ -363,7 +362,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.0014	
+        "TriangleScale":0.002
 
 	},"Microplastic":
 	{
@@ -446,7 +445,8 @@
 		"Model":	"Models/FoodContainer.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":1
+		"Scale":1,
+        "TriangleScale":0.003
 
 	},
 		"Cigarette":
