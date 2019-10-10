@@ -3,10 +3,10 @@
 	{
 		"Name":		"PTEROPOD",
 		"Description":	"<h1> The pteropod, or “sea butterfly”, is a tiny sea creature, a kind of plankton, about the size of a small pea. They are at the very base of the food chain and sustain a huge part of the marine ecosystem, for example feeding krill, whales, and salmon.  </h1> <h2> Ocean acidification is the ongoing decrease in the pH of the Earth's oceans, caused by the uptake of carbon dioxide (CO) from the atmosphere. Since the Industrial revolution, oceans have become 30% more acidic. And by 2100 it is expected they will become 170% more acidic. </h2> <h2> When scientists placed pteropods in water with the levels of pH and CO2 projected for the year 2100, their shells started decaying within 48 hours. They nearly completely dissolved within 45 days. </h2>  <h2> pH is a very important thing. In humans, a small change of 0.2 to 0.3 pH in blood can cause seizures, comas, and even death. </h2>",
-		"Model":	"Models/pteropod.ply",
+		"Model":	"Models/Pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1.3,
+		"Scale":1,
         "TriangleScale":0.0008
 	},
 	
@@ -14,7 +14,7 @@
 	{
 		"Name":		"JELLYFISH",
 		"Description":	"<h1> Unlike other marine animals the highly resilient jellyfish thrive in these increasingly risky conditions, even as water temperatures rise, and the oceans become less oxygenated and more acidic.  </h1> <h2> Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years. </h2> <h2> In the last 50 years oxygen levels in the ocean have dropped by around 2%. In such conditions, jellyfish can still thrive whereas other marine animals cannot.</h2>",
-		"Model":	"Models/jellyfish.ply",
+		"Model":	"Models/Jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
@@ -26,10 +26,10 @@
 	{
 		"Name":		"SALMON",
 		"Description":	"<h1> The pacific pink salmon. Both a highly energetic fish that swims upstream, and – incredibly – it remembers the exact location it was hatched.  </h1> <h2> Salmon lose a quarter of their body mass when exposed to higher temperatures and a decrease in food sources. </h2> <h2>Pteropods (a staple in salmon’s diet) have a doomed existence in acidic waters. With just a 10% reduction in pteropod numbers, salmon could lose up to 20% of their mass.</h2>",
-		"Model":	"Models/PinkSalmon.ply",
+		"Model":	"Models/Salmon.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":0.25,
+        "Scale":1,
         "TriangleScale":0.0027
 
 	},
@@ -41,7 +41,7 @@
 		"Model":	"Models/Seagrass.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.0027
 
 	},
@@ -53,7 +53,7 @@
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.002
 
 	},
@@ -73,10 +73,10 @@
 	{
 		"Name":		"FISH LARVAE",
 		"Description":	"<h1> Fish larvae are the future of the oceans.  </h1> <h2> When grown in the predicted levels of CO2 for the year 2100, fish larvae showed considerable tissue damage, necrosis, and severe internal damage, resulting in a general decrease in survival rates. </h2> ",
-		"Model":	"Models/FishLava.ply",
+		"Model":	"Models/Larvae.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.001
 
 	},
@@ -84,10 +84,10 @@
 	{
 		"Name":		"SEA URCHIN",
 		"Description":	"<h1> Considered a delicacy in many cultures, sea urchins are spiny, globular animals with self-sharpening teeth tucked beneath their bodies. And while they are sightless, they find their food through their senses of smell and hearing.  </h1> <h2> Juveniles species of different kinds of sea urchins were exposed for 100 days to two treatments of pH: a pH of 8.0 μ and pH of 7.6. μ. The juveniles of a certain species, D. africanum, were more predated from the acidic treatment than those kept in the control treatment. </h2> <h2> All juveniles species studied that were reared in a pH of 7.6 showed changes in the form of thie skeletal structures. </h2>",
-		"Model":	"Models/SeaUrchin.ply",
+		"Model":	"Models/Urchin.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.4,
+		"Scale":1,
 		"TriangleScale":0.002
 
 	},
@@ -95,10 +95,10 @@
 	{
 		"Name":		"COCKLE",
 		"Description":	"<h1> With their heart shaped shell, Cockles are actually able to jump in the sandy beaches they live in.  </h1> <h2> When CO2 is absorbed by seawater, chemical reactions occur that reduce seawater pH, carbonate ion concentration, and saturation states of biologically important calcium carbonate minerals. These last minerals are the building blocks of Aragonite, what the Cockle's shell is made of. </h2> <h2> Healthy Aragonite data should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall below 1Ω all skeletons and shells will start dissolving.  </h2> <h2> Under the current progression of carbon emissions, around 70% of North Atlantic cold-water skeletons and shells will be living in corrosive waters by 2050–60. </h2>",
-		"Model":	"Models/cockle_v1.ply",
+		"Model":	"Models/Cockle.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1.2,
+		"Scale":1,
         "TriangleScale":0.0010
 
 	},
@@ -120,17 +120,17 @@
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
-		"Scale":0.4,
+		"Scale":1,
         "TriangleScale":0.0018
 	},
 	"Krill":
 	{
 		"Name":		"ANTARCTIC KRILL",
 		"Description":	"<h1> This tiny swimming crustacean lives in the Antarctic waters of the Southern Ocean. The Antarctic Krill live in dense swarms and are likely the most abundant species on the planet, with around 400 trillion individuals.   </h1> <h2> Antarctic krill have performed an essential role for around 1000 years: through their feeding habits they help with carbon dioxide sinking, whereby they export large quantities of CO2 from the biosphere to the deep bottom of the Antarctic. </h2> <h2> The acidification of the oceans is having a huge impact on krill: their exoskeleton contains carbonate, which is susceptible to dissolution under low pH conditions. It has been shown that increased carbon dioxide can disrupt the development of krill eggs and even prevent the juvenile krill from hatching, leading to future geographically widespread decreases in krill hatching success. </h2> <h2> Krill need the Antarctic’s pack ice structures to have a fair chance of survival, especially in the early stages of their development. But the reduction of the pack ice zone due to global warming is one of the causes of their decline in numbers. </h2>",
-		"Model":	"Models/AntarcticKrill.ply",
+		"Model":	"Models/Krill.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.001,
 		"Flip":true
 
@@ -139,10 +139,10 @@
 	{
 		"Name":		"CORALLINE ALGAE",
 		"Description":	"<h1>  Like coral reefs, coralline algae help bring life to the reef.  </h1> <h2> Coralline algae - red algae with a hard, calcifying tissue - provide habitat for other invertebrates, like sea urchins, and add calcareous material to the structure of the coral reef, helping cementing it together. </h2> <h2> The chemical they produce promote the settlement of the larvae of certain herbivorous invertebrates which, in turn, supports some seaweeds. Most coralline algae species build shells from the high-magnesium calcite form of calcium carbonate, which is more soluble than the aragonite or regular calcite forms. </h2> <h2> One study found that, in acidifying conditions, coralline algae covered 92% less area, making space for other types of non-calcifying algae, which can smother and damage coral reefs. But this has negative impacts, as many coral larvae prefer to settle onto coralline algae when they are ready to leave the plankton stage and start life on a coral reef. </h2>",
-		"Model":	"Models/CooralineAlgue.ply",
+		"Model":	"Models/CorallineAlgae.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.5,
+		"Scale":1,
         "TriangleScale":0.00199
 
 	},
@@ -150,10 +150,10 @@
 	{
 		"Name":		"NODULARIA SPUMIGENA",
 		"Description":	"<h1>  Despite its unfamiliar name, this nitrogen-fixing cyanobacteria plays an important role in our oceans, converting key compounds into more easily consumable ones by other microorganisms.  </h1> <h2> Nodularia Spumigena, a nitrogen-fixing cyanobacteria, help the nitrogen change between states so it can be used by other organisms in an important process and cycle called Nitrogen Fixation. </h2> <h2> Recent studies show that ocean acidification has the potential to alter the marine nitrogen cycle which controls much of primary production in the sea.  </h2> <h2> When immersed in the low pH conditions expected in 2100 of around 7.6. nodularia spumigena show a reduced growth rate and reduced nitrogen fixation rate at elevated CO2. </h2>",
-		"Model":	"Models/NodulariaSpumi.ply",
+		"Model":	"Models/Nodularia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.15,
+		"Scale":1,
         "TriangleScale":0.0006
 
 	},
@@ -161,10 +161,10 @@
 	{
 		"Name":		"KELP FOREST",
 		"Description":	"<h1>  The kelp forest is a root-less seaweed forest that anchors to rocks, recognised as one of the most reproductive and dynamic ecosystems on Earth. </h1> <h2> Kelp requires cold water for growth, and elevated seawater temperatures from global warming are a major threat to kelp forest survival. Similarly, strong individual storms can wipe out large areas of kelp forest, by ripping the kelp plants from the seafloor. </h2> <h2> Overfishing and hunting create imbalances in the animal population and affect the whole ecosystem. </h2> <h2> Pollution in the form of sewage, industrial waste, inorganic fertilisers, and pesticides carried from freshwater runoff can impair kelp growth and reproduction. </h2>",
-		"Model":	"Models/KelpForest.ply",
+		"Model":	"Models/Kelp.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":1.2,
+		"Scale":1,
         "TriangleScale":0.0015,
 		"Flip":true
 
@@ -176,7 +176,7 @@
 		"Model":	"Models/DeepSeaCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.2,
+		"Scale":1,
         "TriangleScale":0.001
 
 	},
@@ -184,7 +184,7 @@
 	{
 		"Name":		"SHARK",
 		"Description":	"<h1>  Sharks are one of the most well-known predators on the planet. There are around 500 different species of sharks, and they live at the top of their food chain.  </h1> <h2> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h2> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
-		"Model":	".random",
+		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
@@ -195,10 +195,10 @@
 	{
 		"Name":		"CEPHALOPODS",
 		"Description":	"<h1>  Cephalopods… color blind, colour-changing creatures, they swim freely through black inked clouds, having recently abandoned their shelled homes. </h1> <h2> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h2> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
-		"Model":	"Models/cephalopod.ply",
+		"Model":	"Models/Cephalopod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":4,
+		"Scale":1,
         "TriangleScale":0.00358
 
 	},
@@ -206,7 +206,7 @@
 	{
 		"Name":		"DEEP SEA CORAL",
 		"Description":	"<h1>  Also known as cold-water corals, extends to deeper, darker parts of the oceans, ranging from near the surface, to the abyss. </h1> <h2> Deep sea corals are founded on the accumulation of calcium carbonate, providing the structural framework for these biodiverse ecosystems. </h2> <h2> With expected shoaling of the aragonite saturation horizon, many of these communities may become exposed to waters corrosive to coral skeletons. </h2> <h2> In lower pH, the calcification rates in the cold water species Lophelia pertusa were reduced by an average of 30-56%. </h2> <h2> The introduction of anthropogenic carbon dioxide in deep sea will make these naturally acidic waters even more acidic. </h2>",
-		"Model":	"Models/DeepseaCoral.ply",
+		"Model":	"Models/DeepSeaCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
@@ -217,7 +217,7 @@
 	{
 		"Name":		"BUBBLE GUM CORAL",
 		"Description":	"<h1> Bubblegum Coral often builds colourful, knobbly-armed structures deep in the oceans. And they appear comfortable nearly everywhere – except the tropics.  </h1> <h2> Bubblegum coral appear comfortable nearly everywhere outside of the tropics – where they can grow between 200 and 1300m of depth. </h2> <h2> Deep-water corals are damaged by a number of things: deep-water trawling, long line fishing, and oil and gas exploration. </h2> <h2> Like aragonitic corals, bubblegum corals are likely to be affected by changes in calcite saturation with depth. </h2>",
-		"Model":	"Models/BubbleGumCoral.ply",
+		"Model":	"Models/BubblegumCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
@@ -231,7 +231,7 @@
 		"Model":	"Models/Lobster.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":0.3,
+        "Scale":1,
         "TriangleScale":0.00139
 
 	},
@@ -239,10 +239,10 @@
 	{
 		"Name":		"JUVENILE BIVALVE",
 		"Description":	"<h1> The Juvenile Bivalve are the newly born shelled marine animals.  </h1> <h2> When it comes to ocean acidification, research demonstrates shell dissolution and mortality for larval and juvenile stages in a number of bivalve species. </h2> <h2> When immersed in waters with pH 7.6, which is expected in 2100, the shells had massive dissolution within 24h and was completely gone in 2 weeks. </h2>",
-		"Model":	"Models/JuvenilleBivalve.ply",
+		"Model":	"Models/JuvenileBivalve.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.05,
+		"Scale":1,
         "TriangleScale":0.0009
 
 	},
@@ -250,7 +250,7 @@
 	{
 		"Name":		"BLUE KING CRAB",
 		"Description":	"<h1> The Blue King Crab is a species of North Pacific king crab often found in the Bering Sea, which only reproduce every other year.  </h1> <h2> According to research, when placed in waters with a level of acidity expected in 2100, juvenile blue king crabs showed a change in morphology, reduced growth, and increased mortality. </h2> <h2> While the mortality rate started off high, it then adjusted, which suggests that the blue king crab may be able to alter their physiology to adapt to low pH water. However, given the current low population levels of the blue king crab, any reduced survival or growth at low pH could result in lower populations in the future. </h2>",
-		"Model":	"Models/BlueKingCrab.ply",
+		"Model":	"Models/BlueCrab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
@@ -261,7 +261,7 @@
 	{
 		"Name":		"SEA TURTLE",
 		"Description":	"<h1> These majestic creatures glide swiftly through the waters, while also breathing air and laying eggs on the land.  </h1> <h2> Sea turtles are 'amniotes', meaning they breathe air and lay their eggs on land. But hotter beaches, due to climate change, will put sea turtle embryos at risk: during development, the sex of an embryo is determined by the heat of incubation, with warmer nests producing females and cooler nests producing males, but temperatures above 33°C are lethal. </h2> <h2> In the coral reefs with which hawksbills, a kind of turtle, are closely associated, increased water temperatures and acidification will undermine the ability of coral polyps to survive and build reefs. </h2> <h2> Near-shore habitats where some species forage will also be destroyed by coastal flooding and decreased visibility; seagrasses are declining worldwide.  </h2>",
-		"Model":	"Models/SeaTurtle.ply",
+		"Model":	"Models/Turtle.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
@@ -272,10 +272,10 @@
 	{
 		"Name":		"YELLOWFIN TUNA",
 		"Description":	"<h1> Yellowfin tuna has the perfect camouflage: its shining metallic blue on top and shimmering silver-white on the bottom, helping it blend in with the ocean waters from both above and below.   </h1> <h2> The Yellow and Bluefin tuna are integral to the diet of millions of people and one of the most commercially valuable fish. But most tuna stocks are fully exploited (meaning there is no room for fishery expansion) and some are already overexploited (there is a risk of stock collapse). Bluefin tuna represents only 1% of the global catch but illegal fishing is pushing it to the brink of extinction. </h2> <h2> Research shows that the increasing acidification of the ocean causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the yellowfin larvae within a week of exposure.  </h2> <h2> Acidification also affects their growth rate of 20-41% and reduces their rate of survival. </h2>",
-		"Model":	"Models/YellowTuna.ply",
+		"Model":	"Models/Tuna.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.00279
 
 	},
@@ -286,7 +286,7 @@
 		"Model":	"Models/Cobia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.4,
+		"Scale":1,
         "TriangleScale":0.0015
 
 	},
@@ -294,10 +294,10 @@
 	{
 		"Name":		"PHYTOPLANKTON",
 		"Description":	"<h1> Named after the Greek for 'wondering plants', phytoplankton are too small to be seen with the naked eye, but can be seen from space when they bloom.   </h1> <h2> Phytoplankton account for about half of all photosynthetic activity on Earth. Their cumulative energy fixation in carbon compounds is the basis for the vast majority of oceanic and also many freshwater food webs. </h2> <h2> Scientists believe that phytoplankton produce between 50 - 85% of the world's oxygen despite amounting to only ~1% of global plant biomass, and have been controlling the atmospheric CO2/O2 balance by the sequestration of carbon from the atmosphere into the seafloor within their biological mass (biological pump). </h2> <h2> Despite substantial variation in both the magnitude and spatial pattern of change, the majority of published studies predict that phytoplankton biomass and/or primary production has declined in the past century and will decline over the next century. </h2>",
-		"Model":	"Models/Phlytoplankton.ply",
+		"Model":	"Models/Phytoplankton.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.0005
 
 	},
@@ -305,10 +305,10 @@
 	{
 		"Name":		"MUSSELS",
 		"Description":	"<h1>  Mussels… with their dark shells and shimmering, silvery interior, these elongated bivalve live attached to rocks thanks to byssal threads, which resemble a sort of beard. Mussels feed entirely on plankton and to do so they filter up to 65 litres of water a day, and their cultivation is a major food source - a booming $1.5 billion industry that is deeply rooted in some cultures. </h1> <h2> Mussels live attached to rocks due to their byssal threads, and can withstand harsh weather and extreme conditions. But climate change is impairing their ability to cling. Research has shown that when mussel byssal threads are grown in acidified conditions with a pH lower than 7.6 were 40% weaker than normal. </h2> <h2> Ocean acidification doesn't just dissolve their clinging threads, it also affects the way they can make their shells. Scientists have in fact discovered a 25% decrease in calcification in waters with pH 7.6, the level expected in 2100. </h2> ",
-		"Model":	"Models/Mussel_v002.ply",
+		"Model":	"Models/Mussels.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.1,
+		"Scale":1,
         "TriangleScale":0.001
 
 	},
@@ -316,10 +316,10 @@
 	{
 		"Name":		"MENIDIA MENIDIA",
 		"Description":	"<h1> Menidia Menidia is a small silver fish who’s strongest form of defense is the “strength-in-numbers” strategy.  </h1> <h2> The larval growth of the small Menidia Menidia fish was found to be negatively affected in both reduced oxygen and low pH both conditions of reduced, both independently and combined.  </h2> <h2> In adults, on the other hand, only the combination of acidic and deoxygenated waters had a negative effect. </h2> <h2> They are a common subject of scientific research because of their sensitivity to environmental changes. </h2>",
-		"Model":	"Models/MenidaMenida.ply",
+		"Model":	"Models/Menidia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.3,
+		"Scale":1,
         "TriangleScale":0.0018
 
 	},
@@ -327,10 +327,10 @@
 	{
 		"Name":		"BRACHYURAN CRAB",
 		"Description":	"<h1>  A crustacean with 10 limbs, the brachyuran crab lives with its small abdomen curled up underneath the main shell, and the skeleton outside of their body. </h1> <h2> Warming temperatures may allow the brachyuran crab to invade the shelf surrounding Antarctica, with significant consequences for the local organisms that have evolved in the absence of such predators. </h2> <h2> The weakly calcified shells of Antarctic echinoderms and molluscs – further stressed by acidification – would provide little defense from these predators. </h2> <h2> In addition to warming temperatures, the retreat of sea ice, and increasing species invasions, high latitude regions are subject to heavy fishing pressure which is an additional stressor for these ecosystems. </h2>",
-		"Model":	"Models/BrachyuranCrab.ply",
+		"Model":	"Models/Crab.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.3,
+		"Scale":1,
         "TriangleScale":0.0018
 
 	},
@@ -341,7 +341,7 @@
 		"Model":	"Models/BrittleStar.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-        "Scale":0.2,
+        "Scale":1,
         "TriangleScale":0.002592
 
 	},
@@ -349,7 +349,7 @@
 	{
 		"Name":		"CORAL",
 		"Description":	"<h1>  Coral reefs have served as Cradles of Evolution throughout Earth’s biological history. More marine species have originated in reef ecosystems than in any other. And today they are home to an estimated 1 million types of organisms, 25% of the world’s species. </h1> <h2> Corals reefs are a marine invertebrate that live in symbiosis with a photosynthetic unicellular organism called zooxanthellae which sustains the coral with nutrients. </h2> <h2> They are home to an estimated 1 million types of organisms, 25% of the world’s species. </h2> <h2> Coral bleaching is the most known threat: in case of warmer waters the coral expels the zooxanthellae, causing the coral to turn completely white and be prone to death. </h2> <h2> Another threat is ocean acidification: research has shown that most corals grown in low pH conditions highly reduced their calcification rates, especially when in combination with warmer temperatures. </h2> <h2> Surprisingly enough, sun screens are a big threat to them! </h2>",
-		"Model":	"Models/CoralCorrectTexture.ply",
+		"Model":	"Models/Coral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
         "TriangleScale":0.002
@@ -359,7 +359,7 @@
 	{
 		"Name":		"CLOWNFISH",
 		"Description":	"<h1>  The clownfish somewhat lives up to its name, with its display of bright colours and striking patterns. They live in a symbiotic mutualism with the stinging sea anemone. </h1> <h2> The clownfish live in a symbiotic mutualism with the stinging sea anemone. They mostly live in reefs, for example Coral Reef, which are dying due to rising water temperatures. This is also killing the sea anemone. </h2> <h2> When the sea anemone doesn't protect the clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise. </h2> <h2> Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators. </h2>",
-		"Model":	".random",
+		"Model":	"Models/Clownfish.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
@@ -369,10 +369,10 @@
 	{
 		"Name":		"MICROPLASTIC",
 		"Description":	"<h1> A 2015 study estimated that there was between 93 and 236 thousand metric tons of microplastics in the world’s oceans. </h1> <h2> Scientists are only just now discovering how much the problem of microplastic has spread. They studied the scat of 51 wild fur Seals and discovered that 67% of the samples showed an abundance of microfibers. </h2> <h2> Microfibers are the least studied form of microplastic. They are small hairs of plastic, less than 1 millimetre in size, from materials such as polyester or nylon and can end up in the ocean through waste water even after cleaning. They also can absorb a wide array of pollutants. </h2> <h2> It is projected that by 2050, 99% of all sea bird species will have ingested plastic. </h2>",
-		"Model":	"Models/MicroPlastic.ply",
+		"Model":	"Models/Microplastic.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.8,
+		"Scale":1,
         "TriangleScale":0.003
 
 	},
@@ -380,7 +380,7 @@
 	{
 		"Name":		"PLASTIC BOTTLE",
 		"Description":	"<h1> 1 million plastic bottles are bought around the world every minute. That number will jump another 20% by 2021, creating an environmental crisis some predict will be as serious as climate change. </h1> <h2> More than 480 billion plastic drinking bottles were sold in 2016 across the world, up from about 300 billion a decade ago. </h2> <h2> If placed end to end, they would extend more than halfway to the sun. By 2021 this will increase to 583.3 billion, according to the most up-to-date estimates from Euromonitor International’s global packaging trends report. </h2> <h2> Fewer than half of the bottles bought in 2016 were collected for recycling and just 7% of those collected were turned into new bottles. </h2> <h2> Between 5 million and 13 million tonnes of plastic leaks into the world’s oceans each year to be ingested by sea birds, fish and other organisms, and by 2050 the ocean will contain more plastic by weight than fish. </h2>",
-		"Model":	"Models/PlasticBottle.ply",
+		"Model":	"Models/Bottle.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
         "TriangleScale":0.003
@@ -390,7 +390,7 @@
 	{
 		"Name":		"ALUMINIUM CAN",
 		"Description":	"<h1> The aluminium can can be fully recycled. Yet in the oceans it's found everywhere, injuring some marine animals and being consumed by others who confuse them for food with deadly effect. </h1> <h2> The global production of aluminium can amounts to 180 billion annually. </h2> <h2> If an aluminium can goes to landfill, it will stay there for 500 years before it oxidises. Recycling aluminium takes 95% less energy than producing it from its raw materials. The recycling process also generates only 5% of the greenhouse gas emissions. </h2>",
-		"Model":	"Models/BeerCan.ply",
+		"Model":	"Models/Can.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
         "TriangleScale":0.003
@@ -400,7 +400,7 @@
 	{
 		"Name":		"PLASTIC STRAW",
 		"Description":	"<h1> Most plastic straws are too lightweight to make it through the mechanical recycling sorter and, even though they could be recycled, they aren't accepted by most recycling programs. So they usually end up in landfills and the ocean. </h1> <h2> In the U.S.A alone, 500 million straws are used every day, an amount that could fill over 127 school buses each day, or more than 46,400 school buses every year. </h2>",
-		"Model":	"Models/PlasticStraw.ply",
+		"Model":	"Models/Straw.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
         "TriangleScale":0.003
@@ -410,7 +410,7 @@
 	{
 		"Name":		"PLASTIC BAG",
 		"Description":	"<h1> This year 5 trillion plastic bags will be consumed, or 160,000 per second. This number would be able to wrap around the world 7 times every hour, and cover an area twice the size of France. </h1> <h2> Most bags are simply thrown out, as they have an average “working life” of 15 minutes, and only less than 1% are recycled. They are most often made from Polyethylene that takes centuries to degrade. Each ton of recycled plastic bags produces energy equivalent to 11 barrels of oil, which is another incredibly destructive pollutant of our oceans. </h2> <h2> Seabirds, turtles, seals, sea lions, whales, and fish eat these plastic bags. The death of one Sperm Whale found in California in the USA in 2008 was caused by 22.2kg of plastic that the whale had eaten. </h2>",
-		"Model":	"Models/PlasticBag.ply",
+		"Model":	"Models/Bag.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
@@ -421,10 +421,10 @@
 	{
 		"Name":		"SANITARY PAD",
 		"Description":	"<h1> As many as 10 000 disposable period products are used in a woman's reproductive lifetime, which corresponds to a carbon footprint of 5,3kg of CO2 per year. Average carbon footprint? </h1> <h2> Every year, UK women produce the equivalent of 200 000 tonnes of menstrual waste. That’s 27 Eiffel Towers. </h2> <h2> Forty pads, panty liners and backing strips are found for every kilometre of UK beach, along with 12 used tampons and applicators. </h2>",
-		"Model":	"Models/SanitaryPad.ply",
+		"Model":	"Models/Assorbente.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.05,
+		"Scale":1,
         "TriangleScale":0.003
 
 	},
@@ -432,10 +432,10 @@
 	{
 		"Name":		"PIECE OF PLASTIC",
 		"Description":	"<h1> More than 8 million tons of plastic are dumped in the oceans every year. </h1> <h2> 1 in 3 species of marine mammals have been found entangled in marine litter. </h2> <h2> Over 90% of all seabirds have pieces of plastic in their stomachs, and every year 1 million seabirds die from plastic pollution. </h2> <h2> It's predicted that in 2050 99% of ALL SPECIES will have ingested plastic. </h2>",
-		"Model":	"Models/PiecesOfPlastic.ply",
+		"Model":	"Models/Plastic.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.5,
+		"Scale":1,
         "TriangleScale":0.003
 
 	},
@@ -443,7 +443,7 @@
 	{
 		"Name":		"FOOD CONTAINER",
 		"Description":	"<h1> Once food packaging use comes to an end it becomes the largest end-use market segment accounting for just over 40% of total plastic usage. </h1> <h2> Over the last ten years more plastic has been produced than during the whole of the last century. </h2>",
-		"Model":	"Models/PlasticContainer.ply",
+		"Model":	"Models/FoodContainer.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1
@@ -453,10 +453,10 @@
 	{
 		"Name":		"CIGARETTE STUB",
 		"Description":	"<h1> By itself, cellulose acetate, which form a cigarette filter, takes between 18 months to 10 years to degrade. </h1> <h2> Studies have shown that one cigarette filter in about two gallons of water is lethal to water fleas, a tiny crustacean found in freshwater and saltwater. Wildlife also easily confuses them for food and ingests them. </h2> <h2> In 2017, cigarette filters were the biggest source of plastic pollution on beaches, with 1,863,838 collected. </h2>",
-		"Model":	"Models/CigaretteStub.ply",
+		"Model":	"Models/Cigarette.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":0.5,
+		"Scale":1,
         "TriangleScale":0.003
 
 	},
@@ -464,7 +464,7 @@
 	{
 		"Name":		"GHOST NET",
 		"Description":	"<h1> Discarded nylon plastic fishing nets comprise a large part of plastic pollution, with an estimated 640,000 tons (£1.28 billion) of fishing gear left in the ocean each year. </h1> <h2> On average these nets entangle and harm between 30-40 marine animals per net when left in the ocean. </h2>",
-		"Model":	"Models/FishingNet.ply",
+		"Model":	"Models/Net.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
