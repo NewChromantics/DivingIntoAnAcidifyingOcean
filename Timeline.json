@@ -40,11 +40,11 @@
 	{
 		"Subtitle":"Every second breath we take comes from the ocean."
 	},
-	"1805":
+	"1806":
 	{
 		"Subtitle":" "
 	},
-	"1807":
+	"1808":
 	{
 		"Subtitle":"But this won’t be much longer."
 	},
@@ -53,18 +53,18 @@
 		"Subtitle":" "
 	},
 
-	"1814":
+	"1815":
 	{
 		"Subtitle":"We’re in the process of killing 96% of ocean life."
 	},
 
-	"1818":
+	"1819":
 	{
 		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
 		"Subtitle":" "
 	},
 	
-	"1820":
+	"1823":
 	{
 		"Subtitle":"That’s what happened some 252 million years ago in an event known as “The Great Dying”,  where a massive release of carbon dioxide (CO2) and other gases caused extreme global warming that depleted the oceans of oxygen and acidified the waters."
 	},
@@ -85,18 +85,19 @@
 	},
 	"1858":
 	{
-		"Subtitle":"Select the animals to discover."
+		"HintClickAnimalVisible":true,
+		"Subtitle":" "
 	},
 	
 	
 	"1859":
 	{
-		"YearsPerSecond":1
+		"YearsPerSecond":0.5
 	},
 	
 	"1860":
 	{
-		"HintClickAnimalVisible":true,
+		"HintClickAnimalVisible":false,
 		"StatsVisible":true,
 		"TimelineVisible":true,
 		"Subtitle":"",
@@ -110,31 +111,42 @@
 
 	"1863":
 	{
-		"HintClickAnimalVisible":false
+		
 	},
 	
 	"1870":
 	{
-		"YearsPerSecond":0.5,
+
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
 		"Subtitle":""
 	},
 
-	"1876":
-	{
-		"Subtitle":"Carbon Dioxide (CO2) is absorbed by the world’s oceans and acidifies the water through a chemical process called Ocean Acidification."
-	},
 	
-	"1880":
+	
+	"1878":
 	{
 		"HintDragTimelineVisible":true
 	},
 	
-	"1883":
+	"1880":
 	{
 		"HintDragTimelineVisible":false
 	},
 	
+	"1885":
+	{
+		"Subtitle":"TextTimeline1.json "
+	},
+
+	"1887":
+	{
+		"Subtitle":" "
+	},
+
+	"1910":
+	{
+		"Subtitle":"TextTimeline2.json "
+	},
 
 	"2019":
 	{
@@ -170,29 +182,17 @@
 		
 	},
 
+	"2020":
+	{
+		"Subtitle":"TextTimeline3.json "
+	},
+
 	"2035":
 	{
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_2050.mp3",
-		"Subtitle":"2050 represents a tipping point for the future of the oceans."
+		"Subtitle":" "
 	},
 
-	"2041":
-	{
-		"Subtitle":"With increasingly warmer temperatures around the world, we are depleting the oceans of oxygen and suffocating all lifeforms."
-	},
-
-	"2051":
-	{
-		"Subtitle":"These animals don’t only sustain the rest of marine life. They ultimately sustain us. "
-	},
-	"2057":
-	{
-		"Subtitle":"Human beings, and our economies, cultures, and communities, depend on them."
-	},
-	"2064":
-	{
-		"Subtitle":""
-	},
 
 	"2084":
 	{
