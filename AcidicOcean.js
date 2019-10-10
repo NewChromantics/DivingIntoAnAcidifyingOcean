@@ -239,6 +239,7 @@ const TimelineMaxYear = 2160;
 const TimelineMaxInteractiveYear = 2100;
 const TimelineSolutionYear = 2146;
 
+
 const BigBangDuration = 10;
 
 Params.TimelineYear = TimelineMinYear;
@@ -395,6 +396,21 @@ if ( IsDebugEnabled() )
 	Params.InitParamsWindow( ParamsWindow );
 }
 
+
+function AddSwirlActor()
+{
+	function PushActor(Actor)
+	{
+		//	move
+		const Pos = Acid.GetCameraPosition();
+		Pos[1] += -0.1;
+		const PosMatrix = Math.CreateTranslationMatrix( ...Pos );
+		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( PosMatrix, Actor.LocalToWorldTransform );
+		CameraScene.push( Actor );
+	}
+	
+	CreateSplineActors( PushActor );
+}
 
 
 function LoadCameraScene(Filename)
@@ -874,7 +890,7 @@ Acid.GetCameraPosition = function()
 {
 	if ( !Acid.CameraPosition )
 		throw "this should have been set before use";
-	return Acid.CameraPosition;
+	return Acid.CameraPosition.slice();
 }
 Acid.GetFogParams = function()
 {
@@ -1334,6 +1350,21 @@ function Update(FrameDurationSecs)
 	{
 		Params.YearsPerSecond = Timeline.GetUniform( Time, 'YearsPerSecond' );
 		ParamsWindow.OnParamChanged('YearsPerSecond');
+	}
+	
+	//	create some swirls
+	if ( Params.CreateSwirlEveryXYears )
+	{
+		if ( !Acid.LastSwirlYear )
+			Acid.LastSwirlYear = 9999;
+		
+		//	years since swirl
+		const YearsSinceNewSwirl = Math.abs( Acid.LastSwirlYear - Time );
+		if ( YearsSinceNewSwirl >= Params.CreateSwirlEveryXYears )
+		{
+			AddSwirlActor();
+			Acid.LastSwirlYear = Time;
+		}
 	}
 	
 	//	mark actors visible this frame

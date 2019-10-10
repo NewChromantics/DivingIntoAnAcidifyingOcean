@@ -241,6 +241,19 @@ Params.Swirl_Physics_SplineTimeSpeed = 0.05;
 Params.Swirl_Physics_SplineTimeRange = 0.03;
 Params.Swirl_Physics_NoiseScale = 0.0;
 Params.Swirl_Physics_SplineNoiseScale = 0.0;
+Params.Swirl_NodeCount = 16;
+Params.Swirl_PathLoop = false;
+Params.Swirl_PersistentPath = false;	//	for editor
+Params.Swirl_PointCount = 90000;
+Params.Swirl_LinearTest = false;
+Params.Swirl_NodeDistance = 0.70;
+Params.Swirl_ShowPathNodePoints = false;
+Params.Spline_PointCount = 200;
+Params.Spline_LerpToTarget = 0.35;
+Params.Spline_ForwardDeviateX = 1.9;
+Params.Spline_ForwardDeviateY = 2.6;
+Params.Spline_ForwardDeviateZ = 1.2;
+Params.CreateSwirlEveryXYears = 0;	//	0 doesn't create
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
@@ -311,7 +324,19 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Swirl_Physics_SplineTimeRange',0,1);
 	ParamsWindow.AddParam('Swirl_Physics_NoiseScale',0,20);
 	ParamsWindow.AddParam('Swirl_Physics_SplineNoiseScale',0,20);
-	
+	ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
+	ParamsWindow.AddParam('Swirl_PointCount',1,90000,Math.floor);
+	ParamsWindow.AddParam('Swirl_PathLoop');
+	ParamsWindow.AddParam('Swirl_LinearTest');
+	ParamsWindow.AddParam('Swirl_NodeDistance',0.001,2);
+	ParamsWindow.AddParam('Swirl_ShowPathNodePoints');
+
+	ParamsWindow.AddParam('Spline_PointCount',1,9000,Math.floor);
+	ParamsWindow.AddParam('Spline_LerpToTarget',0,1);
+	ParamsWindow.AddParam('Spline_ForwardDeviateX',0,10);
+	ParamsWindow.AddParam('Spline_ForwardDeviateY',0,10);
+	ParamsWindow.AddParam('Spline_ForwardDeviateZ',0,10);
+	ParamsWindow.AddParam('CreateSwirlEveryXYears',0,50);
 
 	
 	ParamsWindow.AddParam('Turbulence_Frequency',0,20);

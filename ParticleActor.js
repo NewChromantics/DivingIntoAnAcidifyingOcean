@@ -575,3 +575,260 @@ function UpdateDebugHud(Hud)
 	ResetRenderStats();
 
 }
+
+
+function GetRandomSwirlPath(Count)
+{
+	const Positions = [];
+	
+	Positions.push([0,0,0]);
+	
+	//	make some random points for the bezier
+	for ( let p=1;	p<Count;	p++ )
+	{
+		let x = Math.random();
+		let y = Math.random();
+		let z = Math.random();
+		Positions.push([x,y,z]);
+	}
+	return Positions;
+}
+
+
+function GetForwardSwirlPath(Count)
+{
+	//	start at 0,0,0
+	const Positions = [];
+	Positions.push( [0,0,0] );
+	
+	//	randomly move forward but try and gravitate towards 0,0,1 if we go too far
+	for ( let i=1;	i<Count;	i++ )
+	{
+		const x = Params.Spline_ForwardDeviateX;
+		const y = Params.Spline_ForwardDeviateY;
+		const z = -Params.Spline_ForwardDeviateZ;
+		
+		const LastPos = Positions[i-1];
+		let Pos = LastPos.slice();
+		const Target = Pos.slice();
+		Target[2] += z*2;
+		
+		//	random pos
+		Pos[0] += Math.lerp( -x, x, Math.random() );
+		Pos[1] += Math.lerp( -y, y, Math.random() );
+		Pos[2] += Math.lerp( 0, z*2, Math.random() );
+		
+		//	now gravitate towards the target
+		Pos = Math.Lerp3( Pos, Target, Params.Spline_LerpToTarget );
+		Pos = Math.Subtract3( Pos, LastPos );
+		Pos = Math.Normalise3( Pos, Params.Swirl_NodeDistance );
+		Pos = Math.Add3( Pos, LastPos );
+		
+		Positions.push( Pos );
+	}
+	
+	return Positions;
+}
+
+function GetBrownianSwirlPath(Count)
+{
+	//	calc 2 random points
+	const Positions = GetRandomSwirlPath(2);
+	
+	const MaxDist3 = [Params.Swirl_NodeDistance,Params.Swirl_NodeDistance,Params.Swirl_NodeDistance];
+	//	cap first distance - gr: could use lerp3 here
+	Positions[1] = Math.Normalise3( Positions[1], Params.Swirl_NodeDistance );
+	
+	//	now add more vaguely in the correct direction
+	while ( Positions.length < Count )
+	{
+		const LastIndex = Positions.length-1;
+		let Dir = Math.Subtract3( Positions[LastIndex], Positions[LastIndex-1] );
+		Dir = Math.Normalise3( Dir );
+		
+		let x = Math.random() - 0.5;
+		let y = Math.random() - 0.5;
+		let z = Math.random() - 0.5;
+		let Delta = [x,y,z];
+		
+		//	flip if going in the wrong direction (up to 90 degrees - lets make this more clever)
+		Delta = Math.Normalise3(Delta);
+		const Dot = Math.Dot3( Dir, Delta );
+		if ( Dot < 0 )
+		{
+			Delta = Math.Multiply3( Delta, [-1,-1,-1] );
+		}
+		
+		//	cap length
+		Delta = Math.Multiply3( Delta, MaxDist3 );
+		
+		Delta = Math.Add3( Positions[LastIndex], Delta );
+		Positions.push( Delta );
+	}
+	
+	return Positions;
+}
+
+
+
+function GenerateRandomSplinePathVertexes(Contents,OnVertex,OnMeta)
+{
+	Pop.Debug("GenerateRandomSplinePathVertexes");
+	const Positions = CreateRandomSplinePath( Params.Swirl_NodeCount, Params.Swirl_PointCount );
+	Positions.forEach( Pos => OnVertex(...Pos) );
+}
+
+function GetSwirlMeta(Actor)
+{
+	const Meta = {};
+	
+	Meta.LocalScale = 1;
+	
+	Meta.Filename = 'GenerateRandomSplinePathVertexes()';
+	Meta.RenderShader = AnimalParticleShader;
+	
+	//	single pass/MRT
+	if ( UpdateSwirlShader )
+	{
+		Meta.VelocityShader = null;
+		Meta.PositionShader = UpdateSwirlShader;
+	}
+	else
+	{
+		Meta.VelocityShader = UpdateVelocitySwirlShader;
+		Meta.PositionShader = UpdatePositionShader;
+	}
+	
+	Meta.PhysicsUniforms = {};
+	Meta.PhysicsUniforms.Damping = Params.Swirl_Physics_Damping;
+	Meta.PhysicsUniforms.SpringScale = Params.Swirl_Physics_SpringScale;
+	Meta.PhysicsUniforms.MaxSpringForce = Params.Swirl_Physics_MaxSpringForce;
+	if ( Params.Swirl_Physics_CustomSplineTime )
+	{
+		Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
+	}
+	else
+	{
+		Meta.PhysicsUniforms.SplineTime = Pop.GetTimeNowMs() / 1000 * Params.Swirl_Physics_SplineTimeSpeed;
+		Meta.PhysicsUniforms.SplineTime %= 1;
+	}
+	
+	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;
+	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
+	Meta.PhysicsUniforms.NoiseScale = Params.Swirl_Physics_NoiseScale;
+	Meta.PhysicsUniforms.SplineNoiseScale = Params.Swirl_Physics_SplineNoiseScale;
+	
+	
+	Meta.TriangleScale = Params.Swirl_TriangleScale;
+	
+	Meta.OverridingColourTexture = Noise_TurbulenceTexture;
+	
+	//Meta.FitToBoundingBox = true;
+	return Meta;
+}
+
+let SplineRandomPointSet = null;
+
+
+function CreateCubeActor(ActorNode,Solid=false)
+{
+	let Actor = new TActor();
+	Actor.Name = ActorNode.Name;
+	
+	let LocalScale = ActorNode.Scale;
+	let WorldPos = ActorNode.Position;
+	Actor.Geometry = 'Cube';
+	
+	let RenderAsBounds = true;
+	
+	//	some nodes have no geometry, so no bounding box
+	if ( !ActorNode.BoundingBox )
+	{
+		ActorNode.BoundingBox = {};
+		ActorNode.BoundingBox.Min = [0,0,0];
+		ActorNode.BoundingBox.Max = [1,1,1];
+		RenderAsBounds = false;
+	}
+	
+	if ( RenderAsBounds )
+	{
+		//	undo the bounds scale and render the cube at the bounds scale
+		//	but that'll scale bounds too, so undo that (just to 0..1)
+		let BoundsCenter = Math.Lerp3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min, 0.5 );
+		let BoundsScale = Math.Subtract3( ActorNode.BoundingBox.Max, ActorNode.BoundingBox.Min );
+		
+		BoundsScale = Math.Multiply3( BoundsScale, [0.5,0.5,0.5] );
+		
+		LocalScale = BoundsScale;
+		WorldPos = Math.Add3( WorldPos, BoundsCenter );
+		ActorNode.BoundingBox.Max = [1,1,1];
+		ActorNode.BoundingBox.Min = [-1,-1,-1];
+		Pop.Debug( ActorNode.Name, "BoundsScale", BoundsScale, "ActorNode.Scale", ActorNode.Scale );
+	}
+	
+	let LocalScaleMtx = Math.CreateScaleMatrix( ...LocalScale );
+	let WorldPosMtx = Math.CreateTranslationMatrix( ...WorldPos );
+	
+	Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( WorldPosMtx, LocalScaleMtx );
+	
+	Actor.RenderShader = (Solid===true) ? GeoColourShader : GeoEdgeShader;
+	Actor.BoundingBox = ActorNode.BoundingBox;
+	
+	return Actor;
+}
+
+function CreateRandomSplinePath(NodeCount,PointCount,NodePoints=[])
+{
+	if ( !Params.Swirl_PersistentPath )
+		SplineRandomPointSet = null;
+	
+	//	keep points persistent so we can modify some values for testing
+	if ( SplineRandomPointSet && SplineRandomPointSet.length != NodeCount )
+		SplineRandomPointSet = null;
+	
+	if ( !SplineRandomPointSet )
+	{
+		//SplineRandomPointSet = GetBrownianSwirlPath(NodeCount);
+		SplineRandomPointSet = GetForwardSwirlPath(NodeCount);
+	}
+	
+	const Nodes = SplineRandomPointSet;
+	if ( NodePoints )
+		NodePoints.push( ...Nodes );
+	
+	//	now fill bezier inbetween
+	const PathPoints = [];
+	for ( let i=0;	i<PointCount;	i++ )
+	{
+		let t = i / (PointCount-1);
+		const Pos = Math.GetCatmullPathPosition( Nodes, t, Params.Swirl_PathLoop );
+		PathPoints.push( Pos );
+	}
+	
+	return PathPoints;
+}
+
+function CreateSplineActors(PushActor)
+{
+	function PushSplinePointActor(xyz,Index,Size)
+	{
+		if ( !xyz )
+			return;
+		const Node = {};
+		Node.Scale = [Size,Size,Size];
+		Node.Position = xyz;
+		Node.Name = 'x';
+		const Actor = CreateCubeActor( Node, true );
+		PushActor(Actor);
+	}
+	
+	let PathNodes = [];
+	let PathPoints = CreateRandomSplinePath( Params.Swirl_NodeCount, Params.Spline_PointCount, PathNodes );
+	
+	PathPoints.forEach( Pos => PushSplinePointActor( Pos, 0, 0.01 ) );
+	
+	if ( Params.Swirl_ShowPathNodePoints )
+		PathNodes.forEach( Pos => PushSplinePointActor(Pos,0,0.03) );
+}
+
+
