@@ -231,14 +231,15 @@ function GetActorIntersections(CameraScreenUv)
 }
 
 
-
-const TimelineMinYear = 1800;
-const TimelineBigBangYear = 1823;
-const TimelineMinInteractiveYear = 1860;
-const TimelineMaxYear = 2160;
-const TimelineMaxInteractiveYear = 2100;
-const TimelineSolutionYear = 2146;
-
+const TimelineMinYear				= 1800;
+const TimelineBigBangYear			= 1823;
+const TimelineMinInteractiveYear	= 1860;
+const Timeline_Text1_Year			= 1885;
+const Timeline_Text2_Year			= 1910;
+const Timeline_Text3_Year			= 2020;
+const TimelineMaxInteractiveYear	= 2100;
+const TimelineSolutionYear			= 2146;
+const TimelineMaxYear				= 2160;
 
 const BigBangDuration = 10;
 
@@ -406,7 +407,7 @@ function AddSwirlActor()
 		Pos[1] += -0.1;
 		const PosMatrix = Math.CreateTranslationMatrix( ...Pos );
 		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( PosMatrix, Actor.LocalToWorldTransform );
-		CameraScene.push( Actor );
+		Acid.CameraScene.push( Actor );
 	}
 	
 	CreateSplineActors( PushActor );
@@ -535,7 +536,7 @@ function LoadCameraScene(Filename)
 //	default reads from default timeline
 let GetCameraTimelineAndUniform = function()
 {
-	return [Timeline,'Timeline_CameraPosition'];
+	return [Acid.Timeline,'Timeline_CameraPosition'];
 }
 
 function GetCameraPath()
@@ -603,7 +604,7 @@ function GetActorScene(Filter)
 		Scene.push(Actor)
 	}
 	
-	CameraScene.forEach( PushCameraSceneActor );
+	Acid.CameraScene.forEach( PushCameraSceneActor );
 	
 	return Scene;
 }
@@ -741,9 +742,12 @@ function Init()
 {
 	AppTime = 0;
 	
-	CameraScene = LoadCameraScene('CameraSpline.dae.json');
-	Timeline = LoadTimeline('Timeline.json');
-	
+	Acid.CameraScene = LoadCameraScene('CameraSpline.dae.json');
+	Acid.Timeline = LoadTimeline('Timeline.json');
+	Acid.TextTimeline1 = LoadTimeline('TextTimeline1.json');
+	Acid.TextTimeline2 = LoadTimeline('TextTimeline2.json');
+	Acid.TextTimeline3 = LoadTimeline('TextTimeline3.json');
+
 	//	init very first camera pos
 	Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
 
@@ -751,6 +755,8 @@ function Init()
 	Hud.Music2Label = new Pop.Hud.Label('AudioMusic2Label');
 	Hud.VoiceLabel = new Pop.Hud.Label('AudioVoiceLabel');
 	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
+	Hud.SubtitleSkipButton = new Pop.Hud.Button('SubtitleSkip');
+	Hud.SubtitleSkipButton.SetVisible(false);
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
@@ -868,6 +874,9 @@ var Acid = {};
 //	use a string if function not yet declared
 Acid.State_Intro = 'Intro';
 Acid.State_Fly = 'Fly';
+Acid.State_TextTimeline1 = 'TextTimeline1';
+Acid.State_TextTimeline2 = 'TextTimeline2';
+Acid.State_TextTimeline3 = 'TextTimeline3';
 Acid.State_ShowAnimal = 'ShowAnimal';
 Acid.State_BigBang = 'BigBang';
 Acid.State_Outro = 'Outro';
@@ -877,6 +886,9 @@ Acid.StateMap =
 	'Intro':		Update_Intro,
 	'BigBang':		Update_BigBang,
 	'Fly':			Update_Fly,
+	'TextTimeline1':	Update_TextTimeline1,
+	'TextTimeline2':	Update_TextTimeline2,
+	'TextTimeline3':	Update_TextTimeline3,
 	'ShowAnimal':	Update_ShowAnimal,
 	'Outro':		Update_Outro,
 	'Solution':		Update_Solution
@@ -903,8 +915,11 @@ Acid.GetFogParams = function()
 	return FogParams;
 }
 
-var CameraScene = null;
-var Timeline = null;
+Acid.CameraScene = null;
+Acid.Timeline = null;
+Acid.TextTimeline1 = null;
+Acid.TextTimeline2 = null;
+Acid.TextTimeline3 = null;
 
 
 
@@ -1191,6 +1206,34 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 		return Acid.State_ShowAnimal;
 	}
 	
+	//	fly until we hit a text time
+	if ( Params.TimelineYear >= Timeline_Text1_Year )
+	{
+		if ( !Acid.TriggeredText1 )
+		{
+			Acid.TriggeredText1 = true;
+			return Acid.State_TextTimeline1;
+		}
+	}
+	
+	if ( Params.TimelineYear >= Timeline_Text2_Year )
+	{
+		if ( !Acid.TriggeredText2 )
+		{
+			Acid.TriggeredText2 = true;
+			return Acid.State_TextTimeline2;
+		}
+	}
+	
+	if ( Params.TimelineYear >= Timeline_Text3_Year )
+	{
+		if ( !Acid.TriggeredText3 )
+		{
+			Acid.TriggeredText3 = true;
+			return Acid.State_TextTimeline3;
+		}
+	}
+	
 	//	fly until we reach end of timeline
 	if ( Params.TimelineYear >= TimelineMaxInteractiveYear )
 		return Acid.State_Outro;
@@ -1198,6 +1241,71 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	//	stay flying
 	return null;
 }
+
+
+function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
+{
+	if ( FirstUpdate )
+	{
+		Hud.SubtitleSkipButton.SetVisible(true);
+		Hud.SubtitleSkipButton.OnClicked = function()
+		{
+			Acid.UserSkippedTextTimeline = true;
+		}
+		Acid.UserSkippedTextTimeline = false;
+	}
+	function OnExit()
+	{
+		Hud.SubtitleSkipButton.SetVisible(false);
+		Acid.UserSkippedTextTimeline = false;
+	}
+	
+	Update( FrameDuration );
+	
+	//	gr: change these hud things after Update as it updates subtitles/hud for us
+	Hud.Timeline.SetVisible( false );
+	
+	//	update text timeline
+	const Subtitle = TextTimeline.GetUniform(StateTime,'Subtitle');
+	Hud.SubtitleLabel.SetValue( Subtitle );
+	Hud.SubtitleLabel.SetVisible( Subtitle.length > 0 );
+	
+	if ( Acid.UserSkippedTextTimeline )
+	{
+		OnExit();
+		return Acid.State_Fly;
+	}
+	
+	//	exit back to flying
+	if ( StateTime >= TextTimeline.LastKeyframeTime() )
+	{
+		OnExit();
+		Pop.Debug('exit text timeline Update_TextTimelineX',StateTime,TextTimeline.LastKeyframeTime());
+		return Acid.State_Fly;
+	}
+	
+	return null;
+}
+
+function Update_TextTimeline1(FirstUpdate,FrameDuration,StateTime)
+{
+	const TextTimeline = Acid.TextTimeline1;
+	return Update_TextTimelineX( FirstUpdate, FrameDuration, StateTime, TextTimeline );
+}
+
+function Update_TextTimeline2(FirstUpdate,FrameDuration,StateTime)
+{
+	const TextTimeline = Acid.TextTimeline2;
+	return Update_TextTimelineX( FirstUpdate, FrameDuration, StateTime, TextTimeline );
+}
+
+function Update_TextTimeline3(FirstUpdate,FrameDuration,StateTime)
+{
+	const TextTimeline = Acid.TextTimeline3;
+	return Update_TextTimelineX( FirstUpdate, FrameDuration, StateTime, TextTimeline );
+}
+
+
 
 function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
 {
@@ -1262,6 +1370,7 @@ function Update(FrameDurationSecs)
 	//AppTime += FrameDurationSecs;
 	AppTime += 1/60;
 
+	const Timeline = Acid.Timeline;
 	const Time = Params.TimelineYear;
 	
 	//	update audio
