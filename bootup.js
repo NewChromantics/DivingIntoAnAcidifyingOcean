@@ -199,13 +199,13 @@ Params.ScrollFlySpeed = 1;
 Params.AnimalDebugParticleColour = false;
 //Params.FogColour = [1,0,0];
 Params.AnimalBufferLod = 1;
-Params.DrawBoundingBoxes = false;
+Params.DrawBoundingBoxes = true;
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
 
 Params.FogColour = [0,0,0.2];
 Params.FogMinDistance = 8.0;
-Params.FogMaxDistance = BoldMode ? 999 : 20.0;
+Params.FogMaxDistance = BoldMode ? 999 : 10.0;
 
 Params.BigBang_Damping = 0.01;
 Params.BigBang_NoiseScale = 0.01;

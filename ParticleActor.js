@@ -82,9 +82,22 @@ function GetIntersectingActors(Ray,Scene)
 }
 
 
+
 //	return the filter function
 function GetCameraActorCullingFilter(Camera,Viewport)
 {
+	const CameraFrustumMatrix = Camera.GetWorldToFrustumTransform(Viewport);
+	//	normalising doesn't seem to make much difference, but it should?
+	const FrustumPlanes = Math.GetFrustumPlanes( CameraFrustumMatrix, false );
+	
+	const IsVisibleFunction = function(Actor)
+	{
+		const BoundingBox = GetActorWorldBoundingBox(Actor);
+		return Math.IsBoundingBoxIntersectingFrustumPlanes( BoundingBox, FrustumPlanes );
+	}
+	return IsVisibleFunction;
+	
+/*
 	//	get a matrix to convert world space to camera frustum space (-1..1)
 	const WorldToFrustum = Camera.GetWorldToFrustumTransform(Viewport);
 	
@@ -125,6 +138,7 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 	}
 	
 	return IsVisibleFunction;
+ */
 }
 
 

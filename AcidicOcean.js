@@ -281,7 +281,7 @@ Params.DebugNoiseTextures = IsDebugEnabled();
 Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
-Params.CameraFarDistance = 24;	//	under 20 and keeps clipping too easily
+Params.CameraFarDistance = Params.FogMaxDistance;
 Params.AudioCrossFadeDurationSecs = 2;
 
 Params.CustomiseWaterColours = false;
