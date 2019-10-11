@@ -142,17 +142,32 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 }
 
 
-function LoadAssetGeoTextureBuffer(RenderTarget)
+function LoadAssetGeoTextureBuffer(RenderTarget,Filename,AddNoise=true)
 {
-	let Filename = this;
 	const MaxPositions = AutoTriangleMeshCount;
+	
+	function AddNoiseToPosition(xyz,Index,Bounds)
+	{
+		const Noise =
+		[
+		(Bounds.Max[0]-Bounds.Min[0]) * Params.LoadTextureBufferNoise * 0.5,
+		(Bounds.Max[1]-Bounds.Min[1]) * Params.LoadTextureBufferNoise * 0.5,
+		(Bounds.Max[2]-Bounds.Min[2]) * Params.LoadTextureBufferNoise * 0.5
+		];
+		function AddNoise(v,Index)
+		{
+			let Change = Math.lerp( -Noise[Index], Noise[Index], Math.random() );
+			xyz[Index] = v + Change;
+		}
+		xyz.forEach(AddNoise);
+	}
 	
 	//	load texture buffer formats
 	const CachedTextureBufferFilename = GetCachedFilename(Filename,'texturebuffer.png');
 	if ( Pop.FileExists(CachedTextureBufferFilename) )
 	{
 		const Contents = Pop.LoadFileAsImage(CachedTextureBufferFilename);
-		const GeoTextureBuffers = LoadPackedImage( Contents );
+		const GeoTextureBuffers = LoadPackedImage( Contents, AddNoise ? AddNoiseToPosition : null );
 		return GeoTextureBuffers;
 	}
 	
@@ -174,13 +189,17 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.Geometry = 'AutoTriangleMesh';
 	this.RenderShader = Meta.RenderShader;
 	
+	const AddNoise = Meta.AddNoiseToTextureBuffer!==false;
 	{
 		//	handle array for animation
 		if ( Array.isArray(Filename) )
 		{
 			const LoadFrame = function(Filename)
 			{
-				AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
+				AssetFetchFunctions[Filename] = function(RenderContext)
+				{
+					return LoadAssetGeoTextureBuffer( RenderContext, Filename, AddNoise );
+				}
 				const Buffers = GetAsset( Filename, FakeRenderTarget );
 				
 				//	set at least one to grab colours
@@ -193,7 +212,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		else
 		{
 			//	setup the fetch func on demand, if already cached, won't make a difference
-			AssetFetchFunctions[Filename] = LoadAssetGeoTextureBuffer.bind(Filename);
+			AssetFetchFunctions[Filename] = function(RenderContext)
+			{
+				return LoadAssetGeoTextureBuffer( RenderContext, Filename, AddNoise );
+			};
 			this.TextureBuffers = GetAsset( Filename, FakeRenderTarget );
 		}
 	}

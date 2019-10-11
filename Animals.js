@@ -180,6 +180,7 @@ function GetBigBangAnimalMeta(Actor)
 function GetOceanMeta()
 {
 	const Meta = {};
+	Meta.AddNoiseToTextureBuffer = false;
 	Meta.LocalScale = 1;
 	Meta.Filename = OceanFilenames;
 	Meta.RenderShader = AnimalParticleShader;

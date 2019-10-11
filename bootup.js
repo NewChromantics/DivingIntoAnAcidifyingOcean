@@ -202,6 +202,7 @@ Params.AnimalBufferLod = 1;
 Params.DrawBoundingBoxes = false;
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
+Params.LoadTextureBufferNoise = 0.007;
 
 Params.FogColour = [0,0,0.2];
 Params.FogMinDistance = 8.0;
@@ -280,7 +281,8 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('DebugCameraClearColour');
 	ParamsWindow.AddParam('DrawBoundingBoxes');
 	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
-
+	ParamsWindow.AddParam('LoadTextureBufferNoise',0,0.3);
+	
 	ParamsWindow.AddParam('FogColour','Colour');
 	ParamsWindow.AddParam('FogMinDistance',0,50);
 	ParamsWindow.AddParam('FogMaxDistance',0,50);

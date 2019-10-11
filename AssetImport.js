@@ -860,8 +860,10 @@ function IsFloatFormat(Format)
 	}
 }
 
-function LoadPackedImage(Image)
+function LoadPackedImage(Image,OnRescaledPosition)
 {
+	OnRescaledPosition = OnRescaledPosition || function(xyz,Index,Bounds){};
+	
 	Image = GetImageAsPopImage(Image);
 	let PixelBuffer = Image.GetPixelBuffer();
 	const PackedImageChannels = GetChannelsFromPixelFormat(PackedImageFormat);
@@ -913,12 +915,16 @@ function LoadPackedImage(Image)
 		const Scalar = InputIsFloat ? 1 : 1/255;
 		for ( let i=0;	i<PixelBytes.length;	i+=Channels )
 		{
+			let xyz = [];
 			for ( let c=0;	c<Channels;	c++ )
 			{
 				let f = PixelBytes[i+c] * Scalar;
 				f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
-				PixelFloats[i+c] = f;
+				xyz[c] = f;
 			}
+			OnRescaledPosition( xyz, i, Bounds );
+			for ( let c=0;	c<Channels;	c++ )
+				PixelFloats[i+c] = xyz[c];
 		}
 		
 		Image.WritePixels( Width, Height, PixelFloats, FloatFormat );
