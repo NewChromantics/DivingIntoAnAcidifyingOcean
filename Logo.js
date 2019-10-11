@@ -243,7 +243,8 @@ function TLogoState()
 		if ( MonitorAssetFile )
 			AssetFilenames.forEach( MonitorAssetFile );
 	}
-	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png','geometry'] ) );
+	//this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png','geometry'] ) );
+	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png'] ) );
 	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, ['scene'] ) );
 
 	this.IsPreloadFinished = function()
