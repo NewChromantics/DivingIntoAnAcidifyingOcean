@@ -1025,6 +1025,8 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 
 function UpdateYearTime(FrameDuration)
 {
+	if ( !Params.ExperiencePlaying )
+		return;
 	const YearsPerFrame = FrameDuration * Params.YearsPerSecond;
 	Params.TimelineYear += YearsPerFrame;
 	if ( ParamsWindow )
