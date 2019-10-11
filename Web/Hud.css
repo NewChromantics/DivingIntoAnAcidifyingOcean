@@ -92,6 +92,24 @@
 	justify-content:	center;
 }
 
+
+#SubtitleSkip
+{
+	position:		absolute;
+	left:			10vw;
+	top:			65vh;
+	width:			80vw;
+	height:			5vh;
+	font-size:		4.5vh;
+	
+	text-decoration:	underline;
+	
+	text-align:			center;
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
 #LogoBg
 {
 	display:	block;

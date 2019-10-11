@@ -28,17 +28,22 @@ function LerpValue(a,b,Lerp)
 	return Math.Lerp( a, b, Lerp );
 }
 
-function TTimeline(OrigKeyframes)
+class TTimeline
 {
-	//	gr: Expecting time to be sorted
-	this.Keyframes = OrigKeyframes;
-
-	this.Constructor = function()
+	constructor(OrigKeyframes)
 	{
+		//	gr: Expecting time to be sorted
+		this.Keyframes = OrigKeyframes;
 		this.FillKeyframes();
 	}
-	
-	this.EnumAllUniforms = function()
+
+	LastKeyframeTime()
+	{
+		const LastKeyframe = this.Keyframes[this.Keyframes.length-1];
+		return LastKeyframe.Time;
+	}
+
+	EnumAllUniforms()
 	{
 		//	keyed list and their first & last keyframe time
 		let Uniforms = {};
@@ -66,7 +71,7 @@ function TTimeline(OrigKeyframes)
 	
 	//	any keyframes missing a uniform, we should in-fill
 	//	we could do it in the lookup, but doing once might be simpler
-	this.FillKeyframes = function()
+	FillKeyframes()
 	{
 		//	get list of all uniforms
 		const AllUniforms = this.EnumAllUniforms();
@@ -106,7 +111,7 @@ function TTimeline(OrigKeyframes)
 		//Pop.Debug( "Filled keyframes", JSON.stringify(this.Keyframes,null,'\t') );
 	}
 
-	this.GetTimeSliceForUniform = function(Time,UniformName)
+	GetTimeSliceForUniform(Time,UniformName)
 	{
 		if ( !this.Keyframes.length )
 			return null;
@@ -148,7 +153,7 @@ function TTimeline(OrigKeyframes)
 		return Slice;
 	}
 	
-	this.GetTimeSlice = function(Time)
+	GetTimeSlice(Time)
 	{
 		if ( !this.Keyframes.length )
 			return null;
@@ -176,7 +181,7 @@ function TTimeline(OrigKeyframes)
 		return Slice;
 	}
 	
-	this.GetUniform = function(Time,Key)
+	GetUniform(Time,Key)
 	{
 		let Slice = this.GetTimeSliceForUniform( Time, Key );
 		if ( Slice == null )
@@ -196,7 +201,7 @@ function TTimeline(OrigKeyframes)
 		return Value;
 	}
 	
-	this.EnumUniforms = function(Time,EnumUniform)
+	EnumUniforms(Time,EnumUniform)
 	{
 		let Slice = this.GetTimeSlice( Time );
 		if ( Slice == null )
@@ -221,8 +226,7 @@ function TTimeline(OrigKeyframes)
 		}
 		UniformKeys.forEach( LerpUniform );
 	}
-	
-	this.Constructor();
+
 }
 
 
