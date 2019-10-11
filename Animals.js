@@ -8,22 +8,23 @@ function LoadAnimalDatabase(Filename)
 
 const AnimalDatabase = LoadAnimalDatabase('Animals.json');
 
-//	to debug, load them in order (rather than "random")
-let AnimalUsageCounter = 0;
 //	debug, force one model to load
 const ForceRandomAnimal = null;//"PLASTIC BAG";
 
 function GetRandomAnimal(NodeName)
 {
+	Pop.Debug("GetRandomAnimal("+NodeName+")");
 	const Category = NodeName;
 	
 	if ( ForceRandomAnimal )
 		return AnimalDatabase[ForceRandomAnimal];
 
 	//	if second half of node name matches an animal, use that explicitly
+	let NodeAnimalName = null;
 	try
 	{
-		const NodeAnimalName = NodeName.split('_')[1];
+		//	grab last part, if it's an animal name, use it
+		NodeAnimalName = NodeName.split('_').slice(-1)[0];
 		if ( AnimalDatabase.hasOwnProperty(NodeAnimalName) )
 			return AnimalDatabase[NodeAnimalName];
 	}
@@ -45,10 +46,19 @@ function GetRandomAnimal(NodeName)
 	
 	//	if no matches, pick any
 	if ( AnimalNames.length == 0 )
+	{
+		Pop.Debug("GetRandomAnimal("+NodeName+") didn't match any, picking random");
 		AnimalNames = Object.keys(AnimalDatabase);
+	}
 	
-	const AnimalIndex = Math.floor( Math.random() * AnimalNames.length );
-	//const AnimalIndex = (AnimalUsageCounter++) % AnimalNames.length;
+	let AnimalIndex = parseInt(NodeAnimalName);
+	
+	if ( isNaN(AnimalIndex) )
+	{
+		Pop.Debug("GetRandomAnimal("+NodeName+") isn't an index, picking random, picking random");
+		AnimalIndex = Math.floor( Math.random() * AnimalNames.length );
+	}
+	
 	const AnimalName = AnimalNames[AnimalIndex];
 	const Animal = AnimalDatabase[AnimalName];
 	return Animal;
