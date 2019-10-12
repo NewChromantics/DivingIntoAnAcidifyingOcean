@@ -200,6 +200,30 @@
         "TriangleScale":0.002
 
 	},
+
+		"Clownfish":
+	{
+		"Name":		"CLOWNFISH",
+		"Description":	"<h1>The Clownfish somewhat lives up to its name, with its display of bright colours and striking patterns.</h1> <h2>The Clownfish lives in a symbiotic mutualism with the stinging Sea Anemone. They mostly live in reefs, for example the Coral Reef, which are dying due to rising water temperatures. </h2> <h2>When the Sea Anemone doesn't protect the Clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise.</h2> <h2>Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators.</h2>",
+		"Model":	"Models/Clownfish.ply",
+		"AfterYear":	1860,
+		"Categorys" : [ "Animal_", "Bigbang_"],
+		"Scale":0.6,
+        "TriangleScale":0.002
+
+	},
+
+	"Cobia":
+	{
+		"Name":		"COBIA",
+		"Description":	"<h1>The Cobia is a curious, solitary fish with large pectoral fins that help attain the profile of a shark.</h1> <h2>While it lacks the swim bladder, what helps a fish float, it grows large Otoliths: small ear bones that affect hearing and balance.</h2> <h2>Acidic waters negatively affect these bones, especially in larvae, which likely alters their ability to detect sound and could impair the ability of the animal to navigate and avoid prey.</h2> <h2>While there is still a lot to learn, these findings suggest that we may see unpredictable changes in animal behavior under acidification.</h2>",
+		"Model":	"Models/Cobia.ply",
+		"AfterYear":	1860,
+		"Categorys" : [ "Animal_" , "Bigbang_"],
+		"Scale":1,
+        "TriangleScale":0.002
+
+	},
 	
 	"DeepSeaCoral":
 	{
@@ -278,17 +302,7 @@
         "TriangleScale":0.002
 
 	},
-	"Cobia":
-	{
-		"Name":		"COBIA",
-		"Description":	"<h1>The Cobia is a curious, solitary fish with large pectoral fins that help attain the profile of a shark.</h1> <h2>While it lacks the swim bladder, what helps a fish float, it grows large Otoliths: small ear bones that affect hearing and balance.</h2> <h2>Acidic waters negatively affect these bones, especially in larvae, which likely alters their ability to detect sound and could impair the ability of the animal to navigate and avoid prey.</h2> <h2>While there is still a lot to learn, these findings suggest that we may see unpredictable changes in animal behavior under acidification.</h2>",
-		"Model":	"Models/Cobia.ply",
-		"AfterYear":	1860,
-		"Categorys" : [ "Animal_" , "Bigbang_"],
-		"Scale":1,
-        "TriangleScale":0.002
-
-	},
+	
 	"Phytoplankton":
 	{
 		"Name":		"PHYTOPLANKTON",
@@ -300,17 +314,7 @@
         "TriangleScale":0.0005
 
 	},
-	"Mussels":
-	{
-		"Name":		"MUSSELS",
-		"Description":	"<h1>Mussels, with their dark shells and shimmering, silvery interior, these elongated bivalve live attached to rocks thanks to beard like threads called Byssal.</h1> <h2>Mussels cultivation is a major food source: a booming $1.5 billion industry that is deeply rooted in some cultures.</h2> <h2>They can usually withstand harsh weather and extreme conditions. But climate change is impairing their ability to cling. Research has shown that when Mussel Byssal threads are grown in acidified conditions with a pH lower than 7.6, they are 40% weaker than normal.</h2> <h2>Ocean acidification doesn't just dissolve their clinging threads, it also affects the way they can make their shells. Scientists have in fact discovered a 25% decrease in calcification in waters with pH 7.6, the level expected in 2100.</h2> ",
-		"Model":	"Models/Mussels.ply",
-		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1,
-        "TriangleScale":0.0015
 
-	},
 	"Menidia":
 	{
 		"Name":		"MENIDIA MENIDIA",
@@ -322,6 +326,19 @@
         "TriangleScale":0.002
 
 	},
+
+		"Mussels":
+	{
+		"Name":		"MUSSELS",
+		"Description":	"<h1>Mussels, with their dark shells and shimmering, silvery interior, these elongated bivalve live attached to rocks thanks to beard like threads called Byssal.</h1> <h2>Mussels cultivation is a major food source: a booming $1.5 billion industry that is deeply rooted in some cultures.</h2> <h2>They can usually withstand harsh weather and extreme conditions. But climate change is impairing their ability to cling. Research has shown that when Mussel Byssal threads are grown in acidified conditions with a pH lower than 7.6, they are 40% weaker than normal.</h2> <h2>Ocean acidification doesn't just dissolve their clinging threads, it also affects the way they can make their shells. Scientists have in fact discovered a 25% decrease in calcification in waters with pH 7.6, the level expected in 2100.</h2> ",
+		"Model":	"Models/Mussels.ply",
+		"AfterYear":	1860,
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":1,
+        "TriangleScale":0.0015
+
+	},
+
 	"Crab":
 	{
 		"Name":		"BRACHYURAN CRAB",
@@ -355,17 +372,7 @@
         "TriangleScale":0.0015
 
 	},
-		"Clownfish":
-	{
-		"Name":		"CLOWNFISH",
-		"Description":	"<h1>The Clownfish somewhat lives up to its name, with its display of bright colours and striking patterns.</h1> <h2>The Clownfish lives in a symbiotic mutualism with the stinging Sea Anemone. They mostly live in reefs, for example the Coral Reef, which are dying due to rising water temperatures. </h2> <h2>When the Sea Anemone doesn't protect the Clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise.</h2> <h2>Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators.</h2>",
-		"Model":	"Models/Clownfish.ply",
-		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_"],
-		"Scale":0.6,
-        "TriangleScale":0.002
-
-	},
+	
 		"Microplastic":
 	{
 		"Name":		"MICROPLASTIC",
@@ -458,8 +465,8 @@
 		"Model":	"Models/Cigarette.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-		"Scale":1,
-        "TriangleScale":0.003
+		"Scale":0.5,
+        "TriangleScale":0.002
 
 	},
 		"Net":

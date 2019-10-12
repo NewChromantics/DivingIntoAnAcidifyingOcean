@@ -4,8 +4,8 @@
     "-version": "1.4.1",
     "asset": {
       "contributor": { "authoring_tool": "CINEMA4D 16.050 COLLADA Exporter" },
-      "created": "2019-10-12T13:33:21Z",
-      "modified": "2019-10-12T13:33:21Z",
+      "created": "2019-10-12T16:21:08Z",
+      "modified": "2019-10-12T16:21:08Z",
       "unit": {
         "-meter": "0.01",
         "-name": "centimeter"
@@ -13115,7 +13115,7 @@
             "-name": "Nasty_Animal_Plastic",
             "translate": {
               "-sid": "translate",
-              "#text": "91.1868 -137.684 -34452.3"
+              "#text": "58.7966 -137.684 -34452.3"
             },
             "rotate": [
               {
@@ -13142,7 +13142,7 @@
             "-name": "Nasty_Animal_Cigarette",
             "translate": {
               "-sid": "translate",
-              "#text": "214.531 -133.232 -31167.6"
+              "#text": "102.638 -133.232 -31167.6"
             },
             "rotate": [
               {
@@ -13169,7 +13169,7 @@
             "-name": "Nasty_Animal_Assorbente",
             "translate": {
               "-sid": "translate",
-              "#text": "66.6263 -202.67 -30966.5"
+              "#text": "213.854 -202.67 -30966.5"
             },
             "rotate": [
               {
@@ -13223,7 +13223,7 @@
             "-name": "Nasty_Animal_Bag",
             "translate": {
               "-sid": "translate",
-              "#text": "205.649 -4.32075 -29211.3"
+              "#text": "8.36317 -4.32075 -29211.3"
             },
             "rotate": [
               {
@@ -13250,7 +13250,7 @@
             "-name": "Animal_Shark",
             "translate": {
               "-sid": "translate",
-              "#text": "-35.824 -12.4555 -27009.4"
+              "#text": "-24.0457 -34.1003 -27009.4"
             },
             "rotate": [
               {
@@ -13277,7 +13277,7 @@
             "-name": "Nasty_Animal_Straw",
             "translate": {
               "-sid": "translate",
-              "#text": "165.624 98.4984 -25781.6"
+              "#text": "89.0658 98.4984 -25781.6"
             },
             "rotate": [
               {
@@ -13412,7 +13412,7 @@
             "-name": "Animal_Turtle",
             "translate": {
               "-sid": "translate",
-              "#text": "-106.842 -10.1392 -17059.6"
+              "#text": "-89.1748 -10.1392 -17059.6"
             },
             "rotate": [
               {
@@ -13655,7 +13655,7 @@
             "-name": "Animal_Crab",
             "translate": {
               "-sid": "translate",
-              "#text": "128.712 -86.4245 -9150.72"
+              "#text": "87.4882 -86.4245 -9150.72"
             },
             "rotate": [
               {
@@ -13682,7 +13682,7 @@
             "-name": "Animal_Lobster",
             "translate": {
               "-sid": "translate",
-              "#text": "-64.0811 -119.539 -8756.89"
+              "#text": "-64.0811 -38.3714 -8756.89"
             },
             "rotate": [
               {
@@ -13790,7 +13790,7 @@
             "-name": "Animal_BlueCrab",
             "translate": {
               "-sid": "translate",
-              "#text": "163.239 -213.863 -6886.6"
+              "#text": "113.182 -213.863 -6886.6"
             },
             "rotate": [
               {
@@ -13817,7 +13817,7 @@
             "-name": "Animal_BrittleStar",
             "translate": {
               "-sid": "translate",
-              "#text": "-126.617 -189.756 -6456.38"
+              "#text": "-100.116 -189.756 -6447.55"
             },
             "rotate": [
               {
@@ -13871,7 +13871,7 @@
             "-name": "Animal_BubblegumCoral",
             "translate": {
               "-sid": "translate",
-              "#text": "163.056 -266.378 -5941.99"
+              "#text": "98.2752 -266.378 -5941.99"
             },
             "rotate": [
               {
@@ -13898,7 +13898,7 @@
             "-name": "Animal_Seagrass",
             "translate": {
               "-sid": "translate",
-              "#text": "-96.4108 -312.252 -5583.39"
+              "#text": "-31.6304 -312.252 -5583.39"
             },
             "rotate": [
               {
@@ -14060,7 +14060,7 @@
             "-name": "Animal_Coral",
             "translate": {
               "-sid": "translate",
-              "#text": "120.747 -395.744 -3335.45"
+              "#text": "86.853 -395.744 -3335.45"
             },
             "rotate": [
               {
@@ -14087,7 +14087,7 @@
             "-name": "Animal_Phytoplankton",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.797719 -584.485 -2473.87"
+              "#text": "-0.797719 -584.485 -2438.74"
             },
             "rotate": [
               {
@@ -14114,7 +14114,7 @@
             "-name": "Animal_JuvenileBivalve",
             "translate": {
               "-sid": "translate",
-              "#text": "-30.6667 -678.768 -2132.16"
+              "#text": "-30.6667 -678.768 -2054.08"
             },
             "rotate": [
               {
@@ -14141,7 +14141,7 @@
             "-name": "Animal_Larvae",
             "translate": {
               "-sid": "translate",
-              "#text": "24.784 -716.52 -1785.77"
+              "#text": "24.784 -716.52 -1731.11"
             },
             "rotate": [
               {
@@ -14168,7 +14168,7 @@
             "-name": "Animal_Krill",
             "translate": {
               "-sid": "translate",
-              "#text": "-90.9508 -766.869 -1486.28"
+              "#text": "-67.5263 -786.375 -1447.24"
             },
             "rotate": [
               {
@@ -14249,7 +14249,7 @@
             "-name": "Bigbang_10",
             "translate": {
               "-sid": "translate",
-              "#text": "-82.1142 -394.174 -286.624"
+              "#text": "-2.55683 -702.556 -606.087"
             },
             "rotate": [
               {
@@ -14276,7 +14276,7 @@
             "-name": "Bigbang_9",
             "translate": {
               "-sid": "translate",
-              "#text": "118.764 -180.487 -114.269"
+              "#text": "97.2431 -609.707 -500.706"
             },
             "rotate": [
               {
@@ -14303,7 +14303,7 @@
             "-name": "Bigbang_8",
             "translate": {
               "-sid": "translate",
-              "#text": "49.3657 -693.54 -606.087"
+              "#text": "-8.31968 -497.99 -395.356"
             },
             "rotate": [
               {
@@ -14330,7 +14330,7 @@
             "-name": "Bigbang_7",
             "translate": {
               "-sid": "translate",
-              "#text": "97.2431 -594.679 -500.706"
+              "#text": "-82.1142 -409.202 -286.624"
             },
             "rotate": [
               {
@@ -14357,7 +14357,7 @@
             "-name": "Bigbang_6",
             "translate": {
               "-sid": "translate",
-              "#text": "-8.31968 -497.99 -395.356"
+              "#text": "37.3814 -356.776 -179.211"
             },
             "rotate": [
               {
@@ -14384,7 +14384,7 @@
             "-name": "Bigbang_5",
             "translate": {
               "-sid": "translate",
-              "#text": "37.3814 -356.776 -227.108"
+              "#text": "-65.3077 -266.571 -86.9776"
             },
             "rotate": [
               {
@@ -14411,7 +14411,7 @@
             "-name": "Bigbang_4",
             "translate": {
               "-sid": "translate",
-              "#text": "-65.3077 -266.571 -150.485"
+              "#text": "70.0866 -171.684 9.88038"
             },
             "rotate": [
               {
@@ -14438,7 +14438,7 @@
             "-name": "Bigbang_3",
             "translate": {
               "-sid": "translate",
-              "#text": "11.6608 -100.256 -31.9875"
+              "#text": "-30.5263 -129.044 96.1795"
             },
             "rotate": [
               {
@@ -14465,7 +14465,7 @@
             "-name": "Bigbang_2",
             "translate": {
               "-sid": "translate",
-              "#text": "-105.258 10.8277 85.1949"
+              "#text": "-105.258 -7.89143 124.268"
             },
             "rotate": [
               {
@@ -14519,7 +14519,7 @@
             "-name": "Bigbang_0",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.408459 32.3609 105.388"
+              "#text": "-0.408459 23.3441 177.523"
             },
             "rotate": [
               {
