@@ -80,9 +80,9 @@
 {
 
 	position:		absolute;
-	left:			10vw;
+	left:			20vw;
 	top:			45vh;
-	width:			80vw;
+	width:			60vw;
 	height:			5vh;
 	font-size:		2.5vh;
 	
@@ -96,11 +96,11 @@
 #SubtitleSkip
 {
 	position:		absolute;
-	left:			10vw;
+	left:			40vw;
 	top:			65vh;
 	width:			80vw;
 	height:			5vh;
-	font-size:		4.5vh;
+	font-size:		2.5vh;
 	
 	text-decoration:	underline;
 	
@@ -162,7 +162,7 @@
 	position:	absolute;
 	left:		48.5vw;
 	top:		79.35vh;
-	width:		2.8vw;
+	width:		4.5vw;
 	height:		4vh;
 	font-size:	1.5vh;
 	padding: 0.3em;
@@ -279,9 +279,9 @@
 	visibility: hidden;
 	display:	block;
 	position:	absolute;
-	left:		45vw;
+	left:		40vw;
 	xxxtop:		45vh;
-	width:		9.3vw;
+	width:		16vw;
 	height:		4vh;
 	font-size:	2vh;
 	justify-content:	flex-end;
@@ -303,9 +303,9 @@
 {
 	display:	block;
 	position:	absolute;
-	left:		45vw;
+	left:		40vw;
 	top:		40vh;
-	width:		9.3vw;
+	width:		16vw;
 	height:		4vh;
 	font-size:	2vh;
 	justify-content:	flex-end;
@@ -326,9 +326,9 @@
 	visibility: hidden;
 	display:	block;
 	position:	absolute;
-	left:		45vw;
+	left:		40vw;
 	xxxtop:		45vh;
-	width:		9vw;
+	width:		16vw;
 	height:		4vh;
 	font-size:	2vh;
 	justify-content:	flex-end;
@@ -348,9 +348,9 @@
 {
 	display:	block;
 	position:	absolute;
-	left:		45vw;
+	left:		40vw;
 	top:		40vh;
-	width:		9.3vw;
+	width:		16vw;
 	height:		4vh;
 	font-size:	2vh;
 	justify-content:	flex-end;
@@ -373,7 +373,7 @@
 	position:	absolute;
 	left:		46vw;
 	xxxtop:		45vh;
-	width:		6.5vw;
+	width:		10vw;
 	height:		4vh;
 	font-size:	2vh;
 	justify-content:	flex-end;

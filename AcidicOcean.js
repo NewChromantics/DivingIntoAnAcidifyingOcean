@@ -232,16 +232,16 @@ function GetActorIntersections(CameraScreenUv)
 
 
 const TimelineMinYear				= 1800;
-const TimelineBigBangYear			= 1823;
+const TimelineBigBangYear			= 1819;
 const TimelineMinInteractiveYear	= 1860;
-const Timeline_Text1_Year			= 1885;
+const Timeline_Text1_Year			= 1882;
 const Timeline_Text2_Year			= 1910;
 const Timeline_Text3_Year			= 2020;
 const TimelineMaxInteractiveYear	= 2100;
 const TimelineSolutionYear			= 2146;
 const TimelineMaxYear				= 2160;
 
-const BigBangDuration = 10;
+const BigBangDuration = 33;
 
 Params.TimelineYear = TimelineMinYear;
 Params.YearsPerSecond = 1;

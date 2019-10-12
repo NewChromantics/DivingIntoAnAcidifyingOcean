@@ -6,8 +6,8 @@
 		"Model":	"Models/Pteropod.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.5,
-        "TriangleScale":0.0013
+		"Scale":0.6,
+        "TriangleScale":0.0016
 	},
 	
 	"Jellyfish":
@@ -17,8 +17,8 @@
 		"Model":	"Models/Jellyfish.ply",
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
-		"Scale":0.5,
-        "TriangleScale":0.0015
+		"Scale":0.7,
+        "TriangleScale":0.002
 
 	},
 
@@ -31,6 +31,17 @@
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
         "TriangleScale":0.002
+
+	},
+	"Cephalopod":
+	{
+		"Name":		"CEPHALOPODS",
+		"Description":	"<h1>  Cephalopods… color blind, colour-changing creatures, they swim freely through black inked clouds, having recently abandoned their shelled homes. </h1> <h2> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h2> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
+		"Model":	"Models/Cephalopod.ply",
+		"AfterYear":	1860,
+		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Scale":1,
+        "TriangleScale":0.0028
 
 	},
 
@@ -53,7 +64,7 @@
 		"Model":	"Models/Oyster.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.7,
+		"Scale":0.8,
         "TriangleScale":0.002
 
 	},
@@ -98,8 +109,8 @@
 		"Model":	"Models/Cockle.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.5,
-        "TriangleScale":0.0012
+		"Scale":0.6,
+        "TriangleScale":0.0015
 
 	},
 	"AlgalBloom":
@@ -110,7 +121,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":0.4,
-        "TriangleScale":0.001
+        "TriangleScale":0.0015
 
 	},
 	"Pollock":
@@ -120,7 +131,7 @@
 		"Model":	"Models/Pollock.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
-		"Scale":1,
+		"Scale":1.2,
         "TriangleScale":0.002
 	},
 	"Krill":
@@ -130,8 +141,8 @@
 		"Model":	"Models/Krill.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":0.4,
-        "TriangleScale":0.0015
+		"Scale":0.8,
+        "TriangleScale":0.002
 
 	},
 	"CorallineAlgae":
@@ -152,7 +163,7 @@
 		"Model":	"Models/Nodularia.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.4,
+		"Scale":0.6,
         "TriangleScale":0.0009
 
 	},
@@ -163,7 +174,7 @@
 		"Model":	"Models/Kelp.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
-		"Scale":0.8,
+		"Scale":1,
         "TriangleScale":0.002
 
 	},
@@ -184,22 +195,12 @@
 		"Description":	"<h1>  Sharks are one of the most well-known predators on the planet. There are around 500 different species of sharks, and they live at the top of their food chain.  </h1> <h2> Humans are a greater threat to sharks than sharks are to us: in 2018 there were only 4 fatal attacks to humans globally, whereas 100million sharks are killed each year. </h2> <h2> Elevated temperature and CO2 have detrimental effects on sharks by not only increasing energetic demands, but also by decreasing metabolic efficiency, reducing their ability to locate food, through olfaction, and leading to considerable reductions in growth rates. </h2> <h2> Sharks in high CO2 conditions have been shown to avoid the food odour stream, spending less than 15% of their time there. In a recent study, the survival of hatched shark embryos declined by up to 44% for those exposed to the warming and acidification conditions that are expected by 2100. </h2>",
 		"Model":	"Models/Shark.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"],
-		"Scale":0.6,
-        "TriangleScale":0.002
-
-	},
-	"Cephalopod":
-	{
-		"Name":		"CEPHALOPODS",
-		"Description":	"<h1>  Cephalopods… color blind, colour-changing creatures, they swim freely through black inked clouds, having recently abandoned their shelled homes. </h1> <h2> When environmental hypoxia, or oxygen depletion, and water acidification pressures are high, a cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs. </h2> <h2> Environmental hypoxia will not only limit oxygen intake at the gills but will also reduce the gradient necessary for cutaneous oxygen uptake. Hypoxia at the tissues may in turn result in an increase in venous pH, further reducing oxygen delivery to the tissues. </h2>",
-		"Model":	"Models/Cephalopod.ply",
-		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":0.8,
         "TriangleScale":0.002
 
 	},
+	
 	"DeepSeaCoral":
 	{
 		"Name":		"DEEP SEA CORAL",
@@ -283,7 +284,7 @@
 		"Description":	"<h1>  The cobia is a curious, solitary fish. </h1> <h2> While the Cobia lacks the swim bladder, it grows large otoliths, small ear bones that affect hearing and balance.  </h2> <h2> Acidic waters negatively affect these bones, especially in larvae, which likely alters their ability to detect sound and could impair the ability of the animal to navigate and avoid prey. </h2>",
 		"Model":	"Models/Cobia.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_", "Bigbang_" ],
+		"Categorys" : [ "Animal_" , "Bigbang_"],
 		"Scale":1,
         "TriangleScale":0.002
 
@@ -306,7 +307,7 @@
 		"Model":	"Models/Mussels.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
-		"Scale":1.2,
+		"Scale":1,
         "TriangleScale":0.0015
 
 	},
@@ -360,11 +361,12 @@
 		"Description":	"<h1>  The clownfish somewhat lives up to its name, with its display of bright colours and striking patterns. They live in a symbiotic mutualism with the stinging sea anemone. </h1> <h2> The clownfish live in a symbiotic mutualism with the stinging sea anemone. They mostly live in reefs, for example Coral Reef, which are dying due to rising water temperatures. This is also killing the sea anemone. </h2> <h2> When the sea anemone doesn't protect the clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise. </h2> <h2> Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators. </h2>",
 		"Model":	"Models/Clownfish.ply",
 		"AfterYear":	1860,
-		"Categorys" : [ "Animal_"],
-		"Scale":1,
+		"Categorys" : [ "Animal_", "Bigbang_"],
+		"Scale":0.6,
         "TriangleScale":0.002
 
-	},"Microplastic":
+	},
+		"Microplastic":
 	{
 		"Name":		"MICROPLASTIC",
 		"Description":	"<h1> A 2015 study estimated that there was between 93 and 236 thousand metric tons of microplastics in the world’s oceans. </h1> <h2> Scientists are only just now discovering how much the problem of microplastic has spread. They studied the scat of 51 wild fur Seals and discovered that 67% of the samples showed an abundance of microfibers. </h2> <h2> Microfibers are the least studied form of microplastic. They are small hairs of plastic, less than 1 millimetre in size, from materials such as polyester or nylon and can end up in the ocean through waste water even after cleaning. They also can absorb a wide array of pollutants. </h2> <h2> It is projected that by 2050, 99% of all sea bird species will have ingested plastic. </h2>",
