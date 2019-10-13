@@ -4,8 +4,8 @@
     "-version": "1.4.1",
     "asset": {
       "contributor": { "authoring_tool": "CINEMA4D 16.050 COLLADA Exporter" },
-      "created": "2019-10-12T16:21:08Z",
-      "modified": "2019-10-12T16:21:08Z",
+      "created": "2019-10-13T18:07:10Z",
+      "modified": "2019-10-13T18:07:10Z",
       "unit": {
         "-meter": "0.01",
         "-name": "centimeter"
@@ -14438,7 +14438,7 @@
             "-name": "Bigbang_3",
             "translate": {
               "-sid": "translate",
-              "#text": "-30.5263 -129.044 96.1795"
+              "#text": "-30.5263 -112.372 96.1795"
             },
             "rotate": [
               {
@@ -14465,7 +14465,7 @@
             "-name": "Bigbang_2",
             "translate": {
               "-sid": "translate",
-              "#text": "-105.258 -7.89143 124.268"
+              "#text": "-105.258 -52.9048 124.268"
             },
             "rotate": [
               {
@@ -14492,7 +14492,7 @@
             "-name": "Bigbang_1",
             "translate": {
               "-sid": "translate",
-              "#text": "109.286 23.1272 72.611"
+              "#text": "109.286 -31.8892 72.611"
             },
             "rotate": [
               {
@@ -14519,7 +14519,7 @@
             "-name": "Bigbang_0",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.408459 23.3441 177.523"
+              "#text": "-0.408459 -11.6663 177.523"
             },
             "rotate": [
               {
