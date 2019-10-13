@@ -1061,6 +1061,13 @@ function UpdateYearTime(FrameDuration)
 		ParamsWindow.OnParamChanged('TimelineYear');
 }
 
+function UpdateCameraPos()
+{
+	const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
+	let TargetCameraPos = TimelineCameraPos;
+	Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
+}
+
 function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
@@ -1071,6 +1078,7 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	UpdateFog( FrameDuration );
 	Update( FrameDuration );
 	UpdateYearTime( FrameDuration );
+	UpdateCameraPos();
 
 	const Actors = {};
 	function IsBigBangActor(Actor)
@@ -1131,11 +1139,7 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 	UpdateYearTime( FrameDuration );
 	
 	//	move camera
-	{
-		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
-		let TargetCameraPos = TimelineCameraPos;
-		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
-	}
+	UpdateCameraPos();
 	
 	Acid.SelectedActor = null;
 	
@@ -1188,11 +1192,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	}
 
 	//	move camera
-	{
-		const TimelineCameraPos = GetTimelineCameraPosition( Params.TimelineYear );
-		let TargetCameraPos = TimelineCameraPos;
-		Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpOutSpeed );
-	}
+	UpdateCameraPos();
 	
 	//	check for animal selection
 	function CompareNearest(IntersectionA,IntersectionB)
