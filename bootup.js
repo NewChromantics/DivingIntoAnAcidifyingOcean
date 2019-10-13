@@ -199,7 +199,7 @@ Params.ScrollFlySpeed = 1;
 Params.AnimalDebugParticleColour = false;
 //Params.FogColour = [1,0,0];
 Params.AnimalBufferLod = 1;
-Params.DrawBoundingBoxes = false;
+Params.DrawBoundingBoxes = true;
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
 Params.LoadTextureBufferNoise = 0.007;
@@ -238,14 +238,14 @@ Params.Swirl_Physics_MaxSpringForce = 50.0;
 Params.Swirl_Physics_Damping = 0.20;
 Params.Swirl_Physics_CustomSplineTime = false;
 Params.Swirl_Physics_SplineTime = 0.0;
-Params.Swirl_Physics_SplineTimeSpeed = 0.05;
-Params.Swirl_Physics_SplineTimeRange = 0.03;
+Params.Swirl_Physics_SplineDuration = 5.00;
+Params.Swirl_Physics_SplineTimeRange = 0.07;
 Params.Swirl_Physics_NoiseScale = 0.0;
-Params.Swirl_Physics_SplineNoiseScale = 0.0;
+Params.Swirl_Physics_SplineNoiseScale = 1.7;
 Params.Swirl_NodeCount = 16;
 Params.Swirl_PathLoop = false;
 Params.Swirl_PersistentPath = false;	//	for editor
-Params.Swirl_PointCount = 90000;
+Params.Swirl_PointCount = 50000;
 Params.Swirl_LinearTest = false;
 Params.Swirl_NodeDistance = 0.70;
 Params.Swirl_ShowPathNodePoints = false;
@@ -254,7 +254,7 @@ Params.Spline_LerpToTarget = 0.35;
 Params.Spline_ForwardDeviateX = 1.9;
 Params.Spline_ForwardDeviateY = 2.6;
 Params.Spline_ForwardDeviateZ = 1.2;
-Params.CreateSwirlEveryXYears = 0;	//	0 doesn't create
+Params.CreateSwirlEveryXYears = 4;	//	0 doesn't create
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
@@ -322,7 +322,7 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Swirl_Physics_Damping',0.001,1);
 	ParamsWindow.AddParam('Swirl_Physics_CustomSplineTime');
 	ParamsWindow.AddParam('Swirl_Physics_SplineTime',0,1);
-	ParamsWindow.AddParam('Swirl_Physics_SplineTimeSpeed',0,1);
+	ParamsWindow.AddParam('Swirl_Physics_SplineDuration',0,30);
 	ParamsWindow.AddParam('Swirl_Physics_SplineTimeRange',0,1);
 	ParamsWindow.AddParam('Swirl_Physics_NoiseScale',0,20);
 	ParamsWindow.AddParam('Swirl_Physics_SplineNoiseScale',0,20);

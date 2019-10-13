@@ -749,8 +749,21 @@ function GetSwirlMeta(Actor)
 	}
 	else
 	{
-		Meta.PhysicsUniforms.SplineTime = Pop.GetTimeNowMs() / 1000 * Params.Swirl_Physics_SplineTimeSpeed;
-		Meta.PhysicsUniforms.SplineTime %= 1;
+		if ( Actor && Actor.SpawnTime )
+		{
+			let Time = Pop.GetTimeNowMs() - Actor.SpawnTime;
+			
+			Time /= 1000;
+			Time /= Params.Swirl_Physics_SplineDuration;
+			
+			Meta.PhysicsUniforms.SplineTime = Time;
+			Pop.Debug("Splinetime",Meta.PhysicsUniforms.SplineTime);
+		}
+		else
+		{
+			Meta.PhysicsUniforms.SplineTime = Pop.GetTimeNowMs() / 1000 * Params.Swirl_Physics_SplineTimeSpeed;
+			Meta.PhysicsUniforms.SplineTime %= 1;
+		}
 	}
 	
 	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;

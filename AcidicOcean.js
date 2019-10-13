@@ -412,17 +412,38 @@ if ( IsDebugEnabled() )
 
 function AddSwirlActor()
 {
+	function GetSplineStartPos()
+	{
+		const Pos = Acid.GetCameraPosition();
+		Pos[1] += -0.1;
+		return Pos;
+	}
+	
 	function PushActor(Actor)
 	{
 		//	move
-		const Pos = Acid.GetCameraPosition();
-		Pos[1] += -0.1;
+		const Pos = GetSplineStartPos();
 		const PosMatrix = Math.CreateTranslationMatrix( ...Pos );
 		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( PosMatrix, Actor.LocalToWorldTransform );
 		Acid.CameraScene.push( Actor );
 	}
 	
-	CreateSplineActors( PushActor );
+	//CreateSplineActors( PushActor );
+	
+	{
+		let Actor = new TActor();
+		Actor.SpawnTime = Pop.GetTimeNowMs();
+		Actor.Name = "Swirl";
+		let SplineStartPos = GetSplineStartPos();
+		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...SplineStartPos );
+		
+		SetupAnimalTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
+		Acid.CameraScene.push( Actor );
+		Actor.UpdatePhysics = true;
+		//Actor.BoundingBox.Min = [-100,-100,-100];
+		//Actor.BoundingBox.Max = [100,100,100];
+		Pop.Debug("Created swirl",Actor);
+	}
 }
 
 
