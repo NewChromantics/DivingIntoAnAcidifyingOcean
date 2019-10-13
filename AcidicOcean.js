@@ -54,6 +54,18 @@ DebugCamera.Position = [ 0,0,0 ];
 DebugCamera.LookAt = [ 0,0,-1 ];
 DebugCamera.FarDistance = 400;	//	try not to clip anythig in debug mode
 
+const BigBangExplodeYears = {};
+BigBangExplodeYears[1820] = BigBangAnimalPrefix + '0';
+BigBangExplodeYears[1821] = BigBangAnimalPrefix + '1';
+BigBangExplodeYears[1822] = BigBangAnimalPrefix + '2';
+BigBangExplodeYears[1827] = BigBangAnimalPrefix + '3';
+BigBangExplodeYears[1829] = BigBangAnimalPrefix + '4';
+BigBangExplodeYears[1834] = BigBangAnimalPrefix + '5';
+BigBangExplodeYears[1838] = BigBangAnimalPrefix + '6';
+BigBangExplodeYears[1840] = BigBangAnimalPrefix + '7';
+BigBangExplodeYears[1845] = BigBangAnimalPrefix + '8';
+BigBangExplodeYears[1851] = BigBangAnimalPrefix + '9';
+BigBangExplodeYears[1857] = BigBangAnimalPrefix + '10';
 
 
 function IsAutoClearTextureActor(Actor)
@@ -463,7 +475,8 @@ function LoadCameraScene(Filename)
 			{
 				const Animal = GetRandomAnimal( ActorNode.Name );
 				Actor.Animal = Animal;
-				Actor.Name += " " + Animal.Name;
+				//	gr: this helped with debugging, but for some things we're looking for actors by name
+				//Actor.Name += " " + Animal.Name;
 				let GetMeta = GetAnimalMeta;
 				if ( ActorNode.Name.startsWith( NastyAnimalPrefix ) )
 					GetMeta = GetNastyAnimalMeta;
@@ -1052,27 +1065,51 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		//	explode all bigbang nodes
-		function IsBigBangActor(Actor)
-		{
-			return Actor.Name.startsWith( BigBangAnimalPrefix );
-		}
-		const BigBangActors = GetActorScene( IsBigBangActor );
-		function Explode(Actor)
-		{
-			Actor.UpdatePhysics = true;
-			Actor.AnimalHasBeenExploded = true;
-		}
-		BigBangActors.forEach( Explode );
 		
-		//	play a big bang sound
-		AudioManager.PlaySound( ExplosionSoundFilename );
 	}
 	
 	UpdateFog( FrameDuration );
 	Update( FrameDuration );
 	UpdateYearTime( FrameDuration );
 
+	const Actors = {};
+	function IsBigBangActor(Actor)
+	{
+		Actors[Actor.Name] = Actor;
+		return Actor.Name.startsWith( BigBangAnimalPrefix );
+	}
+	const BigBangActors = GetActorScene( IsBigBangActor );
+	function GetBigBangActor(ActorName)
+	{
+		return Actors[ActorName];
+	}
+	
+	const CurrentYear = Params.TimelineYear;
+	
+	//	explode big bang actors at/after certain years
+	function ExplodeActor(Year)
+	{
+		if ( Year > CurrentYear )
+			return;
+		const ActorName = BigBangExplodeYears[Year];
+		const Actor = GetBigBangActor( ActorName );
+		
+		if ( !Actor )
+		{
+			Pop.Debug("Couldn't find actor named " + ActorName + " to explode");
+			return;
+		}
+
+		if ( Actor.AnimalHasBeenExploded )
+			return;
+		Actor.UpdatePhysics = true;
+		Actor.AnimalHasBeenExploded = true;
+		
+		//	play a big bang sound
+		AudioManager.PlaySound( ExplosionSoundFilename );
+	}
+	Object.keys(BigBangExplodeYears).forEach( ExplodeActor );
+	
 	
 	if ( StateTime < BigBangDuration )
 		return null;
