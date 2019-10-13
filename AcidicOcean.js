@@ -244,7 +244,8 @@ function GetActorIntersections(CameraScreenUv)
 
 
 const TimelineMinYear				= 1800;
-const TimelineBigBangYear			= 1819;
+const TimelineBigBangStartYear		= 1819;
+const TimelineBigBangEndYear		= 1857;
 const TimelineMinInteractiveYear	= 1860;
 const Timeline_Text1_Year			= 1882;
 const Timeline_Text2_Year			= 1910;
@@ -253,7 +254,6 @@ const TimelineMaxInteractiveYear	= 2100;
 const TimelineSolutionYear			= 2146;
 const TimelineMaxYear				= 2160;
 
-const BigBangDuration = 33;
 
 Params.TimelineYear = TimelineMinYear;
 Params.YearsPerSecond = 1;
@@ -1044,7 +1044,7 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	UpdateFog(FrameDuration);
 	
 	//	fly until we hit big bang
-	if ( Params.TimelineYear >= TimelineBigBangYear )
+	if ( Params.TimelineYear >= TimelineBigBangStartYear )
 		return Acid.State_BigBang;
 	
 	//	stay flying
@@ -1119,7 +1119,7 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	Object.keys(BigBangExplodeYears).forEach( ExplodeActor );
 	
 	
-	if ( StateTime < BigBangDuration )
+	if ( CurrentYear < TimelineBigBangEndYear )
 		return null;
 	
 	return Acid.State_Fly;
