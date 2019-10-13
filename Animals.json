@@ -205,7 +205,7 @@
 	{
 		"Name":		"CLOWNFISH",
 		"Description":	"<h1>The Clownfish somewhat lives up to its name, with its display of bright colours and striking patterns.</h1> <h2>The Clownfish lives in a symbiotic mutualism with the stinging Sea Anemone. They mostly live in reefs, for example the Coral Reef, which are dying due to rising water temperatures. </h2> <h2>When the Sea Anemone doesn't protect the Clownfish from predators, they sometimes still manage to avoid them thanks to their hearing. In more acidic waters, though, they do not flee threatening noise.</h2> <h2>Alongside their sound, these fish use smell, but this too is affected by acidic waters: they have trouble smelling their way back home and can become fatally attracted to the scent of predators.</h2>",
-		"Model":	"Models/Clownfish.ply",
+		"Model":	"Models/ClownFish.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":0.6,
