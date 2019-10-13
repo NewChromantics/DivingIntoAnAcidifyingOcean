@@ -240,7 +240,7 @@
 	{
 		"Name":		"BUBBLE GUM CORAL",
 		"Description":	"<h1>Bubblegum Coral often builds colourful, knobbly-armed structures deep in the oceans, and they appear comfortable nearly everywhere outside of the tropics – where they can grow between 200 and 1300m of depth.</h1> <h2>Deep-water Corals are damaged by a number of things: deep-water trawling, long line fishing, and oil and gas exploration.</h2> <h2>Like aragonitic Corals, Bubblegum Corals are likely to be affected by changes in calcite saturation with depth– even in these kinds of depths there is no escape from acidic waters.</h2>",
-		"Model":	"Models/BubblegumCoral.ply",
+		"Model":	"Models/BubbleGumCoral.ply",
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.6,
