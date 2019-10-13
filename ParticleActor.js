@@ -531,13 +531,17 @@ function RenderScene(Scene,RenderTarget,Camera,Time,GlobalUniforms)
 	{
 		const SetGlobalUniforms = function(Shader)
 		{
-			let SetUniformOfThisArray = function(Key)
+			function SetUniforms(Array)
 			{
-				let Value = this[Key];
-				Shader.SetUniform( Key, Value );
+				function SetUniform(Key)
+				{
+					const Value = Array[Key];
+					Shader.SetUniform( Key, Value );
+				}
+				Object.keys( Array ).forEach( SetUniform );
 			}
-			Object.keys( GlobalUniforms ).forEach( SetUniformOfThisArray.bind(GlobalUniforms) );
-			Object.keys( Actor.Uniforms ).forEach( SetUniformOfThisArray.bind(Actor.Uniforms) );
+			SetUniforms( GlobalUniforms );
+			SetUniforms( Actor.Uniforms );
 		}
 		
 		//try
