@@ -4,8 +4,8 @@
     "-version": "1.4.1",
     "asset": {
       "contributor": { "authoring_tool": "CINEMA4D 16.050 COLLADA Exporter" },
-      "created": "2019-10-12T16:21:08Z",
-      "modified": "2019-10-12T16:21:08Z",
+      "created": "2019-10-14T06:23:52Z",
+      "modified": "2019-10-14T06:23:52Z",
       "unit": {
         "-meter": "0.01",
         "-name": "centimeter"
@@ -13736,7 +13736,7 @@
             "-name": "Animal_AlgalBloom",
             "translate": {
               "-sid": "translate",
-              "#text": "-72.1196 -136.254 -7848.32"
+              "#text": "-72.1196 -47.6679 -7848.32"
             },
             "rotate": [
               {
@@ -14249,7 +14249,7 @@
             "-name": "Bigbang_10",
             "translate": {
               "-sid": "translate",
-              "#text": "-2.55683 -702.556 -606.087"
+              "#text": "-2.55683 -559.077 -542.632"
             },
             "rotate": [
               {
@@ -14276,7 +14276,7 @@
             "-name": "Bigbang_9",
             "translate": {
               "-sid": "translate",
-              "#text": "97.2431 -609.707 -500.706"
+              "#text": "-106.008 -506.24 -459.728"
             },
             "rotate": [
               {
@@ -14303,7 +14303,7 @@
             "-name": "Bigbang_8",
             "translate": {
               "-sid": "translate",
-              "#text": "-8.31968 -497.99 -395.356"
+              "#text": "103.023 -479.651 -385.353"
             },
             "rotate": [
               {
@@ -14330,7 +14330,7 @@
             "-name": "Bigbang_7",
             "translate": {
               "-sid": "translate",
-              "#text": "-82.1142 -409.202 -286.624"
+              "#text": "-79.7138 -409.202 -286.624"
             },
             "rotate": [
               {
@@ -14438,7 +14438,7 @@
             "-name": "Bigbang_3",
             "translate": {
               "-sid": "translate",
-              "#text": "-30.5263 -129.044 96.1795"
+              "#text": "-30.5263 -112.372 96.1795"
             },
             "rotate": [
               {
@@ -14465,7 +14465,7 @@
             "-name": "Bigbang_2",
             "translate": {
               "-sid": "translate",
-              "#text": "-105.258 -7.89143 124.268"
+              "#text": "-105.258 -52.9048 124.268"
             },
             "rotate": [
               {
@@ -14492,7 +14492,7 @@
             "-name": "Bigbang_1",
             "translate": {
               "-sid": "translate",
-              "#text": "109.286 23.1272 72.611"
+              "#text": "109.286 -31.8892 72.611"
             },
             "rotate": [
               {
@@ -14519,7 +14519,7 @@
             "-name": "Bigbang_0",
             "translate": {
               "-sid": "translate",
-              "#text": "-0.408459 23.3441 177.523"
+              "#text": "-0.408459 -11.6663 177.523"
             },
             "rotate": [
               {

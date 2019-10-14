@@ -55,17 +55,17 @@ DebugCamera.LookAt = [ 0,0,-1 ];
 DebugCamera.FarDistance = 400;	//	try not to clip anythig in debug mode
 
 const BigBangExplodeYears = {};
-BigBangExplodeYears[1820] = BigBangAnimalPrefix + '0';
+BigBangExplodeYears[1818] = BigBangAnimalPrefix + '0';
 BigBangExplodeYears[1821] = BigBangAnimalPrefix + '1';
-BigBangExplodeYears[1822] = BigBangAnimalPrefix + '2';
-BigBangExplodeYears[1827] = BigBangAnimalPrefix + '3';
-BigBangExplodeYears[1829] = BigBangAnimalPrefix + '4';
-BigBangExplodeYears[1834] = BigBangAnimalPrefix + '5';
-BigBangExplodeYears[1838] = BigBangAnimalPrefix + '6';
-BigBangExplodeYears[1840] = BigBangAnimalPrefix + '7';
-BigBangExplodeYears[1845] = BigBangAnimalPrefix + '8';
-BigBangExplodeYears[1851] = BigBangAnimalPrefix + '9';
-BigBangExplodeYears[1857] = BigBangAnimalPrefix + '10';
+BigBangExplodeYears[1823] = BigBangAnimalPrefix + '2';
+BigBangExplodeYears[1826] = BigBangAnimalPrefix + '3';
+BigBangExplodeYears[1828] = BigBangAnimalPrefix + '4';
+BigBangExplodeYears[1831] = BigBangAnimalPrefix + '5';
+BigBangExplodeYears[1835] = BigBangAnimalPrefix + '6';
+BigBangExplodeYears[1837] = BigBangAnimalPrefix + '7';
+BigBangExplodeYears[1839] = BigBangAnimalPrefix + '8';
+BigBangExplodeYears[1842] = BigBangAnimalPrefix + '9';
+BigBangExplodeYears[1843] = BigBangAnimalPrefix + '10';
 
 
 function IsAutoClearTextureActor(Actor)
@@ -244,7 +244,8 @@ function GetActorIntersections(CameraScreenUv)
 
 
 const TimelineMinYear				= 1800;
-const TimelineBigBangYear			= 1819;
+const TimelineBigBangStartYear		= 1818;
+const TimelineBigBangEndYear		= 1857;
 const TimelineMinInteractiveYear	= 1860;
 const Timeline_Text1_Year			= 1882;
 const Timeline_Text2_Year			= 1910;
@@ -253,7 +254,6 @@ const TimelineMaxInteractiveYear	= 2100;
 const TimelineSolutionYear			= 2146;
 const TimelineMaxYear				= 2160;
 
-const BigBangDuration = 33;
 
 Params.TimelineYear = TimelineMinYear;
 Params.YearsPerSecond = 1;
@@ -1065,7 +1065,7 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	UpdateFog(FrameDuration);
 	
 	//	fly until we hit big bang
-	if ( Params.TimelineYear >= TimelineBigBangYear )
+	if ( Params.TimelineYear >= TimelineBigBangStartYear )
 		return Acid.State_BigBang;
 	
 	//	stay flying
@@ -1140,7 +1140,7 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	Object.keys(BigBangExplodeYears).forEach( ExplodeActor );
 	
 	
-	if ( StateTime < BigBangDuration )
+	if ( CurrentYear < TimelineBigBangEndYear )
 		return null;
 	
 	return Acid.State_Fly;
