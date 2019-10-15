@@ -433,6 +433,9 @@ function AddSwirlActor()
 	//CreateSplineActors( PushActor );
 	
 	{
+		//	reset previous asset
+		//	gr: maybe need a better idea here (like set an incrementing function name, or generate the asset now)
+		InvalidateAsset('GenerateRandomSplinePathVertexes()');
 		let Actor = new TActor();
 		Actor.Name = "Swirl";
 		let SplineStartPos = GetSplineStartPos();
@@ -1533,7 +1536,8 @@ function Update(FrameDurationSecs)
 	}
 	
 	//	create some swirls
-	if ( Params.CreateSwirlEveryXYears )
+	const SwirlsEnabled = Timeline.GetUniform( Time, 'SwirlsEnabled' );
+	if ( Params.AlwaysCreateSwirls || SwirlsEnabled )
 	{
 		if ( !Acid.LastSwirlYear )
 			Acid.LastSwirlYear = 9999;
@@ -1542,6 +1546,7 @@ function Update(FrameDurationSecs)
 		const YearsSinceNewSwirl = Math.abs( Acid.LastSwirlYear - Time );
 		if ( YearsSinceNewSwirl >= Params.CreateSwirlEveryXYears )
 		{
+			Pop.Debug("AddSwirlActor",Time);
 			AddSwirlActor();
 			Acid.LastSwirlYear = Time;
 		}

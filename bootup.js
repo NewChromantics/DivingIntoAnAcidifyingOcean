@@ -232,30 +232,34 @@ Params.DustParticles_BoundsY = 2;
 Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
-Params.Swirl_TriangleScale = 0.012;
+Params.Swirl_TriangleScale = 0.0033;
 Params.Swirl_Physics_SpringScale = 50.0;
 Params.Swirl_Physics_MaxSpringForce = 50.0;
 Params.Swirl_Physics_Damping = 0.20;
 Params.Swirl_Physics_CustomSplineTime = false;
 Params.Swirl_Physics_SplineTime = 0.0;
 Params.Swirl_Physics_SplineDuration = 10.00;
-Params.Swirl_Physics_SplineTimeRange = 0.07;
+Params.Swirl_Physics_SplineTimeRange = 0.105;
 Params.Swirl_Physics_SplineStrips = 6;
-Params.Swirl_Physics_LocalNoiseScale = 0.0;
-Params.Swirl_Physics_SplineNoiseScale = 0.36;
-Params.Swirl_NodeCount = 16;
+Params.Swirl_Physics_LocalNoiseScale = 0.204;
+Params.Swirl_Physics_SplineNoiseScale = 0.38;
+Params.Swirl_NodeCount = 26;
 Params.Swirl_PathLoop = false;
 Params.Swirl_PersistentPath = false;	//	for editor
-Params.Swirl_PointCount = 50000;
+Params.Swirl_PointCount = 40000;
 Params.Swirl_LinearTest = false;
 Params.Swirl_NodeDistance = 0.70;
 Params.Swirl_ShowPathNodePoints = false;
 Params.Spline_PointCount = 200;
 Params.Spline_LerpToTarget = 0.35;
-Params.Spline_ForwardDeviateX = 1.9;
-Params.Spline_ForwardDeviateY = 2.6;
+Params.Spline_ForwardDeviateX = 2.4;
+Params.Spline_ForwardDeviateY = 1.5;
 Params.Spline_ForwardDeviateZ = 1.2;
-Params.CreateSwirlEveryXYears = 4;	//	0 doesn't create
+Params.Swirl_StartPositionX = 0;
+Params.Swirl_StartPositionY = -0.1;
+Params.Swirl_StartPositionZ = 3.0;
+Params.AlwaysCreateSwirls = false;	//	for debug
+Params.CreateSwirlEveryXYears = 10;
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
@@ -340,6 +344,10 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Spline_ForwardDeviateX',0,10);
 	ParamsWindow.AddParam('Spline_ForwardDeviateY',0,10);
 	ParamsWindow.AddParam('Spline_ForwardDeviateZ',0,10);
+	ParamsWindow.AddParam('Swirl_StartPositionX',-5,5);
+	ParamsWindow.AddParam('Swirl_StartPositionY',-5,5);
+	ParamsWindow.AddParam('Swirl_StartPositionZ',-5,5);
+	ParamsWindow.AddParam('AlwaysCreateSwirls');
 	ParamsWindow.AddParam('CreateSwirlEveryXYears',0,50);
 
 	

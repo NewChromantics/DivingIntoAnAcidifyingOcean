@@ -2,6 +2,7 @@
 	"1800":
 	{
 		"YearsPerSecond":1,
+		"SwirlsEnabled":false,
 		"HintClickAnimalVisible":false,
 		"HintDragTimelineVisible":false,
 		"StatsVisible":false,
@@ -50,7 +51,8 @@
 	},
 	"1812":
 	{
-		"Subtitle":" "
+		"Subtitle":"",
+		"SwirlsEnabled":true
 	},
 
 	"1815":
