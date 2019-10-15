@@ -8,7 +8,7 @@ const UpdateVelocitySwirlShader = RegisterShaderAssetFilename('PhysicsIteration_
 const UpdatePositionShader = RegisterShaderAssetFilename('PhysicsIteration_UpdatePosition.frag.glsl','Quad.vert.glsl');
 
 //	pos+velocity
-const UpdateSwirlShader = null;//RegisterShaderAssetFilename('PhysicsIteration_UpdateSwirl.frag.glsl','Quad.vert.glsl');
+const UpdateSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateSwirl.frag.glsl','Quad.vert.glsl');
 
 const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
 
@@ -234,6 +234,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 			
 			Shader.SetUniform('LastVelocitys',VelocityScratchTexture);
 			Shader.SetUniform('OrigPositions',PositionOrigTexture);
+			Shader.SetUniform('OrigPositionsWidthHeight', [PositionOrigTexture.GetWidth(),PositionOrigTexture.GetHeight()] );
 			
 			if ( UpdateVelocityShader )
 				Shader.SetUniform('Velocitys',VelocityTexture);
