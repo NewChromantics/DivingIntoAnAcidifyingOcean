@@ -232,17 +232,17 @@ Params.DustParticles_BoundsY = 2;
 Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
-Params.Swirl_TriangleScale = 0.0033;
-Params.Swirl_Physics_SpringScale = 50.0;
-Params.Swirl_Physics_MaxSpringForce = 50.0;
+Params.Swirl_TriangleScale = 0.007567000000000001;
+Params.Swirl_Physics_SpringScale = 69.8;
+Params.Swirl_Physics_MaxSpringForce = 62;
 Params.Swirl_Physics_Damping = 0.20;
 Params.Swirl_Physics_CustomSplineTime = false;
 Params.Swirl_Physics_SplineTime = 0.0;
-Params.Swirl_Physics_SplineDuration = 10.00;
-Params.Swirl_Physics_SplineTimeRange = 0.105;
-Params.Swirl_Physics_SplineStrips = 6;
-Params.Swirl_Physics_LocalNoiseScale = 0.204;
-Params.Swirl_Physics_SplineNoiseScale = 0.38;
+Params.Swirl_Physics_SplineDuration = 12.9;
+Params.Swirl_Physics_SplineTimeRange = 0.061;
+Params.Swirl_Physics_SplineStrips = 3;
+Params.Swirl_Physics_LocalNoiseScale = 0;
+Params.Swirl_Physics_SplineNoiseScale = 0.14;
 Params.Swirl_NodeCount = 26;
 Params.Swirl_PathLoop = false;
 Params.Swirl_PersistentPath = false;	//	for editor
@@ -259,7 +259,7 @@ Params.Swirl_StartPositionX = 0;
 Params.Swirl_StartPositionY = -0.1;
 Params.Swirl_StartPositionZ = 3.0;
 Params.AlwaysCreateSwirls = false;	//	for debug
-Params.CreateSwirlEveryXYears = 10;
+Params.CreateSwirlEveryXYears = 1;
 
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
