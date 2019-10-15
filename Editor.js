@@ -314,7 +314,7 @@ function CreateEditorActorScene()
 		
 		if ( IsSwirlActor )
 		{
-			SetupAnimalTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
+			SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
 		}
 		else if ( IsDustActor )
 		{
@@ -403,16 +403,31 @@ class TAssetEditor
 		this.Window.OnRender = this.Render.bind(this);
 		this.Camera = CreateDebugCamera(this.Window);
 		this.Time = 0;
+		this.CreateEditorParamsWindow();
+
+		this.ReloadScene();
+	}
+	
+	ReloadScene(ResetSpline=true)
+	{
+		if ( ResetSpline )
+			SplineRandomPointSet = null;
 		this.Scene = CreateEditorActorScene();
 		this.SceneInitTime = this.Time;
-
-		this.CreateEditorParamsWindow();
 	}
 	
 	Update(FrameDurationSecs,Time)
 	{
 		this.Time = Time;
 		//Pop.Debug("Update",FrameDurationSecs);
+		
+		//	update actors in the scene
+		this.Scene = this.Scene.filter( a => a.Update(FrameDurationSecs) );
+		if ( this.Scene.length == 0 )
+		{
+			this.ReloadScene();
+			return;
+		}
 		
 		const SceneTime = ( this.Time - this.SceneInitTime );
 		if ( SceneTime > EditorParams.EnablePhysicsAfterSecs )
@@ -422,9 +437,7 @@ class TAssetEditor
 		
 		if ( SceneTime > EditorParams.ReloadAfterSecs )
 		{
-			SplineRandomPointSet = null;
-			this.Scene = CreateEditorActorScene();
-			this.SceneInitTime = this.Time;
+			this.ReloadScene();
 			return;
 		}
 		
@@ -521,8 +534,7 @@ class TAssetEditor
 		//	reload scene if actor changes
 		if ( ReloadSceneOnParamChanged.includes(ChangedParamName) )
 		{
-			this.Scene = CreateEditorActorScene();
-			this.SceneInitTime = this.Time;
+			this.ReloadScene(false);
 		}
 	}
 	

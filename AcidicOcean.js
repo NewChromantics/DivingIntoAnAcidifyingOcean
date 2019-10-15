@@ -436,7 +436,7 @@ function AddSwirlActor()
 		let SplineStartPos = GetSplineStartPos();
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...SplineStartPos );
 		
-		SetupAnimalTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
+		SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
 		Acid.CameraScene.push( Actor );
 		Actor.UpdatePhysics = true;
 		//Actor.BoundingBox.Min = [-100,-100,-100];
@@ -468,12 +468,12 @@ function LoadCameraScene(Filename)
 		let IsAnimalActor = IsActorSelectable(Actor);
 		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
 		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
-		
+		const IsSwirlActor = ActorNode.Name.startsWith(SwirlActorPrefix);
 		
 		if ( ShowDefaultActors )
 			IsAnimalActor = false;
 		
-		const IsParticleActor = IsAnimalActor || IsDebrisActor || IsOceanActor;
+		const IsParticleActor = IsSwirlActor || IsAnimalActor || IsDebrisActor || IsOceanActor;
 		
 		//if ( !ShowDefaultActors && IsParticleActor )
 		if ( IsParticleActor )
@@ -483,7 +483,11 @@ function LoadCameraScene(Filename)
 			Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...WorldPos );
 			Actor.BoundingBox = ActorNode.BoundingBox;
 			
-			if ( IsOceanActor )
+			if ( IsSwirlActor )
+			{
+				SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
+			}
+			else if ( IsOceanActor )
 			{
 				SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
 			}

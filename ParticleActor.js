@@ -444,6 +444,23 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	
 }
 
+function SetupSwirlTextureBufferActor(Filename,GetMeta)
+{
+	SetupAnimalTextureBufferActor.call( this, ...arguments );
+	
+	this.Update = function()
+	{
+		const Meta = GetMeta(this);
+		
+		//	check if we've reached the end of the spline
+		const SplineMin = Meta.PhysicsUniforms.SplineTime - Meta.PhysicsUniforms.SplineTimeRange;
+		if ( SplineMin >= 1 )
+			return false;
+
+		return true;
+	}
+	
+}
 
 
 function TActor(Transform,Geometry,Shader,Uniforms)
@@ -454,6 +471,12 @@ function TActor(Transform,Geometry,Shader,Uniforms)
 	this.RenderShader = Shader;
 	this.Uniforms = Uniforms || [];
 	this.BoundingBox = null;
+	
+	this.Update = function(TimeStepSecs)
+	{
+		//	return false to delete actor
+		return true;
+	}
 	
 	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
 	{
