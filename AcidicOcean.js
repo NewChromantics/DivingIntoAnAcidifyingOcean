@@ -432,7 +432,6 @@ function AddSwirlActor()
 	
 	{
 		let Actor = new TActor();
-		Actor.SpawnTime = Pop.GetTimeNowMs();
 		Actor.Name = "Swirl";
 		let SplineStartPos = GetSplineStartPos();
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...SplineStartPos );

@@ -441,6 +441,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 
 function TActor(Transform,Geometry,Shader,Uniforms)
 {
+	this.SpawnTime = Pop.GetTimeNowMs();
 	this.LocalToWorldTransform = Transform;
 	this.Geometry = Geometry;
 	this.RenderShader = Shader;
