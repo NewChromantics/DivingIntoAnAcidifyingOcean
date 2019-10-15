@@ -810,7 +810,7 @@ function GetSwirlMeta(Actor)
 
 	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
-	Meta.OverridingColourTexture = Noise_TurbulenceTexture;
+	Meta.OverridingColourTexture = SwirlColourTexture;
 	
 	//Meta.FitToBoundingBox = true;
 	return Meta;

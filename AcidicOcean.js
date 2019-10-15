@@ -43,6 +43,7 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
+var SwirlColourTexture = new Pop.Image();
 
 const LastUpdateColourTextureElapsed = {};
 
@@ -320,8 +321,16 @@ Params.Ocean_Colour7 = InvalidColour;
 Params.Ocean_Colour8 = InvalidColour;
 Params.Ocean_Colour9 = InvalidColour;
 
-
-
+Params.Swirl_Colour0 = [0.67,0.00,0.00];
+Params.Swirl_Colour1 = [1.00,0.00,0.05];
+Params.Swirl_Colour2 = [0.71,0.02,0.13];
+Params.Swirl_Colour3 = [1.00,0.00,0.22];
+Params.Swirl_Colour4 = [1.00,0.33,0.31];
+Params.Swirl_Colour5 = [0.92,0.02,0.25];
+Params.Swirl_Colour6 = [0.80,0.05,0.09];
+Params.Swirl_Colour7 = [1.00,0.82,0.29];
+Params.Swirl_Colour8 = [1.00,0.90,0.09];
+Params.Swirl_Colour9 = [0.51,0.25,0.12];
 
 
 let OnParamsChanged = function(Params,ChangedParamName)
@@ -405,6 +414,16 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('Ocean_Colour7','Colour');
 	ParamsWindow.AddParam('Ocean_Colour8','Colour');
 	ParamsWindow.AddParam('Ocean_Colour9','Colour');
+	ParamsWindow.AddParam('Swirl_Colour0','Colour');
+	ParamsWindow.AddParam('Swirl_Colour1','Colour');
+	ParamsWindow.AddParam('Swirl_Colour2','Colour');
+	ParamsWindow.AddParam('Swirl_Colour3','Colour');
+	ParamsWindow.AddParam('Swirl_Colour4','Colour');
+	ParamsWindow.AddParam('Swirl_Colour5','Colour');
+	ParamsWindow.AddParam('Swirl_Colour6','Colour');
+	ParamsWindow.AddParam('Swirl_Colour7','Colour');
+	ParamsWindow.AddParam('Swirl_Colour8','Colour');
+	ParamsWindow.AddParam('Swirl_Colour9','Colour');
 
 	Params.InitParamsWindow( ParamsWindow );
 }
@@ -1508,6 +1527,7 @@ function Update(FrameDurationSecs)
 		const UpdateReflection = true;	//	gr: thought this might be a hit updating the dom, but it's not
 		const DebrisColours = Timeline.GetUniform( Time, 'DebrisColours' );
 		const OceanColours = Timeline.GetUniform( Time, 'OceanColours' );
+		const SwirlColours = Timeline.GetUniform( Time, 'SwirlColours' );
 
 		function CopyValue(Value,Index,NamePrefix)
 		{
@@ -1523,10 +1543,12 @@ function Update(FrameDurationSecs)
 		}
 		CopyValues( DebrisColours, 'Debris_Colour' );
 		CopyValues( OceanColours, 'Ocean_Colour' );
+		CopyValues( SwirlColours, 'Swirl_Colour' );
 	}
 	
 	UpdateColourTexture( FrameDurationSecs, OceanColourTexture, 'Ocean_Colour' );
 	UpdateColourTexture( FrameDurationSecs, DebrisColourTexture, 'Debris_Colour' );
+	UpdateColourTexture( FrameDurationSecs, SwirlColourTexture, 'Swirl_Colour' );
 
 	//	update frame rate
 	if ( !Params.CustomYearsPerSecond )
@@ -1760,6 +1782,7 @@ function Render(RenderTarget,RenderCamera)
 	{
 		DebugTextures.push( OceanColourTexture );
 		DebugTextures.push( DebrisColourTexture );
+		DebugTextures.push( SwirlColourTexture );
 		DebugTextures.push( RandomTexture );
 		DebugTextures.push( Noise_TurbulenceTexture );
 	}
