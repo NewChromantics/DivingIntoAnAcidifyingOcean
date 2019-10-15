@@ -223,6 +223,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	this.UpdateVelocityShader = Meta.VelocityShader;
 	this.UpdatePositionShader = Meta.PositionShader;
 	this.UpdatePhysics = false;
+	this.UpdatePhysicsFirst = true;
 	
 	if ( Meta.FitToBoundingBox )
 	{
@@ -290,6 +291,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	
 		this.ScratchVelocityTexture.Copy( this.VelocityTexture );
 		this.ScratchPositionTexture.Copy( this.PositionTexture );
+		this.UpdatePhysicsFirst = true;
 	}
 	
 	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
@@ -308,6 +310,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		
 		const Meta = GetMeta(this);
 		const TriangleCount = this.TextureBuffers.TriangleCount;
+		const FirstUpdate = this.UpdatePhysicsFirst;
+		this.UpdatePhysicsFirst = false;
 		const SetAnimalPhysicsUniforms = function(Shader)
 		{
 			SetPhysicsUniforms(Shader);
@@ -319,6 +323,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			}
 			Object.keys( Meta.PhysicsUniforms ).forEach( ApplyUniform );
 			
+			if ( FirstUpdate )
+				Pop.Debug("Physics first update");
+			Shader.SetUniform('FirstUpdate', FirstUpdate );
 			Shader.SetUniform('PositionCount',TriangleCount);
 		}
 		
@@ -744,6 +751,8 @@ function GetSwirlMeta(Actor)
 	Meta.PhysicsUniforms.Damping = Params.Swirl_Physics_Damping;
 	Meta.PhysicsUniforms.SpringScale = Params.Swirl_Physics_SpringScale;
 	Meta.PhysicsUniforms.MaxSpringForce = Params.Swirl_Physics_MaxSpringForce;
+	Meta.PhysicsUniforms.StringStrips = Params.Swirl_Physics_SplineStrips;
+	
 	if ( Params.Swirl_Physics_CustomSplineTime )
 	{
 		Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
@@ -753,12 +762,11 @@ function GetSwirlMeta(Actor)
 		if ( Actor && Actor.SpawnTime )
 		{
 			let Time = Pop.GetTimeNowMs() - Actor.SpawnTime;
-			
+					
 			Time /= 1000;
 			Time /= Params.Swirl_Physics_SplineDuration;
 			
 			Meta.PhysicsUniforms.SplineTime = Time;
-			Pop.Debug("Splinetime",Meta.PhysicsUniforms.SplineTime);
 		}
 		else
 		{
@@ -766,10 +774,11 @@ function GetSwirlMeta(Actor)
 			Meta.PhysicsUniforms.SplineTime %= 1;
 		}
 	}
+	//Pop.Debug("SplineTime",Meta.PhysicsUniforms.SplineTime);
 	
 	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;
 	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
-	Meta.PhysicsUniforms.NoiseScale = Params.Swirl_Physics_NoiseScale;
+	Meta.PhysicsUniforms.LocalNoiseScale = Params.Swirl_Physics_LocalNoiseScale;
 	Meta.PhysicsUniforms.SplineNoiseScale = Params.Swirl_Physics_SplineNoiseScale;
 	
 	

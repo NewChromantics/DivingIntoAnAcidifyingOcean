@@ -154,7 +154,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 	{
 		try
 		{
-			Pop.Debug("Physics iteration");
+			//Pop.Debug("Physics iteration");
 			//	copy old positions
 			let CopyToScratch = function(RenderTarget)
 			{

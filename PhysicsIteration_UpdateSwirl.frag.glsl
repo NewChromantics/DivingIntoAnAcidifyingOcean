@@ -15,13 +15,16 @@ uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
 uniform float Damping;
 
-uniform float NoiseScale;
+uniform float LocalNoiseScale;
 uniform float SplineNoiseScale;
 
 uniform float SpringScale;// = 0.1;
 uniform float MaxSpringForce;
 uniform float SplineTime;
 uniform float SplineTimeRange;
+uniform float StringStrips;
+
+uniform bool FirstUpdate;
 
 float Range(float Min,float Max,float Value)
 {
@@ -62,7 +65,42 @@ float2 PositionIndexToUv(float TriangleIndex)
 	return uv;
 }
 
-float3 GetSpringTargetPos(float2 uv,float2 NoiseUv)
+float2 GetNoiseUv(float2 uv)
+{
+	//	put gaps in the noise
+	float x = uv.x;
+	float Strips = max( 1.0, StringStrips );
+	x *= Strips;
+	//	shrink remainder
+	float Frac = fract( x ) * 0.1;
+	x = floor( x ) + Frac;
+	
+	//	scale back down again
+	x /= Strips;
+	
+	return float2( x, uv.y );
+}
+
+
+float2 GetNoiseUvFromIndex(float IndexNormal)
+{
+	//	Index normal is 0-1 along spline (1 further along length)
+	//	we want length-wise strips, so split inside chunks, instead of by-chunk
+	float Strips = max( 1.0, StringStrips );
+
+	float Index = IndexNormal * PositionCount;
+	float Row = floor( mod( Index, Strips ) ) / Strips;
+	float Col = IndexNormal;
+	
+	return float2( Col, Row );
+}
+
+float Clamp01(float Value)
+{
+	return max( 0.0, min( 0.99, Value ) );
+}
+
+float3 GetSpringTargetPos(float2 uv)
 {
 	//	retarget uv
 	//	uv -> index
@@ -72,30 +110,35 @@ float3 GetSpringTargetPos(float2 uv,float2 NoiseUv)
 	float Index = PositionUvToIndex( uv );
 	float Normal = Index / PositionCount;
 
-	//Normal += SplineTime;
-	//Normal = fract(Normal);
-	float Min = max( 0.0, SplineTime-SplineTimeRange );
-	float Max = min( 1.0, SplineTime+SplineTimeRange );
-	Normal = mix( Min, Max, Normal );
+	//	we now have 0-1 for us
+	//	find a position along the spline
+	float SplineMin = Clamp01( SplineTime-SplineTimeRange );
+	float SplineMax = Clamp01( SplineTime+SplineTimeRange );
+	float SplineSampleTime = mix( SplineMin, SplineMax, Normal );
 	
-	Index = Normal * PositionCount;
-	uv = PositionIndexToUv( Index );
+	float2 SplinePosUv = PositionIndexToUv( SplineSampleTime * PositionCount );
+	float3 SplinePos = texture2D( OrigPositions, SplinePosUv ).xyz;
+
+	//	get noise related to our spline position to make divergence from the path as strips
+	float2 SplineNoiseUv = GetNoiseUvFromIndex( Normal );
+	float3 SplineNoise = texture2D( Noise, SplineNoiseUv ).xyz;
+	float3 SplineNoiseScale3 = float3(SplineNoiseScale,SplineNoiseScale,SplineNoiseScale) * 0.5;
+	SplineNoise = mix( -SplineNoiseScale3, SplineNoiseScale3, SplineNoise );
+	SplinePos += SplineNoise;
 	
-	float3 SplinePos = texture2D( OrigPositions, uv ).xyz;
-	
-	float3 Noise = texture2D( Noise, NoiseUv ).xyz;
-	float3 NoiseScale3 = float3(SplineNoiseScale,SplineNoiseScale,SplineNoiseScale) * 0.5;
-	Noise = mix( -NoiseScale3, NoiseScale3, Noise );
-	SplinePos += Noise;
+	//	additional noise which when using perlin/flowy noise spreads them out into ribbons
+	float3 LocalNoise = texture2D( Noise, uv ).xyz;
+	float3 LocalNoiseScale3 = float3(LocalNoiseScale,LocalNoiseScale,LocalNoiseScale) * 0.5;
+	LocalNoise = mix( -LocalNoiseScale3, LocalNoiseScale3, LocalNoise );
+	SplinePos += LocalNoise;
 	
 	return SplinePos;
 }
 
 
-float3 GetSpringForce(float2 uv)
+float3 GetSpringForce(float3 LastPos,float2 uv)
 {
-	vec3 OrigPos = GetSpringTargetPos( uv, uv.yx );
-	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
+	vec3 OrigPos = GetSpringTargetPos( uv );
 	
 	float3 Force = (OrigPos - LastPos) * SpringScale;
 	float ForceMagnitude = length( Force );
@@ -104,20 +147,18 @@ float3 GetSpringForce(float2 uv)
 	return Force;
 }
 
-float3 GetNoiseForce(float2 uv)
-{
-	float3 Noise = texture2D( Noise, uv ).xyz;
-	float3 NoiseScale3 = float3(NoiseScale,NoiseScale,NoiseScale) * 0.5;
-	Noise = mix( -NoiseScale3, NoiseScale3, Noise );
-	return Noise;
-}
 	
 void main()
 {
 	vec4 Vel = texture2D( LastVelocitys, uv );
-
-	//Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
-	Vel.xyz += GetSpringForce(uv) * PhysicsStep;
+	vec4 Pos = texture2D( LastPositions, uv );
+	
+	//Pos.xyz = GetSpringTargetPos(uv);
+	
+	if ( FirstUpdate )
+		Pos.xyz = GetSpringTargetPos(uv);
+	
+	Vel.xyz += GetSpringForce(Pos.xyz,uv) * PhysicsStep;
  
 	//	damping
 	Vel.xyz *= 1.0 - Damping;
@@ -125,8 +166,6 @@ void main()
 	//Vel = float4(0.4,0,0,1);
 	Vel.w = 1.0;
 	
-	vec4 Pos = texture2D( LastPositions, uv );
-
 	Pos += Vel * PhysicsStep;
 	Pos.w = 1.0;
 	

@@ -35,7 +35,7 @@ EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
 EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
-EditorParams.ActorNodeName = SplineActorPrefix;
+//EditorParams.ActorNodeName = SplineActorPrefix;
 
 EditorParams.ReloadAfterSecs = 300;
 EditorParams.EnablePhysicsAfterSecs = 1;

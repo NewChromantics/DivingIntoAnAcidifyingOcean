@@ -232,16 +232,17 @@ Params.DustParticles_BoundsY = 2;
 Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
-Params.Swirl_TriangleScale = 0.002;
+Params.Swirl_TriangleScale = 0.012;
 Params.Swirl_Physics_SpringScale = 50.0;
 Params.Swirl_Physics_MaxSpringForce = 50.0;
 Params.Swirl_Physics_Damping = 0.20;
 Params.Swirl_Physics_CustomSplineTime = false;
 Params.Swirl_Physics_SplineTime = 0.0;
-Params.Swirl_Physics_SplineDuration = 5.00;
+Params.Swirl_Physics_SplineDuration = 10.00;
 Params.Swirl_Physics_SplineTimeRange = 0.07;
-Params.Swirl_Physics_NoiseScale = 0.0;
-Params.Swirl_Physics_SplineNoiseScale = 1.7;
+Params.Swirl_Physics_SplineStrips = 6;
+Params.Swirl_Physics_LocalNoiseScale = 0.0;
+Params.Swirl_Physics_SplineNoiseScale = 0.36;
 Params.Swirl_NodeCount = 16;
 Params.Swirl_PathLoop = false;
 Params.Swirl_PersistentPath = false;	//	for editor
@@ -323,8 +324,9 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Swirl_Physics_CustomSplineTime');
 	ParamsWindow.AddParam('Swirl_Physics_SplineTime',0,1);
 	ParamsWindow.AddParam('Swirl_Physics_SplineDuration',0,30);
+	ParamsWindow.AddParam('Swirl_Physics_SplineStrips',1,100,Math.floor);
 	ParamsWindow.AddParam('Swirl_Physics_SplineTimeRange',0,1);
-	ParamsWindow.AddParam('Swirl_Physics_NoiseScale',0,20);
+	ParamsWindow.AddParam('Swirl_Physics_LocalNoiseScale',0,2);
 	ParamsWindow.AddParam('Swirl_Physics_SplineNoiseScale',0,20);
 	ParamsWindow.AddParam('Swirl_NodeCount',4,200,Math.floor);
 	ParamsWindow.AddParam('Swirl_PointCount',1,90000,Math.floor);
