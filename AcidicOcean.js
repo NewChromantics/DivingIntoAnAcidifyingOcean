@@ -646,6 +646,12 @@ function GetActorScene(Filter)
 	return Scene;
 }
 
+function UpdateActorScene(TimeStep)
+{
+	//	update all actors and delete any that return false
+	Acid.CameraScene = Acid.CameraScene.filter( a => a.Update(TimeStep) );
+}
+
 
 //	get scene graph
 function GetRenderScene(GetActorScene,Time)
@@ -1539,6 +1545,8 @@ function Update(FrameDurationSecs)
 		}
 	}
 	
+	UpdateActorScene(FrameDurationSecs);
+	
 	//	mark actors visible this frame
 	UpdateSceneVisibility(Time);
 	
@@ -1580,6 +1588,7 @@ function Update(FrameDurationSecs)
 	
 	RenderFrameDurationSecs = FrameDurationSecs;
 }
+
 
 //	set the actor visibility for this frame
 //	setup new animal actors where neccessary
