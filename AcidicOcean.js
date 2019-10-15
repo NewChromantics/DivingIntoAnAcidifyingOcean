@@ -415,7 +415,9 @@ function AddSwirlActor()
 	function GetSplineStartPos()
 	{
 		const Pos = Acid.GetCameraPosition();
-		Pos[1] += -0.1;
+		Pos[0] += Params.Swirl_StartPositionX;
+		Pos[1] += Params.Swirl_StartPositionY;
+		Pos[2] += Params.Swirl_StartPositionZ;
 		return Pos;
 	}
 	
