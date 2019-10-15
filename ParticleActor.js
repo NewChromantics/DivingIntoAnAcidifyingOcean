@@ -375,8 +375,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			ColourTexture = RandomTexture;
 		
 		//	limit number of triangles
+		let Lod = (Meta.Lod !== undefined) ? Meta.Lod : Params.AnimalBufferLod;
 		let TriangleCount = Math.min(AutoTriangleMeshCount, Actor.TextureBuffers.TriangleCount) || AutoTriangleMeshCount;
-		TriangleCount = Math.floor(TriangleCount * Params.AnimalBufferLod);
+		TriangleCount = Math.floor(TriangleCount * Lod);
 		//Pop.Debug("TriangleCount", TriangleCount);
 		
 		const SetUniforms = function(Shader)
@@ -804,7 +805,9 @@ function GetSwirlMeta(Actor)
 	Meta.PhysicsUniforms.LocalNoiseScale = Params.Swirl_Physics_LocalNoiseScale;
 	Meta.PhysicsUniforms.SplineNoiseScale = Params.Swirl_Physics_SplineNoiseScale;
 	
-	
+	Meta.Lod = 1 - Math.RangeClamped( 1 - Meta.PhysicsUniforms.SplineTimeRange, 1, Meta.PhysicsUniforms.SplineTime );
+	Meta.Lod *= Params.AnimalBufferLod;
+
 	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
 	Meta.OverridingColourTexture = Noise_TurbulenceTexture;
