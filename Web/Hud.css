@@ -96,10 +96,44 @@
 #SubtitleSkip
 {
 	position:		absolute;
-	left:			50vw;
-	top:			85vh;
-	width:			80vw;
-	height:			5vh;
+	right:			2.5vw;
+	top:			90vh;
+	width:			10vw;
+	xxxheight:			5vh;
+	font-size:		1.5vh;
+	
+	text-decoration:	underline;
+	
+	text-align:			center;
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+#Next_Text
+{
+	position:		absolute;
+	right:			1.5vw;
+	top:			87vh;
+	width:			10vw;
+	xxxheight:			5vh;
+	font-size:		1.5vh;
+	
+	text-decoration:	underline;
+	
+	text-align:			center;
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+#Prev_Text
+{
+	position:		absolute;
+	left:			1.5vw;
+	top:			87vh;
+	width:			10vw;
+	xxxheight:			5vh;
 	font-size:		1.5vh;
 	
 	text-decoration:	underline;
@@ -140,11 +174,11 @@
 	font-size:		1.5vh;
 	line-height:	3vh;
 	position:		absolute;
-	right:			1.5vw;
+	left:			2vw;
 	top:			5vh;
 	width:			23vh;
 	height:			15vh;
-	text-align: right;
+	text-align: left;
 
 }
 
