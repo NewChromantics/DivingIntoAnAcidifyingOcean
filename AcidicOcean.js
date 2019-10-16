@@ -1049,6 +1049,9 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	Update( FrameDuration );
 
+	//	no timeline!
+	Hud.Timeline.SetVisible(false);
+	
 	const AnimalBounds = GetActorWorldBoundingBox(Acid.SelectedActor);
 	
 	//	target the near side of the bounds (this helps for meshes which are offset, as well as size)
