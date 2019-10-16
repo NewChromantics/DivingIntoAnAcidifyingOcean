@@ -234,13 +234,13 @@ Params.DustParticles_OffsetZ = 2.8;
 
 Params.Swirl_TriangleScale = 0.007567000000000001;
 Params.Swirl_Physics_SpringScale = 69.8;
-Params.Swirl_Physics_MaxSpringForce = 62;
+Params.Swirl_Physics_MaxSpringForce = 45.3;
 Params.Swirl_Physics_Damping = 0.20;
 Params.Swirl_Physics_CustomSplineTime = false;
-Params.Swirl_Physics_SplineTime = 0.0;
-Params.Swirl_Physics_SplineDuration = 13.0;
+Params.Swirl_Physics_SplineTime = 0.148;
+Params.Swirl_Physics_SplineDuration = 13.86;
 Params.Swirl_Physics_SplineTimeRange = 0.061;
-Params.Swirl_Physics_SplineStrips = 3;
+Params.Swirl_Physics_SplineStrips = 22;
 Params.Swirl_Physics_LocalNoiseScale = 0;
 Params.Swirl_Physics_SplineNoiseScale = 0.14;
 Params.Swirl_NodeCount = 40;
