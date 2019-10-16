@@ -439,7 +439,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		
 		ClearTexture( this.PositionTexture );
 		ClearTexture( this.VelocityTexture );
-		ClearTexture( this.ScratchTexture );
+		ClearTexture( this.ScratchVelocityTexture );
+		ClearTexture( this.ScratchPositionTexture );
 		//ClearTexture( this.PositionOrigTexture );
 	}
 	
@@ -456,8 +457,11 @@ function SetupSwirlTextureBufferActor(Filename,GetMeta)
 		//	check if we've reached the end of the spline
 		const SplineMin = Meta.PhysicsUniforms.SplineTime - Meta.PhysicsUniforms.SplineTimeRange;
 		if ( SplineMin >= 1 )
+		{
+			//	cleanup
+			this.ClearOpenglTextures();
 			return false;
-
+		}
 		return true;
 	}
 	
