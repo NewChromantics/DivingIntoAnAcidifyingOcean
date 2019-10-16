@@ -113,7 +113,7 @@ float3 GetSpringTargetPos(float2 uv)
 	//	we now have 0-1 for us
 	//	find a position along the spline
 	float SplineMin = Clamp01( SplineTime-SplineTimeRange );
-	float SplineMax = Clamp01( SplineTime+SplineTimeRange );
+	float SplineMax = Clamp01( SplineTime );
 	float SplineSampleTime = mix( SplineMin, SplineMax, Normal );
 	
 	float2 SplinePosUv = PositionIndexToUv( SplineSampleTime * PositionCount );

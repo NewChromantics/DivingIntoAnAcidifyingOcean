@@ -51,8 +51,7 @@
 	},
 	"1812":
 	{
-		"Subtitle":"",
-		"SwirlsEnabled":true
+		"Subtitle":""
 	},
 
 	"1815":
@@ -125,7 +124,7 @@
 
 	"1882":
 	{
-		"EnableSwirls":true
+		"SwirlsEnabled":true
 	},
 	
 	"1884":

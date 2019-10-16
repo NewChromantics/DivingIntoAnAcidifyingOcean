@@ -780,7 +780,8 @@ function GetSwirlMeta(Actor)
 	Meta.PhysicsUniforms.SpringScale = Params.Swirl_Physics_SpringScale;
 	Meta.PhysicsUniforms.MaxSpringForce = Params.Swirl_Physics_MaxSpringForce;
 	Meta.PhysicsUniforms.StringStrips = Params.Swirl_Physics_SplineStrips;
-	
+	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;
+
 	if ( Params.Swirl_Physics_CustomSplineTime )
 	{
 		Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;
@@ -804,17 +805,21 @@ function GetSwirlMeta(Actor)
 	}
 	//Pop.Debug("SplineTime",Meta.PhysicsUniforms.SplineTime);
 	
-	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;
 	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
 	Meta.PhysicsUniforms.LocalNoiseScale = Params.Swirl_Physics_LocalNoiseScale;
 	Meta.PhysicsUniforms.SplineNoiseScale = Params.Swirl_Physics_SplineNoiseScale;
 	
-	Meta.Lod = 1 - Math.RangeClamped( 1 - Meta.PhysicsUniforms.SplineTimeRange, 1, Meta.PhysicsUniforms.SplineTime );
+	const LodMin = 1 - Math.RangeClamped( 1 - Meta.PhysicsUniforms.SplineTimeRange, 1, Meta.PhysicsUniforms.SplineTime );
+	const LodMax = Math.RangeClamped( 0, Meta.PhysicsUniforms.SplineTimeRange, Meta.PhysicsUniforms.SplineTime );
+
+	Meta.Lod = Math.min( LodMin, LodMax );
 	Meta.Lod *= Params.AnimalBufferLod;
 
 	Meta.TriangleScale = Params.Swirl_TriangleScale;
 	
-	Meta.OverridingColourTexture = SwirlColourTexture;
+	let SwirlColourTexture = Pop.Global.SwirlColourTexture;
+	if ( SwirlColourTexture !== undefined )
+		Meta.OverridingColourTexture = SwirlColourTexture;
 	
 	//Meta.FitToBoundingBox = true;
 	return Meta;
