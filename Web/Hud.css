@@ -110,6 +110,12 @@
 	justify-content:	center;
 }
 
+/* temporarily disabled until implemented */
+#Next_Text, #Prev_Text, #About
+{
+	display:	none;
+}
+
 #Next_Text
 {
 	position:		absolute;
@@ -122,13 +128,11 @@
 	text-decoration:	underline;
 	
 	text-align:			center;
-	display:			flex;
-	align-items:		center;
-	justify-content:	center;
 }
 
 #Prev_Text
 {
+	display:none;	/*disbale for now*/
 	position:		absolute;
 	left:			1.5vw;
 	top:			87vh;
@@ -139,9 +143,6 @@
 	text-decoration:	underline;
 	
 	text-align:			center;
-	display:			flex;
-	align-items:		center;
-	justify-content:	center;
 }
 
 #LogoBg
