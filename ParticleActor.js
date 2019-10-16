@@ -354,20 +354,23 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const Actor = this;
 		const RenderContext = RenderTarget.GetRenderContext();
 		
+		const Meta = GetMeta(this);
+		if ( Meta.RenderTimeIsRealTime )
+			Time = Pop.GetTimeNowMs() / 1000;
+		
 		const Geo = GetAsset( this.Geometry, RenderContext );
 		const Shader = GetAsset( this.RenderShader, RenderContext );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
+		let ColourTexture = this.TextureBuffers.ColourTexture;
 		const PositionTexture = this.GetPositionTexture(Time);
 		if ( !PositionTexture )
 		{
 			Pop.Debug("Actor has no position texture",Actor);
 			return;
 		}
-		let ColourTexture = this.TextureBuffers.ColourTexture;
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.GetLocalToWorldTransform();
 		
-		const Meta = GetMeta(this);
 		if ( Meta.OverridingColourTexture )
 			ColourTexture = Meta.OverridingColourTexture;
 		

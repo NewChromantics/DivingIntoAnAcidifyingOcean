@@ -184,11 +184,16 @@ function GetOceanMeta()
 	Meta.LocalScale = 1;
 	Meta.Filename = OceanFilenames;
 	Meta.RenderShader = AnimalParticleShader;
+	
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
+	
 	Meta.TriangleScale = Params.Ocean_TriangleScale;
 	if ( OceanColourTexture.Pixels )
 		Meta.OverridingColourTexture = OceanColourTexture;
+	
+	Meta.RenderTimeIsRealTime = true;
+	
 	return Meta;
 }
 
