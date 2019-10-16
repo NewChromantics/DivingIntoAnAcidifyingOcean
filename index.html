@@ -33,9 +33,33 @@
 </style>
 </head>
 <body>
+	
+<script>
+	function ShowElement(Element)
+	{
+		if ( typeof Element == 'string' )
+			Element = document.getElementById(Element);
+		Element.style.visibility = 'visible';
+	}
 
+	function HideElement(Element)
+	{
+		if ( typeof Element == 'string' )
+			Element = document.getElementById(Element);
+		Element.style.visibility = 'hidden';
+	}
+</script>
+
+	<div id="Ui">
+		<div id="AboutPage">
+			<div id="AboutPageClose"><a href="javascript:HideElement('AboutPage');">Close</a></div>
+			<a href=https://www.studiocrtq.com/>Christina Tarquini</a> &amp; <a href=http://www.newchromantics.com>Graham Reeves</a>
+		</div>
+		<div id="About"><a href="javascript:ShowElement('AboutPage');">About</a></div>
+	</div>
+	
 	<div id="Hud">
-		<div id="About">About</div>
+		<div id="Pause">Pause</div>
 		<!--
 		
 		<div id="IconSubtitles"><img src="Web/icons/Subtitles.svg"></div>
@@ -48,7 +72,7 @@
 		<span id="Subtitle_Line"> </span>
 		-->
 
-		
+		<!-- move this, only needed for the old opengl logo -->
 		<div id="Logo">
 			<!--<div id="TitleText">ACIDIC OCEAN</div>-->
 			<div id="LogoBg">&nbsp;</div>

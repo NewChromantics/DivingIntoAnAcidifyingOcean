@@ -1,3 +1,20 @@
+a, a:active, a:hover
+{
+	color:	#1f80b5;
+}
+
+a:hover
+{
+	color:	#ffffff;
+}
+
+#Ui
+{
+	position:	absolute;
+	z-index:	901;
+	height:		90vh;
+}
+
 #Hud
 {
 	font-size:	3vmin;
@@ -111,7 +128,7 @@
 }
 
 /* temporarily disabled until implemented */
-#Next_Text, #Prev_Text, #About
+#Next_Text, #Prev_Text, #Pause
 {
 	display:	none;
 }
@@ -132,7 +149,6 @@
 
 #Prev_Text
 {
-	display:none;	/*disbale for now*/
 	position:		absolute;
 	left:			1.5vw;
 	top:			87vh;
@@ -170,7 +186,7 @@
 
 }
 
-#About
+#About, #Pause
 {
 	font-size:		1.5vh;
 	line-height:	3vh;
@@ -180,7 +196,11 @@
 	width:			23vh;
 	height:			15vh;
 	text-align: left;
+}
 
+#Pause
+{
+	left:			25vw;
 }
 
 #Stats div
@@ -721,3 +741,18 @@
 	width:	22vw;
 }
 
+#AboutPage
+{
+	visibility:	hidden;
+	position:	absolute;
+	background:	black;
+	opacity:	0.9;
+	left:		4vw;
+	width:		92vw;
+	top:		4vh;
+	height:		92vh;
+	font-size:	10vh;
+	text-align:	center;
+	margin:		0px;
+	padding-top:	30vh;
+}
