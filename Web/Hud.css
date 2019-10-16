@@ -128,7 +128,7 @@ a:hover
 }
 
 /* temporarily disabled until implemented */
-#Next_Text, #Prev_Text, #Pause
+#Next_Text, #Prev_Text
 {
 	display:	none;
 }
@@ -186,7 +186,7 @@ a:hover
 
 }
 
-#About, #Pause
+#About, #PauseButton
 {
 	font-size:		1.5vh;
 	line-height:	3vh;
@@ -198,7 +198,7 @@ a:hover
 	text-align: left;
 }
 
-#Pause
+#PauseButton
 {
 	left:			25vw;
 }

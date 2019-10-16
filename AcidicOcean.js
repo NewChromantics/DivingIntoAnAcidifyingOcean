@@ -803,6 +803,17 @@ function GetAudioGetCrossFadeDuration()
 	return Params.AudioCrossFadeDurationSecs;
 }
 
+function OnPauseToggle(PauseButton)
+{
+	//	toggle playing
+	Params.ExperiencePlaying = !Params.ExperiencePlaying;
+	
+	//	update label
+	const Label = Params.ExperiencePlaying ? 'Pause' : 'Play';
+	Pop.Debug("New Label",Label);
+	PauseButton.SetLabel( Label );
+}
+
 
 //	need a better place for this, app state!
 function Init()
@@ -817,6 +828,10 @@ function Init()
 
 	//	init very first camera pos
 	Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
+
+	Hud.PauseButton = new Pop.Hud.Button('PauseButton');
+	Hud.PauseButton.SetVisible(true);
+	Hud.PauseButton.OnClicked = function(){	OnPauseToggle(Hud.PauseButton);	};
 
 	Hud.MusicLabel = new Pop.Hud.Label('AudioMusicLabel');
 	Hud.Music2Label = new Pop.Hud.Label('AudioMusic2Label');
