@@ -255,6 +255,7 @@ const TimelineMaxInteractiveYear	= 2100;
 const TimelineSolutionYear			= 2146;
 const TimelineMaxYear				= 2160;
 
+const Timeline_AllowIntroSkipAfterYear	= 1813;
 
 Params.TimelineYear = TimelineMinYear;
 Params.YearsPerSecond = 1;
@@ -1103,8 +1104,29 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	{
 	}
 	
+	if ( Acid.UserSkippedIntro )
+	{
+		Pop.Debug("Acid.UserSkippedIntro");
+		Params.TimelineYear = TimelineBigBangStartYear;
+	}
+	
 	Update( FrameDuration );
 	UpdateYearTime( FrameDuration );
+
+	//	hud init's in the first Update here, so we do it later
+	if ( Params.TimelineYear >= Timeline_AllowIntroSkipAfterYear )
+	{
+		if ( !Acid.UserSkippedIntro && !Hud.SubtitleSkipButton.IsVisible() )
+		{
+			Hud.SubtitleSkipButton.SetVisible(true);
+			Hud.SubtitleSkipButton.OnClicked = function()
+			{
+				Acid.UserSkippedIntro = true;
+				Hud.SubtitleSkipButton.SetVisible(false);
+			}
+			Acid.UserSkippedIntro = false;
+		}
+	}
 
 	//	move camera
 	{
@@ -1127,6 +1149,7 @@ function UpdateYearTime(FrameDuration)
 {
 	if ( !Params.ExperiencePlaying )
 		return;
+	
 	const YearsPerFrame = FrameDuration * Params.YearsPerSecond;
 	Params.TimelineYear += YearsPerFrame;
 	if ( ParamsWindow )
@@ -1144,7 +1167,13 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		
+		Hud.SubtitleSkipButton.SetVisible(true);
+		Hud.SubtitleSkipButton.OnClicked = function()
+		{
+			Acid.UserSkippedBigBang = true;
+			Hud.SubtitleSkipButton.SetVisible(false);
+		}
+		Acid.UserSkippedBigBang = false;
 	}
 	
 	UpdateFog( FrameDuration );
@@ -1152,6 +1181,9 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	UpdateYearTime( FrameDuration );
 	UpdateCameraPos();
 
+	if ( Acid.UserSkippedBigBang )
+		Params.TimelineYear = TimelineBigBangEndYear;
+	
 	const Actors = {};
 	function IsBigBangActor(Actor)
 	{
@@ -1240,6 +1272,8 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
+		Hud.SubtitleSkipButton.SetVisible(false);
+		
 		//	init very first camera pos
 		if ( !Acid.CameraPosition )
 		{
@@ -1360,6 +1394,7 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 		Hud.SubtitleSkipButton.OnClicked = function()
 		{
 			Acid.UserSkippedTextTimeline = true;
+			Hud.SubtitleSkipButton.SetVisible(false);
 		}
 		Acid.UserSkippedTextTimeline = false;
 	}
@@ -1370,7 +1405,10 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 	}
 	
 	Update( FrameDuration );
-	
+
+	//	move camera
+	UpdateCameraPos();
+
 	//	gr: change these hud things after Update as it updates subtitles/hud for us
 	Hud.Timeline.SetVisible( false );
 	

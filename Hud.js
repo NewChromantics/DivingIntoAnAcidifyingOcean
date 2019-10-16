@@ -54,6 +54,14 @@ Pop.Hud.Button = function()
 	
 	this.VisibleCache = null;
 	
+	this.IsVisible = function()
+	{
+		if ( !this.Element )
+			return false;
+		
+		return this.Element.style.visibility != 'hidden';
+	}
+	
 	this.SetVisible = function(Visible)
 	{
 		if ( !this.Element )
