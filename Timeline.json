@@ -72,7 +72,7 @@
 
 	"1835":
 	{
-		"Subtitle":""
+		"Subtitle":" "
 	},
 
 	"1837":
@@ -82,7 +82,7 @@
 
 	"1840":
 	{
-		"Subtitle":""
+		"Subtitle":" "
 	},
 	
 	"1842":
@@ -92,7 +92,7 @@
 
 	"1848":
 	{
-		"Subtitle":""
+		"Subtitle":" "
 	},
 	
 	"1850":
@@ -104,9 +104,10 @@
 	{
 		"Subtitle":""
 	},
+
 	"1857":
 	{
-		"HintClickAnimalVisible":true,
+		"HintClickAnimalVisible":true
 	},
 	
 	
