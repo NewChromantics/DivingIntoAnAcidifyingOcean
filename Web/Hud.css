@@ -1,11 +1,13 @@
 a, a:active, a:hover, a:visited
 {
-	color:	#1f80b5;
+	color:	#ffffff;
+	text-decoration:	none;
 }
 
 a:hover
 {
 	color:	#ffffff;
+	font-weight: bold;
 }
 
 #Ui
@@ -13,6 +15,8 @@ a:hover
 	position:	absolute;
 	z-index:	901;
 	height:		90vh;
+	font-size:		2.5vh;
+	
 }
 
 #Hud
@@ -119,7 +123,7 @@ a:hover
 	xxxheight:			5vh;
 	font-size:		1.5vh;
 	
-	text-decoration:	underline;
+	xxxtext-decoration:	underline;
 	
 	text-align:			center;
 	display:			flex;
@@ -130,14 +134,14 @@ a:hover
 /* temporarily disabled until implemented */
 #Next_Text, #Prev_Text
 {
-	display:	none;
+	display:	visible;
 }
 
 #Next_Text
 {
 	position:		absolute;
-	right:			1.5vw;
-	top:			87vh;
+	right:			25vw;
+	top:			55vh;
 	width:			10vw;
 	xxxheight:			5vh;
 	font-size:		1.5vh;
@@ -145,13 +149,16 @@ a:hover
 	text-decoration:	underline;
 	
 	text-align:			center;
+	background:     url(icons/arrow_right.svg) no-repeat;
+	background-size: 1.5vh;
+	background-position:	right top;
 }
 
 #Prev_Text
 {
 	position:		absolute;
-	left:			1.5vw;
-	top:			87vh;
+	left:			25vw;
+	top:			55vh;
 	width:			10vw;
 	xxxheight:			5vh;
 	font-size:		1.5vh;
@@ -159,6 +166,9 @@ a:hover
 	text-decoration:	underline;
 	
 	text-align:			center;
+	background:     url(icons/arrow_left.svg) no-repeat;
+	background-size: 1.5vh;
+	background-position:	left top;
 }
 
 #LogoBg
@@ -186,7 +196,7 @@ a:hover
 
 }
 
-#About, #PauseButton
+#About 
 {
 	font-size:		1.5vh;
 	line-height:	3vh;
@@ -200,7 +210,15 @@ a:hover
 
 #PauseButton
 {
-	left:			25vw;
+	position:		absolute;
+	left:			2vw;
+	top:			8.5vh;
+	width:			23vh;
+	height:			15vh;
+	background:     url(icons/pause.svg) no-repeat;
+	xxxbackground:     url(icons/play.svg) no-repeat;
+	background-size: 1.5vh;
+	background-position:	left top;
 }
 
 #Stats div
