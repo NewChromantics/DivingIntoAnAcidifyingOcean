@@ -70,24 +70,43 @@
 		"Subtitle":"That’s what happened some 252 million years ago in an event known as “The Great Dying”,  where a massive release of carbon dioxide (CO2) and other gases caused extreme global warming that depleted the oceans of oxygen and acidified the waters."
 	},
 
+	"1835":
+	{
+		"Subtitle":""
+	},
+
 	"1837":
 	{
 		"Subtitle":"Today we are doing the same."
 	},
+
+	"1840":
+	{
+		"Subtitle":""
+	},
 	
-	"1841":
+	"1842":
 	{
 		"Subtitle":"But rather than taking tens of thousands of years, we are doing it in a little bit more than one single lifetime."
 	},
+
+	"1848":
+	{
+		"Subtitle":""
+	},
 	
-	"1849":
+	"1850":
 	{
 		"Subtitle":"If we fail to act, what will happen to them… and to us?"
+	},
+
+	"1855":
+	{
+		"Subtitle":""
 	},
 	"1857":
 	{
 		"HintClickAnimalVisible":true,
-		"Subtitle":" "
 	},
 	
 	
