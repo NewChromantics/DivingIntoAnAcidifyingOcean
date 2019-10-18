@@ -23,7 +23,7 @@ const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
 const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_ShellDissolution.mp3';
 
 //	for debugging opengl stuff
-const EnableColourTextureUpdate = false;
+const EnableColourTextureUpdate = true;
 
 //	temp turning off and just having dummy actors
 const PhysicsEnabled = !Pop.GetExeArguments().includes('PhysicsDisabled');
