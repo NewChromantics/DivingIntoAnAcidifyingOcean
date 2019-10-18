@@ -511,18 +511,24 @@ a:hover
 
 #Continue
 {
-	xbackground: yellow;
+	background: rgba(0, 0, 0, 0.75);
 	position:	absolute;
 	right:		0vw;
-	width:		34vw;
+	width:		17vw;
 	height:		4vh;
 	font-weight: 300;
 
 	text-align:			right;
-	text-decoration:	underline;
-	padding-right:		0vh;
+	xxtext-decoration:	underline;
+	padding-right:		2vw;
+	padding-top: 1vh;
 	font-size:			1.5vh;
 	letter-spacing:		0.07vw;
+
+	background-image:	url(icons/Continue.svg);
+	background-size:	17vw;
+	background-repeat:	no-repeat;
+	background-position: bottom;
 }
 
 
