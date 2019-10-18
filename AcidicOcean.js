@@ -798,6 +798,11 @@ function GetRenderScene(GetActorScene,Time)
 	return Scene;
 }
 
+function ShowElement(ElementId,Visible=true)
+{
+	const Element = document.getElementById(ElementId);
+	Element.style.visibility = Visible ? 'visible' : 'hidden';
+}
 
 function GetAudioGetCrossFadeDuration()
 {
@@ -810,9 +815,8 @@ function OnPauseToggle(PauseButton)
 	Params.ExperiencePlaying = !Params.ExperiencePlaying;
 	
 	//	update label
-	const Label = Params.ExperiencePlaying ? 'Pause' : 'Play';
-	Pop.Debug("New Label",Label);
-	PauseButton.SetLabel( Label );
+	ShowElement('PauseLabel',Params.ExperiencePlaying);
+	ShowElement('ResumeLabel',!Params.ExperiencePlaying);
 }
 
 

@@ -4,16 +4,23 @@ a, a:active, a:hover, a:visited
 	text-decoration:	none;
 }
 
+
+
 a:hover
 {
 	color:	#ffffff;
 	font-weight: bold;
 }
 
+/* Stuff that needs to be on top of the experience */
+#Ui, #PauseButton, #Hint_Start, #Hint_StartXr
+{
+	z-index:	902;
+}
+
 #Ui
 {
 	position:	absolute;
-	z-index:	901;
 	height:		90vh;
 	font-size:		2.5vh;
 	
@@ -196,15 +203,16 @@ a:hover
 
 }
 
-#About 
+#AboutButton
 {
+	xxxbackground:	blue;
 	font-size:		1.5vh;
 	line-height:	3vh;
 	position:		absolute;
 	left:			2vw;
 	top:			5vh;
 	width:			23vh;
-	height:			15vh;
+	height:			5vh;
 	text-align: left;
 }
 
@@ -212,14 +220,35 @@ a:hover
 {
 	position:		absolute;
 	left:			2vw;
-	top:			8.5vh;
+	top:			10vh;
 	width:			23vh;
-	height:			15vh;
-	background:     url(icons/pause.svg) no-repeat;
-	xxxbackground:     url(icons/play.svg) no-repeat;
-	background-size: 1.5vh;
-	background-position:	left top;
+	height:			5vh;
 }
+
+#PauseLabel, #ResumeLabel
+{
+	font-size:		0;		/* Hide the text */
+	pointer-events:	none;	/* let clicks fall through to parent */
+	position:		absolute;
+	top:			0px;
+	bottom:			0px;
+	right:			0px;
+	left:			0px;
+}
+
+#PauseLabel
+{
+	background:     url(icons/pause.svg) no-repeat;
+	xxbackground-color:	red;
+}
+
+#ResumeLabel
+{
+	visibility:		hidden;	/* Toggled in code - overridden on style ON element */
+	background:     url(icons/play.svg) no-repeat;
+	xxbackground-color:	lime;
+}
+
 
 #Stats div
 {
@@ -228,9 +257,6 @@ a:hover
 
 #Hint_Start, #Hint_StartXr
 {
-	/* put on top of the rest of the hud so it's clickable */
-	z-index:	2;
-
 	display:	block;
 	position:	absolute;
 	left:		48.5vw;
@@ -758,7 +784,7 @@ a:hover
 
 #Debug_VisibleActors, #Debug_RenderedActors, #Debug_FrameRate, #Debug_RenderStats
 {
-	z-index: 999;
+	z-index: 901;
 	background: black;
 	font-size: 20pt;
 	opacity:0.6;
