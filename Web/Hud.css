@@ -140,8 +140,8 @@ a:hover
 #Next_Text
 {
 	position:		absolute;
-	right:			25vw;
-	top:			55vh;
+	right:			22vw;
+	top:			53vh;
 	width:			10vw;
 	xxxheight:			5vh;
 	font-size:		1.5vh;
@@ -157,8 +157,8 @@ a:hover
 #Prev_Text
 {
 	position:		absolute;
-	left:			25vw;
-	top:			55vh;
+	left:			23vw;
+	top:			53vh;
 	width:			10vw;
 	xxxheight:			5vh;
 	font-size:		1.5vh;
