@@ -2,7 +2,7 @@
 	"1800":
 	{
 		"YearsPerSecond":1,
-		"SwirlsEnabled":false,
+		"CreateSwirlEveryXYears":false,
 		"HintClickAnimalVisible":false,
 		"HintDragTimelineVisible":false,
 		"StatsVisible":false,
@@ -142,13 +142,9 @@
 		"Subtitle":""
 	},
 
-	"1882":
-	{
-		"SwirlsEnabled":true
-	},
-	
 	"1884":
 	{
+		"CreateSwirlEveryXYears":7,
 		"HintDragTimelineVisible":true
 	},
 	

@@ -1618,17 +1618,20 @@ function Update(FrameDurationSecs)
 	}
 	
 	//	create some swirls
-	const SwirlsEnabled = Timeline.GetUniform( Time, 'SwirlsEnabled' );
-	if ( Params.AlwaysCreateSwirls || SwirlsEnabled )
+	let SwirlsEveryYears = Timeline.GetUniform( Time, 'CreateSwirlEveryXYears' );
+	if ( Params.AlwaysCreateSwirls )
+		SwirlsEveryYears = 3;
+	if ( SwirlsEveryYears !== false )
 	{
+		//	first trigger, trigger NOW
 		if ( !Acid.LastSwirlYear )
-			Acid.LastSwirlYear = 9999;
-		
+			Acid.LastSwirlYear = Time - SwirlsEveryYears;
+
 		//	years since swirl
 		const YearsSinceNewSwirl = Math.abs( Acid.LastSwirlYear - Time );
-		if ( YearsSinceNewSwirl >= Params.CreateSwirlEveryXYears )
+		if ( YearsSinceNewSwirl >= SwirlsEveryYears )
 		{
-			Pop.Debug("AddSwirlActor",Time);
+			Pop.Debug("AddSwirlActor",Time,"SwirlsEveryYears",SwirlsEveryYears);
 			AddSwirlActor();
 			Acid.LastSwirlYear = Time;
 		}
