@@ -13,6 +13,9 @@ Pop.Include('ParticleActor.js');
 
 const SceneFilename = 'CameraSpline.dae.json';
 
+var LastMouseRayUv = null;
+
+
 var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
@@ -60,7 +63,48 @@ var Hud = {};
 InitDebugHud(Hud);
 
 
+function UpdateMouseMove(x,y)
+{
+	const Rect = Window.GetScreenRect();
+	const u = x / Rect[2];
+	const v = y / Rect[3];
+	const CameraScreenUv = [u,v];
+	LastMouseRayUv = CameraScreenUv;
+}
 
+
+function GetMouseRay(uv)
+{
+	let ScreenRect = Window.GetScreenRect();
+	let Aspect = ScreenRect[2] / ScreenRect[3];
+	let x = Math.lerp( -Aspect, Aspect, uv[0] );
+	let y = Math.lerp( 1, -1, uv[1] );
+	const ViewRect = [-1,-1,1,1];
+
+	//	get ray
+	const Camera = Editor.Camera;
+
+
+	const RayDistance = Params.TestRayDistance;
+	
+	let ScreenToCameraTransform = Camera.GetProjectionMatrix( ViewRect );
+	ScreenToCameraTransform = Math.MatrixInverse4x4( ScreenToCameraTransform );
+	
+	let StartMatrix = Math.CreateTranslationMatrix( x, y, 0.1 );
+	let EndMatrix = Math.CreateTranslationMatrix( x, y, RayDistance );
+	StartMatrix = Math.MatrixMultiply4x4( ScreenToCameraTransform, StartMatrix );
+	EndMatrix = Math.MatrixMultiply4x4( ScreenToCameraTransform, EndMatrix );
+	
+	StartMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), StartMatrix );
+	EndMatrix = Math.MatrixMultiply4x4( Camera.GetLocalToWorldMatrix(), EndMatrix );
+	
+	const Ray = {};
+	Ray.Start = Math.GetMatrixTranslation( StartMatrix, true );
+	Ray.End = Math.GetMatrixTranslation( EndMatrix, true );
+	Ray.Direction = Math.Normalise3( Math.Subtract3( Ray.End, Ray.Start ) );
+	
+	return Ray;
+}
 
 function CreateDebugCamera(Window,OnClicked,OnGrabbedCamera,OnMouseMove)
 {
@@ -401,7 +445,7 @@ class TAssetEditor
 	{
 		this.Window = new Pop.Opengl.Window(Name);
 		this.Window.OnRender = this.Render.bind(this);
-		this.Camera = CreateDebugCamera(this.Window);
+		this.Camera = CreateDebugCamera(this.Window,null,null,UpdateMouseMove);
 		this.Time = 0;
 		this.CreateEditorParamsWindow();
 
@@ -539,5 +583,4 @@ class TAssetEditor
 	}
 	
 }
-
 

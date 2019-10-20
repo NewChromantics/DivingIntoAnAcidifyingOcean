@@ -110,7 +110,6 @@ var AppTime = null;
 var Hud = {};
 var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
-var LastMouseRay = null;	//	gr: this isn't getting updated any more
 var LastMouseRayUv = null;
 var LastMouseClicks = [];	//	array of queued uvs
 
