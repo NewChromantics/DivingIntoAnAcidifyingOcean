@@ -216,7 +216,7 @@ void main()
 		Pos.xyz = GetSpringTargetPos(uv);
 	
 	Vel.xyz += GetSpringForce(Pos.xyz,uv) * PhysicsStep;
-	Vel.xyz += GetAvoidForce(Pos.xyz) * PhysicsStep;
+	//Vel.xyz += GetAvoidForce(Pos.xyz) * PhysicsStep;
  
 	//	damping
 	Vel.xyz *= 1.0 - Damping;
