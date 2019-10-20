@@ -39,7 +39,7 @@
 
 	"1802":
 	{
-		"Subtitle":"Every second breath we take comes from the ocean."
+		"Subtitle":"Every second breath we take comes from the ocean"
 	},
 	"1806":
 	{
@@ -47,7 +47,7 @@
 	},
 	"1808":
 	{
-		"Subtitle":"But this won’t be much longer."
+		"Subtitle":"But this won’t be much longer"
 	},
 	"1812":
 	{
@@ -56,7 +56,7 @@
 
 	"1815":
 	{
-		"Subtitle":"We’re in the process of killing 96% of ocean life."
+		"Subtitle":"We’re in the process of killing 96% of ocean life"
 	},
 
 	"1820":
@@ -67,40 +67,37 @@
 	
 	"1823":
 	{
-		"Subtitle":"That’s what happened some 252 million years ago in an event known as “The Great Dying”,  where a massive release of carbon dioxide (CO2) and other gases caused extreme global warming that depleted the oceans of oxygen and acidified the waters."
+		"Subtitle":"That’s what happened some 252 million years ago in an event known as “The Great Dying”"
 	},
 
-	"1835":
+	"1828":
 	{
-		"Subtitle":" "
+		"Subtitle":"when a massive release of carbon dioxide (CO2) and other gases caused extreme global warming"
 	},
 
-	"1837":
+	"1834":
 	{
-		"Subtitle":"Today we are doing the same."
+		"Subtitle":"that depleted the oceans of oxygen and acidified the waters"
 	},
 
-	"1840":
+
+	"1838":
 	{
-		"Subtitle":" "
+		"Subtitle":"Today we are repeating this"
 	},
+
 	
-	"1842":
+	"1841":
 	{
-		"Subtitle":"But rather than taking tens of thousands of years, we are doing it in a little bit more than one single lifetime."
+		"Subtitle":"But rather than taking tens of thousands of years, we are doing this in a little more than one single lifetime"
 	},
 
-	"1848":
-	{
-		"Subtitle":" "
-	},
-	
 	"1850":
 	{
 		"Subtitle":"If we fail to act, what will happen to them… and to us?"
 	},
 
-	"1855":
+	"1856":
 	{
 		"Subtitle":""
 	},
@@ -113,7 +110,7 @@
 	
 	"1859":
 	{
-		"YearsPerSecond":0.5
+		"YearsPerSecond":0.35
 	},
 	
 	"1860":
@@ -130,9 +127,14 @@
 		"Subtitle":""
 	},
 
-	"1863":
+	"1866":
 	{
-		
+		"HintDragTimelineVisible":true
+	},
+
+	"1867":
+	{
+		"HintDragTimelineVisible":false
 	},
 	
 	"1870":
@@ -146,17 +148,7 @@
 	{
 		"SwirlsEnabled":true
 	},
-	
-	"1884":
-	{
-		"HintDragTimelineVisible":true
-	},
-	
-	"1886":
-	{
-		"HintDragTimelineVisible":false
-	},
-	
+		
 	"1887":
 	{
 		"Subtitle":" "
@@ -291,33 +283,33 @@
 	"2102":
 	{
 		"YearsPerSecond":1,
-		"Subtitle":"If we don't drastically reduce our CO2 production, and limit the planet’s temperature rise to under 1.5°C, the whole ocean system may collapse.",
+		"Subtitle":"If we don't drastically reduce our CO2 production, and limit the planet’s temperature rise to under 1.5°C, the whole ocean system may collapse",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
 	},
 
 	"2114":
 	{
-		"Subtitle":"This won’t only affect the ocean. Many land animals depend on fish to survive."
+		"Subtitle":"This won’t only affect the ocean. Many land animals depend on fish to survive"
 	},
 
 	"2122":
 	{
-		"Subtitle":"And so do we, our economies and our cultures."
+		"Subtitle":"And so do we, our economies and our cultures"
 	},
 
 	"2127":
 	{
-		"Subtitle":"To prevent this, we need to reduce our carbon footprint. "
+		"Subtitle":"To prevent this, we need to reduce our carbon footprint"
 	},
 
 	"2133":
 	{
-		"Subtitle":"We still have the power to stop this catastrophe. "
+		"Subtitle":"We still have the power to stop this catastrophe"
 	},
 
 	"2138":
 	{
-		"Subtitle":"But the time to act is NOW. "
+		"Subtitle":"But the time to act is NOW"
 	},
 	"2146":
 	{

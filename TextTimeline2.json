@@ -1,23 +1,33 @@
 {
 	"0":
 	{
-		"Subtitle":" The ocean absorbs about 30% of the carbon dioxide (CO2) that is released in the atmosphere."
+		"Subtitle":" The oceans absorb around 30% of the carbon dioxide (CO2) that is released into the atmosphere"
 	},
 
-	"5":
+	"6":
 	{
-		"Subtitle":" From 1860 the oceans’ pH as fallen by 0.1 pH units, going from 8.2 pH to 8.1 pH. "
+		"Subtitle":" From 1860 the oceans’ pH as fallen by 0.1 pH units, from 8.2 pH to 8.1 pH "
 	},
-	"12":
+	"13":
 	{
-		"Subtitle":"A change of 0.1 means that today the oceans are 30% more acidic, and if we continue at this rhythm, by 2100 they will be 170% more acidic, falling to a pH of about 7.6. "
+		"Subtitle":"What seems like a small change of 0.1 actually means that today the oceans are 30% more acidic"
+	},
+	"19":
+	{
+		"Subtitle":"In humans, a drop of 0.1 pH units in the blood can result in seizures, coma or even death."
 	},
 	"26":
 	{
-		"Subtitle":" In humans, a drop of 0.1 pH units in the blood can result in seizures, coma or even death. It is a small number with huge consequences. "
+		"Subtitle":"If we continue at this pace, by 2100 the oceans will be 170% more acidic, falling to a pH of around 7.6"
 	},
-	"37":
+
+	"35":
+	{
+		"Subtitle":"Let’s consider the huge consequences"
+	},
+
+	"39":
 	{
 		"Subtitle":" "
-	}
+	},
 }
