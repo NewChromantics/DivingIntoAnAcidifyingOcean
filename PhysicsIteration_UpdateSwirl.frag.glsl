@@ -225,7 +225,7 @@ void main()
 	Vel.w = 1.0;
 	
 	Pos += Vel * PhysicsStep;
-	Pos.w = 1.0;
+	Pos.w = 0.1;
 	
 	gl_FragData[0] = Pos;
 	gl_FragData[1] = Vel;

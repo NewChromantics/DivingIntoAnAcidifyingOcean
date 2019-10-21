@@ -11,7 +11,7 @@ uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
 
-uniform int TriangleCount;
+//uniform float TriangleCount;
 
 uniform mat4 CameraToWorldTransform;
 uniform mat4 LocalToWorldTransform;
@@ -69,12 +69,14 @@ void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out fl
 {
 	float2 uv = GetTriangleUvf( TriangleIndex );
 	float Lod = 0.0;
-	WorldPos = textureLod( WorldPositions, uv, Lod ).xyz;
+	float4 WorldPos4 = textureLod( WorldPositions, uv, Lod );
+	WorldPos = WorldPos4.xyz;
 #if defined(TEST_ONE_COLOUR)
 	Colour = TEST_ONE_COLOUR;
 #else
 	float4 ColourImageColour = textureLod( ColourImage, uv, Lod );
-	Colour = float4(ColourImageColour.xyz,1);
+	float Alpha = WorldPos4.w;
+	Colour = float4(ColourImageColour.xyz,Alpha);
 #endif
 }
 

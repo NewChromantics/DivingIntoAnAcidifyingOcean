@@ -3,9 +3,6 @@ varying vec4 Rgba;
 varying vec3 TriangleUvIndex;
 varying vec3 FragWorldPos;
 
-uniform float TriangleCount;
-uniform float StringStrips;
-
 const float CircleRadius = 0.5;
 
 
@@ -17,6 +14,30 @@ uniform bool DebugFogCenter;
 
 uniform bool Debug_ForceColour;
 #define Debug_Alpha	true
+
+
+/*
+
+float PositionUvToIndex(float2 uv)
+{
+	//	gr: does this work with an arbirtry number?
+	float2 Size = OrigPositionsWidthHeight;
+	uv = floor( uv * Size );
+	float Index = uv.y * Size.x;
+	Index += uv.x;
+	return Index;
+}
+
+float Index = PositionUvToIndex( uv );
+float Normal = Index / PositionCount;
+*/
+float GetStripIndex(float2 Triangleuv)
+{
+	//float Strips = max( 1.0, StringStrips );
+	
+	//float Index = IndexNormal * PositionCount;
+	//float Row = floor( mod( Index, Strips ) ) / Strips;
+}
 
 float Range(float Min,float Max,float Value)
 {
@@ -47,32 +68,15 @@ float3 ApplyFog(vec3 Rgb,vec3 WorldPos)
 	return Rgb;
 }
 
-float GetStripIndexFromIndex(float Index)
-{
-	//	Index normal is 0-1 along spline (1 further along length)
-	//	we want length-wise strips, so split inside chunks, instead of by-chunk
-	float Strips = max( 1.0, StringStrips );
-	
-	//float Index = IndexNormal * PositionCount;
-	float Row = floor( mod( Index, Strips ) );
-	return Row;
-}
-	
+
 void main()
 {
 	if ( Debug_Alpha )
 	{
-		float Index = TriangleUvIndex.z;
-		float StripIndex = GetStripIndexFromIndex( TriangleUvIndex.z );
-		//float SplineNorm = Index / TriangleCount;
-		float SplineNorm = StripIndex / StringStrips;
-		
-		//if ( SplineNorm < 0.5 )
-		//	SplineNorm = 0.0;
-		//else
-		//	SplineNorm = 1.0;
-		
-		gl_FragColor = mix( float4( 1,0,0,1 ), float4( 0,1,0,1 ), SplineNorm );
+		if ( Rgba.w < 1.0 )
+			gl_FragColor = float4( 1,0,0,1 );
+		else
+			gl_FragColor = float4( 0,1,0,1 );
 		return;
 	}
 

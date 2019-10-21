@@ -763,6 +763,9 @@ function GetSwirlMeta(Actor)
 	
 	Meta.LocalScale = 1;
 	
+	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.StringStrips = Params.Swirl_Physics_SplineStrips;
+	
 	Meta.Filename = 'GenerateRandomSplinePathVertexes()';
 	Meta.RenderShader = AnimalParticleShader;
 	

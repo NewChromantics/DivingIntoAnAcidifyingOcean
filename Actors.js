@@ -158,6 +158,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 			//	copy old positions
 			let CopyToScratch = function(RenderTarget)
 			{
+				RenderTarget.SetBlendModeBlit();
 				let SetUniforms = function(Shader)
 				{
 					Shader.SetUniform('VertexRect', [0,0,1,1] );

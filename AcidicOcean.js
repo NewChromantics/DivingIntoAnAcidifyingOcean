@@ -1619,7 +1619,7 @@ function Update(FrameDurationSecs)
 	//	create some swirls
 	let SwirlsEveryYears = Timeline.GetUniform( Time, 'CreateSwirlEveryXYears' );
 	if ( Params.AlwaysCreateSwirls )
-		SwirlsEveryYears = 3;
+		SwirlsEveryYears = Params.CreateSwirlEveryXYears;
 	if ( SwirlsEveryYears !== false )
 	{
 		//	first trigger, trigger NOW
