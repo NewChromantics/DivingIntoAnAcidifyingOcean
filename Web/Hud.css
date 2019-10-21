@@ -192,6 +192,32 @@ a:hover
 
 }
 
+#Mosaic
+{
+	visibility: hidden;
+	display:	block;
+	position:	absolute;
+	width:		100vw;
+	height:		100vh;
+	background-image:		url(icons/Mosaic3.jpg);
+	background-repeat:		no-repeat;
+	background-size:		contain;
+	background-position:	center center;
+
+}
+
+#MosaicText
+{
+	visibility: hidden;
+	font-size:		10vh;
+	font-weight: 	bold;
+	position:		absolute;
+	left:			12.5vw;
+	top:			37vh;
+	width:			75vw;
+	text-align: center;
+}
+
 #Stats
 {
 	font-size:		2vh;
