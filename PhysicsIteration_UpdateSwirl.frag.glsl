@@ -32,6 +32,11 @@ uniform float AvoidRayRadius;
 uniform float AvoidRayScale;
 
 
+//	gr: flip here if double buffering
+float2 FlipUv(float2 uv)
+{
+	return float2( uv.x, 1.0 - uv.y );
+}
 
 float Range(float Min,float Max,float Value)
 {
@@ -207,8 +212,9 @@ float3 GetAvoidForce(float3 Pos)
 	
 void main()
 {
-	vec4 Vel = texture2D( LastVelocitys, uv );
-	vec4 Pos = texture2D( LastPositions, uv );
+	vec4 Vel = texture2D( LastVelocitys, FlipUv(uv) );
+	vec4 Pos = texture2D( LastPositions, FlipUv(uv) );
+	
 	
 	//Pos.xyz = GetSpringTargetPos(uv);
 	
@@ -217,7 +223,7 @@ void main()
 	
 	Vel.xyz += GetSpringForce(Pos.xyz,uv) * PhysicsStep;
 	//Vel.xyz += GetAvoidForce(Pos.xyz) * PhysicsStep;
- 
+	
 	//	damping
 	Vel.xyz *= 1.0 - Damping;
 
@@ -226,7 +232,16 @@ void main()
 	
 	Pos += Vel * PhysicsStep;
 	Pos.w = 1.0;
+
+
+	float Index = PositionUvToIndex( uv );
+	if ( Index > PositionCount )
+	{
+		Vel = float4( 0,0,1,1 );
+		Pos = float4( 1,0,1,1 );
+	}
 	
+
 	gl_FragData[0] = Pos;
 	gl_FragData[1] = Vel;
 }
