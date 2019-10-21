@@ -39,7 +39,7 @@
 
 	"1802":
 	{
-		"Subtitle":"EVERY <strong> SECOND </strong> BREATH WE TAKE COMES FROM THE OCEAN"
+		"Subtitle":"EVERY  <strong>  SECOND  </strong>  BREATH WE TAKE COMES FROM THE OCEAN"
 	},
 	"1806":
 	{
@@ -47,7 +47,7 @@
 	},
 	"1808":
 	{
-		"Subtitle":"BUT THIS WON’T BE FOR <strong> MUCH LONGER </strong> "
+		"Subtitle":"BUT THIS WON’T BE FOR  <strong>  MUCH LONGER  </strong> "
 	},
 	"1812":
 	{
@@ -56,7 +56,7 @@
 
 	"1815":
 	{
-		"Subtitle":"WE’RE IN THE PROCESS OF KILLING <strong> 96% </strong> OF OCEAN LIFE"
+		"Subtitle":"WE’RE IN THE PROCESS OF <strong> KILLING 96%  </strong>  OF OCEAN LIFE"
 	},
 
 	"1820":
@@ -67,12 +67,12 @@
 	
 	"1823":
 	{
-		"Subtitle":"THAT’S WHAT HAPPENED SOME 252 MILLION YEARS AGO IN AN EVENT KNOWN AS <strong> <br />  “THE GREAT DYING” </strong>"
+		"Subtitle":"THAT’S WHAT HAPPENED SOME 252 MILLION YEARS AGO IN AN EVENT KNOWN AS <strong> <br> “THE GREAT DYING” </strong>"
 	},
 
 	"1828":
 	{
-		"Subtitle":"WHEN A MASSIVE RELEASE OF <strong>CARBON DIOXIDE (CO2)</strong> AND OTHER GASES CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
+		"Subtitle":"WHEN A MASSIVE RELEASE OF <strong> CARBON DIOXIDE (CO2) </strong> AND OTHER GASES CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
 	},
 
 	"1834":
@@ -83,39 +83,38 @@
 
 	"1838":
 	{
-		"Subtitle":"TODAY WE ARE REPEATING THIS"
+		"Subtitle":"TODAY WE ARE REPEATING THIS <strong>AGAIN</strong>"
 	},
 
 	
 	"1841":
 	{
-		"Subtitle":"BUT RATHER THAN TAKING TENS OF THOUSANDS OF YEARS, WE ARE DOING THIS IN A LITTLE MORE THAN <strong>ONE SINGLE LIFETIME</strong>"
+		"Subtitle":"BUT RATHER THAN TAKING TENS OF THOUSANDS OF YEARS, WE ARE DOING THIS <br> IN A LITTLE MORE THAN <strong>ONE SINGLE LIFETIME</strong>"
 	},
 
-	"1850":
+	"1845":
 	{
 		"Subtitle":"IF WE FAIL TO ACT, WHAT WILL HAPPEN TO OCEAN LIFE… <strong>AND TO US?</strong>"
 	},
 
-	"1856":
+	"1850":
 	{
 		"Subtitle":""
 	},
 
-	"1857":
+	"1855":
 	{
 		"HintClickAnimalVisible":true
 	},
-	
-	
-	"1859":
+
+	"1857":
 	{
-		"YearsPerSecond":0.35
+		"HintClickAnimalVisible":false
 	},
 	
 	"1860":
 	{
-		"HintClickAnimalVisible":false,
+		"YearsPerSecond":0.35,
 		"StatsVisible":true,
 		"TimelineVisible":true,
 		"Subtitle":"",
