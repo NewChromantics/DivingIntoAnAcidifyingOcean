@@ -1,15 +1,15 @@
 a, a:active, a:hover, a:visited
 {
 	color:	#ffffff;
-	text-decoration:	none;
+	xxxtext-decoration:	none;
 }
 
 
 
 a:hover
 {
-	color:	#ffffff;
-	font-weight: bold;
+	color:	#b3b7ca;
+	xxxfont-weight: bold;
 }
 
 /* Stuff that needs to be on top of the experience */
@@ -115,9 +115,10 @@ a:hover
 	font-size:		2.5vh;
 	
 	text-align:			center;
-	display:			flex;
-	align-items:		center;
-	justify-content:	center;
+	xxxdisplay:			flex;
+	xxxalign-items:		center;
+	xxxjustify-content:	center;
+	xxxflex-direction: row;
 }
 
 
@@ -128,9 +129,9 @@ a:hover
 	top:			90vh;
 	width:			10vw;
 	xxxheight:			5vh;
-	font-size:		1.5vh;
+	font-size:		calc(0.5em + 0.3vh);
 	
-	xxxtext-decoration:	underline;
+	text-decoration:	underline;
 	
 	text-align:			center;
 	display:			flex;
@@ -191,14 +192,40 @@ a:hover
 
 }
 
+#Mosaic
+{
+	visibility: hidden;
+	display:	block;
+	position:	absolute;
+	width:		100vw;
+	height:		100vh;
+	background-image:		url(icons/Mosaic.jpg);
+	background-repeat:		no-repeat;
+	background-size:		contain;
+	background-position:	center center;
+
+}
+
+#MosaicText
+{
+	visibility: hidden;
+	font-size:		10vh;
+	font-weight: 	bold;
+	position:		absolute;
+	left:			12.5vw;
+	top:			37vh;
+	width:			75vw;
+	text-align: center;
+}
+
 #Stats
 {
 	font-size:		2vh;
 	line-height:	3vh;
 	position:		absolute;
-	right:			1vw;
+	right:			2vw;
 	top:			5vh;
-	width:			23vh;
+	width:			30vh;
 	height:			15vh;
 
 }
@@ -206,7 +233,7 @@ a:hover
 #AboutButton
 {
 	xxxbackground:	blue;
-	font-size:		1.5vh;
+	font-size:		calc(0.5em + 0.3vh);
 	line-height:	3vh;
 	position:		absolute;
 	left:			2vw;
@@ -214,6 +241,7 @@ a:hover
 	width:			23vh;
 	height:			5vh;
 	text-align: left;
+	text-decoration:	underline;
 }
 
 #PauseButton
@@ -266,13 +294,15 @@ a:hover
 
 #Hint_Start, #Hint_StartXr
 {
+	xxxbackground-color:	red;
 	display:	block;
 	position:	absolute;
-	left:		48.5vw;
+	left:		25vw;
 	top:		79.35vh;
-	width:		4.5vw;
+	width:		50vw;
 	height:		4vh;
-	font-size:	1.5vh;
+	font-size:	calc(0.5em + 0.5vh);
+	font-weight: bold;
 	padding: 0.3em;
 	
 
@@ -282,8 +312,11 @@ a:hover
 	align-items:		center;
 	justify-content:	center;
 
-	border-radius: 0.7em;
-  	border: 0.1em solid white;
+	text-decoration:	underline;
+	text-underline-position: under;
+
+	xxxborder-radius: 0.7em;
+  	xxxborder: 0.1em solid white;
 }
 
 #Hint_StartXr

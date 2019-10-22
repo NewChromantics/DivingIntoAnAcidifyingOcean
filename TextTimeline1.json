@@ -1,22 +1,26 @@
 {
 	"0":
 	{
-		"Subtitle":" Carbon Dioxide (CO2) is absorbed by the world’s oceans and acidifies the water through a chemical process called Ocean Acidification. "
+		"Subtitle":"ALMOST ONE-THIRD OF CARBON DIOXIDE (CO2) IS ABSORBED BY THE WORLD’S OCEANS. THIS ACIDIFIES THE WATER THROUGH A CHEMICAL PROCESS CALLED <strong>OCEAN ACIDIFICATION</strong>"
 	},
 
 	"8":
 	{
-		"Subtitle":" These chemical processes decrease our oceans’ pH – its levels of acidity – which has deadly consequences for much of marine life. "
+		"Subtitle":" THESE CHEMICAL PROCESSES DECREASE OUR OCEANS’ PH - ITS LEVELS OF ACIDITY - WHICH HAS <strong>DEADLY CONSEQUENCES FOR MUCH OF MARINE LIFE</strong>"
 	},
 	"17":
 	{
-		"Subtitle":" Shells and skeletons dissolve, and marine animals’ physiology changes. "
+		"Subtitle":"SHELLS AND SKELETONS <strong>DISSOLVE</strong>, AND <br> MARINE ANIMALS’ <strong>PHYSIOLOGY CHANGES</strong>"
 	},
 	"21":
 	{
-		"Subtitle":" The animals encountered so far represent the future of the oceans and the very base of marine food webs. And they are the ones suffering the most the changes occurring in the oceans. "
+		"Subtitle":"THE ANIMALS ENCOUNTERED SO FAR FORM THE <strong>FOUNDATION OF THE MARINE FOOD WEB</strong>, AND REPRESENT THE <strong>FUTURE</strong> OF THE OCEANS"
 	},
-	"32":
+	"28":
+	{
+		"Subtitle":"BUT DUE TO THE DRAMATIC CHANGES TAKING PLACE, THEY ARE ALSO THE ONES <strong>SUFFERING THE MOST</strong>"
+	},
+	"34":
 	{
 		"Subtitle":" "
 	}
