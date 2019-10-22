@@ -10,7 +10,6 @@ varying float3 FragWorldPos;
 uniform sampler2D	NoiseImage;
 uniform float Time;
 uniform float Water_TimeScale;
-const float WorldPosScale = 4.0;
 uniform float Water_PosScale;
 uniform float Water_HeightScale;
 
@@ -91,6 +90,8 @@ float wave_generate(float A, float D_x, float D_z, float f, float x, float z, fl
 	return A*pow((sin((D_x*x+D_z*z)*f+t*p)*0.5+0.5), k);
 }
 
+const float SidewaysScalar = 0.05;
+
 float3 GetWave1(float2 uv)
 {
 	float time = Time * Water_TimeScale;
@@ -102,8 +103,11 @@ float3 GetWave1(float2 uv)
 	float sharpness = Wave1_Sharpness;
 	float sine_result_1 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
 
-	float2 SidewaysScale = 2.0 * texture2D( NoiseImage, uv ).xy;
-	float3 xyz = float3( direction_x*SidewaysScale.x, 1.0, direction_z*SidewaysScale.y );
+	float2 Sideways = normalize( float2(direction_x, direction_z) );
+	Sideways *= SidewaysScalar;
+	Sideways *= texture2D( NoiseImage, uv ).xy;
+
+	float3 xyz = float3( Sideways.x, 1.0, Sideways.y );
 	return xyz * sine_result_1;
 }
 
@@ -118,8 +122,11 @@ float3 GetWave2(float2 uv)
 	float sharpness = Wave2_Sharpness;
 	float sine_result_2 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
 
-	float2 SidewaysScale = 2.0 * texture2D( NoiseImage, uv ).yz;
-	float3 xyz = float3( direction_x*SidewaysScale.x, 1.0, direction_z*SidewaysScale.y );
+	float2 Sideways = normalize( float2(direction_x, direction_z) );
+	Sideways *= SidewaysScalar;
+	Sideways *= texture2D( NoiseImage, uv ).yz;
+	
+	float3 xyz = float3( Sideways.x, 1.0, Sideways.y );
 	return xyz * sine_result_2;
 }
 
@@ -135,8 +142,11 @@ float3 GetWave3(float2 uv)
 	float sharpness = Wave3_Sharpness;
 	float sine_result_2 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
 	
-	float2 SidewaysScale = 2.0 * texture2D( NoiseImage, uv ).xz;
-	float3 xyz = float3( direction_x*SidewaysScale.x, 1.0, direction_z*SidewaysScale.y );
+	float2 Sideways = normalize( float2(direction_x, direction_z) );
+	Sideways *= SidewaysScalar;
+	Sideways *= texture2D( NoiseImage, uv ).xz;
+	
+	float3 xyz = float3( Sideways.x, 1.0, Sideways.y );
 	return xyz * sine_result_2;
 }
 
@@ -174,22 +184,21 @@ void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out fl
 	float Lod = 0.0;
 	
 	float3 GridPos = textureLod( WorldPositions, uv, Lod ).xyz;
-	float3 WorldPosScale3 = float3( WorldPosScale, WorldPosScale, WorldPosScale );
 	//	for some reason, this doesn't give me y=0
-	GridPos.y = 0.0;
-	WorldPos = mix( -WorldPosScale3, WorldPosScale3, GridPos );	//	* bounds, repeat etc
-	WorldPos.y = 0.0;
+	WorldPos = GridPos;
+	//WorldPos.y = 0.0;
 	
 	float2 NoiseUv = GridPos.xz;
 	float3 WaterNoise = GetWaterNoiseOffset( NoiseUv );
 	
 	WorldPos += WaterNoise;
-	//Colour = float4( GridPos, 1 );
+	//Colour = float4( GridPos.xz, 0, 1 );
 	/*
 	Colour = float4( NoiseUv, 0, 1 );
 	if ( NoiseUv.x > 1.0 )
 		Colour = float4( 0, 0, 1, 1 );
-*/
+	*/
+	
 #if defined(TEST_ONE_COLOUR)
 	Colour = TEST_ONE_COLOUR;
 #else

@@ -280,25 +280,25 @@ Params.XrTrackTimelineCamera = true;
 Params.DebugCameraClearColour = false;
 
 Params.Water_TimeScale = 3;
-Params.Water_PosScale = 40;
-Params.Water_HeightScale = 0.3;
+Params.Water_PosScale = 350;
+Params.Water_HeightScale = 0.28;
 
 Params.Wave1_Amplitude = 1.0;
 Params.Wave1_Frequency = 0.2;
 Params.Wave1_DirX = -1.0;
 Params.Wave1_DirZ = -0.7;
-Params.Wave1_Phase = 0.5;
+Params.Wave1_Phase = 0.57;
 Params.Wave1_Sharpness = 2.0;
 
-Params.Wave2_Amplitude = 0.5;
-Params.Wave2_Frequency = 0.4;
-Params.Wave2_DirX = 0.0;
+Params.Wave2_Amplitude = 0.818;
+Params.Wave2_Frequency = 0.32;
+Params.Wave2_DirX = 0.21;
 Params.Wave2_DirZ = 0.7;
-Params.Wave2_Phase = 1.3;
-Params.Wave2_Sharpness = 2.0;
+Params.Wave2_Phase = 1.4;
+Params.Wave2_Sharpness = 1.9;
 
-Params.Wave3_Amplitude = 0.3;
-Params.Wave3_Frequency = 0.8;
+Params.Wave3_Amplitude = 0.48;
+Params.Wave3_Frequency = 0.98;
 Params.Wave3_DirX = -0.3;
 Params.Wave3_DirZ = 0.5;
 Params.Wave3_Phase = 2.3;
@@ -390,7 +390,7 @@ Params.InitParamsWindow = function(ParamsWindow)
 	
 	
 	ParamsWindow.AddParam('Water_TimeScale',0.1,10);
-	ParamsWindow.AddParam('Water_PosScale',1,100);
+	ParamsWindow.AddParam('Water_PosScale',1,500);
 	ParamsWindow.AddParam('Water_HeightScale',0.01,2);
 	
 	ParamsWindow.AddParam('Wave1_Amplitude',0,2);
