@@ -234,6 +234,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		let BoxOffset = Math.Multiply3( BoxScale, [0.5,0.5,0.5] );
 		Position = Math.Subtract3( Position, BoxOffset );
 		let Scale = BoxScale;
+		//	use original Y for bounds
+		if ( Meta.ForceBoundsY )
+			Scale[1] = Meta.ForceBoundsY;
 		this.LocalToWorldTransform = Math.CreateTranslationScaleMatrix( Position, Scale );
 		//	bounds match mesh!
 		this.BoundingBox.Min = [0,0,0];

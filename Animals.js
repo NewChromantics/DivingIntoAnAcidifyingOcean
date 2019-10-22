@@ -262,6 +262,8 @@ function GetWaterMeta()
 		Meta.OverridingColourTexture = OceanColourTexture;
 	
 	Meta.RenderTimeIsRealTime = true;
+	Meta.FitToBoundingBox = true;
+	Meta.ForceBoundsY = 1;
 	
 	return Meta;
 }
