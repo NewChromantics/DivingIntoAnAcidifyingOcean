@@ -958,7 +958,7 @@ function LoadPackedImage(Image,OnRescaledPosition)
 		{
 			const TimerStart = Pop.GetTimeNowMs();
 			RescaleImageToFloat( Image, TextureBuffers.BoundingBox );
-			Pop.Debug("RescaleImageToFloat() took ", Pop.GetTimeNowMs() - TimerStart );
+			Pop.Debug("RescaleImageToFloat() took ", Pop.GetTimeNowMs() - TimerStart, " x"+TextureBuffers.TriangleCount );
 		}
 		else
 		{

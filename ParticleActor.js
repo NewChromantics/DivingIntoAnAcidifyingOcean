@@ -148,6 +148,7 @@ function LoadAssetGeoTextureBuffer(RenderTarget,Filename,AddNoise=true)
 	const PreCalcNoise = [];
 	
 	//	8ms total
+	let Rands = null;
 	function AddNoiseToPosition(xyz,Index,Bounds,VertexCount)
 	{
 		//	precalc
@@ -156,9 +157,9 @@ function LoadAssetGeoTextureBuffer(RenderTarget,Filename,AddNoise=true)
 			PreCalcNoise[0] = (Bounds.Max[0]-Bounds.Min[0]) * Params.LoadTextureBufferNoise;
 			PreCalcNoise[1] = (Bounds.Max[1]-Bounds.Min[1]) * Params.LoadTextureBufferNoise;
 			PreCalcNoise[2] = (Bounds.Max[2]-Bounds.Min[2]) * Params.LoadTextureBufferNoise;
+			Rands = GetRandomNumberArray(VertexCount);
 			return;
 		}
-		const Rands = GetRandomNumberArray(Index+3);
 		const RandIndex = Index;
 		
 		xyz[0] += (Rands[RandIndex+0] - 0.5) * PreCalcNoise[0];
