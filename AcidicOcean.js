@@ -41,9 +41,9 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 
 
 var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
-var OceanColourTexture = new Pop.Image();
-var DebrisColourTexture = new Pop.Image();
-var SwirlColourTexture = new Pop.Image();
+var OceanColourTexture = new Pop.Image('OceanColourTexture');
+var DebrisColourTexture = new Pop.Image('DebrisColourTexture');
+var SwirlColourTexture = new Pop.Image('SwirlColourTexture');
 
 const LastUpdateColourTextureElapsed = {};
 
@@ -299,7 +299,7 @@ Params.CameraFarDistance = Params.FogMaxDistance;
 Params.AudioCrossFadeDurationSecs = 2;
 
 Params.CustomiseWaterColours = false;
-Params.UpdateColourTextureFrequencySecs = 0.3;
+Params.UpdateColourTextureFrequencySecs = 1.5;
 Params.Debris_Colour0 = InvalidColour;
 Params.Debris_Colour1 = InvalidColour;
 Params.Debris_Colour2 = InvalidColour;
