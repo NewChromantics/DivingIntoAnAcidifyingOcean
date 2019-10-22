@@ -308,7 +308,9 @@ Params.Wave3_Frequency = 1.498;
 Params.Wave3_DirX = -0.3;
 Params.Wave3_DirZ = -0.112;
 Params.Wave3_Phase = 0.868;
-Params.Wave3_Sharpness = 1.505;aramsWindow = function(ParamsWindow)
+Params.Wave3_Sharpness = 1.505;
+
+Params.InitParamsWindow = function(ParamsWindow)
 {
 	ParamsWindow.AddParam('ScrollFlySpeed',1,300);
 	ParamsWindow.AddParam('XrInvertRotation');
