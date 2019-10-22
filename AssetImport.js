@@ -810,6 +810,8 @@ function GetImageAsPopImage(Img)
 	throw "Dont know how to get pixels from " + Img;
 }
 
+
+//	gr: currently 4ms
 function BufferToRgb(Buffer,BufferFormat,ChannelCount)
 {
 	const BufferChannels = GetChannelsFromPixelFormat(BufferFormat);
@@ -861,7 +863,7 @@ function IsFloatFormat(Format)
 
 function LoadPackedImage(Image,OnRescaledPosition)
 {
-	OnRescaledPosition = OnRescaledPosition || function(xyz,Index,Bounds){};
+	OnRescaledPosition = OnRescaledPosition || function(xyz,Index,Bounds,VertexCount){};
 	
 	Image = GetImageAsPopImage(Image);
 	let PixelBuffer = Image.GetPixelBuffer();
@@ -895,9 +897,11 @@ function LoadPackedImage(Image,OnRescaledPosition)
 	TextureBuffers.TriangleCount = Meta.TriangleCount;
 	
 	//	maybe this should be in the renderer, but doing it here means we keep system kinda consistent
+	//	currently 17ms!
 	function RescaleImageToFloat(Image,Bounds)
 	{
 		const PixelBytes = Image.GetPixelBuffer();
+		
 		//	need aligned image
 		const Height = Math.GetNextPowerOf2(Image.GetHeight());
 		const Width = Image.GetWidth();
@@ -911,17 +915,19 @@ function LoadPackedImage(Image,OnRescaledPosition)
 		//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
 		const PixelFloats = new Float32Array( Width*Height*Channels );
 
+		//	pre-calcs
+		OnRescaledPosition( false, false, Bounds, PixelBytes.length/Channels );
+
 		const Scalar = InputIsFloat ? 1 : 1/255;
+		const xyz = [];
 		for ( let i=0;	i<PixelBytes.length;	i+=Channels )
 		{
-			let xyz = [];
 			for ( let c=0;	c<Channels;	c++ )
 			{
-				let f = PixelBytes[i+c] * Scalar;
-				f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
-				xyz[c] = f;
+				xyz[c] = PixelBytes[i+c] * Scalar;
+				xyz[c] = Math.lerp( Bounds.Min[c], Bounds.Max[c], xyz[c] );
 			}
-			OnRescaledPosition( xyz, i, Bounds );
+			OnRescaledPosition( xyz, i, Bounds, PixelBytes.length/Channels );
 			for ( let c=0;	c<Channels;	c++ )
 				PixelFloats[i+c] = xyz[c];
 		}
@@ -950,7 +956,9 @@ function LoadPackedImage(Image,OnRescaledPosition)
 		
 		if ( ImageMeta.Name == 'PositionTexture' )
 		{
+			const TimerStart = Pop.GetTimeNowMs();
 			RescaleImageToFloat( Image, TextureBuffers.BoundingBox );
+			Pop.Debug("RescaleImageToFloat() took ", Pop.GetTimeNowMs() - TimerStart );
 		}
 		else
 		{

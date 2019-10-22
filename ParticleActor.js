@@ -141,25 +141,29 @@ function GetCameraActorCullingFilter(Camera,Viewport)
  */
 }
 
-
 function LoadAssetGeoTextureBuffer(RenderTarget,Filename,AddNoise=true)
 {
 	const MaxPositions = AutoTriangleMeshCount;
 	
-	function AddNoiseToPosition(xyz,Index,Bounds)
+	const PreCalcNoise = [];
+	
+	//	8ms total
+	function AddNoiseToPosition(xyz,Index,Bounds,VertexCount)
 	{
-		const Noise =
-		[
-		(Bounds.Max[0]-Bounds.Min[0]) * Params.LoadTextureBufferNoise * 0.5,
-		(Bounds.Max[1]-Bounds.Min[1]) * Params.LoadTextureBufferNoise * 0.5,
-		(Bounds.Max[2]-Bounds.Min[2]) * Params.LoadTextureBufferNoise * 0.5
-		];
-		function AddNoise(v,Index)
+		//	precalc
+		if ( xyz === false )
 		{
-			let Change = Math.lerp( -Noise[Index], Noise[Index], Math.random() );
-			xyz[Index] = v + Change;
+			PreCalcNoise[0] = (Bounds.Max[0]-Bounds.Min[0]) * Params.LoadTextureBufferNoise;
+			PreCalcNoise[1] = (Bounds.Max[1]-Bounds.Min[1]) * Params.LoadTextureBufferNoise;
+			PreCalcNoise[2] = (Bounds.Max[2]-Bounds.Min[2]) * Params.LoadTextureBufferNoise;
+			return;
 		}
-		xyz.forEach(AddNoise);
+		const Rands = GetRandomNumberArray(Index+3);
+		const RandIndex = Index;
+		
+		xyz[0] += (Rands[RandIndex+0] - 0.5) * PreCalcNoise[0];
+		xyz[1] += (Rands[RandIndex+0] - 0.5) * PreCalcNoise[1];
+		xyz[2] += (Rands[RandIndex+0] - 0.5) * PreCalcNoise[2];
 	}
 	
 	//	load texture buffer formats
