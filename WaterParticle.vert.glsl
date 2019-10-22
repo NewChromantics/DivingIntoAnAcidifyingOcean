@@ -12,6 +12,7 @@ uniform float Time;
 uniform float Water_TimeScale;
 uniform float Water_PosScale;
 uniform float Water_HeightScale;
+uniform float Water_SidewaysScalar;
 
 uniform float Wave1_Amplitude;
 uniform float Wave1_Frequency;
@@ -90,8 +91,6 @@ float wave_generate(float A, float D_x, float D_z, float f, float x, float z, fl
 	return A*pow((sin((D_x*x+D_z*z)*f+t*p)*0.5+0.5), k);
 }
 
-const float SidewaysScalar = 0.05;
-
 float3 GetWave1(float2 uv)
 {
 	float time = Time * Water_TimeScale;
@@ -104,7 +103,7 @@ float3 GetWave1(float2 uv)
 	float sine_result_1 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
 
 	float2 Sideways = normalize( float2(direction_x, direction_z) );
-	Sideways *= SidewaysScalar;
+	Sideways *= Water_SidewaysScalar;
 	Sideways *= texture2D( NoiseImage, uv ).xy;
 
 	float3 xyz = float3( Sideways.x, 1.0, Sideways.y );
@@ -123,7 +122,7 @@ float3 GetWave2(float2 uv)
 	float sine_result_2 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
 
 	float2 Sideways = normalize( float2(direction_x, direction_z) );
-	Sideways *= SidewaysScalar;
+	Sideways *= Water_SidewaysScalar;
 	Sideways *= texture2D( NoiseImage, uv ).yz;
 	
 	float3 xyz = float3( Sideways.x, 1.0, Sideways.y );
@@ -143,7 +142,7 @@ float3 GetWave3(float2 uv)
 	float sine_result_2 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
 	
 	float2 Sideways = normalize( float2(direction_x, direction_z) );
-	Sideways *= SidewaysScalar;
+	Sideways *= Water_SidewaysScalar;
 	Sideways *= texture2D( NoiseImage, uv ).xz;
 	
 	float3 xyz = float3( Sideways.x, 1.0, Sideways.y );

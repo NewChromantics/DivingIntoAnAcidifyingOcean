@@ -281,7 +281,8 @@ Params.DebugCameraClearColour = false;
 
 Params.Water_TimeScale = 3;
 Params.Water_PosScale = 350;
-Params.Water_HeightScale = 0.28;
+Params.Water_HeightScale = 0.33;
+Params.Water_SidewaysScalar = 0.05;
 
 Params.Wave1_Amplitude = 1.0;
 Params.Wave1_Frequency = 0.2;
@@ -392,7 +393,8 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Water_TimeScale',0.1,10);
 	ParamsWindow.AddParam('Water_PosScale',1,500);
 	ParamsWindow.AddParam('Water_HeightScale',0.01,2);
-	
+	ParamsWindow.AddParam('Water_SidewaysScalar',0.01,0.4);
+
 	ParamsWindow.AddParam('Wave1_Amplitude',0,2);
 	ParamsWindow.AddParam('Wave1_Frequency',0,2);
 	ParamsWindow.AddParam('Wave1_DirX',-1,1);
