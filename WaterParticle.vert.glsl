@@ -9,12 +9,31 @@ varying float3 FragWorldPos;
 
 uniform sampler2D	NoiseImage;
 uniform float Time;
-const float Water_TimeScale = 3.0;
-const float WorldPosScale = 2.0;
-const float Water_PosScale = 40.0;
-const float Water_HeightScale = 0.3;
+uniform float Water_TimeScale;
+const float WorldPosScale = 4.0;
+uniform float Water_PosScale;
+uniform float Water_HeightScale;
 
+uniform float Wave1_Amplitude;
+uniform float Wave1_Frequency;
+uniform float Wave1_DirX;
+uniform float Wave1_DirZ;
+uniform float Wave1_Phase;
+uniform float Wave1_Sharpness;
 
+uniform float Wave2_Amplitude;
+uniform float Wave2_Frequency;
+uniform float Wave2_DirX;
+uniform float Wave2_DirZ;
+uniform float Wave2_Phase;
+uniform float Wave2_Sharpness;
+
+uniform float Wave3_Amplitude;
+uniform float Wave3_Frequency;
+uniform float Wave3_DirX;
+uniform float Wave3_DirZ;
+uniform float Wave3_Phase;
+uniform float Wave3_Sharpness;
 
 
 uniform sampler2D WorldPositions;
@@ -72,44 +91,53 @@ float wave_generate(float A, float D_x, float D_z, float f, float x, float z, fl
 	return A*pow((sin((D_x*x+D_z*z)*f+t*p)*0.5+0.5), k);
 }
 
-float GetWave1(float2 uv)
+float3 GetWave1(float2 uv)
 {
 	float time = Time * Water_TimeScale;
-	float amplitude = 1.0;
-	float frequency = 0.2;
-	float direction_x = -1.0;
-	float direction_z = -0.7;
-	float phase = 0.5;
-	float sharpness = 2.0;
+	float amplitude = Wave1_Amplitude;
+	float frequency = Wave1_Frequency;
+	float direction_x = Wave1_DirX;
+	float direction_z = Wave1_DirZ;
+	float phase = Wave1_Phase;
+	float sharpness = Wave1_Sharpness;
 	float sine_result_1 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
-	return sine_result_1;
+
+	float2 SidewaysScale = 2.0 * texture2D( NoiseImage, uv ).xy;
+	float3 xyz = float3( direction_x*SidewaysScale.x, 1.0, direction_z*SidewaysScale.y );
+	return xyz * sine_result_1;
 }
 
-float GetWave2(float2 uv)
+float3 GetWave2(float2 uv)
 {
 	float time = Time * Water_TimeScale;
-	float amplitude = 0.5;
-	float frequency = 0.4;
-	float direction_x = 0.0;
-	float direction_z = 0.7;
-	float phase = 1.3;
-	float sharpness = 2.0;
+	float amplitude = Wave2_Amplitude;
+	float frequency = Wave2_Frequency;
+	float direction_x = Wave2_DirX;
+	float direction_z = Wave2_DirZ;
+	float phase = Wave2_Phase;
+	float sharpness = Wave2_Sharpness;
 	float sine_result_2 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
-	return sine_result_2;
+
+	float2 SidewaysScale = 2.0 * texture2D( NoiseImage, uv ).yz;
+	float3 xyz = float3( direction_x*SidewaysScale.x, 1.0, direction_z*SidewaysScale.y );
+	return xyz * sine_result_2;
 }
 
 
-float GetWave3(float2 uv)
+float3 GetWave3(float2 uv)
 {
 	float time = Time * Water_TimeScale;
-	float amplitude = 0.3;
-	float frequency = 0.8;
-	float direction_x = -0.3;
-	float direction_z = 0.5;
-	float phase = 2.3;
-	float sharpness = 2.0;
+	float amplitude = Wave3_Amplitude;
+	float frequency = Wave3_Frequency;
+	float direction_x = Wave3_DirX;
+	float direction_z = Wave3_DirZ;
+	float phase = Wave3_Phase;
+	float sharpness = Wave3_Sharpness;
 	float sine_result_2 = wave_generate( amplitude, direction_x, direction_z, frequency, uv.x, uv.y, phase, time, sharpness);
-	return sine_result_2;
+	
+	float2 SidewaysScale = 2.0 * texture2D( NoiseImage, uv ).xz;
+	float3 xyz = float3( direction_x*SidewaysScale.x, 1.0, direction_z*SidewaysScale.y );
+	return xyz * sine_result_2;
 }
 
 float3 GetWaterNoiseOffset(float2 Mapuv)
@@ -129,14 +157,14 @@ float3 GetWaterNoiseOffset(float2 Mapuv)
 	float Noise = NoiseA;
 	*/
 	float SpaceScalar = Water_PosScale;
-	float Noise = 0.0;
+	float3 Noise;
 	Noise += GetWave1(Mapuv * float2(SpaceScalar,SpaceScalar));
 	Noise += GetWave2(Mapuv * float2(SpaceScalar,SpaceScalar));
 	Noise += GetWave3(Mapuv * float2(SpaceScalar,SpaceScalar));
 	Noise *= Water_HeightScale;
 	//Noise *= Noise;
 	//Noise *= Noise;
-	return float3( 0.0, Noise, 0.0 );
+	return Noise;
 }
 
 

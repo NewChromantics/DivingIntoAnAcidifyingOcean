@@ -223,7 +223,37 @@ function GetWaterMeta()
 	Meta.RenderShader = WaterParticleShader;
 	Meta.RenderUniforms = {};
 	Meta.RenderUniforms.NoiseImage = Noise_TurbulenceTexture;
+	function PushParam(Name)
+	{
+		Meta.RenderUniforms[Name] = Params[Name];
+	}
+	const WaterParams =
+	[
+	'Water_TimeScale',
+	'Water_PosScale',
+	'Water_HeightScale',
+	'Wave1_Amplitude',
+	'Wave1_Frequency',
+	'Wave1_DirX',
+	'Wave1_DirZ',
+	'Wave1_Phase',
+	'Wave1_Sharpness',
+	'Wave2_Amplitude',
+	'Wave2_Frequency',
+	'Wave2_DirX',
+	'Wave2_DirZ',
+	'Wave2_Phase',
+	'Wave2_Sharpness',
+	'Wave3_Amplitude',
+	'Wave3_Frequency',
+	'Wave3_DirX',
+	'Wave3_DirZ',
+	'Wave3_Phase',
+	'Wave3_Sharpness',
+	];
+	WaterParams.forEach( PushParam );
 	
+
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	

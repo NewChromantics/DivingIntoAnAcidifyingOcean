@@ -387,6 +387,32 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
 
 	ParamsWindow.AddParam('DoubleBufferPhysics');
+	
+	
+	ParamsWindow.AddParam('Water_TimeScale',0.1,10);
+	ParamsWindow.AddParam('Water_PosScale',1,100);
+	ParamsWindow.AddParam('Water_HeightScale',0.01,2);
+	
+	ParamsWindow.AddParam('Wave1_Amplitude',0,2);
+	ParamsWindow.AddParam('Wave1_Frequency',0,2);
+	ParamsWindow.AddParam('Wave1_DirX',-1,1);
+	ParamsWindow.AddParam('Wave1_DirZ',-1,1);
+	ParamsWindow.AddParam('Wave1_Phase',0,2);
+	ParamsWindow.AddParam('Wave1_Sharpness',0,5);
+	
+	ParamsWindow.AddParam('Wave2_Amplitude',0,2);
+	ParamsWindow.AddParam('Wave2_Frequency',0,2);
+	ParamsWindow.AddParam('Wave2_DirX',-1,1);
+	ParamsWindow.AddParam('Wave2_DirZ',-1,1);
+	ParamsWindow.AddParam('Wave2_Phase',0,2);
+	ParamsWindow.AddParam('Wave2_Sharpness',0,5);
+	
+	ParamsWindow.AddParam('Wave3_Amplitude',0,2);
+	ParamsWindow.AddParam('Wave3_Frequency',0,2);
+	ParamsWindow.AddParam('Wave3_DirX',-1,1);
+	ParamsWindow.AddParam('Wave3_DirZ',-1,1);
+	ParamsWindow.AddParam('Wave3_Phase',0,2);
+	ParamsWindow.AddParam('Wave3_Sharpness',0,5);
 }
 
 
