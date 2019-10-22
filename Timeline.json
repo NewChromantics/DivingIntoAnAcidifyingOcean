@@ -1,5 +1,5 @@
 {
-	"1800":
+	"1808":
 	{
 		"YearsPerSecond":1,
 		"CreateSwirlEveryXYears":false,
@@ -37,77 +37,77 @@
 		]
 	},
 
-	"1802":
+	"1810":
 	{
 		"Subtitle":"EVERY  <strong>  SECOND  </strong>  BREATH WE TAKE COMES FROM THE OCEAN"
 	},
-	"1806":
+	"1814":
 	{
 		"Subtitle":" "
 	},
-	"1808":
+	"1816":
 	{
 		"Subtitle":"BUT THIS WON’T BE FOR  <strong>  MUCH LONGER  </strong> "
 	},
-	"1812":
+	"1820":
 	{
 		"Subtitle":""
 	},
 
-	"1815":
+	"1823":
 	{
 		"Subtitle":"WE’RE IN THE PROCESS OF <strong> KILLING 96%  </strong>  OF OCEAN LIFE"
 	},
 
-	"1820":
+	"1828":
 	{
 		"Music": "Audio/AcidicOcean_AMB_UnderWater.mp3",
 		"Subtitle":" "
 	},
 	
-	"1823":
+	"1831":
 	{
 		"Subtitle":"THAT’S WHAT HAPPENED SOME 252 MILLION YEARS AGO IN AN EVENT KNOWN AS <strong> <br> “THE GREAT DYING” </strong>"
 	},
 
-	"1828":
+	"1836":
 	{
 		"Subtitle":"WHEN A MASSIVE RELEASE OF <strong> CARBON DIOXIDE (CO2) </strong> AND OTHER GASES CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
 	},
 
-	"1834":
+	"1842":
 	{
 		"Subtitle":"THAT <strong>DEPLETED THE OCEANS OF OXYGEN</strong> AND <strong>ACIDIFIED THE WATERS</strong>"
 	},
 
 
-	"1838":
+	"1846":
 	{
 		"Subtitle":"TODAY WE ARE REPEATING THIS <strong>AGAIN</strong>"
 	},
 
 	
-	"1841":
+	"1849":
 	{
 		"Subtitle":"BUT RATHER THAN TAKING TENS OF THOUSANDS OF YEARS, WE ARE DOING THIS <br> IN A LITTLE MORE THAN <strong>ONE SINGLE LIFETIME</strong>"
 	},
 
-	"1845":
+	"1853":
 	{
 		"Subtitle":"IF WE FAIL TO ACT, WHAT WILL HAPPEN TO OCEAN LIFE… <strong>AND TO US?</strong>"
 	},
 
-	"1850":
+	"1856":
 	{
 		"Subtitle":""
 	},
 
-	"1855":
+	"1857":
 	{
 		"HintClickAnimalVisible":true
 	},
 
-	"1857":
+	"1859":
 	{
 		"HintClickAnimalVisible":false
 	},
