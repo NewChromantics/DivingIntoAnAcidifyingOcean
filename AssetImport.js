@@ -861,10 +861,8 @@ function IsFloatFormat(Format)
 	}
 }
 
-function LoadPackedImage(Image,OnRescaledPosition)
+function LoadPackedImage(Image,PositionNoise=0)
 {
-	OnRescaledPosition = OnRescaledPosition || function(xyz,Index,Bounds,VertexCount){};
-	
 	Image = GetImageAsPopImage(Image);
 	let PixelBuffer = Image.GetPixelBuffer();
 	const PackedImageChannels = GetChannelsFromPixelFormat(PackedImageFormat);
@@ -915,21 +913,17 @@ function LoadPackedImage(Image,OnRescaledPosition)
 		//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
 		const PixelFloats = new Float32Array( Width*Height*Channels );
 
-		//	pre-calcs
-		OnRescaledPosition( false, false, Bounds, PixelBytes.length/Channels );
-
+		const Rands = GetRandomNumberArray( PixelBytes.length );
+		
 		const Scalar = InputIsFloat ? 1 : 1/255;
-		const xyz = [];
-		for ( let i=0;	i<PixelBytes.length;	i+=Channels )
+		
+		for ( let i=0;	i<PixelBytes.length;	i++ )
 		{
-			for ( let c=0;	c<Channels;	c++ )
-			{
-				xyz[c] = PixelBytes[i+c] * Scalar;
-				xyz[c] = Math.lerp( Bounds.Min[c], Bounds.Max[c], xyz[c] );
-			}
-			OnRescaledPosition( xyz, i, Bounds, PixelBytes.length/Channels );
-			for ( let c=0;	c<Channels;	c++ )
-				PixelFloats[i+c] = xyz[c];
+			let c = i % Channels;
+			let f = PixelBytes[i] * Scalar;
+			f += (Rands[i]-0.5) * PositionNoise;
+			f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
+			PixelFloats[i] = f;
 		}
 		
 		Image.WritePixels( Width, Height, PixelFloats, FloatFormat );
