@@ -492,8 +492,11 @@ function LoadCameraScene(Filename)
 		let IsAnimalActor = IsActorSelectable(Actor);
 		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
 		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
-		const IsWaterActor = ActorNode.Name.startsWith(WaterActorPrefix);
+		const IsWaterActor = IsOceanActor || ActorNode.Name.startsWith(WaterActorPrefix);
 		const IsSwirlActor = ActorNode.Name.startsWith(SwirlActorPrefix);
+		
+		if ( IsDebrisActor )
+			return;
 		
 		if ( ShowDefaultActors )
 			IsAnimalActor = false;
@@ -512,13 +515,13 @@ function LoadCameraScene(Filename)
 			{
 				SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
 			}
-			else if ( IsOceanActor )
-			{
-				SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
-			}
 			else if ( IsWaterActor )
 			{
 				SetupAnimalTextureBufferActor.call( Actor, GetWaterMeta().Filename, GetWaterMeta );
+			}
+			else if ( IsOceanActor )
+			{
+				SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
 			}
 			else if ( IsDebrisActor )
 			{
