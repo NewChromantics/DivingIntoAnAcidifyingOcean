@@ -249,7 +249,7 @@ a:hover
 	position:		absolute;
 	left:			2vw;
 	top:			10vh;
-	width:			23vh;
+	width:			5vh;
 	height:			5vh;
 }
 
@@ -257,12 +257,18 @@ a:hover
 #PauseButton:hover span
 {
 	xbackground:red;
-	background-size:	auto 120%;
+	background-size:	auto 100%;
+}
+
+#PauseButton span
+{
+	background-size:		auto 80%;
+	background-position:	center;
 }
 
 #PauseLabel, #ResumeLabel
 {
-	background-size:	auto 100%;
+	xbackground-size:	auto 50%;
 	font-size:		0;		/* Hide the text */
 	pointer-events:	none;	/* let clicks fall through to parent */
 	position:		absolute;
