@@ -13,7 +13,7 @@ const ForceRandomAnimal = null;//"PLASTIC BAG";
 
 function GetRandomAnimal(NodeName)
 {
-	Pop.Debug("GetRandomAnimal("+NodeName+")");
+	//Pop.Debug("GetRandomAnimal("+NodeName+")");
 	const Category = NodeName;
 	
 	if ( ForceRandomAnimal )

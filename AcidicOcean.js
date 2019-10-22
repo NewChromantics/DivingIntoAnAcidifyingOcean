@@ -483,7 +483,7 @@ function LoadCameraScene(Filename)
 			return;
 		}
 		
-		Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
+		//Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();
 		Actor.Name = ActorNode.Name;
 		

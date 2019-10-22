@@ -545,8 +545,11 @@ function GetAsset(Name,RenderContext)
 	if ( !AssetFetchFunctions.hasOwnProperty(Name) )
 		throw "No known asset named "+ Name;
 	
-	Pop.Debug("Generating asset",Name);
+	Pop.Debug("Generating asset "+Name+"...");
+	const Timer_Start = Pop.GetTimeNowMs();
 	ContextAssets[Name] = AssetFetchFunctions[Name]( RenderContext );
+	const Timer_Duration = Math.floor(Pop.GetTimeNowMs() - Timer_Start);
+	Pop.Debug("Generating asset "+Name+" took "+Timer_Duration + "ms");
 	OnAssetChanged( Name );
 	return ContextAssets[Name];
 }
