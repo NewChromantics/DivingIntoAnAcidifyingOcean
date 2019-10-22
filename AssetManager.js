@@ -246,7 +246,7 @@ function MonitorAssetFile(Filename)
 	//	not supported
 	if ( !Pop.FileMonitor )
 	{
-		Pop.Debug("Pop.FileMonitor not supported");
+		//Pop.Debug("Pop.FileMonitor not supported");
 		return;
 	}
 	
@@ -313,27 +313,34 @@ function CreateRandomSphereImage(Width,Height)
 {
 	let Channels = 4;
 	let Format = 'Float4';
+
+	const TimerStart = Pop.GetTimeNowMs();
 	
 	let Pixels = new Float32Array( Width * Height * Channels );
-	for ( let i=0;	i<Pixels.length;	i+=4 )
+	const Rands = GetRandomNumberArray(Pixels.length*Channels);
+	for ( let i=0;	i<Pixels.length;	i+=Channels )
 	{
-		let xyz = [ Math.random()-0.5, Math.random()-0.5, Math.random()-0.5 ];
+		let xyz = Rands.slice( i*Channels, (i*Channels)+Channels );
+		let w = xyz[3];
+		xyz = Math.Subtract3( xyz, [0.5,0.5,0.5] );
 		xyz = Math.Normalise3( xyz );
 		xyz = Math.Add3( xyz, [1,1,1] );
 		xyz = Math.Multiply3( xyz, [0.5,0.5,0.5] );
 		
-		let w = Math.random();
 		Pixels[i+0] = xyz[0];
 		Pixels[i+1] = xyz[1];
 		Pixels[i+2] = xyz[2];
 		Pixels[i+3] = w;
 	}
 	
+	Pop.Debug("CreateRandomSphereImage() took", Pop.GetTimeNowMs() - TimerStart);
+	
 	let Texture = new Pop.Image();
 	Texture.WritePixels( Width, Height, Pixels, Format );
 	return Texture;
 }
 
+Pop.Debug("RandomTexture = CreateRandomSphereImage");
 const RandomTexture = CreateRandomSphereImage( 1024, 1024 );
 
 

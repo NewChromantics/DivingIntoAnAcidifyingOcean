@@ -241,7 +241,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		//	bounds match mesh!
 		this.BoundingBox.Min = [0,0,0];
 		this.BoundingBox.Max = [1,1,1];
-		Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
+		//Pop.Debug("Fit bounding box transform",this.LocalToWorldTransform,this);
 	}
 	else
 	{

@@ -13,8 +13,26 @@ function SetGlobal()
 SetGlobal.call(this);
 
 
-
 Pop.Include('PopEngineCommon/PopApi.js');
+
+
+
+
+const RandomNumberCache = [];
+
+function GetRandomNumberArray(Count)
+{
+	if ( RandomNumberCache.length < Count )
+		Pop.Debug("calculating random numbers x"+Count);
+	while ( RandomNumberCache.length < Count )
+	{
+		RandomNumberCache.push( Math.random() );
+	}
+	return RandomNumberCache;
+}
+
+
+
 Pop.Include('AssetImport.js');
 Pop.Include('Animals.js');
 

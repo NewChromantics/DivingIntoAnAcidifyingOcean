@@ -34,12 +34,11 @@ function GetCachedFilename(Filename,Type)
 
 function GenerateRandomVertexes(Contents,OnVertex,OnMeta)
 {
+	const Rands = GetRandomNumberArray(2000*3);
 	for ( let i=0;	i<2000;	i++ )
 	{
-		let x = Math.random();
-		let y = Math.random();
-		let z = Math.random();
-		OnVertex(x,y,z);
+		const xyz = Rands.slice( i*3, (i*3)+3 );
+		OnVertex( ...xyz );
 	}
 }
 
