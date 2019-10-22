@@ -23,7 +23,7 @@ const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
 const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_ShellDissolution.mp3';
 
 //	for debugging opengl stuff
-const EnableColourTextureUpdate = false;
+const EnableColourTextureUpdate = true;
 
 //	temp turning off and just having dummy actors
 const PhysicsEnabled = !Pop.GetExeArguments().includes('PhysicsDisabled');
@@ -110,7 +110,6 @@ var AppTime = null;
 var Hud = {};
 var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
-var LastMouseRay = null;	//	gr: this isn't getting updated any more
 var LastMouseRayUv = null;
 var LastMouseClicks = [];	//	array of queued uvs
 
@@ -264,7 +263,7 @@ Params.ShowAnimal_ExplodeSecs = 3;
 Params.ShowAnimal_Duration = 40;
 Params.ShowAnimal_CameraOffsetX = 0.0;
 Params.ShowAnimal_CameraOffsetY = 0.0;
-Params.ShowAnimal_CameraOffsetZ = 0.41;
+Params.ShowAnimal_CameraOffsetZ = 1.9;
 Params.ShowAnimal_CameraLerpInSpeed = 0.275;
 Params.ShowAnimal_CameraLerpOutSpeed = 0.10;
 Params.AnimalBufferLod = 1.0;
@@ -1618,17 +1617,20 @@ function Update(FrameDurationSecs)
 	}
 	
 	//	create some swirls
-	const SwirlsEnabled = Timeline.GetUniform( Time, 'SwirlsEnabled' );
-	if ( Params.AlwaysCreateSwirls || SwirlsEnabled )
+	let SwirlsEveryYears = Timeline.GetUniform( Time, 'CreateSwirlEveryXYears' );
+	if ( Params.AlwaysCreateSwirls )
+		SwirlsEveryYears = 3;
+	if ( SwirlsEveryYears !== false )
 	{
+		//	first trigger, trigger NOW
 		if ( !Acid.LastSwirlYear )
-			Acid.LastSwirlYear = 9999;
-		
+			Acid.LastSwirlYear = Time - SwirlsEveryYears;
+
 		//	years since swirl
 		const YearsSinceNewSwirl = Math.abs( Acid.LastSwirlYear - Time );
-		if ( YearsSinceNewSwirl >= Params.CreateSwirlEveryXYears )
+		if ( YearsSinceNewSwirl >= SwirlsEveryYears )
 		{
-			Pop.Debug("AddSwirlActor",Time);
+			Pop.Debug("AddSwirlActor",Time,"SwirlsEveryYears",SwirlsEveryYears);
 			AddSwirlActor();
 			Acid.LastSwirlYear = Time;
 		}

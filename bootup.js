@@ -203,6 +203,7 @@ Params.DrawBoundingBoxes = false;//IsDebugEnabled();
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
 Params.LoadTextureBufferNoise = 0.007;
+Params.TestRayDistance = 0.82;
 
 Params.FogColour = [0,0,0.2];
 Params.FogMinDistance = 8.0;
@@ -233,12 +234,12 @@ Params.DustParticles_BoundsZ = 7.4;
 Params.DustParticles_OffsetZ = 2.8;
 
 Params.Swirl_TriangleScale = 0.007567000000000001;
-Params.Swirl_Physics_SpringScale = 69.8;
+Params.Swirl_Physics_SpringScale = 15.0;
 Params.Swirl_Physics_MaxSpringForce = 45.3;
-Params.Swirl_Physics_Damping = 0.20;
+Params.Swirl_Physics_Damping = 0.075;
 Params.Swirl_Physics_CustomSplineTime = false;
 Params.Swirl_Physics_SplineTime = 0.148;
-Params.Swirl_Physics_SplineDuration = 13.86;
+Params.Swirl_Physics_SplineDuration = 13.86*2;
 Params.Swirl_Physics_SplineTimeRange = 0.061;
 Params.Swirl_Physics_SplineStrips = 22;
 Params.Swirl_Physics_LocalNoiseScale = 0;
@@ -260,7 +261,8 @@ Params.Swirl_StartPositionY = -0.1;
 Params.Swirl_StartPositionZ = 0.8;
 Params.AlwaysCreateSwirls = false;	//	for debug
 Params.CreateSwirlEveryXYears = 7;
-
+Params.Swirl_AvoidRadius = 0.35;
+Params.Swirl_AvoidPhysicsScale = 14;
 
 Params.Ocean_TriangleScale = BoldMode ? 0.2 : 0.0148;
 Params.OceanAnimationFrameRate = 25;
@@ -349,6 +351,8 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Swirl_StartPositionZ',-5,5);
 	ParamsWindow.AddParam('AlwaysCreateSwirls');
 	ParamsWindow.AddParam('CreateSwirlEveryXYears',0,50);
+	ParamsWindow.AddParam('Swirl_AvoidRadius',0,20);
+	ParamsWindow.AddParam('Swirl_AvoidPhysicsScale',0,20);
 
 	
 	ParamsWindow.AddParam('Turbulence_Frequency',0,20);

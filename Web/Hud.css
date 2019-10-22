@@ -253,8 +253,16 @@ a:hover
 	height:			5vh;
 }
 
+/* make background bigger on hover*/
+#PauseButton:hover span
+{
+	xbackground:red;
+	background-size:	auto 120%;
+}
+
 #PauseLabel, #ResumeLabel
 {
+	background-size:	auto 100%;
 	font-size:		0;		/* Hide the text */
 	pointer-events:	none;	/* let clicks fall through to parent */
 	position:		absolute;
@@ -263,6 +271,7 @@ a:hover
 	right:			0px;
 	left:			0px;
 }
+
 
 #PauseLabel
 {

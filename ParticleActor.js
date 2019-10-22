@@ -785,6 +785,22 @@ function GetSwirlMeta(Actor)
 	Meta.PhysicsUniforms.StringStrips = Params.Swirl_Physics_SplineStrips;
 	Meta.PhysicsUniforms.SplineTimeRange = Params.Swirl_Physics_SplineTimeRange;
 
+	//	get the avoid ray
+	{
+		Meta.PhysicsUniforms.AvoidRayStart = [0,0,0];
+		Meta.PhysicsUniforms.AvoidRayDirection = [0,0,0];
+		Meta.PhysicsUniforms.AvoidRayRadius = Params.Swirl_AvoidRadius;
+		Meta.PhysicsUniforms.AvoidRayScale = Params.Swirl_AvoidPhysicsScale;
+		if ( LastMouseRayUv )
+		{
+			const MouseRay = GetMouseRay( LastMouseRayUv );
+			Meta.PhysicsUniforms.AvoidRayStart = MouseRay.Start;
+			Meta.PhysicsUniforms.AvoidRayDirection = MouseRay.Direction;
+			//Pop.Debug(Meta.PhysicsUniforms);
+		}
+	}
+	
+	
 	if ( Params.Swirl_Physics_CustomSplineTime )
 	{
 		Meta.PhysicsUniforms.SplineTime = Params.Swirl_Physics_SplineTime;

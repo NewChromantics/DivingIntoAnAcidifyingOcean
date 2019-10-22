@@ -18,11 +18,16 @@ function LerpValue(a,b,Lerp)
 	if ( Array.isArray(a) )
 		return LerpArray( a, b, Lerp );
 
-	let IsLerpable = ( typeof a == 'number' );
+	let IsLerpable_a = ( typeof a == 'number' );
+	let IsLerpable_b = ( typeof b == 'number' );
 
 	//	bool, string, object, return previous until we hit next keyframe
-	if ( !IsLerpable )
-		return (Lerp < 1.0) ? a : b;
+	if ( Lerp >= 1.0 )
+		return b;
+	
+	//	if a or b isn't lerpable, we return prev
+	if ( !IsLerpable_a || !IsLerpable_b )
+		return a;
 	
 	//	lerp number
 	return Math.Lerp( a, b, Lerp );
