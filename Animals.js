@@ -195,19 +195,20 @@ function GetOceanMeta()
 	
 	Meta.RenderTimeIsRealTime = true;
 	
+	
 	return Meta;
 }
 
 function GenerateGridVertexes(Contents,OnVertex,OnMeta)
 {
-	const Width = 100;
-	const Height = 100;
+	const Width = 300;
+	const Height = 300;
 	for ( let x=0;	x<Width;	x++ )
 	{
 		for ( let y=0;	y<Height;	y++ )
 		{
-			let u = x / Width;
-			let v = y / Height;
+			let u = Math.lerp( 0.2, 0.8, x / Width );
+			let v = Math.lerp( 1.0, 0.4, y / Height );
 			OnVertex(u,0,v);
 		}
 	}
