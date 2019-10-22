@@ -539,7 +539,7 @@ a:hover
 #AnimalCard
 {
 	xxxvisibility:	visible !important;	/* forces on for testing */
-	background:rgba(0, 0, 0, 0.75);
+	background:rgba(0, 0, 0, 0.50);
 	display:	block;
 	position:	absolute;
 	left:		10vw;
@@ -585,7 +585,7 @@ a:hover
 
 #Continue
 {
-	background: rgba(0, 0, 0, 0.75);
+	background: rgba(0, 0, 0, 0.50);
 	position:	absolute;
 	right:		0vw;
 	width:		17vw;
