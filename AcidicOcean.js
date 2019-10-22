@@ -495,9 +495,6 @@ function LoadCameraScene(Filename)
 		const IsWaterActor = IsOceanActor || ActorNode.Name.startsWith(WaterActorPrefix);
 		const IsSwirlActor = ActorNode.Name.startsWith(SwirlActorPrefix);
 		
-		if ( IsDebrisActor )
-			return;
-		
 		if ( ShowDefaultActors )
 			IsAnimalActor = false;
 		
