@@ -129,7 +129,7 @@ a:hover
 	top:			90vh;
 	width:			10vw;
 	xxxheight:			5vh;
-	font-size:		1.5vh;
+	font-size:		calc(0.5em + 0.3vh);
 	
 	text-decoration:	underline;
 	
@@ -233,7 +233,7 @@ a:hover
 #AboutButton
 {
 	xxxbackground:	blue;
-	font-size:		1.5vh;
+	font-size:		calc(0.5em + 0.3vh);
 	line-height:	3vh;
 	position:		absolute;
 	left:			2vw;
@@ -285,13 +285,14 @@ a:hover
 
 #Hint_Start, #Hint_StartXr
 {
+	xxxbackground-color:	red;
 	display:	block;
 	position:	absolute;
-	left:		48.5vw;
+	left:		25vw;
 	top:		79.35vh;
-	width:		4.5vw;
+	width:		50vw;
 	height:		4vh;
-	font-size:	2vh;
+	font-size:	calc(0.5em + 0.5vh);
 	font-weight: bold;
 	padding: 0.3em;
 	
