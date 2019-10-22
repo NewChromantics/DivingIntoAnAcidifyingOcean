@@ -9,11 +9,17 @@ Pop.Include('PopEngineCommon/PopMath.js');
 const EnableLogoParams = false;
 const EnableInteractiveLogo = Pop.GetExeArguments().includes('Logo');
 
-const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
-const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
-const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
-const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdatePosition.frag.glsl');
-const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
+
+//const LogoParticleFrag = Pop.LoadFileAsString('Logo/LogoParticle.frag.glsl');
+//const LogoParticleVert = Pop.LoadFileAsString('Logo/LogoParticle.vert.glsl');
+//const LogoParticlePhysicsIteration_UpdateVelocity = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl');
+//const LogoParticlePhysicsIteration_UpdatePosition = Pop.LoadFileAsString('Logo/Logo_PhysicsIteration_UpdatePosition.frag.glsl');
+//const LogoSdfFrag = Pop.LoadFileAsString('Logo/LogoSdf.frag.glsl');
+const LogoParticleFrag = null;
+const LogoParticleVert = null;
+const LogoParticlePhysicsIteration_UpdateVelocity = null;
+const LogoParticlePhysicsIteration_UpdatePosition = null;
+const LogoSdfFrag = null;
 const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
 
 
@@ -153,6 +159,7 @@ function TLogoState()
 	];
 
 	//	autogen ocean asset filenames
+	/*
 	{
 		let LoadOceanFrames = 96;
 		if ( Pop.GetExeArguments().includes('ShortOcean') )
@@ -164,7 +171,7 @@ function TLogoState()
 			this.PreloadGeoFilenames.push(Filename);
 		}
 	}
-
+	*/
 	//	autogen model asset filenames
 	this.PreloadGeoFilenames.push( ...GetAnimalAssetFilenames() );
 

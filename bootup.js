@@ -17,20 +17,25 @@ SetGlobal.call(this);
 Pop.Include('PopEngineCommon/PopApi.js');
 Pop.Include('AssetImport.js');
 Pop.Include('Animals.js');
-try
-{
-	Pop.Include('ConvertAssets.js');
-}
-catch(e)
-{
-	Pop.Debug("Convert assets error: " + e);
-}
+
 
 function IsDebugEnabled()
 {
 	const Args = Pop.GetExeArguments();
 	const HasDebug = Args.includes('Debug');
 	return HasDebug;
+}
+
+if ( IsDebugEnabled() )
+{
+	try
+	{
+		Pop.Include('ConvertAssets.js');
+	}
+	catch(e)
+	{
+		Pop.Debug("Convert assets error: " + e);
+	}
 }
 
 Pop.Include('Hud.js');
