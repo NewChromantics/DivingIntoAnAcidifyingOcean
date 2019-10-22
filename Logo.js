@@ -123,7 +123,8 @@ function TLogoState()
 	 
 	 	'AnimalParticle.frag.glsl',
 	 	'AnimalParticle.vert.glsl',
-	 	'DustParticle.vert.glsl',
+		'DustParticle.vert.glsl',
+		'WaterParticle.vert.glsl',
 	 	'Noise/TurbulencePerlin.frag.glsl',
 
 

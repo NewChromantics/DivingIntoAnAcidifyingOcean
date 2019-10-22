@@ -396,6 +396,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 				Object.keys(Meta.RenderUniforms).forEach( SetUniform.bind(Meta.RenderUniforms) );
 			}
 			
+			Shader.SetUniform('Time',Time);
 			Shader.SetUniform('ShowClippedParticle', Params.ShowClippedParticle );
 			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
 			Shader.SetUniform('LocalPositions', LocalPositions );

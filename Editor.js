@@ -38,6 +38,7 @@ EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
 EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
+EditorParams.ActorNodeName = WaterActorPrefix;
 //EditorParams.ActorNodeName = SplineActorPrefix;
 
 EditorParams.ReloadAfterSecs = 300;
@@ -257,18 +258,18 @@ function GetRenderScene(GetActorScene,Time)
 	
 	const DebugTextures = [];
 	
-	//if ( Params.DebugNoiseTextures )
-	{
-		DebugTextures.push( OceanColourTexture );
-		DebugTextures.push( DebrisColourTexture );
-		DebugTextures.push( RandomTexture );
-		DebugTextures.push( Noise_TurbulenceTexture );
-	}
-	
 	const ActorScene = GetActorScene();
 	ActorScene.forEach( a => PushActorBoundingBox(a) );
 	ActorScene.forEach( a => Scene.push(a) );
 	
+	//if ( Params.DebugNoiseTextures )
+	{
+		//DebugTextures.push( OceanColourTexture );
+		//DebugTextures.push( DebrisColourTexture );
+		//DebugTextures.push( RandomTexture );
+		DebugTextures.push( Noise_TurbulenceTexture );
+	}
+
 	//	show all the actor positions
 	function PushActorPositionTexture(Actor)
 	{
@@ -284,7 +285,7 @@ function GetRenderScene(GetActorScene,Time)
 	ActorScene.forEach( PushActorPositionTexture );
 	
 	//
-	DebugTextures.reverse().forEach( RenderTextureQuad );
+	DebugTextures.forEach( RenderTextureQuad );
 
 	return Scene;
 }
@@ -330,6 +331,7 @@ function CreateEditorActorScene()
 		const IsDebrisActor = ActorNode.Name.startsWith(DebrisActorPrefix);
 		const IsDustActor = ActorNode.Name.startsWith(DustActorPrefix);
 		const IsOceanActor = ActorNode.Name.startsWith(OceanActorPrefix);
+		const IsWaterActor = ActorNode.Name.startsWith(WaterActorPrefix);
 		const IsSwirlActor = ActorNode.Name.startsWith(SwirlActorPrefix);
 		const IsSplineActor = ActorNode.Name.startsWith(SplineActorPrefix);
 		
@@ -367,6 +369,10 @@ function CreateEditorActorScene()
 		else if ( IsOceanActor )
 		{
 			SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
+		}
+		else if ( IsWaterActor )
+		{
+			SetupAnimalTextureBufferActor.call( Actor, GetWaterMeta().Filename, GetWaterMeta );
 		}
 		else if ( IsDebrisActor )
 		{

@@ -13,6 +13,7 @@ const UpdateSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateSw
 const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
 
 const AnimalParticleShader = RegisterShaderAssetFilename('AnimalParticle.frag.glsl','AnimalParticle.vert.glsl');
+const WaterParticleShader = RegisterShaderAssetFilename('AnimalParticle.frag.glsl','WaterParticle.vert.glsl');
 const DustParticleShader = RegisterShaderAssetFilename('AnimalParticle.frag.glsl','DustParticle.vert.glsl');
 
 const GeoColourShader = RegisterShaderAssetFilename('Colour.frag.glsl','Geo.vert.glsl');

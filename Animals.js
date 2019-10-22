@@ -76,6 +76,7 @@ function GetAnimalAssetFilenames()
 
 
 const OceanActorPrefix = 'Ocean_surface_';
+const WaterActorPrefix = 'WaterSurface_';
 const DebrisActorPrefix = 'Water_';
 const NastyAnimalPrefix = 'Nasty_Animal_';
 const BigBangAnimalPrefix = 'Bigbang_';
@@ -197,6 +198,43 @@ function GetOceanMeta()
 	return Meta;
 }
 
+function GenerateGridVertexes(Contents,OnVertex,OnMeta)
+{
+	const Width = 100;
+	const Height = 100;
+	for ( let x=0;	x<Width;	x++ )
+	{
+		for ( let y=0;	y<Height;	y++ )
+		{
+			let u = x / Width;
+			let v = y / Height;
+			OnVertex(u,0,v);
+		}
+	}
+}
+
+function GetWaterMeta()
+{
+	const Meta = {};
+	Meta.AddNoiseToTextureBuffer = false;
+	Meta.LocalScale = 1;
+	Meta.Filename = 'GenerateGridVertexes()';
+	
+	Meta.RenderShader = WaterParticleShader;
+	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.NoiseImage = Noise_TurbulenceTexture;
+	
+	Meta.PhysicsNoiseScale = 0;
+	Meta.PhysicsDamping = 1;
+	
+	Meta.TriangleScale = Params.Ocean_TriangleScale;
+	if ( OceanColourTexture.Pixels )
+		Meta.OverridingColourTexture = OceanColourTexture;
+	
+	Meta.RenderTimeIsRealTime = true;
+	
+	return Meta;
+}
 
 function GetDustMeta(Actor)
 {
