@@ -198,7 +198,7 @@ a:hover
 	background-image:		url(icons/LogoBG.png);
 	background-repeat:		no-repeat;
 	background-size:		contain;
-	background-position:	center center;
+	background-position:	center 40%;
 
 }
 
@@ -242,23 +242,28 @@ a:hover
 
 #AboutButton
 {
-	xxxbackground:	blue;
+	background:	blue;
 	font-size:		calc(0.5em + 0.3vh);
 	line-height:	3vh;
 	position:		absolute;
 	left:			2vw;
 	top:			5vh;
-	width:			23vh;
-	height:			5vh;
+	width:			10vh;
+	xxxheight:			5vh;
 	text-align: left;
 	text-decoration:	underline;
+
+	background:     url(icons/about?.svg) no-repeat;
+	background-size:		auto 45%;
+	background-position:	left;
+	
 }
 
 #PauseButton
 {
 	position:		absolute;
 	left:			2vw;
-	top:			10vh;
+	top:			7vh;
 	width:			5vh;
 	height:			5vh;
 }
@@ -267,13 +272,13 @@ a:hover
 #PauseButton:hover span
 {
 	xbackground:red;
-	background-size:	auto 100%;
+	background-size:	auto 50%;
 }
 
 #PauseButton span
 {
-	background-size:		auto 80%;
-	background-position:	center;
+	background-size:		auto 45%;
+	background-position:	left;
 }
 
 #PauseLabel, #ResumeLabel
@@ -314,7 +319,7 @@ a:hover
 	display:	block;
 	position:	absolute;
 	left:		25vw;
-	top:		79.35vh;
+	top:		75vh;
 	width:		50vw;
 	height:		4vh;
 	font-size:	calc(0.5em + 0.5vh);
@@ -342,14 +347,14 @@ a:hover
 
 #Hint_Headphones
 {
-	visibility: hidden;
+	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
-	left: 10vw;
-	top: 80vh;
+	left: 10.2vw;
+	top: 83vh;
 	width: 80vw;
 	height:	5vh;
-	font-size: 2vh;
+	font-size: 1.5vh;
 	text-align:	center;
 	
 	display:			flex;
@@ -361,13 +366,13 @@ a:hover
 
 #IconHeadphones
 {
-	visibility: hidden;
+	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
-	left: 49.5vw;
-	top: 86vh;
-	width:1vw;
-	height:	5vh;
+	left: 49.3vw;
+	top: 88vh;
+	width:1.8vw;
+	xxxheight:	5vh;
 }
 
 #IconSubtitles
