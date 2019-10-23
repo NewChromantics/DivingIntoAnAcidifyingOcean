@@ -199,7 +199,7 @@ a:hover
 	position:		absolute;
 	right:			2vw;
 	top:			5vh;
-	width:			35vh;
+	width:			38vh;
 	height:			15vh;
 }
 
@@ -317,6 +317,121 @@ a:hover
 	xxbackground-color:	red;
 }
 
+#AboutText1
+{
+	overflow:hidden;
+
+	xxxbackground:	red;
+
+	position:	absolute;
+	xxpadding-top:	10vh;
+	top:		14vh;
+	left:		30vw;
+	width:		30vw;
+
+	font-size:		1.5vh;
+	text-align: center;
+}
+
+#Wave1
+{
+	position: absolute;
+	top: 14vh;
+	left: 43.5vw;
+	width: 5vw;
+}
+
+#AboutText2
+{
+	overflow:hidden;
+	position:	absolute;
+	top:		25vh;
+	left:		30vw;
+	width:		30vw;
+
+	font-size:		1.5vh;
+	text-align: center;
+}
+
+#crtq
+{
+	position: absolute;
+	top: 22vh;
+	left: 30vw;
+	width: 26vw;
+}
+
+#AboutText3
+{
+	overflow:hidden;
+	position:	absolute;
+	top:		33vh;
+	left:		30vw;
+	width:		30vw;
+
+	font-size:		1.5vh;
+	text-align: center;
+}
+
+#gac
+{
+	position: absolute;
+	top: 31vh;
+	left: 25vw;
+	width: 16vw;
+}
+
+#and
+{
+	overflow:hidden;
+	position:	absolute;
+	top:		38vh;
+	left:		42.5vw;
+	width:		5vw;
+
+	font-size:		1.5vh;
+	text-align: center;
+}
+
+#graham
+{
+	position: absolute;
+	top: 29.1vh;
+	left: 50vw;
+	width: 14vw;
+}
+
+#Wave2
+{
+	position: absolute;
+	top: 38vh;
+	left: 43vw;
+	width: 5vw;
+}
+
+#AboutText4
+{
+	overflow:hidden;
+	position:	absolute;
+	top:		53vh;
+	left:		30vw;
+	width:		30vw;
+
+	font-size:		1.5vh;
+	text-align: center;
+}
+
+#Disclaimer
+{
+	overflow:hidden;
+	position:	absolute;
+	top:		75vh;
+	left:		5vw;
+	width:		80vw;
+
+	font-size:		1vh;
+	text-align: center;
+}
 
 #Stats div
 {
