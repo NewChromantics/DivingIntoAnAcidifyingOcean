@@ -23,7 +23,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #Hint_Start, #Hint_StartXr
+#Ui, #PauseButton, #AboutButton, #Hint_Start, #Hint_StartXr
 {
 	z-index:	902;
 }
@@ -240,50 +240,36 @@ a:hover
 
 }
 
-#AboutButton
+#PauseButton, #AboutButton
 {
-	background:	blue;
-	font-size:		calc(0.5em + 0.3vh);
-	line-height:	3vh;
 	position:		absolute;
-	left:			2vw;
-	top:			5vh;
-	width:			10vh;
-	xxxheight:			5vh;
-	text-align: left;
-	text-decoration:	underline;
-
-	background:     url(icons/about?.svg) no-repeat;
-	background-size:		auto 45%;
-	background-position:	left;
-	
+	left:			2vmin;
+	top:			8vmin;/*2+4+2*/
+	width:			4vmin;
+	height:			4vmin;
 }
 
-#PauseButton
+#AboutButton
 {
-	position:		absolute;
-	left:			2vw;
-	top:			7vh;
-	width:			5vh;
-	height:			5vh;
+	top:			2vmin;
 }
 
 /* make background bigger on hover*/
-#PauseButton:hover span
+#PauseButton:hover span, #AboutButton:hover span
 {
 	xbackground:red;
-	background-size:	auto 50%;
+	background-size:	auto 100%;
 }
 
-#PauseButton span
+#PauseButton span, #AboutButton span
 {
-	background-size:		auto 45%;
-	background-position:	left;
+	background-size:		auto 80%;
+	background-position:	center;
 }
 
-#PauseLabel, #ResumeLabel
+#PauseLabel, #ResumeLabel, #AboutLabel
 {
-	xbackground-size:	auto 50%;
+	/*xbackground-size:	auto 50%;	 this needs to go in the selector with hover */
 	font-size:		0;		/* Hide the text */
 	pointer-events:	none;	/* let clicks fall through to parent */
 	position:		absolute;
@@ -293,6 +279,11 @@ a:hover
 	left:			0px;
 }
 
+#AboutLabel
+{
+	background:     url(icons/About.svg) no-repeat;
+	xxbackground-color:	red;
+}
 
 #PauseLabel
 {
