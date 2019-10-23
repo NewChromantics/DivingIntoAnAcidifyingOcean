@@ -302,7 +302,7 @@ Params.XrInvertRotation = true;
 Params.XrTrackTimelineCamera = true;
 Params.DebugCameraClearColour = false;
 
-Params.Water_TimeScale = 1.7;
+Params.Water_TimeScale = 1.565;
 Params.Water_PosScale = 350;
 Params.Water_HeightScale = 0.33;
 Params.Water_SidewaysScalar = 0.05;
@@ -319,14 +319,14 @@ Params.Wave2_Frequency = 0.32;
 Params.Wave2_DirX = 0.21;
 Params.Wave2_DirZ = 0.7;
 Params.Wave2_Phase = 1.4;
-Params.Wave2_Sharpness = 1.9;
+Params.Wave2_Sharpness = 2.74;
 
 Params.Wave3_Amplitude = 0.406;
 Params.Wave3_Frequency = 1.498;
 Params.Wave3_DirX = -0.3;
 Params.Wave3_DirZ = -0.112;
 Params.Wave3_Phase = 0.868;
-Params.Wave3_Sharpness = 1.505;
+Params.Wave3_Sharpness = 4.46;
 
 Params.InitParamsWindow = function(ParamsWindow)
 {
