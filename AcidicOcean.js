@@ -1676,8 +1676,15 @@ function Update(FrameDurationSecs)
 		//	update physics
 		if ( PhysicsEnabled || PhsyicsUpdateCount == 0 )
 		{
-			Scene.forEach( UpdateActorPhysics );
-			PhsyicsUpdateCount++;
+			try
+			{
+				Scene.forEach( UpdateActorPhysics );
+				PhsyicsUpdateCount++;
+			}
+			catch(e)
+			{
+				Pop.Debug("UpdateActorPhysics error",e);
+			}
 		}
 	}
 	GpuJobs.push( UpdateActorPhysics );
@@ -1831,7 +1838,7 @@ function Render(RenderTarget,RenderCamera)
 			return;
 
 		let w = 0.1;
-		let h = 0.2;
+		let h = 0.1;
 		let x = 0.1;
 		let y = 0.1 + (TextureIndex * h * 1.10);
 
