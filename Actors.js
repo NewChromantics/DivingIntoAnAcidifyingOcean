@@ -145,7 +145,6 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 	const RenderContext = RenderTarget.GetRenderContext();
 	const PhysicsStep = FrameDuration;
 	const CopyShader = GetAsset(BlitCopyShader, RenderContext );
-	const CopyMultiShader = GetAsset(BlitCopyMultipleShader, RenderContext );
 	const UpdateVelocityShader = UpdateVelocityShaderAsset ? GetAsset(UpdateVelocityShaderAsset, RenderContext ) : null;
 	const UpdatePositionShader = GetAsset(UpdatePositionShaderAsset, RenderContext );
 	const Quad = GetAsset('Quad', RenderContext);
@@ -153,50 +152,29 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 	//	we don't copy if caller is double buffering
 	if ( DoCopy )
 	{
-		try
+		//	copy old velocitys
+		let CopyVelcoityToScratch = function(RenderTarget)
 		{
-			//Pop.Debug("Physics iteration");
-			//	copy old positions
-			let CopyToScratch = function(RenderTarget)
+			let SetUniforms = function(Shader)
 			{
-				let SetUniforms = function(Shader)
-				{
-					Shader.SetUniform('VertexRect', [0,0,1,1] );
-					Shader.SetUniform('Texture0',PositionTexture);
-					Shader.SetUniform('Texture1',VelocityTexture);
-				}
-				RenderTarget.DrawGeometry( Quad, CopyMultiShader, SetUniforms );
+				Shader.SetUniform('VertexRect', [0,0,1,1] );
+				Shader.SetUniform('Texture',VelocityTexture);
 			}
-			RenderTarget.RenderToRenderTarget( [PositionScratchTexture,VelocityScratchTexture], CopyToScratch );
+			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 		}
-		catch(e)
-		{
-			Pop.Debug("Error with MRT scratch copy",e);
-			//	MRT failed, assume not supported, fallback to 2 copys
-			//	copy old velocitys
-			let CopyVelcoityToScratch = function(RenderTarget)
-			{
-				let SetUniforms = function(Shader)
-				{
-					Shader.SetUniform('VertexRect', [0,0,1,1] );
-					Shader.SetUniform('Texture',VelocityTexture);
-				}
-				RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
-			}
-			RenderTarget.RenderToRenderTarget( VelocityScratchTexture, CopyVelcoityToScratch );
+		RenderTarget.RenderToRenderTarget( VelocityScratchTexture, CopyVelcoityToScratch );
 
-			//	copy old positions
-			let CopyPositionsToScratch = function(RenderTarget)
+		//	copy old positions
+		let CopyPositionsToScratch = function(RenderTarget)
+		{
+			let SetUniforms = function(Shader)
 			{
-				let SetUniforms = function(Shader)
-				{
-					Shader.SetUniform('VertexRect', [0,0,1,1] );
-					Shader.SetUniform('Texture',PositionTexture);
-				}
-				RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
+				Shader.SetUniform('VertexRect', [0,0,1,1] );
+				Shader.SetUniform('Texture',PositionTexture);
 			}
-			RenderTarget.RenderToRenderTarget( PositionScratchTexture, CopyPositionsToScratch );
+			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 		}
+		RenderTarget.RenderToRenderTarget( PositionScratchTexture, CopyPositionsToScratch );
 	}
 	
 	
