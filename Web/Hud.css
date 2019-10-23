@@ -6,6 +6,8 @@ html, body
 	position:	fixed;
 	width:		100%;
 	height:		100%;
+	margin:		0px;
+	padding:	0px;
 }
 
 a, a:active, a:hover, a:visited
@@ -23,7 +25,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #Hint_Start, #Hint_StartXr
+#Ui, #PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Hint_StartXr
 {
 	z-index:	902;
 }
@@ -149,45 +151,6 @@ a:hover
 	justify-content:	center;
 }
 
-/* temporarily disabled until implemented */
-#Next_Text, #Prev_Text
-{
-	display:	visible;
-}
-
-#Next_Text
-{
-	position:		absolute;
-	right:			22vw;
-	top:			53vh;
-	width:			10vw;
-	xxxheight:			5vh;
-	font-size:		1.5vh;
-	
-	text-decoration:	underline;
-	
-	text-align:			center;
-	background:     url(icons/arrow_right.svg) no-repeat;
-	background-size: 1.5vh;
-	background-position:	right top;
-}
-
-#Prev_Text
-{
-	position:		absolute;
-	left:			23vw;
-	top:			53vh;
-	width:			10vw;
-	xxxheight:			5vh;
-	font-size:		1.5vh;
-	
-	text-decoration:	underline;
-	
-	text-align:			center;
-	background:     url(icons/arrow_left.svg) no-repeat;
-	background-size: 1.5vh;
-	background-position:	left top;
-}
 
 #LogoBg
 {
@@ -237,11 +200,14 @@ a:hover
 	top:			5vh;
 	width:			30vh;
 	height:			15vh;
-
 }
 
-#PauseButton, #AboutButton
+#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton
 {
+	/* these are for debug really, as they dont react until they're setup with style in code */
+	pointer-events:	auto;
+	cursor:			pointer;
+	
 	position:		absolute;
 	left:			2vmin;
 	top:			8vmin;/*2+4+2*/
@@ -254,20 +220,45 @@ a:hover
 	top:			2vmin;
 }
 
+#PrevButton
+{
+	top:			calc( 100vh - 6vmin);
+}
+
+#NextButton, #SkipButton
+{
+	top:			calc( 100vh - 6vmin);
+	right:			2vmin;
+	left:			auto;
+}
+
 /* make background bigger on hover*/
-#PauseButton:hover span, #AboutButton:hover span
+#PauseButton:hover span,
+#AboutButton:hover span,
+#SkipButton:hover span,
+#PrevButton:hover span,
+#NextButton:hover span
 {
 	xbackground:red;
 	background-size:	auto 100%;
 }
 
-#PauseButton span, #AboutButton span
+#PauseButton span,
+#AboutButton span,
+#SkipButton span,
+#PrevButton span,
+#NextButton span
 {
 	background-size:		auto 80%;
 	background-position:	center;
 }
 
-#PauseLabel, #ResumeLabel, #AboutLabel
+#PauseLabel,
+#ResumeLabel,
+#AboutLabel,
+#SkipLabel,
+#PrevLabel,
+#NextLabel
 {
 	/*xbackground-size:	auto 50%;	 this needs to go in the selector with hover */
 	font-size:		0;		/* Hide the text */
@@ -296,6 +287,18 @@ a:hover
 	visibility:		hidden;	/* Toggled in code - overridden on style ON element */
 	background:     url(icons/play.svg) no-repeat;
 	xxbackground-color:	lime;
+}
+
+#NextLabel, #SkipLabel
+{
+	background:     url(icons/arrow_right.svg) no-repeat;
+	xxbackground-color:	red;
+}
+
+#PrevLabel
+{
+	background:     url(icons/arrow_left.svg) no-repeat;
+	xxbackground-color:	red;
 }
 
 

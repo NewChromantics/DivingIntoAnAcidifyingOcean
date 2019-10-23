@@ -846,7 +846,7 @@ function Init()
 	Hud.Music2Label = new Pop.Hud.Label('AudioMusic2Label');
 	Hud.VoiceLabel = new Pop.Hud.Label('AudioVoiceLabel');
 	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
-	Hud.SubtitleSkipButton = new Pop.Hud.Button('SubtitleSkip');
+	Hud.SubtitleSkipButton = new Pop.Hud.Button('SkipButton');
 	Hud.SubtitleSkipButton.SetVisible(false);
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');

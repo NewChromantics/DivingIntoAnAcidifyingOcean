@@ -56,9 +56,9 @@
 			<a href=https://www.studiocrtq.com/>Cristina Tarquini</a> &amp; <a href=http://www.newchromantics.com>Graham Reeves</a>
 		</div>
 		
-		<a id="AboutButton" href="javascript:ShowElement('AboutPage');"><span id=AboutLabel>About</span></a>
 	</div>
-	
+	<a id="AboutButton" class="IconButton" href="javascript:ShowElement('AboutPage');"><span id=AboutLabel>About</span></a>
+
 	<div id="Hud">
 		<!--
 		
@@ -83,18 +83,20 @@
 			<div id="IconHeadphones"> <img src="Web/icons/Headphones.svg"> </div>
 		</div><!-- Logo screen -->
 
+		
+		
 		<div id="Experience">
-			<div id="PauseButton">
+			<div id="PauseButton" class="IconButton">
 				<span id="PauseLabel">Pause</span>
 				<span id="ResumeLabel">Resume</span>
 			</div>
 			
 			
 			<div ><span id="SubtitleLabel">Subtitles</span></div>
-			<div id="SubtitleSkip">Skip section</div>
-			<div id="Next_Text">n</div>
-			<div id="Prev_Text">p</div>
-
+			
+			<div id="SkipButton" class="IconButton"><span id="SkipLabel">Skip Section</span></div>
+			<div id="NextButton" class="IconButton"><span id="NextLabel">Next</span></div>
+			<div id="PrevButton" class="IconButton"><span id="PrevLabel">Prev</span></div>
 
 			<div id="TimelineContainer">
 				<input type=range id="YearSlider" min=1900 max=2600 oninput="MoveWithThumb(this);" onchange="MoveWithThumb(this);"/>
