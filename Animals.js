@@ -218,7 +218,7 @@ function GenerateGridVertexes(Contents,OnVertex,OnMeta)
 		s *= 1 / Width;
 		t *= 1 / Height;
 		let u = Math.lerp( 0.2, 0.8, x / Width ) + s;
-		let v = Math.lerp( 1.0, 0.4, y / Height ) + t;
+		let v = Math.lerp( 1.0, 0.0, y / Height ) + t;
 		OnVertex( u,0,v );
 	}
 	
