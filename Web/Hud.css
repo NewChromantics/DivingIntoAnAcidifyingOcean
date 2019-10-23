@@ -1,3 +1,13 @@
+/* disable scrolling on ios
+https://stackoverflow.com/a/57489918/355753
+*/
+html, body
+{
+	position:	fixed;
+	width:		100%;
+	height:		100%;
+}
+
 a, a:active, a:hover, a:visited
 {
 	color:	#ffffff;
