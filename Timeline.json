@@ -107,13 +107,9 @@
 		"HintClickAnimalVisible":true
 	},
 
-	"1859":
-	{
-		"HintClickAnimalVisible":false
-	},
-	
 	"1860":
 	{
+		"HintClickAnimalVisible":false,
 		"YearsPerSecond":0.35,
 		"StatsVisible":true,
 		"TimelineVisible":true,
