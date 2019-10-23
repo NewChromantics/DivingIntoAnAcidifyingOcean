@@ -1,4 +1,4 @@
-precision mediump float;
+precision highp float;
 //#extension GL_EXT_shader_texture_lod : require
 //#extension GL_OES_standard_derivatives : require
 
