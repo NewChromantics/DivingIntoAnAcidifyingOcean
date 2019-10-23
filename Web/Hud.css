@@ -25,7 +25,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Hint_StartXr
+#Ui, #PauseButton, #AboutButton, #AboutPageCloseButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Hint_StartXr
 {
 	z-index:	902;
 }
@@ -198,11 +198,11 @@ a:hover
 	position:		absolute;
 	right:			2vw;
 	top:			5vh;
-	width:			30vh;
+	width:			35vh;
 	height:			15vh;
 }
 
-#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton
+#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton
 {
 	/* these are for debug really, as they dont react until they're setup with style in code */
 	pointer-events:	auto;
@@ -210,7 +210,7 @@ a:hover
 	
 	position:		absolute;
 	left:			2vmin;
-	top:			8vmin;/*2+4+2*/
+	top:			6vmin;/*2+4+2*/
 	width:			4vmin;
 	height:			4vmin;
 }
@@ -232,30 +232,39 @@ a:hover
 	left:			auto;
 }
 
+#AboutPageCloseButton
+{
+	top:	0vmin;
+	left: 	45vw;
+}
+
 /* make background bigger on hover*/
 #PauseButton:hover span,
 #AboutButton:hover span,
+#AboutPageCloseButton:hover span,
 #SkipButton:hover span,
 #PrevButton:hover span,
 #NextButton:hover span
 {
 	xbackground:red;
-	background-size:	auto 100%;
+	background-size:	auto 60%;
 }
 
 #PauseButton span,
 #AboutButton span,
+#AboutPageCloseButton span,
 #SkipButton span,
 #PrevButton span,
 #NextButton span
 {
-	background-size:		auto 80%;
+	background-size:		auto 40%;
 	background-position:	center;
 }
 
 #PauseLabel,
 #ResumeLabel,
 #AboutLabel,
+#AboutPageCloseLabel,
 #SkipLabel,
 #PrevLabel,
 #NextLabel
@@ -273,6 +282,12 @@ a:hover
 #AboutLabel
 {
 	background:     url(icons/About.svg) no-repeat;
+	xxbackground-color:	red;
+}
+
+#AboutPageCloseLabel
+{
+	background:     url(icons/close.svg) no-repeat;
 	xxbackground-color:	red;
 }
 
@@ -344,7 +359,7 @@ a:hover
 	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
-	left: 10.2vw;
+	left: 10.5vw;
 	top: 83vh;
 	width: 80vw;
 	height:	5vh;
@@ -363,7 +378,7 @@ a:hover
 	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
-	left: 49.3vw;
+	left: 49.5vw;
 	top: 88vh;
 	width:1.8vw;
 	xxxheight:	5vh;
