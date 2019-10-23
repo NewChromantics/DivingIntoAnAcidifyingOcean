@@ -801,6 +801,13 @@ function GetImageAsPopImage(Img)
 		const PopImage = new Pop.Image();
 		//	gr: I checked pixels manually, canvas is always RGBA [in chrome]
 		PopImage.WritePixels( Width, Height, Buffer, 'RGBA' );
+		
+		//	destroy canvas (safari suggests its hanging around)
+		Canvas.width = 0;
+		Canvas.height = 0;
+		delete Canvas;
+		//Canvas = null;
+		
 		return PopImage;
 	}
 
