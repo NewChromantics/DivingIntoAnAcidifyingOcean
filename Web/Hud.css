@@ -136,6 +136,7 @@ a:hover
 
 #SubtitleSkip
 {
+	visibility: hidden;
 	position:		absolute;
 	right:			2.5vw;
 	top:			90vh;
@@ -306,13 +307,13 @@ a:hover
 
 #NextLabel, #SkipLabel
 {
-	background:     url(icons/arrow_right.svg) no-repeat;
+	background:     url(icons/skip_right.svg) no-repeat;
 	xxbackground-color:	red;
 }
 
 #PrevLabel
 {
-	background:     url(icons/arrow_left.svg) no-repeat;
+	background:     url(icons/Prev_left.svg) no-repeat;
 	xxbackground-color:	red;
 }
 
