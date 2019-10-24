@@ -381,9 +381,14 @@ a:hover
 	width: 16vw;
 }
 
+#gac, #crtq, #graham
+{
+	font-size:	0px;	/* hide text*/
+}
+
 #and
 {
-	overflow:hidden;
+	overflow:	hidden;
 	position:	absolute;
 	top:		38vh;
 	left:		42.5vw;
