@@ -317,68 +317,95 @@ a:hover
 	xxbackground-color:	red;
 }
 
-#AboutText1
+hr
 {
-	overflow:hidden;
-
-	xxxbackground:	red;
-
-	position:	absolute;
-	xxpadding-top:	10vh;
-	top:		14vh;
-	left:		30vw;
-	width:		30vw;
-
-	font-size:		1.5vh;
-	text-align: center;
-}
-
-#Wave1
-{
+	border:	0;
+	background: url('icons/wave1.svg') no-repeat top center;
+	background-size: contain;
+	height:	8vh;
+	
+	xwidth:	5vw;
+	xbackground:	magenta;
+	/*
 	position: absolute;
 	top: 14vh;
 	left: 43.5vw;
 	width: 5vw;
+	 */
 }
 
-#AboutText2
+
+#AboutText1, #AboutText2, #AboutText3
 {
-	overflow:hidden;
-	position:	absolute;
-	top:		25vh;
-	left:		30vw;
-	width:		30vw;
-
-	font-size:		1.5vh;
-	text-align: center;
+	text-align:	center;
+	background:	red;
 }
+
 
 #crtq
 {
-	position: absolute;
-	top: 22vh;
-	left: 30vw;
+	background:	blue;
+}
+#crtq a
+{
+	xwidth:	100%;
 	width: 26vw;
+	height: 8vh;
+	background:	lime;
+	display:inline-block;
+	text-align:center;
 }
 
-#AboutText3
+#GoogleAndGraham
 {
-	overflow:hidden;
-	position:	absolute;
-	top:		33vh;
-	left:		30vw;
-	width:		30vw;
-
-	font-size:		1.5vh;
-	text-align: center;
+	background:	yellow;
+	display:			flex;
+	justify-content:	center;
+	align-items:		center;
 }
 
-#gac
+#GoogleAndGraham #gac, #GoogleAndGraham #graham
 {
-	position: absolute;
-	top: 31vh;
-	left: 25vw;
-	width: 16vw;
+	display:	inline-block;
+	background:	blue;
+	height:		10vh;
+	width:		20vw;
+}
+
+/* these images aren't aligned */
+#GoogleAndGraham #gac
+{
+	padding-bottom:	2vh;
+}
+#GoogleAndGraham #graham
+{
+	padding-top:		3vh;
+}
+
+#GoogleAndGraham #and
+{
+	background:	magenta;
+	padding:	0 2vw 0 2vw;
+}
+
+#TeamList div
+{
+	display:	flex;
+	justify-content:	center;
+}
+#TeamList div span
+{
+	padding-right:	0.5em;
+	text-align:		right;
+	width:	40%;
+	display:	inline-block;
+}
+#TeamList div strong
+{
+	padding-left:	0.5em;
+	text-align:		left;
+	width:	40%;
+	display:	inline-block;
 }
 
 #gac, #crtq, #graham
@@ -386,45 +413,6 @@ a:hover
 	font-size:	0px;	/* hide text*/
 }
 
-#and
-{
-	overflow:	hidden;
-	position:	absolute;
-	top:		38vh;
-	left:		42.5vw;
-	width:		5vw;
-
-	font-size:		1.5vh;
-	text-align: center;
-}
-
-#graham
-{
-	position: absolute;
-	top: 29.1vh;
-	left: 50vw;
-	width: 14vw;
-}
-
-#Wave2
-{
-	position: absolute;
-	top: 38vh;
-	left: 43vw;
-	width: 5vw;
-}
-
-#AboutText4
-{
-	overflow:hidden;
-	position:	absolute;
-	top:		53vh;
-	left:		30vw;
-	width:		30vw;
-
-	font-size:		1.5vh;
-	text-align: center;
-}
 
 #Disclaimer
 {
@@ -986,7 +974,7 @@ a:hover
 
 #AboutPage
 {
-	visibility:	hidden;
+	xxvisibility:	hidden;
 	position:	absolute;
 	background:	black;
 	opacity:	0.9;
@@ -994,8 +982,9 @@ a:hover
 	width:		92vw;
 	top:		4vh;
 	height:		92vh;
-	font-size:	10vh;
+	font-size:	1.5vh;
 	text-align:	center;
 	margin:		0px;
-	padding-top:	30vh;
+	padding-top:	14vh;
+	xbackground:	red;
 }
