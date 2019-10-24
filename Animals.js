@@ -188,11 +188,12 @@ function GetAnimalMeta(Actor)
 function GetNastyAnimalMeta(Actor)
 {
 	let Meta = GetAnimalMeta(Actor);
-	
+
+	Meta.RenderUniforms.NoiseTexture = RandomTexture;
 	Meta.RenderUniforms.TriangleScale = Params.NastyAnimal_TriangleScale;
 	Meta.RenderUniforms.TriangleScaleMax = Params.NastyAnimal_TriangleScaleMax;
 	Meta.RenderUniforms.TriangleScale_Duration = Params.NastyAnimal_TriangleScale_Duration;
-
+	
 	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
 		Meta.RenderUniforms.TriangleScale = Actor.Animal.TriangleScale;
 	if ( Actor && Actor.Animal && Actor.Animal.TriangleScaleMax !== undefined )
@@ -218,6 +219,12 @@ function GetNastyAnimalMeta(Actor)
 	Meta.PhysicsUniforms.ExplodeScale = Params.NastyAnimal_PhysicsExplodeScale;
 	
 	Meta.RenderTimeIsRealTime = true;
+	
+	if ( Actor.UpdatePhysics )
+	{
+		Meta.RenderUniforms.Time = Pop.GetTimeNowMs() - Actor.UpdatePhysicsTime;
+		Meta.RenderUniforms.Time /= 1000;
+	}
 	
 	return Meta;
 }

@@ -36,6 +36,7 @@ uniform float TriangleScaleMax;
 uniform float TriangleScale_Duration;
 
 uniform sampler2D Velocitys;
+uniform sampler2D NoiseTexture;
 
 #define BillboardTriangles	true
 
@@ -128,17 +129,30 @@ float RangePingPong(float Min,float Max,float Time)
 	return TimeNorm;
 }
 
-float GetTriangleScaleNorm()
+float GetTriangleScaleNorm(float TriangleIndexf)
 {
-	float ScaleLerp = RangePingPong( 0.0, TriangleScale_Duration, Time );
+	//	get a random time offset
+	TriangleIndexf /= float(TriangleCount);
+	float2 Noiseuv = float2( TriangleIndexf, 0 );
+	float TimeOffset = texture2D( NoiseTexture, Noiseuv ).x;
+	float TimeOffset2 = texture2D( NoiseTexture, Noiseuv ).y;
+
+	//	slowly scale up initially, this creates a global glow, but stops things suddenly being big
+	float DurationOffset = 1.0 + TimeOffset2;
+	float TimeOffsetScale = min( 1.0, Range( 0.0, TriangleScale_Duration*DurationOffset, Time ) );
+	TimeOffset *= TimeOffsetScale;
+	
+	float ScaleTime = max( 1.0, Time-TimeOffset );
+	
+	float ScaleLerp = RangePingPong( 0.0, TriangleScale_Duration, ScaleTime );
 	return ScaleLerp;
 }
 
 void main_BillBoardCameraSpace()
 {
-	float TriangleScaleMixed = mix( TriangleScale, TriangleScaleMax, GetTriangleScaleNorm() );
-	
 	float TriangleIndexf = LocalUv_TriangleIndex.z;
+
+	float TriangleScaleMixed = mix( TriangleScale, TriangleScaleMax, GetTriangleScaleNorm(TriangleIndexf) );
 
 	float3 TriangleWorldPos;
 	GetTriangleWorldPosAndColour( TriangleIndexf, TriangleWorldPos, Rgba );
