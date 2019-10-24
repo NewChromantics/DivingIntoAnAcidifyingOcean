@@ -123,7 +123,7 @@ function GetDebrisMeta(Actor)
 
 function GetAnimalPhysics(Time)
 {
-	Pop.Debug("GetAnimalPhysics("+Time+")");
+	//Pop.Debug("GetAnimalPhysics("+Time+")");
 	const StartUniforms = {};
 	StartUniforms.Damping = Params.Animal_PhysicsDamping;
 	StartUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
