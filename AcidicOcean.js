@@ -462,7 +462,7 @@ function AddSwirlActor()
 		
 		SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
 		Acid.CameraScene.push( Actor );
-		Actor.UpdatePhysics = true;
+		Actor.EnablePhysics();
 		//Actor.BoundingBox.Min = [-100,-100,-100];
 		//Actor.BoundingBox.Max = [100,100,100];
 		Pop.Debug("Created swirl",Actor);
@@ -1079,7 +1079,7 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	{
 		if ( !Acid.SelectedActor.UpdatePhysics )
 		{
-			Acid.SelectedActor.UpdatePhysics = true;
+			Acid.SelectedActor.EnablePhysics();
 			AudioManager.PlaySound( AnimalDissolveSoundFilename );
 		}
 	}
@@ -1222,7 +1222,7 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 
 		if ( Actor.AnimalHasBeenExploded )
 			return;
-		Actor.UpdatePhysics = true;
+		Actor.EnablePhysics();
 		Actor.AnimalHasBeenExploded = true;
 		
 		//	play a big bang sound

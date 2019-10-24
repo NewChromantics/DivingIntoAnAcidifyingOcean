@@ -233,6 +233,14 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			this.BoundingBox = this.TextureBuffers.BoundingBox;
 	}
 	
+	this.EnablePhysics = function()
+	{
+		if ( this.UpdatePhysics )
+			return;
+		this.UpdatePhysics = true;
+		this.UpdatePhysicsTime = Pop.GetTimeNowMs();
+	}
+	
 	this.GetVelocityTexture = function()
 	{
 		return this.VelocityTexture;

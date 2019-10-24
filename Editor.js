@@ -483,7 +483,7 @@ class TAssetEditor
 		const SceneTime = ( this.Time - this.SceneInitTime );
 		if ( SceneTime > EditorParams.EnablePhysicsAfterSecs )
 		{
-			this.Scene[0].UpdatePhysics = true;
+			this.Scene[0].EnablePhysics();
 		}
 		
 		if ( SceneTime > EditorParams.ReloadAfterSecs )
