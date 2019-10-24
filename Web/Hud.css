@@ -25,9 +25,14 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #AboutPageCloseButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Hint_StartXr
+#Ui, #PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Hint_StartXr
 {
 	z-index:	902;
+}
+
+#AboutPage
+{
+	z-index:	903;
 }
 
 #Ui
@@ -203,11 +208,11 @@ a:hover
 	height:			15vh;
 }
 
-#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton
+#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton
 {
 	/* these are for debug really, as they dont react until they're setup with style in code */
-	pointer-events:	auto;
-	cursor:			pointer;
+	xxpointer-events:	auto;
+	xxcursor:			pointer;
 	
 	position:		absolute;
 	left:			2vmin;
@@ -215,6 +220,7 @@ a:hover
 	width:			4vmin;
 	height:			4vmin;
 }
+
 
 #AboutButton
 {
@@ -235,9 +241,13 @@ a:hover
 
 #AboutPageCloseButton
 {
-	top:	0vmin;
-	left: 	45vw;
+	width:			4vmin;
+	height:			4vmin;
+	position:		absolute;
+	top:			0vmin;
+	left: 			calc( 50% - 2vmin);
 }
+
 
 /* make background bigger on hover*/
 #PauseButton:hover span,

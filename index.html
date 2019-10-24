@@ -43,6 +43,16 @@
 			throw "Element not found " + arguments[0];
 		return Element;
 	}
+
+	function ToggleElement(Element)
+	{
+		Element = GetElement(Element);
+		if ( Element.style.visibility != 'visible' )
+			Element.style.visibility = 'visible';
+		else
+			Element.style.visibility = 'hidden';
+	}
+
 	function ShowElement(Element)
 	{
 		Element = GetElement(Element);
@@ -58,8 +68,8 @@
 
 	<div id="Ui">
 		<div id="AboutPage">
-			<div id="AboutPageCloseButton" class="IconButton"><a href="javascript:HideElement('AboutPage');"><span id=AboutPageCloseLabel>Close</span></a></div>
-
+			<a id="AboutPageCloseButton" class="IconButton" href="javascript:HideElement('AboutPage');"><span id=AboutPageCloseLabel>Close</span></a>
+			
 			<div>
 				<span id="AboutText1"> Our Blue Planet is in a state of emergency.<br/> The chemistry of seawater is changing faster than ever before with catastrophic consequences across the whole marine food web. <strong> It's time for us to do something to change this. </strong>
 			</div>
@@ -95,11 +105,11 @@
 				<div>
 				Please remember that this is an artistic interpretation and a speculative work. <br/>I did the best I could to find all appropriate and correct information but I am no scientist. Therefore I assumes no responsibility or liability for any errors or omissions in the content of this site. <br/>All the work and content here can only be used for personal use only and should not be used to make any scientific assessments.<br/> All the resorces used int his project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp=sharing> here.</a>
 				</div>
-			<div>
+			</div>
 		</div>
 		
 	</div>
-	<a id="AboutButton" class="IconButton" href="javascript:ShowElement('AboutPage');"><span id=AboutLabel>About</span></a>
+	<a id="AboutButton" class="IconButton" href="javascript:ToggleElement('AboutPage');"><span id=AboutLabel>About</span></a>
 
 	<div id="Hud">
 		<!--
