@@ -33,13 +33,13 @@ Params.DrawHighlightedActors = true;
 
 //var EditorParams = {};
 const EditorParams = Params;
-//EditorParams.ActorNodeName = 'Animal_XXX';
 EditorParams.ActorNodeName = OceanActorPrefix + 'x';
 EditorParams.ActorNodeName = SceneFilename;
 EditorParams.ActorNodeName = DustActorPrefix;
 EditorParams.ActorNodeName = SwirlActorPrefix;
 EditorParams.ActorNodeName = WaterActorPrefix;
 //EditorParams.ActorNodeName = SplineActorPrefix;
+EditorParams.ActorNodeName = 'Animal_XXX';
 
 EditorParams.ReloadAfterSecs = 300;
 EditorParams.EnablePhysicsAfterSecs = 1;

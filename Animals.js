@@ -120,6 +120,35 @@ function GetDebrisMeta(Actor)
 	return Meta;
 }
 
+
+function GetAnimalPhysics(Time)
+{
+	Pop.Debug("GetAnimalPhysics("+Time+")");
+	const StartUniforms = {};
+	StartUniforms.Damping = Params.Animal_PhysicsDamping;
+	StartUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
+	if ( Time === undefined )
+		return StartUniforms;
+
+	const EndUniforms = {};
+	EndUniforms.Damping = Params.Animal_PhysicsDamping_End;
+	EndUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale_End;
+
+	const KeyFrames = [];
+	KeyFrames.push( new TKeyframe(0,StartUniforms) );
+	KeyFrames.push( new TKeyframe(Params.Animal_PhysicsDuration,EndUniforms) );
+
+	const Timeline = new TTimeline( KeyFrames );
+	
+	const Frame = {};
+	const PushUniform = function(Key,Value)
+	{
+		Frame[Key] = Value;
+	}
+	Timeline.EnumUniforms( Time, PushUniform );
+	return Frame;
+}
+
 function GetAnimalMeta(Actor)
 {
 	const Meta = {};
@@ -137,8 +166,12 @@ function GetAnimalMeta(Actor)
 	Meta.PositionShader = UpdatePositionShader;
 	
 	Meta.PhysicsUniforms = {};
-	Meta.PhysicsUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
-	Meta.PhysicsUniforms.Damping = Params.Animal_PhysicsDamping;
+
+	const PhysicsTime = (Actor.SpawnTime===undefined) ? 0 : (Pop.GetTimeNowMs() - Actor.SpawnTime);
+	const AnimalPhysics = GetAnimalPhysics( PhysicsTime );
+	
+	Meta.PhysicsUniforms.NoiseScale = AnimalPhysics.NoiseScale;
+	Meta.PhysicsUniforms.Damping = AnimalPhysics.Damping;
 	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
 	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
 	

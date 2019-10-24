@@ -238,7 +238,10 @@ Params.BigBang_TinyNoiseScale = 0.5;
 
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.12;
+Params.Animal_PhysicsDamping_End = 0.12;
 Params.Animal_PhysicsNoiseScale = 16.0;
+Params.Animal_PhysicsNoiseScale_End = 16.0;
+Params.Animal_PhysicsDuration = 10.0;
 Params.AnimalScale = 1.0;
 Params.AnimalFlip = false;
 
@@ -347,8 +350,11 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('AnimalFlip');
 	ParamsWindow.AddParam('AnimalDebugParticleColour');
 	ParamsWindow.AddParam('Animal_TriangleScale',0.001,0.2);
+	ParamsWindow.AddParam('Animal_PhysicsDuration',0,60);
 	ParamsWindow.AddParam('Animal_PhysicsDamping',0,1);
-	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,20);
+	ParamsWindow.AddParam('Animal_PhysicsDamping_End',0,1);
+	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,50);
+	ParamsWindow.AddParam('Animal_PhysicsNoiseScale_End',0,50);
 
 	ParamsWindow.AddParam('NastyAnimal_PhysicsNoiseScale',0,10);
 	ParamsWindow.AddParam('NastyAnimal_PhysicsSpringScale',0,1);
