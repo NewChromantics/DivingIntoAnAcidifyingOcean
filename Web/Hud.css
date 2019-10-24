@@ -229,14 +229,19 @@ a:hover
 
 #PrevButton
 {
-	top:			calc( 100vh - 6vmin);
+	visibility:		hidden;	/* shown by code */
+	top:			70vh;
+	left:			calc( 10vw + 4vmin );
 }
 
 #NextButton, #SkipButton
 {
-	top:			calc( 100vh - 6vmin);
-	right:			2vmin;
-	left:			auto;
+	visibility:		hidden;	/* shown by code */
+	xxxdeubug_visibility:		visible !important;
+	/* 88vh is top of timeline */
+	/* 80vw is widht of timline */
+	top:			70vh;
+	left:			calc( 90vw - 8vmin );
 }
 
 #AboutPageCloseButton
@@ -850,7 +855,6 @@ hr:nth-child(even)
 }
 
 
-/* slider http://danielstern.ca/range.css/#/ */
 /* I'm not sure this is visible in all screen sizes... */
 #Timeline
 {
