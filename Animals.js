@@ -112,7 +112,7 @@ function GetDebrisMeta(Actor)
 	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 	
-	Meta.TriangleScale = Params.Debris_TriangleScale;
+	Meta.RenderUniforms = {};
 	if ( DebrisColourTexture.Pixels )
 		Meta.OverridingColourTexture = DebrisColourTexture;
 	
@@ -165,6 +165,7 @@ function GetAnimalMeta(Actor)
 	Meta.VelocityShader = UpdateVelocityShader;
 	Meta.PositionShader = UpdatePositionShader;
 	
+	Meta.RenderUniforms = {};
 	Meta.PhysicsUniforms = {};
 
 	const PhysicsTime = (Actor.SpawnTime===undefined) ? 0 : (Pop.GetTimeNowMs() - Actor.SpawnTime)/1000;
@@ -223,7 +224,7 @@ function GetOceanMeta()
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	
-	Meta.TriangleScale = Params.Ocean_TriangleScale;
+	Meta.RenderUniforms = {};
 	if ( OceanColourTexture.Pixels )
 		Meta.OverridingColourTexture = OceanColourTexture;
 	
@@ -310,7 +311,7 @@ function GetWaterMeta()
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	
-	Meta.TriangleScale = Params.Ocean_TriangleScale;
+	Meta.RenderUniforms = {};
 	if ( OceanColourTexture.Pixels )
 		Meta.OverridingColourTexture = OceanColourTexture;
 	

@@ -821,7 +821,7 @@ function GetSwirlMeta(Actor)
 	Meta.Lod = Math.min( LodMin, LodMax );
 	Meta.Lod *= Params.AnimalBufferLod;
 
-	Meta.TriangleScale = Params.Swirl_TriangleScale;
+	Meta.RenderUniforms = {};
 	
 	let SwirlColourTexture = Pop.Global.SwirlColourTexture;
 	if ( SwirlColourTexture !== undefined )
