@@ -167,7 +167,7 @@ function GetAnimalMeta(Actor)
 	
 	Meta.PhysicsUniforms = {};
 
-	const PhysicsTime = (Actor.SpawnTime===undefined) ? 0 : (Pop.GetTimeNowMs() - Actor.SpawnTime);
+	const PhysicsTime = (Actor.SpawnTime===undefined) ? 0 : (Pop.GetTimeNowMs() - Actor.SpawnTime)/1000;
 	const AnimalPhysics = GetAnimalPhysics( PhysicsTime );
 	
 	Meta.PhysicsUniforms.NoiseScale = AnimalPhysics.NoiseScale;

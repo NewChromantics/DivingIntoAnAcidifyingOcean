@@ -238,7 +238,7 @@ Params.BigBang_TinyNoiseScale = 0.5;
 
 Params.Animal_TriangleScale = 0.01;
 Params.Animal_PhysicsDamping = 0.12;
-Params.Animal_PhysicsDamping_End = 0.12;
+Params.Animal_PhysicsDamping_End = 1;
 Params.Animal_PhysicsNoiseScale = 16.0;
 Params.Animal_PhysicsNoiseScale_End = 16.0;
 Params.Animal_PhysicsDuration = 10.0;
