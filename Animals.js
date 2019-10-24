@@ -187,6 +187,7 @@ function GetNastyAnimalMeta(Actor)
 {
 	let Meta = GetAnimalMeta(Actor);
 	
+	Meta.RenderShader = NastyAnimalParticleShader;
 	Meta.VelocityShader = UpdateVelocityPulseShader;
 	Meta.PositionShader = UpdatePositionShader;
 	
