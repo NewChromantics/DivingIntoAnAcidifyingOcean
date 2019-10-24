@@ -128,7 +128,9 @@ function TLogoState()
 	 	'PhysicsIteration_UpdatePositionSwirl.frag.glsl',
 	 	'PhysicsIteration_UpdateSwirl.frag.glsl',
 	 
-	 	'AnimalParticle.frag.glsl',
+	 	'NastyAnimalParticle.frag.glsl',
+	 	'NastyAnimalParticle.vert.glsl',
+		'AnimalParticle.frag.glsl',
 	 	'AnimalParticle.vert.glsl',
 		'DustParticle.vert.glsl',
 		'WaterParticle.vert.glsl',

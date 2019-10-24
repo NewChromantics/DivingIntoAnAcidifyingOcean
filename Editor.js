@@ -40,6 +40,7 @@ EditorParams.ActorNodeName = SwirlActorPrefix;
 EditorParams.ActorNodeName = WaterActorPrefix;
 //EditorParams.ActorNodeName = SplineActorPrefix;
 EditorParams.ActorNodeName = 'Animal_XXX';
+EditorParams.ActorNodeName = NastyAnimalPrefix;
 
 EditorParams.ReloadAfterSecs = 300;
 EditorParams.EnablePhysicsAfterSecs = 1;

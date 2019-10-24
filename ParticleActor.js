@@ -233,7 +233,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			this.BoundingBox = this.TextureBuffers.BoundingBox;
 	}
 	
-	
+	this.GetVelocityTexture = function()
+	{
+		return this.VelocityTexture;
+	}
 	
 	this.GetPositionTexture = function(Time)
 	{
@@ -354,6 +357,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Pop.Debug("Actor has no position texture",Actor);
 			return;
 		}
+		let VelocityTexture = this.GetVelocityTexture();
+		if ( !VelocityTexture )
+			VelocityTexture = BlackTexture;
+		
 		const AlphaTexture = this.TextureBuffers.AlphaTexture;
 		const LocalToWorldTransform = this.GetLocalToWorldTransform();
 		
@@ -382,6 +389,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 				Object.keys(Meta.RenderUniforms).forEach( SetUniform.bind(Meta.RenderUniforms) );
 			}
 			
+			if ( VelocityTexture )
+				Shader.SetUniform('Velocitys',VelocityTexture);
+			
 			Shader.SetUniform('Time',Time);
 			Shader.SetUniform('ShowClippedParticle', Params.ShowClippedParticle );
 			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
@@ -390,7 +400,6 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Shader.SetUniform('WorldPositions',PositionTexture);
 			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
 			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
-			Shader.SetUniform('TriangleScale', Meta.TriangleScale );
 			Shader.SetUniform('ColourImage',ColourTexture);
 			Shader.SetUniform('Debug_ForceColour', Params.AnimalDebugParticleColour);
 			Shader.SetUniform('TriangleCount', TriangleCount);
@@ -821,7 +830,8 @@ function GetSwirlMeta(Actor)
 	Meta.Lod = Math.min( LodMin, LodMax );
 	Meta.Lod *= Params.AnimalBufferLod;
 
-	Meta.TriangleScale = Params.Swirl_TriangleScale;
+	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.TriangleScale = Params.Swirl_TriangleScale;
 	
 	let SwirlColourTexture = Pop.Global.SwirlColourTexture;
 	if ( SwirlColourTexture !== undefined )
