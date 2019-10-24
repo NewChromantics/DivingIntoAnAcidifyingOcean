@@ -322,7 +322,7 @@ hr
 	border:	0;
 	background: url('icons/wave1.svg') no-repeat top center;
 	background-size: contain;
-	height:	8vh;
+	height:	6vh;
 	
 	xwidth:	5vw;
 	xbackground:	magenta;
@@ -334,40 +334,55 @@ hr
 	 */
 }
 
+hr:nth-child(even)
+{
+	background:	url('icons/wave2.svg') no-repeat top center;
+}
+
 
 #AboutText1, #AboutText2, #AboutText3
 {
 	text-align:	center;
-	background:	red;
+	xbackground:	red;
+}
+
+
+#gac, #crtq, #graham
+{
+	font-size:	0px;	/* hide text*/
 }
 
 
 #crtq
 {
-	background:	blue;
+	xbackground:	blue;
 }
+
 #crtq a
 {
-	xwidth:	100%;
-	width: 26vw;
-	height: 8vh;
-	background:	lime;
-	display:inline-block;
-	text-align:center;
+	width:			32vw;
+	height:			6vh;
+	xbackground:	lime;
+	display:		inline-block;
+	text-align:		center;
+	margin-top:		1vh;
+	margin-bottom:	4vh;
 }
 
 #GoogleAndGraham
 {
-	background:	yellow;
+	xbackground:		yellow;
 	display:			flex;
 	justify-content:	center;
 	align-items:		center;
+	margin-bottom:		-2vh;
+	margin-top:			-2vh;
 }
 
 #GoogleAndGraham #gac, #GoogleAndGraham #graham
 {
 	display:	inline-block;
-	background:	blue;
+	xbackground:	blue;
 	height:		10vh;
 	width:		20vw;
 }
@@ -379,13 +394,22 @@ hr
 }
 #GoogleAndGraham #graham
 {
-	padding-top:		3vh;
+	width:				16vw;	/* scale down image */
+	padding-left:		0.5vw;
+	padding-right:		3.5vw;
+	padding-top:		4vh;
 }
 
 #GoogleAndGraham #and
 {
-	background:	magenta;
+	xbackground:	magenta;
 	padding:	0 2vw 0 2vw;
+}
+
+#TheTeam
+{
+	margin-top:	2vh;
+	margin-bottom:	2vh;
 }
 
 #TeamList div
@@ -397,34 +421,22 @@ hr
 {
 	padding-right:	0.5em;
 	text-align:		right;
-	width:	40%;
-	display:	inline-block;
+	width:			40%;
+	display:		inline-block;
 }
 #TeamList div strong
 {
 	padding-left:	0.5em;
 	text-align:		left;
-	width:	40%;
-	display:	inline-block;
+	width:			40%;
+	display:		inline-block;
 }
-
-#gac, #crtq, #graham
-{
-	font-size:	0px;	/* hide text*/
-}
-
 
 #Disclaimer
 {
-	overflow:hidden;
-	position:	absolute;
-	top:		75vh;
-	left:		5vw;
-	width:		80vw;
-
-	font-size:		1vh;
-	text-align: center;
+	margin-top:		4vh;
 }
+
 
 #Stats div
 {
@@ -985,6 +997,6 @@ hr
 	font-size:	1.5vh;
 	text-align:	center;
 	margin:		0px;
-	padding-top:	14vh;
+	padding-top:	11vh;
 	xbackground:	red;
 }
