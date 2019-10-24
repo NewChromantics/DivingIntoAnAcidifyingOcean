@@ -996,7 +996,7 @@ hr:nth-child(even)
 
 #AboutPage
 {
-	xxvisibility:	hidden;
+	visibility:	hidden;
 	position:	absolute;
 	background:	black;
 	opacity:	0.9;
