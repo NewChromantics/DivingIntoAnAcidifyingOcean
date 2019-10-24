@@ -762,7 +762,7 @@ function GetSwirlMeta(Actor)
 	else
 	{
 		Meta.VelocityShader = UpdateVelocitySwirlShader;
-		Meta.PositionShader = UpdatePositionShader;
+		Meta.PositionShader = UpdatePositionSwirlShader;
 	}
 	
 	Meta.PhysicsUniforms = {};

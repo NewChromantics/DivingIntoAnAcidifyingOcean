@@ -1,9 +1,9 @@
 precision highp float;
 
 varying vec2 uv;
-uniform sampler2D LastVelocitys;
-uniform sampler2D OrigPositions;
 uniform sampler2D LastPositions;
+uniform sampler2D Velocitys;
+uniform sampler2D OrigPositions;
 uniform float PositionCount;
 uniform float2 OrigPositionsWidthHeight;
 
@@ -15,13 +15,11 @@ uniform float Damping;
 uniform float LocalNoiseScale;
 uniform float SplineNoiseScale;
 
-
 uniform float SpringScale;// = 0.1;
 uniform float MaxSpringForce;
 uniform float SplineTime;
 uniform float SplineTimeRange;
 uniform float StringStrips;
-
 
 uniform bool FirstUpdate;
 
@@ -29,6 +27,8 @@ uniform float3 AvoidRayStart;
 uniform float3 AvoidRayDirection;
 uniform float AvoidRayRadius;
 uniform float AvoidRayScale;
+
+
 
 float Range(float Min,float Max,float Value)
 {
@@ -140,85 +140,20 @@ float3 GetSpringTargetPos(float2 uv)
 }
 
 
-float3 GetSpringForce(float3 LastPos,float2 uv)
-{
-	vec3 OrigPos = GetSpringTargetPos( uv );
-	
-	float3 Force = (OrigPos - LastPos) * SpringScale;
-	float ForceMagnitude = length( Force );
-	ForceMagnitude = min( MaxSpringForce, ForceMagnitude );
-	Force = normalize( Force ) * ForceMagnitude;
-	return Force;
-}
 
 
-//	gr: from the tootle engine :) https://github.com/TootleGames/Tootle/blob/master/Code/TootleMaths/TLine.cpp
-float3 NearestToRay3(float3 Position,float3 Start,float3 Direction)
-{
-	float3 LineDir = normalize(Direction);
-	float LineDirDotProduct = dot( LineDir, LineDir );
-	
-	//	avoid div by zero
-	//	gr: this means the line has no length.... for shaders maybe we can fudge/allow this
-	if ( LineDirDotProduct == 0.0 )
-		return Start;
-	
-	float3 Dist = Position - Start;
-	
-	float LineDirDotProductDist = dot( LineDir, Dist );
-	
-	float TimeAlongLine = LineDirDotProductDist / LineDirDotProduct;
-	
-	//	gr: for line segment
-	/*
-	 if ( TimeAlongLine <= 0.f )
-	 return Start;
-	 
-	 if ( TimeAlongLine >= 1.f )
-	 return GetEnd();
-	 */
-	//	gr: lerp this for gpu speedup
-	return Start + LineDir * TimeAlongLine;
-}
-
-float3 GetAvoidForce(float3 Pos)
-{
-	if ( length(AvoidRayDirection) < 0.001 )
-		return float3(0,0,0);
-	
-	//	work out distance to the avoid ray
-	float3 LinePoint = NearestToRay3( Pos, AvoidRayStart, AvoidRayDirection );
-	float3 AvoidForce = Pos - LinePoint;
-	//float3 AvoidForce = LinePoint - Pos;
-	float DistanceNorm = length( AvoidForce ) / AvoidRayRadius;
-	if ( DistanceNorm > 1.0 )
-		DistanceNorm = 1.0;
-	else
-		DistanceNorm = 0.0;
-	DistanceNorm = 1.0 - min( 1.0, DistanceNorm );
-	//DistanceNorm = DistanceNorm * DistanceNorm;
-	AvoidForce = normalize(AvoidForce) * AvoidRayScale;
-	
-	return AvoidForce;
-}
-	
 void main()
 {
-	vec4 Vel = texture( LastVelocitys, uv );
+	//	gr: this should make sure it's sample middle of texel
 	vec4 Pos = texture2D( LastPositions, uv );
+	vec4 Vel = texture2D( Velocitys, uv );
+	Pos += Vel * PhysicsStep;
+	Pos.w = 1.0;
 	
 	if ( FirstUpdate )
 		Pos.xyz = GetSpringTargetPos(uv);
 	
-	//Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
-	Vel.xyz += GetSpringForce(Pos.xyz,uv) * PhysicsStep;
-	
-	//	damping
-	Vel.xyz *= 1.0 - Damping;
-
-	//Vel = float4(0.4,0,0,1);
-	Vel.w = 1.0;
-	gl_FragColor = Vel;
+	gl_FragColor = Pos;
 }
 
 

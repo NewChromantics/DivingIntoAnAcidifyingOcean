@@ -122,9 +122,10 @@ function TLogoState()
 		'Colour.frag.glsl',
 		'Edge.frag.glsl',
 		'PhysicsIteration_UpdateVelocity.frag.glsl',
-		'PhysicsIteration_UpdatePosition.frag.glsl',
 		'PhysicsIteration_UpdateVelocityPulse.frag.glsl',
-		'PhysicsIteration_UpdateVelocitySwirl.frag.glsl',
+	 	'PhysicsIteration_UpdateVelocitySwirl.frag.glsl',
+	 	'PhysicsIteration_UpdatePosition.frag.glsl',
+	 	'PhysicsIteration_UpdatePositionSwirl.frag.glsl',
 	 	'PhysicsIteration_UpdateSwirl.frag.glsl',
 	 
 	 	'AnimalParticle.frag.glsl',

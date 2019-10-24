@@ -6,9 +6,12 @@ const UpdateVelocityShader = RegisterShaderAssetFilename('PhysicsIteration_Updat
 const UpdateVelocityPulseShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocityPulse.frag.glsl','Quad.vert.glsl');
 const UpdateVelocitySwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocitySwirl.frag.glsl','Quad.vert.glsl');
 const UpdatePositionShader = RegisterShaderAssetFilename('PhysicsIteration_UpdatePosition.frag.glsl','Quad.vert.glsl');
+const UpdatePositionSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdatePositionSwirl.frag.glsl','Quad.vert.glsl');
 
-//	pos+velocity
-const UpdateSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateSwirl.frag.glsl','Quad.vert.glsl');
+//	pos+velocity, null disables
+//	no MRT on mobile :/
+//const UpdateSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateSwirl.frag.glsl','Quad.vert.glsl');
+const UpdateSwirlShader = null;
 
 const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
 
