@@ -32,10 +32,8 @@ uniform sampler2D	ColourImage;
 
 uniform float Time;
 uniform float TriangleScale;// = 0.06;
-#define TriangleScaleMax		( TriangleScale * 2.2 )
-#define TriangleScale_Duration	( 1.0 )
-//uniform float TriangleScale_Duration
-//uniform float TriangleScaleMax
+uniform float TriangleScaleMax;
+uniform float TriangleScale_Duration;
 
 uniform sampler2D Velocitys;
 

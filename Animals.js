@@ -113,6 +113,7 @@ function GetDebrisMeta(Actor)
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 	
 	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.TriangleScale = Params.Debris_TriangleScale;
 	if ( DebrisColourTexture.Pixels )
 		Meta.OverridingColourTexture = DebrisColourTexture;
 	
@@ -176,9 +177,9 @@ function GetAnimalMeta(Actor)
 	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
 	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
 	
-	Meta.TriangleScale = Params.Animal_TriangleScale;
+	Meta.RenderUniforms.TriangleScale = Params.Animal_TriangleScale;
 	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
-		Meta.TriangleScale = Actor.Animal.TriangleScale;
+		Meta.RenderUniforms.TriangleScale = Actor.Animal.TriangleScale;
 	
 	Meta.Colours = [InvalidColour];
 	return Meta;
@@ -188,14 +189,35 @@ function GetNastyAnimalMeta(Actor)
 {
 	let Meta = GetAnimalMeta(Actor);
 	
+	Meta.RenderUniforms.TriangleScale = Params.NastyAnimal_TriangleScale;
+	Meta.RenderUniforms.TriangleScaleMax = Params.NastyAnimal_TriangleScaleMax;
+	Meta.RenderUniforms.TriangleScale_Duration = Params.NastyAnimal_TriangleScale_Duration;
+
+	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
+		Meta.RenderUniforms.TriangleScale = Actor.Animal.TriangleScale;
+	if ( Actor && Actor.Animal && Actor.Animal.TriangleScaleMax !== undefined )
+		Meta.RenderUniforms.TriangleScaleMax = Actor.Animal.TriangleScaleMax;
+
+	//	don't scale triangles unless physics has been enabled
+	if ( Actor )
+	{
+		if ( !Actor.UpdatePhysics )
+		{
+			Meta.RenderUniforms.TriangleScaleMax = Meta.RenderUniforms.TriangleScale;
+		}
+	}
+	
+	
 	Meta.RenderShader = NastyAnimalParticleShader;
 	Meta.VelocityShader = UpdateVelocityPulseShader;
 	Meta.PositionShader = UpdatePositionShader;
-	
+		
 	Meta.PhysicsUniforms.NoiseScale = Params.NastyAnimal_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.SpringScale = Params.NastyAnimal_PhysicsSpringScale;
 	Meta.PhysicsUniforms.Damping = Params.NastyAnimal_PhysicsDamping;
 	Meta.PhysicsUniforms.ExplodeScale = Params.NastyAnimal_PhysicsExplodeScale;
+	
+	Meta.RenderTimeIsRealTime = true;
 	
 	return Meta;
 }
@@ -225,6 +247,8 @@ function GetOceanMeta()
 	Meta.PhysicsDamping = 1;
 	
 	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.TriangleScale = Params.Ocean_TriangleScale;
+
 	if ( OceanColourTexture.Pixels )
 		Meta.OverridingColourTexture = OceanColourTexture;
 	
@@ -311,7 +335,8 @@ function GetWaterMeta()
 	Meta.PhysicsNoiseScale = 0;
 	Meta.PhysicsDamping = 1;
 	
-	Meta.RenderUniforms = {};
+	Meta.RenderUniforms.TriangleScale = Params.Ocean_TriangleScale;
+	
 	if ( OceanColourTexture.Pixels )
 		Meta.OverridingColourTexture = OceanColourTexture;
 	
@@ -336,13 +361,13 @@ function GetDustMeta(Actor)
 	Meta.RenderUniforms.ShiftDustParticles = Params.ShiftDustParticles;
 	Meta.RenderUniforms.DustParticlesBounds = [Params.DustParticles_BoundsX,Params.DustParticles_BoundsY,Params.DustParticles_BoundsZ];
 	Meta.RenderUniforms.DustParticlesOffset = Params.DustParticles_OffsetZ;
-	
+	Meta.RenderUniforms.TriangleScale = Params.Debris_TriangleScale;
+
 	Meta.PhysicsUniforms = {};
 	Meta.PhysicsUniforms.NoiseScale = Params.Debris_PhysicsNoiseScale;
 	Meta.PhysicsUniforms.Damping = Params.Debris_PhysicsDamping;
 	Meta.PhysicsUniforms.Noise = RandomTexture;
 	
-	Meta.TriangleScale = Params.Debris_TriangleScale;
 	if ( DebrisColourTexture.Pixels )
 		Meta.OverridingColourTexture = DebrisColourTexture;
 	

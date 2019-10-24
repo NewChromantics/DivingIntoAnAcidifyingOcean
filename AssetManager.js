@@ -342,7 +342,7 @@ function CreateRandomSphereImage(Width,Height)
 
 Pop.Debug("RandomTexture = CreateRandomSphereImage");
 const RandomTexture = CreateRandomSphereImage( 1024, 1024 );
-
+const BlackTexture = Pop.CreateColourTexture( [0,0,0,1] );
 
 
 

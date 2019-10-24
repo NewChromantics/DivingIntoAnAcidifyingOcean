@@ -245,9 +245,9 @@ Params.Animal_PhysicsDuration = 26.5;
 Params.AnimalScale = 1.0;
 Params.AnimalFlip = false;
 
-Params.NastyAnimal_PhysicsNoiseScale = 2.45;
-Params.NastyAnimal_PhysicsSpringScale = 0.65;
-Params.NastyAnimal_PhysicsDamping = 0.03;
+Params.NastyAnimal_PhysicsNoiseScale = 1.45;
+Params.NastyAnimal_PhysicsSpringScale = 0.35;
+Params.NastyAnimal_PhysicsDamping = 0.3;
 Params.NastyAnimal_PhysicsExplodeScale = 0;
 Params.NastyAnimal_TriangleScale = 0.01;
 Params.NastyAnimal_TriangleScaleMax = 0.01 * 2.2;
