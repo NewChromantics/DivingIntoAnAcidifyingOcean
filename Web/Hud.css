@@ -854,6 +854,42 @@ hr:nth-child(even)
 	top:	18vh;
 }
 
+#ErrorImage
+{
+	visibility: hidden;
+	display:	block;
+	position:	absolute;
+	width:		100vw;
+	height:		100vh;
+	background-image:		url(icons/ErrorPage.jpg);
+	background-repeat:		no-repeat;
+	background-size:		contain;
+	background-position:	center center;
+
+}
+
+#ErrorTextTitle
+{
+	visibility: hidden;
+	font-size:		8vh;
+	font-weight: 	bold;
+	position:		absolute;
+	right:			3vw;
+	top:			7vh;
+	width:			80vw;
+	text-align: right;
+}
+
+#ErrorText
+{
+	visibility: hidden;
+	font-size:		3.5vh;
+	position:		absolute;
+	right:			3vw;
+	top:			20vh;
+	width:			75vw;
+	text-align: right;
+}
 
 /* I'm not sure this is visible in all screen sizes... */
 #Timeline
