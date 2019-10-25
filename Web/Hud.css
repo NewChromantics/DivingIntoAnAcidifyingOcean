@@ -263,7 +263,7 @@ a:hover
 #NextButton:hover span
 {
 	xbackground:red;
-	background-size:	auto 60%;
+	background-size:	auto 65%;
 }
 
 #PauseButton span,
@@ -273,7 +273,7 @@ a:hover
 #PrevButton span,
 #NextButton span
 {
-	background-size:		auto 40%;
+	background-size:		auto 55%;
 	background-position:	center;
 }
 
