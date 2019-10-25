@@ -774,7 +774,7 @@ hr:nth-child(even)
 
 	position:	absolute;
 	padding-top:	10vh;
-	top:		22vh;
+	top:		12vh;
 	left:		8vw;
 	width:		84vw;
 	height:		70vh;
@@ -793,7 +793,7 @@ hr:nth-child(even)
 
 #Solution_Tips
 {
-	margin-top:	10vh;
+	margin-top:	6vh;
 	xbackground:	green;
 	position:	relative;
 	height:		20vh;
