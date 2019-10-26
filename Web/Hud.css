@@ -354,6 +354,8 @@ hr
 hr:nth-child(even)
 {
 	background:	url('icons/wave2.svg') no-repeat top center;
+	margin-top: 2vh;
+	height: 5vh;
 }
 
 
