@@ -33,6 +33,7 @@ a:hover
 #AboutPage
 {
 	z-index:	903;
+
 }
 
 #Ui
@@ -251,6 +252,7 @@ a:hover
 	position:		absolute;
 	top:			0vmin;
 	left: 			calc( 50% - 2vmin);
+	xbackground-color:	red;
 }
 
 
@@ -361,6 +363,10 @@ hr:nth-child(even)
 	xbackground:	red;
 }
 
+#OpeningText
+{
+	margin-top: -4vh;
+}
 
 #gac, #crtq, #graham
 {
@@ -381,9 +387,10 @@ hr:nth-child(even)
 	display:		inline-block;
 	text-align:		center;
 	margin-top:		1vh;
-	margin-bottom:	4vh;
+	margin-bottom:	2vh;
 }
 
+/*
 #GoogleAndGraham
 {
 	xbackground:		yellow;
@@ -393,29 +400,40 @@ hr:nth-child(even)
 	margin-bottom:		-2vh;
 	margin-top:			-2vh;
 }
+*/
 
-#GoogleAndGraham #gac, #GoogleAndGraham #graham
+#gac
 {
 	display:	inline-block;
 	xbackground:	blue;
-	height:		10vh;
-	width:		20vw;
+	height:		7vh;
+	width:		24vw;
+	align-items: center;
 }
 
-/* these images aren't aligned */
-#GoogleAndGraham #gac
+
+#graham
 {
-	padding-bottom:	2vh;
+	display:	inline-block;
+	xbackground:	purple;
+	height:		5vh;
+	width:		22vw;
+	padding-top:	1.5vh;
+	align-items:		center;
+	margin-bottom:		-2vh;
 }
+
+/*
 #GoogleAndGraham #graham
 {
-	width:				16vw;	/* scale down image */
+	width:				16vw;	
 	padding-left:		0.5vw;
 	padding-right:		3.5vw;
 	padding-top:		4vh;
 }
+*/
 
-#GoogleAndGraham #and
+#and
 {
 	xbackground:	magenta;
 	padding:	0 2vw 0 2vw;
