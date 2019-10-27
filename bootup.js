@@ -242,8 +242,8 @@ Params.Animal_PhysicsDamping_End = 0.001;
 Params.Animal_PhysicsNoiseScale = 0;
 Params.Animal_PhysicsNoiseScale_End = 50.0;
 Params.Animal_PhysicsTinyNoiseScale = 0.1;
-Params.Animal_PhysicsTinyNoiseScale_End = 0.1;
-Params.Animal_PhysicsDuration = 26.5;
+Params.Animal_PhysicsTinyNoiseScale_End = 10;
+Params.Animal_PhysicsDuration = 45;
 Params.AnimalScale = 1.0;
 Params.AnimalFlip = false;
 
