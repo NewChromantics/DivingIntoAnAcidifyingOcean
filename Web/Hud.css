@@ -147,6 +147,28 @@ a:hover
 	background-position:	center 40%;
 }
 
+#Logo
+{
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+	height:		100vh;
+	width:		100vw;
+}
+#Logo
+{
+	pointer-events:	initial;
+}
+#LogoShare
+{
+	xdisplay:	inline-block;
+	left:		20vw;
+	width:		30vw;
+	position:	absolute;
+	top:		75vh;
+}
+
+
 #Mosaic
 {
 	visibility: hidden;
@@ -198,7 +220,7 @@ a:hover
 	text-align:	right;
 }
 
-#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton
+#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_StartXr
 {
 	/* these are for debug really, as they dont react until they're setup with style in code */
 	xxpointer-events:	auto;
@@ -219,6 +241,13 @@ a:hover
 #AboutButton
 {
 	top:			2vmin;
+}
+
+#Hint_StartXr
+{
+	font-weight:	bold;
+	text-align:		center;
+	font-size:		2.5vmin;
 }
 
 #PrevButton
@@ -490,7 +519,7 @@ hr:nth-child(even)
 
 
 
-#Hint_Start, #Hint_StartXr
+#Hint_Start
 {
 	xbackground-color:	red;
 	display:	block;
@@ -517,14 +546,9 @@ hr:nth-child(even)
   	xxxborder: 0.1em solid white;
 }
 
-#Hint_StartXr
-{
-	margin-top:	-8vh;
-}
-
 @media (max-device-width: 700px)
 {
-	#Hint_Start, #Hint_StartXr
+	#Hint_Start
 	{
 		font-size:	7vmin;
 	}
