@@ -75,12 +75,7 @@ a:hover
 	visibility:	hidden;
 }
 
-#Hint_StartXr
-{
-	visibility:	hidden;
-}
-
-#Hint_Start
+#Hint_StartXr, #Hint_Start
 {
 	visibility:	hidden;
 }
@@ -140,25 +135,6 @@ a:hover
 }
 
 
-#SubtitleSkip
-{
-	visibility: hidden;
-	position:		absolute;
-	right:			2.5vw;
-	top:			90vh;
-	width:			10vw;
-	xxxheight:			5vh;
-	font-size:		calc(0.5em + 0.3vh);
-	
-	text-decoration:	underline;
-	
-	text-align:			center;
-	display:			flex;
-	align-items:		center;
-	justify-content:	center;
-}
-
-
 #LogoBg
 {
 	display:	block;
@@ -169,7 +145,6 @@ a:hover
 	background-repeat:		no-repeat;
 	background-size:		contain;
 	background-position:	center 40%;
-
 }
 
 #Mosaic
@@ -214,12 +189,16 @@ a:hover
 	/* these are for debug really, as they dont react until they're setup with style in code */
 	xxpointer-events:	auto;
 	xxcursor:			pointer;
-	
+	xxvisibility:		visible !important;	/* force on for debug */
+
 	position:		absolute;
 	left:			2vmin;
 	top:			6vmin;/*2+4+2*/
 	width:			4vmin;
 	height:			4vmin;
+	
+	background:		black;
+	border-radius:	50%;
 }
 
 
@@ -295,6 +274,29 @@ a:hover
 	bottom:			0px;
 	right:			0px;
 	left:			0px;
+}
+
+
+/* small screen */
+@media (max-device-width: 700px)
+{
+	/* make these bigger so they're easier to click */
+	#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton
+	{
+		width:			8vmin;
+		height:			8vmin;
+	}
+
+	#PauseButton
+	{
+		top:			calc( 2vmin + 8vmin + 2vmin);/*2+4+2*/
+	}
+	
+	#NextButton, #SkipButton
+	{
+		left:			calc( 90vw - 8vmin );
+	}
+	
 }
 
 #AboutLabel
@@ -480,7 +482,7 @@ hr:nth-child(even)
 
 #Hint_Start, #Hint_StartXr
 {
-	xxxbackground-color:	red;
+	xbackground-color:	red;
 	display:	block;
 	position:	absolute;
 	left:		25vw;
@@ -507,7 +509,15 @@ hr:nth-child(even)
 
 #Hint_StartXr
 {
-	margin-top:	-5vh;
+	margin-top:	-8vh;
+}
+
+@media (max-device-width: 700px)
+{
+	#Hint_Start, #Hint_StartXr
+	{
+		font-size:	7vmin;
+	}
 }
 
 #Hint_Headphones
