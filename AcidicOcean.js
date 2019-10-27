@@ -1075,15 +1075,6 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	
 	
-	if ( StateTime > Params.ShowAnimal_ExplodeSecs )
-	{
-		if ( !Acid.SelectedActor.UpdatePhysics )
-		{
-			Acid.SelectedActor.EnablePhysics();
-			AudioManager.PlaySound( AnimalDissolveSoundFilename );
-		}
-	}
-	
 	//	never exit
 	if ( AnimalTest )
 		return;
@@ -1094,6 +1085,16 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 
 	if ( Acid.SkipSelectedAnimal )
 		Finished = true;
+	
+	//	if we exit early, trigger explode
+	if ( Finished || StateTime > Params.ShowAnimal_ExplodeSecs )
+	{
+		if ( !Acid.SelectedActor.UpdatePhysics )
+		{
+			Acid.SelectedActor.EnablePhysics();
+			AudioManager.PlaySound( AnimalDissolveSoundFilename );
+		}
+	}
 	
 	if ( !Finished )
 		return;
