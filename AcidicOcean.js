@@ -57,16 +57,16 @@ DebugCamera.FarDistance = 400;	//	try not to clip anythig in debug mode
 
 const BigBangExplodeYears = {};
 BigBangExplodeYears[1826] = BigBangAnimalPrefix + '0';
-BigBangExplodeYears[1829] = BigBangAnimalPrefix + '1';
+BigBangExplodeYears[1828] = BigBangAnimalPrefix + '1';
 BigBangExplodeYears[1830] = BigBangAnimalPrefix + '2';
 BigBangExplodeYears[1833] = BigBangAnimalPrefix + '3';
 BigBangExplodeYears[1836] = BigBangAnimalPrefix + '4';
 BigBangExplodeYears[1840] = BigBangAnimalPrefix + '5';
-BigBangExplodeYears[1841] = BigBangAnimalPrefix + '6';
-BigBangExplodeYears[1842] = BigBangAnimalPrefix + '7';
-BigBangExplodeYears[1845] = BigBangAnimalPrefix + '8';
-BigBangExplodeYears[1846] = BigBangAnimalPrefix + '9';
-BigBangExplodeYears[1847] = BigBangAnimalPrefix + '10';
+BigBangExplodeYears[1843] = BigBangAnimalPrefix + '6';
+BigBangExplodeYears[1847] = BigBangAnimalPrefix + '7';
+BigBangExplodeYears[1851] = BigBangAnimalPrefix + '8';
+BigBangExplodeYears[1853] = BigBangAnimalPrefix + '9';
+BigBangExplodeYears[1855] = BigBangAnimalPrefix + '10';
 
 
 function IsAutoClearTextureActor(Actor)

@@ -4,8 +4,8 @@
     "-version": "1.4.1",
     "asset": {
       "contributor": { "authoring_tool": "CINEMA4D 16.050 COLLADA Exporter" },
-      "created": "2019-10-22T19:30:40Z",
-      "modified": "2019-10-22T19:30:40Z",
+      "created": "2019-10-27T19:17:19Z",
+      "modified": "2019-10-27T19:17:19Z",
       "unit": {
         "-meter": "0.01",
         "-name": "centimeter"
@@ -13193,7 +13193,7 @@
           },
           {
             "-id": "ID418",
-            "-name": "Animal_Jellyfish",
+            "-name": "Nasty_Animal_Jellyfish",
             "translate": {
               "-sid": "translate",
               "#text": "-18.3919 -136.191 -30111.1"
@@ -14249,7 +14249,7 @@
             "-name": "Bigbang_10",
             "translate": {
               "-sid": "translate",
-              "#text": "-2.55683 -559.077 -542.632"
+              "#text": "-2.55683 -647.935 -509.011"
             },
             "rotate": [
               {
@@ -14276,7 +14276,7 @@
             "-name": "Bigbang_9",
             "translate": {
               "-sid": "translate",
-              "#text": "-106.008 -506.24 -459.728"
+              "#text": "-38.8486 -592.696 -394.886"
             },
             "rotate": [
               {
@@ -14303,7 +14303,7 @@
             "-name": "Bigbang_8",
             "translate": {
               "-sid": "translate",
-              "#text": "103.023 -479.651 -385.353"
+              "#text": "23.4268 -549.296 -289.291"
             },
             "rotate": [
               {
@@ -14330,7 +14330,7 @@
             "-name": "Bigbang_7",
             "translate": {
               "-sid": "translate",
-              "#text": "-79.7138 -409.202 -286.624"
+              "#text": "-24.9914 -450.029 -96.9019"
             },
             "rotate": [
               {
@@ -14357,7 +14357,7 @@
             "-name": "Bigbang_6",
             "translate": {
               "-sid": "translate",
-              "#text": "37.3814 -356.776 -179.211"
+              "#text": "37.3814 -373.587 -92.7551"
             },
             "rotate": [
               {
@@ -14384,7 +14384,7 @@
             "-name": "Bigbang_5",
             "translate": {
               "-sid": "translate",
-              "#text": "-65.3077 -266.571 -86.9776"
+              "#text": "-3.12318 -266.571 42.5744"
             },
             "rotate": [
               {
@@ -14411,7 +14411,7 @@
             "-name": "Bigbang_4",
             "translate": {
               "-sid": "translate",
-              "#text": "70.0866 -171.684 9.88038"
+              "#text": "52.675 -171.684 9.88038"
             },
             "rotate": [
               {
@@ -14546,7 +14546,7 @@
             "-name": "Camera",
             "translate": {
               "-sid": "translate",
-              "#text": "0 -87.4411 -55055.5"
+              "#text": "0 -22.0033 341.657"
             },
             "rotate": [
               {
