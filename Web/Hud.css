@@ -175,13 +175,27 @@ a:hover
 
 #Stats
 {
+	xxvisibility:	visible !important;
+	xxbackground:	blue;
+	position:		absolute;
 	font-size:		2vh;
 	line-height:	3vh;
-	position:		absolute;
 	right:			2vw;
 	top:			5vh;
 	width:			38vh;
 	height:			15vh;
+}
+
+#Stats div
+{
+	overflow:	hidden;
+}
+
+#Stats div strong
+{
+	display:	inline-block;
+	width:		30vh;
+	text-align:	right;
 }
 
 #PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton
@@ -475,10 +489,6 @@ hr:nth-child(even)
 }
 
 
-#Stats div
-{
-	overflow:	hidden;
-}
 
 #Hint_Start, #Hint_StartXr
 {
