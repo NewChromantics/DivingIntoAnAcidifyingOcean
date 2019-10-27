@@ -1052,17 +1052,21 @@ hr:nth-child(even)
 
 #YearSlider::-webkit-slider-thumb
 {
-	margin-top:	-1vh;
+	margin:		-1vh 0px 0px 0px;
+	padding:	0px;
 	box-shadow:	none;
 	border:		none;
 	height:		2vh;
-	width:		0.2vw;
+	width:		5vw;
 	min-width:	2px;
-	background:	white;
-	cursor: pointer;
-	-webkit-appearance: none;
+	cursor:		pointer;
+	-webkit-appearance:		none;
+	background-color:		transparent;
+	background-image:		url(icons/SliderTracker.svg);
+	background-size:		100%;	/* same width as slider height */
+	background-position:	center;
+	background-repeat:		repeat-y;	/* doesnt seem to work with svg */
 }
-
 
 
 #Debug_VisibleActors, #Debug_RenderedActors, #Debug_FrameRate, #Debug_RenderStats
