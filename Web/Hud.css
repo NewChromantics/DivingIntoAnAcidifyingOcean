@@ -1025,6 +1025,7 @@ hr:nth-child(even)
 
 #YearSlider
 {
+	xvisibility:		visible !important;
 	cursor: pointer;
 	xbackground:	blue;
 	-webkit-appearance:	none;
@@ -1044,30 +1045,79 @@ hr:nth-child(even)
 	height:			0.20vh;	/* same as #AnimalCard_Title border */
 	min-height:		2px;
 	
-	background:		white;
 	border:			none;
 	box-shadow:		none;
 	
+	-webkit-appearance:		none;
+	padding:	0px;
+	
+	/* on desktop, we are just white */
+	background-color:		white;
 }
 
 #YearSlider::-webkit-slider-thumb
 {
-	margin:		-1vh 0px 0px 0px;
+	margin:		-2vh 0px 0px 0px;
 	padding:	0px;
 	box-shadow:	none;
 	border:		none;
-	height:		2vh;
-	width:		5vw;
+	height:		4vh;
+	width:		0.20vh;
 	min-width:	2px;
 	cursor:		pointer;
 	-webkit-appearance:		none;
-	background-color:		transparent;
-	background-image:		url(icons/SliderTracker.svg);
-	background-size:		100%;	/* same width as slider height */
-	background-position:	center;
-	background-repeat:		repeat-y;	/* doesnt seem to work with svg */
+	
+	/* on desktop, we are just white */
+	background-color:		white;
 }
 
+
+@media (max-device-width: 700px)
+{
+	/* taller track with background for the line */
+	#YearSlider::-webkit-slider-runnable-track
+	{
+		height:		10vh;
+		xbackground-color:		red;
+		background-color:		transparent;
+		background-image:		url("icons/LineHorz.svg");
+		background-size:		100% 100%;	/* same width as slider height */
+		background-position:	center;
+	}
+	
+	/* wider with background line */
+	#YearSlider::-webkit-slider-thumb
+	{
+		margin:		0px;
+		width:		12vw;
+		height:		10vh;
+		xbackground-color:		blue;
+		background-color:		transparent;
+		background-image:		url("icons/LineVert.svg");
+		background-size:		50% 50%;	/* same width as slider height */
+		background-position:	center;
+		background-repeat:		no-repeat;
+	}
+
+	/* block out the overflow on the slider */
+	#YearSlider:before, #YearSlider:after
+	{
+		background:	black;
+		content:	" ";
+		display:	block;
+		position:	absolute;
+		left:		0px;
+		top:		3vh;
+		height:		2vh;
+		width:		calc( 6vw - (10vh*0.10*0.25) );/* width - background/2 */
+	}
+
+	#YearSlider:after
+	{
+		left:		auto;
+		right:		0px;
+	}
+}
 
 #Debug_VisibleActors, #Debug_RenderedActors, #Debug_FrameRate, #Debug_RenderStats
 {
