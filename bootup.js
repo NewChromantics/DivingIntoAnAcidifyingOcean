@@ -241,6 +241,8 @@ Params.Animal_PhysicsDamping = 1;
 Params.Animal_PhysicsDamping_End = 0.001;
 Params.Animal_PhysicsNoiseScale = 0;
 Params.Animal_PhysicsNoiseScale_End = 50.0;
+Params.Animal_PhysicsTinyNoiseScale = 0.1;
+Params.Animal_PhysicsTinyNoiseScale_End = 0.1;
 Params.Animal_PhysicsDuration = 26.5;
 Params.AnimalScale = 1.0;
 Params.AnimalFlip = false;
@@ -358,6 +360,8 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Animal_PhysicsDamping_End',0,1);
 	ParamsWindow.AddParam('Animal_PhysicsNoiseScale',0,50);
 	ParamsWindow.AddParam('Animal_PhysicsNoiseScale_End',0,50);
+	ParamsWindow.AddParam('Animal_PhysicsTinyNoiseScale',0,10);
+	ParamsWindow.AddParam('Animal_PhysicsTinyNoiseScale_End',0,10);
 
 	ParamsWindow.AddParam('NastyAnimal_PhysicsNoiseScale',0,10);
 	ParamsWindow.AddParam('NastyAnimal_PhysicsSpringScale',0,1);

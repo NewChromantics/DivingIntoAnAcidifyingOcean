@@ -128,12 +128,14 @@ function GetAnimalPhysics(Time)
 	const StartUniforms = {};
 	StartUniforms.Damping = Params.Animal_PhysicsDamping;
 	StartUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale;
+	StartUniforms.TinyNoiseScale = Params.Animal_PhysicsTinyNoiseScale;
 	if ( Time === undefined )
 		return StartUniforms;
 
 	const EndUniforms = {};
 	EndUniforms.Damping = Params.Animal_PhysicsDamping_End;
 	EndUniforms.NoiseScale = Params.Animal_PhysicsNoiseScale_End;
+	EndUniforms.TinyNoiseScale = Params.Animal_PhysicsTinyNoiseScale_End;
 
 	const KeyFrames = [];
 	KeyFrames.push( new TKeyframe(0,StartUniforms) );
@@ -175,7 +177,7 @@ function GetAnimalMeta(Actor)
 	Meta.PhysicsUniforms.NoiseScale = AnimalPhysics.NoiseScale;
 	Meta.PhysicsUniforms.Damping = AnimalPhysics.Damping;
 	Meta.PhysicsUniforms.Noise = Noise_TurbulenceTexture;
-	Meta.PhysicsUniforms.TinyNoiseScale = 0.1;
+	Meta.PhysicsUniforms.TinyNoiseScale = AnimalPhysics.TinyNoiseScale;
 	
 	Meta.RenderUniforms.TriangleScale = Params.Animal_TriangleScale;
 	if ( Actor && Actor.Animal && Actor.Animal.TriangleScale !== undefined )
