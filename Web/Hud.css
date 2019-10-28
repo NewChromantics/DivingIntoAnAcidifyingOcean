@@ -863,7 +863,7 @@ hr:nth-child(even)
 	font-size:		2.2vh;
 	height:			4vh;
 	padding-left:	2vh;
-	border-bottom:	0.40vh solid white;
+	border-bottom:	0.10vh solid white;
 }
 
 #AnimalCard_Description
