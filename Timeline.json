@@ -122,19 +122,15 @@
 		"Subtitle":""
 	},
 
-	"1866":
+	"1865":
 	{
 		"HintDragTimelineVisible":true
-	},
-
-	"1867":
-	{
-		"HintDragTimelineVisible":false
 	},
 	
 	"1870":
 	{
 
+		"HintDragTimelineVisible":false,
 		"Music2": "Audio/AcidicOcean_MUSIC_Sonification.mp3",
 		"Subtitle":""
 	},
