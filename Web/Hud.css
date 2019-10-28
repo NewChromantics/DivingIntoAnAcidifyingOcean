@@ -198,12 +198,12 @@ a:hover
 #Stats
 {
 	xxvisibility:	visible !important;
-	xxbackground:	blue;
+	xxxbackground:	blue;
 	position:		absolute;
 	font-size:		2vh;
 	line-height:	3vh;
-	right:			2vw;
-	top:			5vh;
+	right:			0.2vw;
+	top:			2.2vmin; /*same as about button*/
 	width:			42vh;
 	height:			15vh;
 }
@@ -211,6 +211,7 @@ a:hover
 #Stats div
 {
 	overflow:	hidden;
+	xbackground: red;
 }
 
 #Stats div strong
@@ -218,6 +219,7 @@ a:hover
 	display:	inline-block;
 	width:		30vh;
 	text-align:	right;
+
 }
 
 #PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_StartXr
@@ -525,7 +527,7 @@ hr:nth-child(even)
 	display:	block;
 	position:	absolute;
 	left:		25vw;
-	top:		75vh;
+	top:		65vh;
 	width:		50vw;
 	height:		4vh;
 	font-size:	calc(0.5em + 0.5vh);
@@ -560,7 +562,7 @@ hr:nth-child(even)
 	display: block;
 	position: absolute;
 	left: 10.5vw;
-	top: 83vh;
+	top: 71vh;
 	width: 80vw;
 	height:	5vh;
 	font-size: 1.5vh;
@@ -579,7 +581,7 @@ hr:nth-child(even)
 	display: block;
 	position: absolute;
 	left: 49.5vw;
-	top: 88vh;
+	top: 78vh;
 	width:1.8vw;
 	xxxheight:	5vh;
 }
