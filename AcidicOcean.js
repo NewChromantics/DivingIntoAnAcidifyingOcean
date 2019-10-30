@@ -21,7 +21,7 @@ const AnimalTest = Pop.GetExeArguments().includes('AnimalTest');
 const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
 const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
 const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_AnimalDissolution.mp3';
-// const NastyAnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_NastyAnimal.mp3';
+const NastyAnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_NastyAnimal.mp3';
 
 //	for debugging opengl stuff
 const EnableColourTextureUpdate = true;
@@ -1092,8 +1092,14 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	{
 		if ( !Acid.SelectedActor.UpdatePhysics )
 		{
+			Pop.Debug("Explode animal");
 			Acid.SelectedActor.EnablePhysics();
-			AudioManager.PlaySound( AnimalDissolveSoundFilename );
+			
+			let Meta = Acid.SelectedActor.GetMeta ? Acid.SelectedActor.GetMeta() : null;
+			if ( Meta && Meta.PhysicsAudioFilename )
+			{
+				AudioManager.PlaySound( Meta.PhysicsAudioFilename );
+			}
 		}
 	}
 	

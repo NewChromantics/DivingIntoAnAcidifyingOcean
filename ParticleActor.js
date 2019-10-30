@@ -171,6 +171,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	const Meta = GetMeta(this);
 	this.Geometry = 'AutoTriangleMesh';
 	this.RenderShader = Meta.RenderShader;
+	this.GetMeta = function()	{	return GetMeta(this);	};
 	
 	const AddNoise = Meta.AddNoiseToTextureBuffer!==false;
 	{

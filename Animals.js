@@ -156,6 +156,8 @@ function GetAnimalMeta(Actor)
 {
 	const Meta = {};
 	
+	Meta.PhysicsAudioFilename = AnimalDissolveSoundFilename;
+
 	Meta.LocalScale = Params.AnimalScale;
 	if ( Actor && Actor.Animal && Actor.Animal.Scale !== undefined )
 		Meta.LocalScale = Actor.Animal.Scale;
@@ -171,7 +173,7 @@ function GetAnimalMeta(Actor)
 	Meta.RenderUniforms = {};
 	Meta.PhysicsUniforms = {};
 
-	const PhysicsTime = (Actor.UpdatePhysicsTime===undefined) ? 0 : (Pop.GetTimeNowMs() - Actor.UpdatePhysicsTime)/1000;
+	const PhysicsTime = (Actor && Actor.UpdatePhysicsTime===undefined) ? 0 : (Pop.GetTimeNowMs() - Actor.UpdatePhysicsTime)/1000;
 	const AnimalPhysics = GetAnimalPhysics( PhysicsTime );
 	
 	Meta.PhysicsUniforms.NoiseScale = AnimalPhysics.NoiseScale;
@@ -190,6 +192,8 @@ function GetAnimalMeta(Actor)
 function GetNastyAnimalMeta(Actor)
 {
 	let Meta = GetAnimalMeta(Actor);
+	
+	Meta.PhysicsAudioFilename = NastyAnimalDissolveSoundFilename;
 
 	Meta.RenderUniforms.NoiseTexture = RandomTexture;
 	Meta.RenderUniforms.TriangleScale = Params.NastyAnimal_TriangleScale;
