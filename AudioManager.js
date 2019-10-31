@@ -256,7 +256,13 @@ const TQueuedAudio = function(Filename,Loop,StartQuiet,GetVolume)
 	
 	this.IsActive = function()
 	{
-		return (this.Audio != null);
+		//	we've deleted it (fade etc)
+		if ( !this.Audio )
+			return false;
+		//	audio has finished
+		if ( !this.Audio.IsActive() )
+			return false;
+		return true;
 	}
 	
 	this.GetVolume = function()
@@ -386,6 +392,9 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetMusic2Volu
 	
 	this.SetMusic2 = function(Filename)
 	{
+		if ( Filename.length == 0 )
+			Filename = null;
+		
 		//	see if this is at the end of the queue
 		if ( this.Music2Queue.length > 0 )
 		{
