@@ -839,7 +839,11 @@ hr:nth-child(even)
 		display:		flex;
 		flex-direction:	column-reverse;
 		width:			100vw;
-		height:			100vh;
+		/* safari on ios cuts off the bottom
+		 https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser
+		 */
+		xheight: 	-webkit-fill-available;
+		height:			85vh;
 	}
 
 	#AnimalCardContainer *
@@ -910,6 +914,7 @@ hr:nth-child(even)
 
 
 /* debug */
+/*
 #AnimalView, #AnimalCard
 {
 	visibility:		visible !important;
