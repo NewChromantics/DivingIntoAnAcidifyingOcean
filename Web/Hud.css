@@ -768,30 +768,14 @@ hr:nth-child(even)
   	border-radius: 25px;
 }
 
-#SelectedAnimalBox
-{
-	position:		absolute;
-	left:			2vw;
-	width:			96vw;
-	top:			2vh;
-	height:			96vh;
-	display:		flex;
-	background:		yellow;
-}
 
 #AnimalCard
 {
-	xvisibility:	visible !important;	/* forces on for testing */
 	background:		rgba(0, 0, 0, 0.50);
 	padding:		2vmin;
-	margin:			auto;	/* centers with flexbox */
+	xmargin:			auto;	/* centers with flexbox */
 }
 
-#AnimalView
-{
-	visibility:		visible !important;	/* forces on for testing */
-	xbackground:	rgba(0, 255, 0, 0.50);
-}
 
 /* big screen mode */
 #AnimalCard
@@ -815,75 +799,85 @@ hr:nth-child(even)
 /* landscape small screen */
 @media (max-device-width: 780px)
 {
+	/*
+	#AnimalCardContainer
+	{
+		position:		absolute;
+		display:		flex;
+		background:		magenta;
+		flex-direction:	row;
+		width:			100vw;
+		height:			100vh;
+	}
+	
+	#AnimalCardContainer *
+	{
+		flex-grow:		90;
+	}
+	
 	#AnimalCard
 	{
-		position:		absolute;
-		left:			2vmin;
-		top:			8vmin;
-		width:			40vw;
-		height:			calc( 100vh - 16vmin );
+		flex-grow:		1;
+		position:		static;
+		background:		red;
 	}
-	#AnimalView
+	
+	#AnimalCard_Description
 	{
-		xbackground:		blue;
-		display:		block;
-		position:		absolute;
-		left:			calc( 2vmin + 2vmin + 40vw );
-		top:			4vmin;
-		width:			calc( 98vw - (2vmin + 2vmin + 40vw ) );	/* change this to a font-relative size */
-		height:			calc( 100vh - 8vmin );	/* change this to a font-relative size */
+		background:		blue;
 	}
+	*/
 }
 
 
 /* portrait, height/width */
 @media (max-aspect-ratio: 1/1)
 {
+	#AnimalCardContainer
+	{
+		position:		absolute;
+		display:		flex;
+		flex-direction:	column-reverse;
+		width:			100vw;
+		height:			100vh;
+	}
+
+	#AnimalCardContainer *
+	{
+		position:		static;
+		width:			auto;
+		height:			auto;
+		left:			auto;
+		top:			auto;
+		flex-grow:		90;
+	}
+	
 	#AnimalCard
 	{
-		position:		absolute;
-		left:			0vmin;
-		top:			60vh;
-		width:			100vw;
-		height:			40vh;
+		flex-grow:		1;
 	}
-	#AnimalView
-	{
-		xbackground:	lime;
-		display:		block;
-		position:		absolute;
-		left:			0vmin;
-		top:			0vh;
-		width:			100vw;
-		height:			60vh;
-	}
+
 }
 
 
 #AnimalCard_Title
 {
 	letter-spacing: 0.07vw;	/* use of viewport width! */
-	xxbackground: blue;
 	font-weight:	bold;
 	font-size:		2.2vh;
-	height:			4vh;
+	xheight:			4vh;
 	padding-left:	2vh;
 	border-bottom:	0.10vh solid white;
 }
 
-#AnimalCard_Description
-{
-	margin-top:		2vh;
-}
 
 #AnimalCard_Description h1, #AnimalCard_Description h2
 {
 	letter-spacing: 0.07vw;	/* use of viewport width! */
-	xxxbackground:		red;
 	/* remove h1 & h2 default styles */
 	padding:		0px;
 	margin:			0px;
-	font-size:		1.8vh;
+	font-size:		1.5vh;
 	font-weight:	300;
 	margin-bottom:	1vh;
 	padding-left:	2vh;	/* space for bullet */
@@ -894,12 +888,10 @@ hr:nth-child(even)
 	background-position:	0.0vh 1.2vh;
 }
 
+
 #Continue
 {
 	background: rgba(0, 0, 0, 0.50);
-	position:	absolute;
-	right:		0vw;
-	width:		17vw;
 	height:		4vh;
 	font-weight: 300;
 
@@ -915,6 +907,31 @@ hr:nth-child(even)
 	background-repeat:	no-repeat;
 	background-position: bottom;
 }
+
+
+/* debug */
+#AnimalView, #AnimalCard
+{
+	visibility:		visible !important;
+}
+/*
+#AnimalView
+{
+	visibility:		visible !important;
+	background:		yellow !important;
+}
+#AnimalCard
+{
+	visibility:		visible !important;
+	background:		red !important;
+	z-index:		9999 !important;
+}
+#Continue
+{
+	background:	lime !important;
+}
+*/
+
 
 
 #Solution
