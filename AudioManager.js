@@ -22,13 +22,25 @@ class SoundPool
 		for ( let i=0;	i<PoolSize;	i++ )
 			this.DisabledAudios.push(null);
 		
-		window.addEventListener('touchstart', this.AllocAudios.bind(this), true );
+		function OnClick()
+		{
+			Pop.Debug("ONCLICK", this);
+		}
+		
+		//	debug
+		//window.addEventListener('touchstart', OnClick.bind('window touchstart'), true );
 		//document.addEventListener('click', OnClick.bind('document click true'), true);
 		//document.addEventListener('click', OnClick.bind('document click false'), false);
-		window.addEventListener('click', this.AllocAudios.bind(this), true );
 		//document.body.addEventListener('click', OnClick.bind('document.body click true'), true);
 		//document.body.addEventListener('mouseup', OnClick.bind('document.body mouseup true'), true);
+		
+		//	not a user event!
+		//window.addEventListener('touchstart', this.AllocAudios.bind(this), true );
+
+		//	desktop & safari on ios
+		window.addEventListener('click', this.AllocAudios.bind(this), true );
 	}
+	
 	
 	OnSoundEnabled(Sound)
 	{
