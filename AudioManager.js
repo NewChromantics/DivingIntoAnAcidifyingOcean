@@ -14,7 +14,7 @@ const SilentMp3Url = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2
 //		this limits the number of concurrent sounds we can have, but that's probably fine
 class SoundPool
 {
-	constructor(PoolSize=5)
+	constructor(PoolSize=8)
 	{
 		this.DisabledAudios = [];
 		this.UsedAudios = [];
