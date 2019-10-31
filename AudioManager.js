@@ -376,6 +376,9 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetMusic2Volu
 	
 	this.SetMusic = function(Filename)
 	{
+		if ( Filename.length == 0 )
+			Filename = null;
+		
 		//	see if this is at the end of the queue
 		if ( this.MusicQueue.length > 0 )
 		{
