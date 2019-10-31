@@ -22,13 +22,6 @@ class SoundPool
 		for ( let i=0;	i<PoolSize;	i++ )
 			this.DisabledAudios.push(null);
 		
-		
-		function OnClick(Event)
-		{
-			Pop.Debug("CLICKED",this);
-			//this.AllocAudios();
-		}
-
 		window.addEventListener('touchstart', this.AllocAudios.bind(this), true );
 		//document.addEventListener('click', OnClick.bind('document click true'), true);
 		//document.addEventListener('click', OnClick.bind('document click false'), false);
@@ -107,7 +100,9 @@ class SoundPool
 		//	https://stackoverflow.com/a/28060352/355753
 		//	may need to check its loaded first...
 		Sound.pause();
-		Sound.src = "";
+		//	"" triggers an error!
+		//Sound.src = "";
+		Sound.src = SilentMp3Url;
 		Sound.load();
 		
 		//	find in list
@@ -126,9 +121,18 @@ Pop.Audio.AllocSound = function()
 		return Sound;
 	}
 
-	//	pop a sound out of the pool
-	const Sound = Pop.Audio.SoundPool.Pop();
-	return Sound;
+	try
+	{
+		//	pop a sound out of the pool
+		const Sound = Pop.Audio.SoundPool.Pop();
+		return Sound;
+	}
+	catch(e)
+	{
+		console.warn("Alloc sound failed: "+ e);
+		const Sound = new AudioFake();
+		return Sound;
+	}
 }
 
 
@@ -142,8 +146,9 @@ Pop.Audio.AllocSound = function()
 //	fake audio stub
 let AudioFake = function()
 {
-	this.addEventListener = function(){}
-	this.play = function(){}
+	this.addEventListener = function(){};
+	this.removeEventListener = function(){};
+	this.play = function(){};
 	this.pause = function(){};
 	this.load = function(){};
 	this.Free = function(){};
@@ -156,93 +161,116 @@ if ( Pop.GetPlatform() != 'Web' )
 
 //	make these params an object?
 //	note: this is a player, not an asset
-Pop.Audio.Sound = function(Filename,Loop=false)
+Pop.Audio.Sound = class
 {
-	this.Filename = Filename;
-	this.AudioPlayer = null;
-	this.PlayPromise = null;	//	non-null if still waiting
-
-	
-	this.SetVolume = function(Volume)
+	constructor(Filename,Loop=false)
 	{
-		this.AudioPlayer.volume = Volume;
+		this.Loop = Loop;
+		this.Filename = Filename;
+		this.PlayPromise = null;	//	non-null if still waiting
+		this.AudioPlayer = null;
 		
-		//	check is playing
-		if ( !this.AudioPlayer.paused )
-			return;
-		//	audio has stopped (paused will be true)
-		if ( this.AudioPlayer.ended )
-		{
-			if ( !Loop )
-				return;
-		}
-		
-		//	already tried to start
-		if ( this.PlayPromise )
-		{
-			Pop.Debug(Filename,"Audio still waiting for promise");
-			return;
-		}
-
-		let OnPlaying = function(Event)
-		{
-			Pop.Debug(Filename,"Now playing",Event);
-			this.PlayPromise = null;
-		}
-		let OnErrorPlaying = function(Error)
-		{
-			Pop.Debug(Filename,"Error playing",Error);
-			this.PlayPromise = null;
-		}
-		
-		this.PlayPromise = this.AudioPlayer.play();
-		this.PlayPromise.then( OnPlaying.bind(this) ).catch( OnErrorPlaying.bind(this) );
+		this.Event_Error = null;
+		this.Event_Loaded = null;
+		this.Event_Ended = null;
+		this.Create();
 	}
 	
-	this.Create = function()
+	SetVolume(Volume)
 	{
-		this.AudioPlayer = Pop.Audio.AllocSound();
-		
-		this.AudioPlayer.src = Filename;
-		this.AudioPlayer.loop = Loop;
-		this.AudioPlayer.autoplay = true;
+		//	this can be null if the sound has finished
+		if ( !this.AudioPlayer )
+			return;
+		this.AudioPlayer.volume = Volume;
+	}
+	
+	Create()
+	{
+		this.Event_Ended = function()
+		{
+			Pop.Debug("This sound has ended");
+			this.Destroy();
+		}.bind(this);
 		
 		//	callback when meta loaded, should use this for async init/load
-		const OnLoaded = function(Event)
+		this.Event_Loaded = function(Event)
 		{
 			Pop.Debug("Audio on loaded",Event,"Volume is " + this.AudioPlayer.volume, this.AudioPlayer );
 			//	gr: this will be initially paused if user has to interact with webpage first
 			if ( this.AudioPlayer.paused )
 				Pop.Debug("Audio has loaded, initially paused",this);
-			
-		}		
-		const OnError = function(Error)
+		}.bind(this);
+		
+		this.Event_Error = function(Error)
 		{
-			Pop.Debug("On error: ",Error);
-		}
-		this.AudioPlayer.onerror = OnError.bind(this);
-		this.AudioPlayer.addEventListener('loadeddata', OnLoaded.bind(this) );
+			if ( !this.AudioPlayer )
+			{
+				Pop.Debug("On Error",Error,"with no AudioPlayer");
+				return;
+			}
+			
+			Pop.Debug("On Error",Error,"WITH AudioPlayer");
+			const ErrorCode = this.AudioPlayer.error;
+			this.Destroy();
+			/*
+			1 = MEDIA_ERR_ABORTED - fetching process aborted by user
+			2 = MEDIA_ERR_NETWORK - error occurred when downloading
+			3 = MEDIA_ERR_DECODE - error occurred when decoding
+			4 = MEDIA_ERR_SRC_NOT_SUPPORTED - audio/video not supported
+			 */
+		}.bind(this);
+
+		//	need to handle when this fails
+		this.AudioPlayer = Pop.Audio.AllocSound();
+		this.AudioPlayer.loop = this.Loop;
+		this.AudioPlayer.autoplay = true;
+		
+		//	once would be good, but if it's not triggered it's left over, so we'll still manage it
+		//this.AudioPlayer.addEventListener('error', OnError, {once:true,passive:true} );
+		//this.AudioPlayer.addEventListener('loadeddata', OnLoaded, {once:true,passive:true}  );
+		//this.AudioPlayer.addEventListener('ended', OnEnded, {once:true,passive:true}  );
+		this.AudioPlayer.addEventListener('error',this.Event_Error);
+		this.AudioPlayer.addEventListener('loadeddata',this.Event_LoadedData);
+		this.AudioPlayer.addEventListener('ended',this.Event_Ended);
+
+		//	this triggers the load & play
+		this.AudioPlayer.src = this.Filename;
 	}
 	
-	this.Destroy = function()
+	Destroy()
 	{
+		//	already dead
 		if ( !this.AudioPlayer )
 			return;
 
-		this.AudioPlayer.Free();
+		//	remove events
+		this.AudioPlayer.removeEventListener('error',this.Event_Error);
+		this.AudioPlayer.removeEventListener('loadeddata',this.Event_LoadedData);
+		this.AudioPlayer.removeEventListener('ended',this.Event_Ended);
+
+		const Audio = this.AudioPlayer;
 		this.AudioPlayer = null;
+		Audio.Free();
+	}
+	
+	IsActive()
+	{
+		//	we auto delete the audio when it's finished,
+		//	so we can just check the player status
+		if ( !this.AudioPlayer )
+			return false;
+		return true;
 	}
 	
 	//	maybe call this enable?
-	this.Play = function(Play=true)
+	Play(Play=true)
 	{
+		Pop.Debug("Audio Play/Pause",Play);
 		if ( Play )
 			this.AudioPlayer.play();
 		else
 			this.AudioPlayer.pause();
 	}
-	
-	this.Create();
 }
 
 
