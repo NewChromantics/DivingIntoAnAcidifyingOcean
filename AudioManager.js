@@ -148,10 +148,13 @@ let AudioFake = function()
 {
 	this.addEventListener = function(){};
 	this.removeEventListener = function(){};
-	this.play = function(){};
 	this.pause = function(){};
 	this.load = function(){};
 	this.Free = function(){};
+	this.play = function()
+	{
+		return new Promise( function(Resolve,Reject){	Resolve();	} );
+	}
 }
 
 if ( Pop.GetPlatform() != 'Web' )
@@ -173,6 +176,8 @@ Pop.Audio.Sound = class
 		this.Event_Error = null;
 		this.Event_Loaded = null;
 		this.Event_Ended = null;
+		this.Event_Suspend = null;
+		this.Event_Emptied = null;
 		this.Create();
 	}
 	
@@ -192,6 +197,20 @@ Pop.Audio.Sound = class
 			this.Destroy();
 		}.bind(this);
 		
+		this.Event_Suspended = function()
+		{
+			//	https://www.w3schools.com/jsref/event_onsuspend.asp
+			//	This can happen when the download has completed, or because it has been paused for some reason
+			Pop.Debug("This sound has been suspended");
+			//this.Destroy();
+		}.bind(this);
+		
+		this.Event_Emptied = function()
+		{
+			Pop.Debug("This sound has been empited");
+			//this.Destroy();
+		}.bind(this);
+
 		//	callback when meta loaded, should use this for async init/load
 		this.Event_Loaded = function(Event)
 		{
@@ -232,9 +251,23 @@ Pop.Audio.Sound = class
 		this.AudioPlayer.addEventListener('error',this.Event_Error);
 		this.AudioPlayer.addEventListener('loadeddata',this.Event_LoadedData);
 		this.AudioPlayer.addEventListener('ended',this.Event_Ended);
+		this.AudioPlayer.addEventListener('suspend',this.Event_Suspended);
+		this.AudioPlayer.addEventListener('emptied',this.Event_Emptied);
 
 		//	this triggers the load & play
 		this.AudioPlayer.src = this.Filename;
+		
+		function OnPlay()
+		{
+			Pop.Debug("Play success");
+		}
+		function OnPlayError()
+		{
+			Pop.Debug("Play error");
+		}
+		
+		this.AudioPlayer.load();
+		this.AudioPlayer.play().then(OnPlay).catch(OnPlayError);
 	}
 	
 	Destroy()
@@ -247,6 +280,8 @@ Pop.Audio.Sound = class
 		this.AudioPlayer.removeEventListener('error',this.Event_Error);
 		this.AudioPlayer.removeEventListener('loadeddata',this.Event_LoadedData);
 		this.AudioPlayer.removeEventListener('ended',this.Event_Ended);
+		this.AudioPlayer.removeEventListener('suspend',this.Event_Suspended);
+		this.AudioPlayer.removeEventListener('emptied',this.Event_Emptied);
 
 		const Audio = this.AudioPlayer;
 		this.AudioPlayer = null;
