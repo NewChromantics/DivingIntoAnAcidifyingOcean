@@ -239,6 +239,15 @@ a:hover
 	border-radius:	50%;
 }
 
+#ContinueLabel
+{
+	width:			4vmin;
+	height:			4vmin;
+	
+	background:		black;
+	border-radius:	50%;
+}
+
 
 #AboutButton
 {
@@ -286,7 +295,8 @@ a:hover
 #AboutPageCloseButton:hover span,
 #SkipButton:hover span,
 #PrevButton:hover span,
-#NextButton:hover span
+#NextButton:hover span,
+#Continue:hover span
 {
 	xbackground:red;
 	background-size:	auto 65%;
@@ -297,7 +307,8 @@ a:hover
 #AboutPageCloseButton span,
 #SkipButton span,
 #PrevButton span,
-#NextButton span
+#NextButton span,
+#Continue span
 {
 	background-size:		auto 55%;
 	background-position:	center;
@@ -321,14 +332,23 @@ a:hover
 	left:			0px;
 }
 
+#ContinueLabel
+{
+	font-size:		0;
+}
 
 /* small screen */
 @media (max-device-width: 700px)
 {
 	/* make these bigger so they're easier to click */
-	#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton
+	#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton, #ContinueLabel
 	{
 		width:			8vmin;
+		height:			8vmin;
+	}
+	
+	#Continue
+	{
 		height:			8vmin;
 	}
 
@@ -369,7 +389,7 @@ a:hover
 	xxbackground-color:	lime;
 }
 
-#NextLabel, #SkipLabel
+#NextLabel, #SkipLabel, #ContinueLabel
 {
 	background:     url(icons/skip_right.svg) no-repeat;
 	xxbackground-color:	red;
@@ -869,9 +889,10 @@ hr:nth-child(even)
 	letter-spacing: 0.07vw;	/* use of viewport width! */
 	font-weight:	bold;
 	font-size:		2.2vh;
-	xheight:			4vh;
+	height:			4vh;
 	padding-left:	2vh;
 	border-bottom:	0.10vh solid white;
+	margin-bottom:	1vh;
 }
 
 
@@ -881,7 +902,7 @@ hr:nth-child(even)
 	/* remove h1 & h2 default styles */
 	padding:		0px;
 	margin:			0px;
-	font-size:		1.5vh;
+	font-size:		1.8vh;
 	font-weight:	300;
 	margin-bottom:	1vh;
 	padding-left:	2vh;	/* space for bullet */
@@ -899,19 +920,55 @@ hr:nth-child(even)
 	height:		4vh;
 	font-weight: 300;
 
+	text-transform:		uppercase;
 	text-align:			right;
-	xxtext-decoration:	underline;
-	padding-right:		2vw;
-	padding-top: 1vh;
-	font-size:			1.5vh;
-	letter-spacing:		0.07vw;
+	text-decoration:	underline;	/* match START */
+	padding-right:		4vmin;
+	font-size:			2.5vh;
+	letter-spacing:		0.07vw;	/* todo: make all link/text buttons have same spacing! */
 
-	background-image:	url(icons/Continue.svg);
-	background-size:	17vw;
-	background-repeat:	no-repeat;
-	background-position: bottom;
+	xbackground-image:	url(icons/Continue.svg);
+	xbackground-size:	17vw;
+	xbackground-repeat:	no-repeat;
+	xbackground-position: bottom;
+
+	/* undo button style */
+	position:	relative;
+	
+	pointer-events:	auto;
+	cursor:			pointer;
 }
 
+#ContinueLabel
+{
+	display:		block;
+	position:		absolute;
+	right:			0px;
+	top:			0px;
+	
+	/* cant grab width as 100% height, wont appear on mobile without a width
+	height:			100%;
+	width:			auto;
+	 */
+	
+	background:     url(icons/skip_right.svg) no-repeat black;
+	border-radius:	50%;
+	background-size:		auto 55%;
+	background-position:	right center;
+}
+
+@media (max-device-width: 700px)
+{
+	#ContinueLabel
+	{
+		width:			8vmin;
+		height:			8vmin;
+	}
+	#Continue
+	{
+		padding-right:		10vmin;
+	}
+}
 
 /* debug */
 /*
@@ -919,23 +976,20 @@ hr:nth-child(even)
 {
 	visibility:		visible !important;
 }
-/*
 #AnimalView
 {
-	visibility:		visible !important;
 	background:		yellow !important;
 }
 #AnimalCard
 {
-	visibility:		visible !important;
 	background:		red !important;
 	z-index:		9999 !important;
 }
 #Continue
 {
-	background:	lime !important;
+	background-color:	blue !important;
 }
-*/
+/* */
 
 
 
