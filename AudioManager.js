@@ -2,6 +2,143 @@
 //	this needs to evolve into the proper pop API
 Pop.Audio = {};
 
+
+//	https://gist.github.com/wittnl/8a1a0168b94f3b6abfaa#gistcomment-1551393
+const SilentMp3Url = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjM2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU2LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAOTku//MUZAkAAAGkAAAAAAAAA0gAAAAANVVV';
+
+//	gr: on web (mobile explicitly) you cannot play() a Audio unless it's been triggered
+//		from a touch/interaction event.
+//		once you play() a Audio it is okay'd by the browser, AND you can change the src
+//		and play again
+//		SO, we keep a pool of allowed-sounds which we will swap around as requested
+//		this limits the number of concurrent sounds we can have, but that's probably fine
+class SoundPool
+{
+	constructor(PoolSize=5)
+	{
+		this.DisabledAudios = [];
+		this.UsedAudios = [];
+		this.FreeAudios = [];
+		for ( let i=0;	i<PoolSize;	i++ )
+			this.DisabledAudios.push(null);
+		
+		
+		function OnClick(Event)
+		{
+			Pop.Debug("CLICKED",this);
+			//this.AllocAudios();
+		}
+
+		window.addEventListener('touchstart', this.AllocAudios.bind(this), true );
+		//document.addEventListener('click', OnClick.bind('document click true'), true);
+		//document.addEventListener('click', OnClick.bind('document click false'), false);
+		window.addEventListener('click', this.AllocAudios.bind(this), true );
+		//document.body.addEventListener('click', OnClick.bind('document.body click true'), true);
+		//document.body.addEventListener('mouseup', OnClick.bind('document.body mouseup true'), true);
+	}
+	
+	OnSoundEnabled(Sound)
+	{
+		//	this sound is now usable
+		//	move to free
+		Pop.Debug("OnSoundEnabled",...arguments);
+		Pop.Array.MoveElementFromArrayToArray( Sound, this.DisabledAudios, this.FreeAudios );
+	}
+	
+	OnSoundError(Sound,Error)
+	{
+		//	this sound cannot be played
+		//	make sure this is in the disabled list
+		Pop.Debug("OnSoundError",Sound,Error);
+	}
+	
+	AllocAudios()
+	{
+		Pop.Debug("Alloc Audios");
+		const Pool = this;
+		function AllocSound(ExistingSound)
+		{
+			//	here we COULD check if a sound has not been enabled and then play() to allow it to be used
+			if ( ExistingSound != null )
+				return ExistingSound;
+			
+			//	do an intial play to enable
+			const Sound = new Audio();
+			Sound.src = SilentMp3Url;
+			function OnSoundPlay()
+			{
+				Pool.OnSoundEnabled( Sound );
+			}
+			function OnSoundError(Error)
+			{
+				Pool.OnSoundError( Sound, Error );
+			}
+			Sound.play().then( OnSoundPlay ).catch( OnSoundError );
+			
+			//	make a free function which puts the sound back in the pool
+			Sound.Free = function(){	Pool.Release(Sound);	};
+			return Sound;
+		}
+
+		this.DisabledAudios = this.DisabledAudios.map( AllocSound );
+		this.FreeAudios = this.FreeAudios.map( AllocSound );
+		this.UsedAudios = this.UsedAudios.map( AllocSound );
+
+		//window.removeEventListener('touchstart', this.AllocAudios );
+		//window.removeEventListener('click', this.AllocAudios );
+	}
+	
+	Pop()
+	{
+		Pop.Debug("Pop sound from pool");
+		if ( this.FreeAudios.length == 0 )
+			throw "No availible sounds in sound pool!";
+		
+		const Sound = this.FreeAudios.splice(0,1)[0];
+		this.UsedAudios.push( Sound );
+		return Sound;
+	}
+	
+	Release(Sound)
+	{
+		Pop.Debug("Release sound into pool");
+		
+		//	stop it playing
+		//	https://stackoverflow.com/a/28060352/355753
+		//	may need to check its loaded first...
+		Sound.pause();
+		Sound.src = "";
+		Sound.load();
+		
+		//	find in list
+		Pop.Array.MoveElementFromArrayToArray( Sound, this.UsedAudios, this.FreeAudios );
+	}
+}
+Pop.Audio.SoundPool = new SoundPool();
+
+
+
+Pop.Audio.AllocSound = function()
+{
+	if ( Pop.GetExeArguments().includes('NoAudio') )
+	{
+		const Sound = new AudioFake();
+		return Sound;
+	}
+
+	//	pop a sound out of the pool
+	const Sound = Pop.Audio.SoundPool.Pop();
+	return Sound;
+}
+
+
+
+
+
+
+
+
+
 //	fake audio stub
 let AudioFake = function()
 {
@@ -9,6 +146,7 @@ let AudioFake = function()
 	this.play = function(){}
 	this.pause = function(){};
 	this.load = function(){};
+	this.Free = function(){};
 }
 
 if ( Pop.GetPlatform() != 'Web' )
@@ -63,11 +201,9 @@ Pop.Audio.Sound = function(Filename,Loop=false)
 	
 	this.Create = function()
 	{
-		if ( Pop.GetExeArguments().includes('NoAudio') )
-			this.AudioPlayer = new AudioFake();
-		else
-			this.AudioPlayer = new Audio(Filename);
+		this.AudioPlayer = Pop.Audio.AllocSound();
 		
+		this.AudioPlayer.src = Filename;
 		this.AudioPlayer.loop = Loop;
 		this.AudioPlayer.autoplay = true;
 		
@@ -90,11 +226,11 @@ Pop.Audio.Sound = function(Filename,Loop=false)
 	
 	this.Destroy = function()
 	{
-		//	https://stackoverflow.com/a/28060352/355753
-		//	may need to check its loaded first...
-		this.AudioPlayer.pause();
-		this.AudioPlayer.src = "";
-		this.AudioPlayer.load();
+		if ( !this.AudioPlayer )
+			return;
+
+		this.AudioPlayer.Free();
+		this.AudioPlayer = null;
 	}
 	
 	//	maybe call this enable?

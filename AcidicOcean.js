@@ -9,7 +9,7 @@ Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //Pop.Include('AssetManager.js');
-Pop.Include('AudioManager.js');
+//Pop.Include('AudioManager.js');
 Pop.Include('ParticleActor.js');
 //	already included
 //Pop.Include('Timeline.js');

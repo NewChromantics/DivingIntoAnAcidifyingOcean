@@ -5,6 +5,8 @@ Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
 //Pop.Include('AssetImport.js');
 //Pop.Include('Animals.js');
+//	gr: this is currently early otherwise we don't register window click early enough
+Pop.Include('AudioManager.js');
 
 const EnableLogoParams = false;
 const EnableInteractiveLogo = Pop.GetExeArguments().includes('Logo');
