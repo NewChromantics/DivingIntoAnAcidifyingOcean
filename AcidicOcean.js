@@ -253,8 +253,8 @@ const Timeline_Text2_Year			= 1910;
 const Timeline_Text3_Year			= 2020;
 const TimelineMaxInteractiveYear	= 2100;
 const TimelineGalleryStartYear		= 2140;
-const TimelineGalleryEndYear		= 2144;
-const TimelineSolutionYear			= 2146;
+const TimelineGalleryEndYear		= 2150;
+const TimelineSolutionYear			= 2151;
 const TimelineMaxYear				= 2160;
 
 const Timeline_AllowIntroSkipAfterYear	= 1814;
