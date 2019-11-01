@@ -695,9 +695,7 @@ hr:nth-child(even)
 }
 
 #Hint_ClickAnimal,
-#Hint_DragTimeline_Mobile,
-#Hint_DragTimeline,
-#Hint_TouchToInteract
+#Hint_DragTimeline
 {
 	/* debug
 	visibility:	visible !important;
@@ -710,7 +708,6 @@ hr:nth-child(even)
 	top:		40vh;
 }
 
-#Hint_DragTimeline_Mobile,
 #Hint_DragTimeline
 {
 	top:		60vh;
@@ -718,9 +715,7 @@ hr:nth-child(even)
 
 
 #Hint_ClickAnimal span,
-#Hint_DragTimeline_Mobile span,
-#Hint_DragTimeline span,
-#Hint_TouchToInteract span
+#Hint_DragTimeline span
 {
 	/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
 	--FontSize:			3vmin;
@@ -745,10 +740,23 @@ hr:nth-child(even)
 	xbackground-color:		red;
 }
 
-#Hint_DragTimeline_Mobile span,
 #Hint_DragTimeline span
 {
 	background-image:		url(icons/Desktop_Timeline.svg);
+}
+
+/* try and detect mobile devices and show touch icons */
+@media (max-device-width: 780px)
+{
+	#Hint_DragTimeline span
+	{
+		background-image:		url(icons/Mobile_Timeline.svg);
+	}
+	
+	#Hint_ClickAnimal span
+	{
+		background-image:		url(icons/Mobile_Animal.svg);
+	}
 }
 
 
