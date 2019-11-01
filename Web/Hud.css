@@ -406,7 +406,7 @@ hr
 	border:	0;
 	background: url('icons/wave1.svg') no-repeat top center;
 	background-size: contain;
-	height:	6vh;
+	height:	5vh;
 	
 	xwidth:	5vw;
 	xbackground:	magenta;
@@ -421,7 +421,7 @@ hr
 hr:nth-child(even)
 {
 	background:	url('icons/wave2.svg') no-repeat top center;
-	margin-top: 2vh;
+	xmargin-top: -0.5vh;
 	height: 5vh;
 }
 
@@ -488,8 +488,9 @@ hr:nth-child(even)
 	height:		5vh;
 	width:		22vw;
 	padding-top:	1.5vh;
+	xxxpadding-bottom: 1vh;
 	align-items:		center;
-	margin-bottom:		-2vh;
+	margin-bottom:	0.4vh;
 }
 
 /*
@@ -510,7 +511,7 @@ hr:nth-child(even)
 
 #TheTeam
 {
-	margin-top:	2vh;
+	margin-top:	1vh;
 	margin-bottom:	2vh;
 }
 
