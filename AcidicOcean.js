@@ -252,6 +252,8 @@ const Timeline_Text1_Year			= 1881;
 const Timeline_Text2_Year			= 1910;
 const Timeline_Text3_Year			= 2020;
 const TimelineMaxInteractiveYear	= 2100;
+const TimelineGalleryStartYear		= 2140;
+const TimelineGalleryEndYear		= 2144;
 const TimelineSolutionYear			= 2146;
 const TimelineMaxYear				= 2160;
 
@@ -973,6 +975,7 @@ Acid.State_TextTimeline3 = 'TextTimeline3';
 Acid.State_ShowAnimal = 'ShowAnimal';
 Acid.State_BigBang = 'BigBang';
 Acid.State_Outro = 'Outro';
+Acid.State_Gallery = 'Gallery';
 Acid.State_Solution = 'Solution';
 Acid.StateMap =
 {
@@ -984,6 +987,7 @@ Acid.StateMap =
 	'TextTimeline3':	Update_TextTimeline3,
 	'ShowAnimal':	Update_ShowAnimal,
 	'Outro':		Update_Outro,
+	'Gallery':		Update_Gallery,
 	'Solution':		Update_Solution
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, true );
@@ -1271,6 +1275,42 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 	UpdateFog(FrameDuration);
 	
 	//	fly until we reach end of timeline
+	if ( Params.TimelineYear >= TimelineGalleryStartYear )
+		return Acid.State_Gallery;
+	
+	//	stay flying
+	return null;
+}
+
+function Update_Gallery(FirstUpdate,FrameDuration,StateTime)
+{
+	if ( FirstUpdate )
+	{
+		if ( !Hud.Gallery )
+		{
+			Hud.Gallery = new Pop.Hud.Label('Mosaic');
+		}
+		Hud.Gallery.SetVisible(true);
+	}
+	
+	Update( FrameDuration );
+	
+	//	move time along
+	UpdateYearTime( FrameDuration );
+	
+	//	move camera
+	UpdateCameraPos();
+	
+	Acid.SelectedActor = null;
+	
+	UpdateFog(FrameDuration);
+	
+	//	hide hud after end of gallery year
+	if ( Params.TimelineYear >= TimelineGalleryEndYear )
+	{
+		Hud.Gallery.SetVisible(false);
+	}
+	
 	if ( Params.TimelineYear >= TimelineSolutionYear )
 		return Acid.State_Solution;
 	
@@ -1285,9 +1325,10 @@ function Update_Solution(FirstUpdate,FrameDuration,StateTime)
 		const SolutionHud = new Pop.Hud.Label('Solution');
 		SolutionHud.SetVisible(true);
 	}
-
+	
 	Update(FrameDuration);
 }
+
 
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
