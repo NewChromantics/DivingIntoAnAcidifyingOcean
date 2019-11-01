@@ -857,6 +857,7 @@ function Init()
 	{
 		Pop.Debug("Slider changed",NewValue);
 		Acid.UserSetYear = NewValue;
+		Acid.EnableDragHint = false;
 	}
 	
 	Hud.Stats = new Pop.Hud.Label('Stats');
@@ -1012,7 +1013,9 @@ Acid.Timeline = null;
 Acid.TextTimeline1 = null;
 Acid.TextTimeline2 = null;
 Acid.TextTimeline3 = null;
-
+/* disable hints by making these !true */
+Acid.EnableClickHint = true;
+Acid.EnableDragHint = true;
 
 
 function UpdateFog(FrameDuration)
@@ -1030,6 +1033,8 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	if ( FirstUpdate )
 	{
+		Acid.EnableClickHint = false;
+
 		//	update hud to the current animal
 		//	move/offset camera to focus on it
 		const Animal = Acid.SelectedActor.Animal;
@@ -1588,8 +1593,8 @@ function Update(FrameDurationSecs)
 	const Hint_DragTimeline_Visible = Timeline.GetUniform( Time, 'HintDragTimelineVisible' );
 	const Stats_Visible = Timeline.GetUniform( Time, 'StatsVisible' );
 	const Timeline_Visible = Timeline.GetUniform( Time, 'TimelineVisible' );
-	Hud.Hint_ClickAnimal.SetVisible( Hint_ClickAnimal_Visible );
-	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible );
+	Hud.Hint_ClickAnimal.SetVisible( Hint_ClickAnimal_Visible && Acid.EnableClickHint );
+	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible && Acid.EnableDragHint );
 	Hud.Stats.SetVisible( Stats_Visible );
 	Hud.Timeline.SetVisible( Timeline_Visible );
 
