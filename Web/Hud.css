@@ -185,7 +185,7 @@ a:hover
 
 #MosaicText
 {
-	font-size:		10vh;
+	font-size:		10vmin;
 	font-weight: 	bold;
 	position:		absolute;
 	left:			12.5vw;
