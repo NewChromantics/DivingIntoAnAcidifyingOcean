@@ -707,17 +707,12 @@ hr:nth-child(even)
 	top:		40vh;
 }
 
-#Hint_DragTimeline
-{
-	top:		60vh;
-}
-
 
 #Hint_ClickAnimal span,
 #Hint_DragTimeline span
 {
 	/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
-	--FontSize:			3vmin;
+	--FontSize:			1.5vmin;
 	--Height:			calc( var(--FontSize) * 4 );
 	--BackgroundSize:	var(--Height);
 	display:			block;
@@ -737,6 +732,16 @@ hr:nth-child(even)
 	background-size:		calc( 0.5 * var(--BackgroundSize) );
 	background-color:		rgba(0, 0, 0, 0.65);
 	xbackground-color:		red;
+}
+
+@media (max-device-width: 780px)
+{
+	#Hint_ClickAnimal span,
+	#Hint_DragTimeline span
+	{
+		/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
+		--FontSize:			3vmin;
+	}
 }
 
 #Hint_DragTimeline span
