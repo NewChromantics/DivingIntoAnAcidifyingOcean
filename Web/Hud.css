@@ -243,8 +243,8 @@ a:hover
 	width:			4vmin;
 	height:			4vmin;
 	
-	background:		black;
-	border-radius:	50%;
+	xxbackground:		black;
+	xxborder-radius:	50%;
 }
 
 
@@ -388,7 +388,7 @@ a:hover
 	xxbackground-color:	lime;
 }
 
-#NextLabel, #SkipLabel, #ContinueLabel
+#NextLabel, #SkipLabel
 {
 	background:     url(icons/skip_right.svg) no-repeat;
 	xxbackground-color:	red;
@@ -712,7 +712,7 @@ hr:nth-child(even)
 #Hint_DragTimeline span
 {
 	/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
-	--FontSize:			1.5vmin;
+	--FontSize:			2vmin;
 	--Height:			calc( var(--FontSize) * 4 );
 	--BackgroundSize:	var(--Height);
 	display:			block;
@@ -740,7 +740,7 @@ hr:nth-child(even)
 	#Hint_DragTimeline span
 	{
 		/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
-		--FontSize:			3vmin;
+		--FontSize:			2vmin;
 	}
 }
 
@@ -892,20 +892,23 @@ hr:nth-child(even)
 #Continue
 {
 	background: rgba(0, 0, 0, 0.50);
-	height:		4vh;
-	font-weight: 300;
+	height:		5vh;
+	font-weight: bold;
 
-	text-transform:		uppercase;
+	xtext-transform:		uppercase;
 	text-align:			right;
-	text-decoration:	underline;	/* match START */
-	padding-right:		4vmin;
-	font-size:			2.5vh;
+	xtext-decoration:	underline;	/* match START */
+	padding-right:		5vmin;
+	padding-top: 2vh;
+	font-size:			2vh;
 	letter-spacing:		0.07vw;	/* todo: make all link/text buttons have same spacing! */
 
-	xbackground-image:	url(icons/Continue.svg);
+	background-image:	url(icons/Continue.svg);
+	background-size:		auto 55%;
 	xbackground-size:	17vw;
-	xbackground-repeat:	no-repeat;
-	xbackground-position: bottom;
+	background-repeat:	no-repeat;
+	background-position: bottom right;
+
 
 	/* undo button style */
 	position:	relative;
@@ -926,10 +929,10 @@ hr:nth-child(even)
 	width:			auto;
 	 */
 	
-	background:     url(icons/skip_right.svg) no-repeat black;
-	border-radius:	50%;
-	background-size:		auto 55%;
-	background-position:	right center;
+	xbackground:     url(icons/skip_right.svg) no-repeat black;
+	xborder-radius:	50%;
+	xbackground-size:		auto 55%;
+	xbackground-position:	right center;
 }
 
 @media (max-device-width: 700px)
