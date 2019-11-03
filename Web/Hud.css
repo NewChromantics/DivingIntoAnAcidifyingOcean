@@ -726,7 +726,7 @@ hr:nth-child(even)
 	line-height:		var(--Height);	/* vertical center */
 	
 	background-position:	1vw center;
-	padding-left:			var(--BackgroundSize);
+	padding-left:			calc( 1 * var(--BackgroundSize ));
 	
 	background-image:		url(icons/Desktop_Animal.svg);
 	background-repeat:		no-repeat;
@@ -748,6 +748,8 @@ hr:nth-child(even)
 #Hint_DragTimeline span
 {
 	background-image:		url(icons/Desktop_Timeline.svg);
+	background-size:		calc( 0.6 * var(--BackgroundSize) );
+	padding-left:			calc( 1.2 * var(--BackgroundSize ));
 }
 
 /* try and detect mobile devices and show touch icons */
