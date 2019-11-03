@@ -300,6 +300,7 @@ Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = Params.FogMaxDistance;
 Params.AudioCrossFadeDurationSecs = 2;
+Params.MaxSwirlActors = 2;
 
 Params.CustomiseWaterColours = false;
 Params.UpdateColourTextureFrequencySecs = 1.5;
@@ -434,6 +435,9 @@ if ( IsDebugEnabled() )
 
 function AddSwirlActor()
 {
+	if ( Acid.SwirlActors.length >= Params.MaxSwirlActors )
+		return;
+	
 	function GetSplineStartPos()
 	{
 		const Pos = Acid.GetCameraPosition();
@@ -442,17 +446,6 @@ function AddSwirlActor()
 		Pos[2] += Params.Swirl_StartPositionZ;
 		return Pos;
 	}
-	
-	function PushActor(Actor)
-	{
-		//	move
-		const Pos = GetSplineStartPos();
-		const PosMatrix = Math.CreateTranslationMatrix( ...Pos );
-		Actor.LocalToWorldTransform = Math.MatrixMultiply4x4( PosMatrix, Actor.LocalToWorldTransform );
-		Acid.CameraScene.push( Actor );
-	}
-	
-	//CreateSplineActors( PushActor );
 	
 	{
 		//	reset previous asset
@@ -464,7 +457,7 @@ function AddSwirlActor()
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix( ...SplineStartPos );
 		
 		SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
-		Acid.CameraScene.push( Actor );
+		Acid.SwirlActors.push( Actor );
 		Actor.EnablePhysics();
 		//Actor.BoundingBox.Min = [-100,-100,-100];
 		//Actor.BoundingBox.Max = [100,100,100];
@@ -674,6 +667,7 @@ function GetActorScene(Filter)
 	}
 	
 	Acid.CameraScene.forEach( PushCameraSceneActor );
+	Acid.SwirlActors.forEach( PushCameraSceneActor );
 	
 	return Scene;
 }
@@ -682,6 +676,7 @@ function UpdateActorScene(TimeStep)
 {
 	//	update all actors and delete any that return false
 	Acid.CameraScene = Acid.CameraScene.filter( a => a.Update(TimeStep) );
+	Acid.SwirlActors = Acid.SwirlActors.filter( a => a.Update(TimeStep) );
 }
 
 
@@ -1013,6 +1008,7 @@ Acid.GetFogParams = function()
 }
 
 Acid.CameraScene = null;
+Acid.SwirlActors = [];
 Acid.Timeline = null;
 Acid.TextTimeline1 = null;
 Acid.TextTimeline2 = null;
