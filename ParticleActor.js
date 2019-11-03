@@ -814,10 +814,13 @@ function GetSwirlMeta(Actor)
 	{
 		if ( Actor && Actor.SpawnTime )
 		{
+			let SplineDuration = Params.Swirl_Physics_SplineDuration;
+			SplineDuration *= 1 / Params.YearsPerSecond;
+			
 			let Time = Pop.GetTimeNowMs() - Actor.SpawnTime;
-					
+			
 			Time /= 1000;
-			Time /= Params.Swirl_Physics_SplineDuration;
+			Time /= SplineDuration;
 			
 			Meta.PhysicsUniforms.SplineTime = Time;
 		}
