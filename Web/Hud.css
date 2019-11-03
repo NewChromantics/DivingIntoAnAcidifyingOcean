@@ -185,8 +185,7 @@ a:hover
 
 #MosaicText
 {
-	visibility: hidden;
-	font-size:		10vh;
+	font-size:		10vmin;
 	font-weight: 	bold;
 	position:		absolute;
 	left:			12.5vw;
@@ -693,100 +692,75 @@ hr:nth-child(even)
   	border-radius: 25px;
 
 }
-/* This is for Desktop */
-#Hint_ClickAnimal
-{
-	display:	block;
-	position:	absolute;
-	left:		40vw;
-	top:		40vh;
-	width:		16vw;
-	height:		4vh;
-	font-size:	2vh;
-	justify-content:	flex-end;
-	background: rgba(0, 0, 0, 0.65) url(icons/Desktop_Animal.svg) no-repeat 8% 50%;
-	background-size: 3.8vh;
 
-	display: flex;
-	align-items: center;
-
-	padding: 32px;
-	padding-left: 8vh;
-	flex-wrap: wrap;
-	-webkit-flex-flow: row wrap;
-
-  	border-radius: 25px;
-}
-#Hint_DragTimeline_Mobile
-{
-	visibility: hidden;
-	display:	block;
-	position:	absolute;
-	left:		40vw;
-	xxxtop:		45vh;
-	width:		16vw;
-	height:		4vh;
-	font-size:	2vh;
-	justify-content:	flex-end;
-	background: rgba(0, 0, 0, 0.65) url(icons/Mobile_Timeline.svg) no-repeat 8% 50%;
-	background-size: 3.8vh;
-
-	display: flex;
-	align-items: center;
-
-	padding: 32px;
-	padding-left: 8vh;
-	flex-wrap: wrap;
-	-webkit-flex-flow: row wrap;
-
-  	border-radius: 25px;
-}
+#Hint_ClickAnimal,
 #Hint_DragTimeline
 {
+	/* debug
+	visibility:	visible !important;
+	z-index:		9999 !important;
+	background:	magenta !important;
+	/* */
 	display:	block;
 	position:	absolute;
-	left:		40vw;
+	width:		100vw;
 	top:		40vh;
-	width:		16vw;
-	height:		4vh;
-	font-size:	2vh;
-	justify-content:	flex-end;
-	background: rgba(0, 0, 0, 0.65) url(icons/Desktop_Timeline.svg) no-repeat 8% 50%;
-	background-size: 5vh;
-
-	display: flex;
-	align-items: center;
-
-	padding: 32px;
-	padding-left: 8vh;
-	flex-wrap: wrap;
-	-webkit-flex-flow: row wrap;
-
-  	border-radius: 25px;
 }
-#Hint_TouchToInteract
+
+
+#Hint_ClickAnimal span,
+#Hint_DragTimeline span
 {
-	visibility: hidden;
-	display:	block;
-	position:	absolute;
-	left:		46vw;
-	xxxtop:		45vh;
-	width:		10vw;
-	height:		4vh;
-	font-size:	2vh;
-	justify-content:	flex-end;
-	background: rgba(0, 0, 0, 0.65) url(icons/Mobile_Swirls.svg) no-repeat 10% 50%;
-	background-size: 6vh;
+	/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
+	--FontSize:			1.5vmin;
+	--Height:			calc( var(--FontSize) * 4 );
+	--BackgroundSize:	var(--Height);
+	display:			block;
+	width:				calc( (var(--FontSize) * 12) + var(--BackgroundSize) );
+	font-size:			var(--FontSize);
+	height:				var(--Height);
+	border-radius:		calc( 0.25 * var(--Height) );
+	margin:				auto;			/* horz center */
+	
+	line-height:		var(--Height);	/* vertical center */
+	
+	background-position:	1vw center;
+	padding-left:			var(--BackgroundSize);
+	
+	background-image:		url(icons/Desktop_Animal.svg);
+	background-repeat:		no-repeat;
+	background-size:		calc( 0.5 * var(--BackgroundSize) );
+	background-color:		rgba(0, 0, 0, 0.65);
+	xbackground-color:		red;
+}
 
-	display: flex;
-	align-items: center;
+@media (max-device-width: 780px)
+{
+	#Hint_ClickAnimal span,
+	#Hint_DragTimeline span
+	{
+		/* font size dictates height, which dicates width to keep text in one line, which dictates background size */
+		--FontSize:			3vmin;
+	}
+}
 
-	padding: 30px;
-	padding-left: 8vh;
-	flex-wrap: wrap;
-	-webkit-flex-flow: row wrap;
+#Hint_DragTimeline span
+{
+	background-image:		url(icons/Desktop_Timeline.svg);
+}
 
-  	border-radius: 25px;
+/* try and detect mobile devices and show touch icons */
+@media (max-device-width: 780px)
+{
+	#Hint_DragTimeline span
+	{
+		background-image:		url(icons/Mobile_Timeline.svg);
+	}
+	
+	#Hint_ClickAnimal span
+	{
+		background-image:		url(icons/Mobile_Animal.svg);
+	}
 }
 
 
