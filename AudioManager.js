@@ -122,8 +122,12 @@ class SoundPool
 	}
 }
 Pop.Audio.SoundPool = new SoundPool();
+Pop.Audio.SoundIdCounter = 1000;
 
-
+Pop.Audio.AllocSoundId = function()
+{
+	return Pop.Audio.SoundIdCounter++;
+}
 
 Pop.Audio.AllocSound = function()
 {
@@ -544,6 +548,28 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetMusic2Volu
 	this.PlaySound = function(Filename)
 	{
 		const Sound = new Pop.Audio.Sound(Filename);
+		Sound.Id = Pop.Audio.AllocSoundId();
 		this.Sounds.push( Sound );
+		Pop.Debug("PlaySound(",Filename);
+		return Sound.Id;
+	}
+	
+	this.StopSound = function(SoundId)
+	{
+		function MatchSound(Sound)
+		{
+			return Sound.Id == SoundId;
+		}
+		//	we should queue these and fade out instead of just stopping
+		let MatchSounds = this.Sounds.filter( MatchSound );
+		this.Sounds = this.Sounds.filter( s => !MatchSound(s) );
+		function KillSound(Sound)
+		{
+			Pop.Debug("Killing sound");
+			Sound.Destroy();
+		}
+		if ( MatchSounds.length == 0 )
+			Pop.Debug("Tried to kill sound",SoundId," but no matches");
+		MatchSounds.forEach( KillSound );
 	}
 }

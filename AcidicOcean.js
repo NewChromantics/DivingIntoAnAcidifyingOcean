@@ -1103,7 +1103,8 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 			let Meta = Acid.SelectedActor.GetMeta ? Acid.SelectedActor.GetMeta() : null;
 			if ( Meta && Meta.PhysicsAudioFilename )
 			{
-				AudioManager.PlaySound( Meta.PhysicsAudioFilename );
+				const NewSound = AudioManager.PlaySound( Meta.PhysicsAudioFilename );
+				Acid.SelectedActor.Sounds.push( NewSound );
 			}
 		}
 	}
@@ -1239,7 +1240,8 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 		Actor.AnimalHasBeenExploded = true;
 		
 		//	play a big bang sound
-		AudioManager.PlaySound( ExplosionSoundFilename );
+		const NewSound = AudioManager.PlaySound( ExplosionSoundFilename );
+		Actor.Sounds.push( NewSound );
 	}
 	Object.keys(BigBangExplodeYears).forEach( ExplodeActor );
 	
@@ -1767,6 +1769,9 @@ function UpdateSceneVisibility(Time)
 			//		if it's an animal, lets delete the texture data
 			if ( IsAutoClearTextureActor(Actor) )
 				Actor.ClearOpenglTextures();
+			//	turn of any actor sounds
+			Actor.Sounds.forEach( s => AudioManager.StopSound(s) );
+			Actor.Sounds = [];
 		}
 		if ( Actor.IsVisible )
 			VisibleActorCount++;

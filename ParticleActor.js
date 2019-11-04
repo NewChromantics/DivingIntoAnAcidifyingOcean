@@ -484,6 +484,7 @@ function TActor(Transform,Geometry,Shader,Uniforms)
 	this.RenderShader = Shader;
 	this.Uniforms = Uniforms || [];
 	this.BoundingBox = null;
+	this.Sounds = [];
 	
 	this.Update = function(TimeStepSecs)
 	{
