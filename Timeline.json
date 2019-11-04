@@ -226,7 +226,7 @@
 	
 	"2100":
 	{
-		"CreateSwirlEveryXYears":3,
+		"CreateSwirlEveryXYears":2,
 		"YearsPerSecond":0.25,
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
@@ -274,7 +274,7 @@
 
 	"2102":
 	{
-		"YearsPerSecond":1,
+		"YearsPerSecond":0.60,
 		"Subtitle":"IF WE DON’T DRASTICALLY <strong> REDUCE OUR CO2 PRODUCTION </strong>, AND <strong> LIMIT THE PLANET’S TEMPERATURE RISE TO UNDER 1.5°C </strong>, THE WHOLE OCEAN SYSTEM MAY COLLAPSE",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
 	},

@@ -300,7 +300,7 @@ Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
 Params.CameraFarDistance = Params.FogMaxDistance;
 Params.AudioCrossFadeDurationSecs = 2;
-Params.MaxSwirlActors = 2;
+Params.MaxSwirlActors = 4;
 
 Params.CustomiseWaterColours = false;
 Params.UpdateColourTextureFrequencySecs = 1.5;
