@@ -57,7 +57,7 @@ function GetActorWorldBoundingBoxCorners(BoundingBoxWorld,IncludeBothX=true,Incl
 	return Corners;
 }
 
-function GetIntersectingActors(Ray,Scene)
+function GetIntersectingActors(Ray,Scene,MaxDistance)
 {
 	const Intersections = [];
 	
@@ -70,6 +70,16 @@ function GetIntersectingActors(Ray,Scene)
 		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, BoundingBox.Min, BoundingBox.Max );
 		if ( !IntersectionPos )
 			return;
+		
+		if ( MaxDistance !== undefined )
+		{
+			const Distance = Math.Distance3( IntersectionPos, Ray.Start );
+			if ( Distance > MaxDistance )
+			{
+				Pop.Debug("Skipped intersection too far away: " + Distance + "/" + MaxDistance, Actor );
+				return;
+			}
+		}
 		
 		let Intersection = {};
 		Intersection.Position = IntersectionPos;

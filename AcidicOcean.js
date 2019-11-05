@@ -241,7 +241,7 @@ function GetActorIntersections(CameraScreenUv)
 
 	//	find actor
 	const Scene = GetActorScene_OnlySelectable();
-	let SelectedActors = GetIntersectingActors( Ray, Scene );
+	let SelectedActors = GetIntersectingActors( Ray, Scene, Params.MaxHighlightDistance );
 	
 	if ( SelectedActors.length == 0 )
 		return [];
@@ -404,6 +404,7 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('TestRaySize',0,10);
 	ParamsWindow.AddParam('DrawTestRay');
 	ParamsWindow.AddParam('DrawHighlightedActors');
+	ParamsWindow.AddParam('MaxHighlightDistance',0,100);
 	ParamsWindow.AddParam('EnablePhysicsIteration');
 	ParamsWindow.AddParam('DebugPhysicsTextures');
 	ParamsWindow.AddParam('BillboardTriangles');
