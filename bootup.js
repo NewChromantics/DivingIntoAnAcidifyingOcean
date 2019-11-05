@@ -225,7 +225,7 @@ Params.AnimalBufferLod = 1;
 Params.DrawBoundingBoxes = false;//IsDebugEnabled();
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
-Params.MaxHighlightDistance = 5.2;
+Params.MaxHighlightDistance = 6.5;
 Params.LoadTextureBufferNoise = 0.007;
 Params.TestRayDistance = 0.82;
 
