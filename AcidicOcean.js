@@ -1072,9 +1072,11 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	//	target the near side of the bounds (this helps for meshes which are offset, as well as size)
 	const TargetCameraPos = Math.Lerp3( AnimalBounds.Min, AnimalBounds.Max, 0.5 );
 	TargetCameraPos[2] = AnimalBounds.Max[2];
-	TargetCameraPos[0] += Params.ShowAnimal_CameraOffsetX;
-	TargetCameraPos[1] += Params.ShowAnimal_CameraOffsetY;
-	TargetCameraPos[2] += Params.ShowAnimal_CameraOffsetZ;
+	
+	const Offset = Acid.SelectedActor.GetMeta().ShowAnimal_CameraOffset;
+	TargetCameraPos[0] += Offset[0];
+	TargetCameraPos[1] += Offset[1];
+	TargetCameraPos[2] += Offset[2];
 	
 	//	lerp camera
 	Acid.CameraPosition = Math.Lerp3( Acid.CameraPosition, TargetCameraPos, Params.ShowAnimal_CameraLerpInSpeed );
