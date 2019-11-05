@@ -1532,7 +1532,7 @@ function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
 
 	LastUpdateColourTextureElapsed[ColourNamePrefix] = 0;
 	
-	Pop.Debug("Updating colours",ColourNamePrefix);
+	//Pop.Debug("Updating colours",ColourNamePrefix);
 	
 	//	get all the values
 	let Colours = [];
