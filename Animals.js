@@ -186,6 +186,20 @@ function GetAnimalMeta(Actor)
 		Meta.RenderUniforms.TriangleScale = Actor.Animal.TriangleScale;
 	
 	Meta.Colours = [InvalidColour];
+	
+	Meta.ShowAnimal_CameraOffset =
+	[
+	 Params.ShowAnimal_CameraOffsetX,
+	 Params.ShowAnimal_CameraOffsetY,
+	 Params.ShowAnimal_CameraOffsetZ
+	];
+	if ( Actor && Actor.Animal && Actor.Animal.ShowAnimal_CameraOffsetX )
+		Meta.ShowAnimal_CameraOffset[0] = Actor.Animal.ShowAnimal_CameraOffsetX;
+	if ( Actor && Actor.Animal && Actor.Animal.ShowAnimal_CameraOffsetY )
+		Meta.ShowAnimal_CameraOffset[1] = Actor.Animal.ShowAnimal_CameraOffsetY;
+	if ( Actor && Actor.Animal && Actor.Animal.ShowAnimal_CameraOffsetZ )
+		Meta.ShowAnimal_CameraOffset[2] = Actor.Animal.ShowAnimal_CameraOffsetZ;
+
 	return Meta;
 }
 
