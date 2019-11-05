@@ -30,8 +30,6 @@ const EnableColourTextureUpdate = true;
 const PhysicsEnabled = !Pop.GetExeArguments().includes('PhysicsDisabled');
 var PhsyicsUpdateCount = 0;	//	gotta do one
 
-var Debug_HighlightActors = [];
-
 //	for debugging, keep a copy of the old cameras
 const LastXrCameras = {};
 
@@ -180,12 +178,7 @@ function UpdateMouseMove(x,y)
 	const CameraScreenUv = [u,v];
 	LastMouseRayUv = CameraScreenUv;
 	
-	Debug_HighlightActors = GetActorIntersections(CameraScreenUv);
-	if ( Debug_HighlightActors.length )
-	{
-		const Names = Debug_HighlightActors.map( a => a.Actor.Name );
-		//Pop.Debug("Selected actors;", Names );
-	}
+	//Debug_HighlightActors = GetActorIntersections(CameraScreenUv);
 }
 
 
@@ -225,6 +218,16 @@ function GetActorScene_OnlyVisible()
 	return Scene;
 }
 
+//	check for animal selection
+function CompareNearest(IntersectionA,IntersectionB)
+{
+	const za = IntersectionA.Position[2];
+	const zb = IntersectionB.Position[2];
+	if ( za < zb )	return 1;
+	if ( za > zb )	return -1;
+	return 0;
+}
+
 function GetActorIntersections(CameraScreenUv)
 {
 	const Rect = Window.GetScreenRect();
@@ -238,7 +241,20 @@ function GetActorIntersections(CameraScreenUv)
 
 	//	find actor
 	const Scene = GetActorScene_OnlySelectable();
-	const SelectedActors = GetIntersectingActors( Ray, Scene );
+	let SelectedActors = GetIntersectingActors( Ray, Scene );
+	
+	if ( SelectedActors.length == 0 )
+		return [];
+	
+	if ( SelectedActors.length > 1 )
+	{
+		//	sort by nearest!
+		SelectedActors.sort( CompareNearest );
+	}
+	
+	//	filter to one
+	SelectedActors = [SelectedActors[0]];
+	let ActorSelectedActor = SelectedActors[0].Actor;
 	
 	return SelectedActors;
 }
@@ -794,8 +810,15 @@ function GetRenderScene(GetActorScene,Time)
 		let Max = [TestSize,TestSize,TestSize];
 		PushActorBox( Pos, Min, Max, true );
 	}
+	
 	if ( Params.DrawHighlightedActors )
-		Debug_HighlightActors.forEach( DrawIntersection );
+	{
+		if ( LastMouseRayUv )
+		{
+			const Intersections = GetActorIntersections(LastMouseRayUv);
+			Intersections.forEach( DrawIntersection );
+		}
+	}
 	
 	return Scene;
 }
@@ -1362,26 +1385,17 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	//	move camera
 	UpdateCameraPos();
 	
-	//	check for animal selection
-	function CompareNearest(IntersectionA,IntersectionB)
-	{
-		const za = IntersectionA.Position[2];
-		const zb = IntersectionB.Position[2];
-		if ( za < zb )	return -1;
-		if ( za > zb )	return 1;
-		return 0;
-	}
+	
 
 	function GetActorFromUv(uv)
 	{
-		if ( !LastMouseRayUv )
+		if ( !uv )
 			return null;
 		
 		const IntersectedActors = GetActorIntersections(uv);
 		if ( IntersectedActors.length == 0 )
 			return null;
-		//	sort by nearest!
-		IntersectedActors.sort( CompareNearest );
+		
 		let ActorSelectedActor = IntersectedActors[0].Actor;
 		return ActorSelectedActor;
 	}
