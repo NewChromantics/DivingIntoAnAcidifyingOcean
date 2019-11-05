@@ -30,7 +30,10 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShowAnimal_CameraOffsetX": 1.04,
+		"ShowAnimal_CameraOffsetY": 0.02,
+		"ShowAnimal_CameraOffsetZ": 1.62
 
 	},
 	"Cephalopod":
@@ -132,7 +135,10 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_","Bigbang_"  ],
 		"Scale":1.2,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShowAnimal_CameraOffsetX": 0.74,
+		"ShowAnimal_CameraOffsetY": 0.02,
+		"ShowAnimal_CameraOffsetZ": 2.18
 	},
 	"Krill":
 	{
@@ -197,7 +203,10 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":0.8,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShowAnimal_CameraOffsetX": 0.96,
+		"ShowAnimal_CameraOffsetY": 0.02,
+		"ShowAnimal_CameraOffsetZ": 1.92
 
 	},
 
@@ -221,7 +230,10 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" , "Bigbang_"],
 		"Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShowAnimal_CameraOffsetX": 0.48,
+		"ShowAnimal_CameraOffsetY": 0.02,
+		"ShowAnimal_CameraOffsetZ": 2.18
 
 	},
 	
@@ -299,7 +311,10 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShowAnimal_CameraOffsetX": 0.74,
+		"ShowAnimal_CameraOffsetY": 0.02,
+		"ShowAnimal_CameraOffsetZ": 1.92
 
 	},
 	
@@ -422,7 +437,10 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShowAnimal_CameraOffsetX": 0.8,
+		"ShowAnimal_CameraOffsetY": 0.06,
+		"ShowAnimal_CameraOffsetZ": 1.92
 
 	},
 		"Assorbente":
