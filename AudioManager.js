@@ -273,14 +273,15 @@ Pop.Audio.Sound = class
 		//	this triggers the load & play
 		this.AudioPlayer.src = this.Filename;
 		
-		function OnPlay()
+		const OnPlay = function(Args)
 		{
-			Pop.Debug("Play success");
-		}
-		function OnPlayError()
+			Pop.Debug("Play success",...arguments);
+		}.bind(this);
+		
+		const OnPlayError = function(Error)
 		{
-			Pop.Debug("Play error");
-		}
+			Pop.Debug("Play error",Error,...arguments);
+		}.bind(this);
 		
 		this.AudioPlayer.load();
 		this.AudioPlayer.play().then(OnPlay).catch(OnPlayError);
