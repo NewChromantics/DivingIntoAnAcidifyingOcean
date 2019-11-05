@@ -109,7 +109,6 @@
 
 	"1860":
 	{
-		"HintClickAnimalVisible":false,
 		"YearsPerSecond":0.35,
 		"StatsVisible":true,
 		"TimelineVisible":true,
@@ -120,6 +119,11 @@
 		"Stats_Oxygen":0,
 		"Stats_Ph":0,
 		"Subtitle":""
+	},
+
+	"1862":
+	{
+		"HintClickAnimalVisible":false
 	},
 
 	"1865":
