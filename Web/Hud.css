@@ -434,7 +434,8 @@ hr:nth-child(even)
 
 #OpeningText
 {
-	margin-top: -4vh;
+	margin-top: -6vh;
+	xbackground:	blue;
 }
 
 #gac, #crtq, #graham
@@ -537,7 +538,7 @@ hr:nth-child(even)
 
 #Disclaimer
 {
-	margin-top:		4vh;
+	margin-top:		2vh;
 }
 
 
