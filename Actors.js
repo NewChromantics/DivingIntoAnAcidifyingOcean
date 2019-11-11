@@ -13,7 +13,7 @@ const UpdatePositionSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_
 //const UpdateSwirlShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateSwirl.frag.glsl','Quad.vert.glsl');
 const UpdateSwirlShader = null;
 
-const Noise_TurbulenceShader = RegisterShaderAssetFilename('Noise/TurbulencePerlin.frag.glsl','Quad.vert.glsl');
+const Noise_TurbulenceShader = RegisterShaderAssetFilename('TurbulencePerlin.frag.glsl','Quad.vert.glsl');
 
 const AnimalParticleShader = RegisterShaderAssetFilename('AnimalParticle.frag.glsl','AnimalParticle.vert.glsl');
 const NastyAnimalParticleShader = RegisterShaderAssetFilename('NastyAnimalParticle.frag.glsl','NastyAnimalParticle.vert.glsl');
