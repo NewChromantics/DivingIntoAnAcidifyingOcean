@@ -13,7 +13,8 @@ uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
 uniform sampler2D OrigPositions;
 uniform float3 OrigPositionsBoundingBox[2];
-
+const float ScalarMin = 0.2;
+const float ScalarMax = 1.0;
 
 uniform int TriangleCount;
 
@@ -61,12 +62,13 @@ vec2 GetTriangleUv(int TriangleIndex)
 }
 
 
+
 float3 GetInputPositionOffset(float2 uv)
 {
 	float Lod = 0.0;
 	vec4 Pos = textureLod( WorldPositions, uv, Lod );
-	//	todo: use w as scalar
 	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	Pos.xyz *= mix( ScalarMin, ScalarMax, Pos.w );
 	return Pos.xyz;
 }
 

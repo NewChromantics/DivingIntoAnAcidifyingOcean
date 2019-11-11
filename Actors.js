@@ -1,6 +1,7 @@
 
 
 const BlitCopyShader = RegisterShaderAssetFilename('BlitCopy.frag.glsl','Quad.vert.glsl');
+const BlitDebugShader = RegisterShaderAssetFilename('BlitDebug.frag.glsl','Quad.vert.glsl');
 const BlitCopyMultipleShader = RegisterShaderAssetFilename('BlitCopyMultiple.frag.glsl','Quad.vert.glsl');
 const UpdateVelocityShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocity.frag.glsl','Quad.vert.glsl');
 const UpdateVelocityPulseShader = RegisterShaderAssetFilename('PhysicsIteration_UpdateVelocityPulse.frag.glsl','Quad.vert.glsl');
@@ -54,6 +55,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 				Shader.SetUniform('VertexRect', [0,0,1,1] );
 				Shader.SetUniform('Texture',VelocityTexture);
 			}
+			RenderTarget.SetBlendModeBlit(true);
 			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 		}
 		RenderTarget.RenderToRenderTarget( VelocityScratchTexture, CopyVelcoityToScratch );
@@ -66,6 +68,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 				Shader.SetUniform('VertexRect', [0,0,1,1] );
 				Shader.SetUniform('Texture',PositionTexture);
 			}
+			RenderTarget.SetBlendModeBlit(true);
 			RenderTarget.DrawGeometry( Quad, CopyShader, SetUniforms );
 		}
 		RenderTarget.RenderToRenderTarget( PositionScratchTexture, CopyPositionsToScratch );
@@ -89,6 +92,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 			Shader.SetUniform('OrigPositionsWidthHeight', [PositionOrigTexture.GetWidth(),PositionOrigTexture.GetHeight()] );
 			SetPhysicsUniforms( Shader );
 		}
+		RenderTarget.SetBlendModeBlit(true);
 		RenderTarget.DrawGeometry( Quad, UpdateVelocityShader, SetUniforms );
 	}
 	if ( UpdateVelocityShader )
@@ -116,6 +120,7 @@ function PhysicsIteration(RenderTarget,Time,FrameDuration,PositionTexture,Veloci
 			
 			SetPhysicsUniforms( Shader );
 		}
+		RenderTarget.SetBlendModeBlit(true);
 		RenderTarget.DrawGeometry( Quad, UpdatePositionShader, SetUniforms );
 	}
 	//	if there's no velocity update, then we're rendering to two targets

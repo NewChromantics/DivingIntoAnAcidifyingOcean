@@ -253,8 +253,9 @@ function GetRenderScene(GetActorScene,Time)
 		const Uniforms = {};
 		Uniforms['VertexRect'] = [x, y, w, h ];
 		Uniforms['Texture'] = Texture;
+		Uniforms['DrawAlpha'] = Params.DebugTextureAlpha;
 		
-		const Actor = new TActor( null, 'Quad', BlitCopyShader, Uniforms );
+		const Actor = new TActor( null, 'Quad', BlitDebugShader, Uniforms );
 		Scene.push( Actor );
 	}
 	
@@ -269,7 +270,7 @@ function GetRenderScene(GetActorScene,Time)
 		//DebugTextures.push( OceanColourTexture );
 		//DebugTextures.push( DebrisColourTexture );
 		//DebugTextures.push( RandomTexture );
-		DebugTextures.push( Noise_TurbulenceTexture );
+		//DebugTextures.push( Noise_TurbulenceTexture );
 	}
 
 	//	show all the actor positions
@@ -277,12 +278,12 @@ function GetRenderScene(GetActorScene,Time)
 	{
 		if ( !Actor.GetPositionTexture )
 			return;
-		const PositionTexture = Actor.GetPositionTexture();
+		const PositionTexture = Actor.GetPositionOffsetTexture();
 		const VelocityTexture = Actor.VelocityTexture;
 		DebugTextures.push( PositionTexture );
 		DebugTextures.push( VelocityTexture );
-		DebugTextures.push( Actor.ScratchPositionTexture );
-		DebugTextures.push( Actor.ScratchVelocityTexture );
+		//DebugTextures.push( Actor.ScratchPositionTexture );
+		//DebugTextures.push( Actor.ScratchVelocityTexture );
 	}
 	ActorScene.forEach( PushActorPositionTexture );
 	

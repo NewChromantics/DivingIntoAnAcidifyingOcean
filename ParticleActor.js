@@ -424,6 +424,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			}
 		}
 		
+		RenderTarget.SetBlendModeAlpha(true);
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms, TriangleCount );
 	}
 	
@@ -519,6 +520,7 @@ function TActor(Transform,Geometry,Shader,Uniforms)
 			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
 		}
 		
+		RenderTarget.SetBlendModeAlpha(true);
 		RenderTarget.DrawGeometry( Geo, Shader, SetUniforms );
 	}
 	

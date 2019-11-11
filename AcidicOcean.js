@@ -304,8 +304,6 @@ Params.FogHighlightMinDistance = 0.8;
 Params.FogHighlightMaxDistance = 2.7;
 Params.FogParamsLerpSpeed = 0.1;
 Params.FogTargetLerpSpeed = 0.2;
-Params.DebugPhysicsTextures = false;
-Params.DebugNoiseTextures = IsDebugEnabled();
 Params.BillboardTriangles = true;
 Params.ShowClippedParticle = false;
 Params.CameraNearDistance = 0.1;
@@ -377,7 +375,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('ShowAnimal_CameraOffsetZ',-10,10);
 	ParamsWindow.AddParam('ShowAnimal_CameraLerpInSpeed',0,1);
 	ParamsWindow.AddParam('ShowAnimal_CameraLerpOutSpeed',0,1);
-	ParamsWindow.AddParam('DebugNoiseTextures');
 
 	ParamsWindow.AddParam('AutoGrabDebugCamera');
 
@@ -401,7 +398,6 @@ if ( IsDebugEnabled() )
 	ParamsWindow.AddParam('DrawHighlightedActors');
 	ParamsWindow.AddParam('MaxHighlightDistance',0,100);
 	ParamsWindow.AddParam('EnablePhysicsIteration');
-	ParamsWindow.AddParam('DebugPhysicsTextures');
 	ParamsWindow.AddParam('BillboardTriangles');
 	ParamsWindow.AddParam('ShowClippedParticle');
 	ParamsWindow.AddParam('CameraNearDistance', 0.01, 10);
@@ -1912,8 +1908,9 @@ function Render(RenderTarget,RenderCamera)
 		const Uniforms = {};
 		Uniforms['VertexRect'] = [x, y, w, h ];
 		Uniforms['Texture'] = Texture;
+		Uniforms['DrawAlpha'] = Params.DebugTextureAlpha;
 		
-		const Actor = new TActor( null, 'Quad', BlitCopyShader, Uniforms );
+		const Actor = new TActor( null, 'Quad', BlitDebugShader, Uniforms );
 		Scene.push( Actor );
 	}
 	

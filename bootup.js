@@ -229,6 +229,9 @@ Params.DrawHighlightedActors = false;
 Params.MaxHighlightDistance = 6.5;
 Params.LoadTextureBufferNoise = 0.007;
 Params.TestRayDistance = 0.82;
+Params.DebugPhysicsTextures = false;
+Params.DebugNoiseTextures = IsDebugEnabled();
+Params.DebugTextureAlpha = true;
 
 Params.FogColour = [0,0,0.2];
 Params.FogMinDistance = 8.0;
@@ -428,7 +431,10 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('Turbulence_TimeScalar',0,10);
 
 	ParamsWindow.AddParam('DoubleBufferPhysics');
-	
+	ParamsWindow.AddParam('DebugNoiseTextures');
+	ParamsWindow.AddParam('DebugTextureAlpha');
+	ParamsWindow.AddParam('DebugPhysicsTextures');
+
 	
 	ParamsWindow.AddParam('Water_TimeScale',0.1,10);
 	ParamsWindow.AddParam('Water_PosScale',1,500);

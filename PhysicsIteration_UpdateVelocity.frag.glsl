@@ -5,6 +5,8 @@ uniform sampler2D LastVelocitys;
 uniform sampler2D OrigPositions;
 uniform float3 OrigPositionsBoundingBox[2];
 uniform bool FirstUpdate;
+const float ScalarMin = 0.2;
+const float ScalarMax = 1.0;
 
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
@@ -64,21 +66,50 @@ float3 GetGravity(float2 uv)
 	return float3(0,Gravity,0);
 }
 
-float3 GetInputVelocity(float2 uv)
+
+float3 GetScaledInput(float2 uv,sampler2D Texture)
 {
 	if ( FirstUpdate )
 		return float3(0,0,0);
 	
-	vec4 Vel = texture( LastVelocitys, uv );
-	//	todo: use w as scalar
-	Vel.xyz -= float3( 0.5, 0.5, 0.5 );
-	return Vel.xyz;
+	vec4 Pos = texture2D( Texture, uv );
+	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	Pos.xyz *= 2.0;
+	Pos.xyz *= mix( ScalarMin, ScalarMax, Pos.w );
+	
+	return Pos.xyz;
 }
 
-float4 GetOutputVelocity(float3 Velocity)
+float3 GetInputVelocity(float2 uv)
 {
-	Velocity += float3( 0.5, 0.5, 0.5 );
-	return float4( Velocity, 1.0 );
+	return GetScaledInput( uv, LastVelocitys );
+}
+
+float3 abs3(float3 xyz)
+{
+	return float3( abs(xyz.x), abs(xyz.y), abs(xyz.z) );
+}
+
+
+float4 GetScaledOutput(float3 Position)
+{
+	//	get the scalar, but remember, we are normalising to -0.5,,,0.5
+	//	so it needs to double
+	//	and then its still 0...1 so we need to multiply by an arbritry number I guess
+	//	or 1/scalar
+	float3 PosAbs = abs3(Position);
+	float Big = max( ScalarMin, max( PosAbs.x, max( PosAbs.y, PosAbs.z ) ) );
+	float Scalar = Range( ScalarMin, ScalarMax, Big );
+	Position /= Big;
+	Position /= 2.0;
+	Position += float3( 0.5, 0.5, 0.5 );
+	//Scalar = 0.5;
+	//	reverse of
+	//Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	//Pos.xyz *= mix( 1.0, ScalarScalar, Pos.w );
+	
+	
+	return float4( Position, Scalar );
 }
 
 void main()
@@ -92,7 +123,7 @@ void main()
 	//	damping
 	Velocity *= 1.0 - Damping;
 
-	gl_FragColor = GetOutputVelocity( Velocity );
+	gl_FragColor = GetScaledOutput( Velocity );
 }
 
 
