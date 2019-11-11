@@ -16,7 +16,8 @@ SetGlobal.call(this);
 Pop.Include('PopEngineCommon/PopApi.js');
 
 
-
+//	debug, make desktop act like mobileed
+Pop.Opengl.CanRenderToFloat = false;
 
 const RandomNumberCache = [];
 

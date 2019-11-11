@@ -16,7 +16,6 @@ const SceneFilename = 'CameraSpline.dae.json';
 var LastMouseRayUv = null;
 
 
-var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'Float4' );
 var OceanColourTexture = new Pop.Image();
 var DebrisColourTexture = new Pop.Image();
 
@@ -40,7 +39,9 @@ EditorParams.ActorNodeName = SwirlActorPrefix;
 EditorParams.ActorNodeName = WaterActorPrefix;
 //EditorParams.ActorNodeName = SplineActorPrefix;
 EditorParams.ActorNodeName = 'Animal_XXX';
-EditorParams.ActorNodeName = NastyAnimalPrefix;
+//EditorParams.ActorNodeName = NastyAnimalPrefix;
+EditorParams.ActorNodeName = BigBangAnimalPrefix;
+
 
 EditorParams.ReloadAfterSecs = 300;
 EditorParams.EnablePhysicsAfterSecs = 1;

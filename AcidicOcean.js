@@ -35,7 +35,6 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 //const IgnoreActorPrefixs = ['Camera_Spline',DebrisActorPrefix,NastyAnimalPrefix,BigBangAnimalPrefix,NormalAnimalPrefix];
 
 
-var Noise_TurbulenceTexture = new Pop.Image( [512,512], 'RGBA' );
 var OceanColourTexture = new Pop.Image('OceanColourTexture');
 var DebrisColourTexture = new Pop.Image('DebrisColourTexture');
 var SwirlColourTexture = new Pop.Image('SwirlColourTexture');

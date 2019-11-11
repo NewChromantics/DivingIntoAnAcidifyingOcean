@@ -7,9 +7,13 @@ varying vec4 Rgba;
 varying vec3 TriangleUvIndex;
 varying float3 FragWorldPos;
 
+//	worldpositions now an offset from orig
 uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
+uniform sampler2D OrigPositions;
+uniform float3 OrigPositionsBoundingBox[2];
+
 
 uniform int TriangleCount;
 
@@ -57,19 +61,14 @@ vec2 GetTriangleUv(int TriangleIndex)
 }
 
 
-vec3 GetTriangleWorldPos(int TriangleIndex)
-{
-	float2 uv = GetTriangleUv( TriangleIndex );
-	float Lod = 0.0;
-	float3 xyz = textureLod( WorldPositions, uv, Lod ).xyz;
-	return xyz;
-}
-
 void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out float4 Colour)
 {
 	float2 uv = GetTriangleUvf( TriangleIndex );
 	float Lod = 0.0;
-	WorldPos = textureLod( WorldPositions, uv, Lod ).xyz;
+	
+	float3 OrigPos = textureLod( OrigPositions, uv, Lod ).xyz;
+	float3 Offset = textureLod( WorldPositions, uv, Lod ).xyz;
+	WorldPos = OrigPos + Offset;
 #if defined(TEST_ONE_COLOUR)
 	Colour = TEST_ONE_COLOUR;
 #else
@@ -129,33 +128,6 @@ void main_BillBoardCameraSpace()
 	TriangleUvIndex = float3( Localuv, TriangleIndexf );
 }
 
-/*
-void main_WorldSpace()
-{
-	int VertexIndex = int(Vertex.x);
-	int TriangleIndex = int(Vertex.y);
-	float TriangleIndexf = Vertex.y;
-	
-	float3 VertexPos = LocalPositions[VertexIndex] * TriangleScale;
-	float3 LocalPos = VertexPos;
-	
-	float3 TriangleWorldPos = GetTriangleWorldPos(TriangleIndex);
-	float4 WorldPos;
-	
-	WorldPos = LocalToWorldTransform * float4(LocalPos,1);
-	WorldPos.xyz += TriangleWorldPos;
-	
-	float4 CameraPos = WorldToCameraTransform * WorldPos;
-	CameraPos.xyz += VertexPos;
-	
-	float4 ProjectionPos = CameraProjectionTransform * CameraPos;
-	gl_Position = ProjectionPos;
-	
-	FragWorldPos = WorldPos.xyz;
-	TriangleUvIndex = float3( LocalPositions[VertexIndex].xy, TriangleIndexf );
-	Rgba = GetTriangleColour(TriangleIndex);
-}
-*/
 
 void main()
 {

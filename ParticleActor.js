@@ -257,6 +257,13 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		return this.VelocityTexture;
 	}
 	
+	this.GetPositionOffsetTexture = function()
+	{
+		if ( this.OffsetTexture )
+			return this.OffsetTexture;
+		return null;
+	}
+	
 	this.GetPositionTexture = function(Time)
 	{
 		//	is animation
@@ -270,10 +277,6 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			return this.PositionAnimationTextures[FrameIndex];
 		}
 		
-		//	position texture is copy from original source
-		if ( this.PositionTexture )
-			return this.PositionTexture;
-		
 		return this.TextureBuffers.PositionTexture;
 	}
 	
@@ -282,23 +285,17 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		if ( !this.TextureBuffers )
 			throw "Not ready to setup physics yet, no texture buffers";
 		
-		//	make copy of original reference!
-		Pop.Debug("Copy original position texture");
-		this.PositionTexture = new Pop.Image();
-		this.PositionTexture.Copy( this.TextureBuffers.PositionTexture );
-		//Pop.Debug("ResetPhysicsTextures", JSON.stringify(this) );
-		//	need to init these to zero?
-		let Size = [ this.PositionTexture.GetWidth(), this.PositionTexture.GetHeight() ];
-		const Format = this.PositionTexture.GetFormat();
+		const PosTexture = this.TextureBuffers.PositionTexture;
+		//this.PositionTexture = this.TextureBuffers.PositionTexture;
+		
+		const Size = [ PosTexture.GetWidth(), PosTexture.GetHeight() ];
+		const Format = 'RGBA';
+		
+		this.OffsetTexture = new Pop.Image(Size,Format);
 		this.VelocityTexture = new Pop.Image(Size,Format);
 		this.ScratchVelocityTexture = new Pop.Image(Size,Format);
-		this.ScratchPositionTexture = new Pop.Image(Size,Format);
-		//this.PositionOrigTexture = new Pop.Image();
-		this.PositionOrigTexture = this.TextureBuffers.PositionTexture;
-		//this.PositionOrigTexture.Copy( this.PositionTexture );
-	
-		this.ScratchVelocityTexture.Copy( this.VelocityTexture );
-		this.ScratchPositionTexture.Copy( this.PositionTexture );
+		this.ScratchOffsetTexture = new Pop.Image(Size,Format);
+
 		this.UpdatePhysicsFirst = true;
 	}
 	
@@ -338,22 +335,23 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		}
 		
 		const DoubleBuffering = Params.DoubleBufferPhysics;
+		const PositionTexture = this.GetPositionTexture();
 		if ( DoubleBuffering )
 		{
 			//	double buffer flip
 			if ( !this.PhysicsFlipped )
 			{
-				PhysicsIteration( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchPositionTexture, this.ScratchVelocityTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms, !DoubleBuffering );
+				PhysicsIteration( RenderTarget, Time, DurationSecs, this.OffsetTexture, this.VelocityTexture, this.ScratchOffsetTexture, this.ScratchVelocityTexture, PositionTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms, !DoubleBuffering );
 			}
 			else
 			{
-				PhysicsIteration( RenderTarget, Time, DurationSecs, this.ScratchPositionTexture, this.ScratchVelocityTexture, this.PositionTexture, this.VelocityTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms, !DoubleBuffering );
+				PhysicsIteration( RenderTarget, Time, DurationSecs, this.ScratchOffsetTexture, this.ScratchVelocityTexture, this.OffsetTexture, this.VelocityTexture, PositionTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms, !DoubleBuffering );
 			}
 			this.PhysicsFlipped = !this.PhysicsFlipped;
 		}
 		else
 		{
-			PhysicsIteration( RenderTarget, Time, DurationSecs, this.PositionTexture, this.VelocityTexture, this.ScratchPositionTexture, this.ScratchVelocityTexture, this.PositionOrigTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms, !DoubleBuffering );
+			PhysicsIteration( RenderTarget, Time, DurationSecs, this.OffsetTexture, this.VelocityTexture, this.ScratchOffsetTexture, this.ScratchVelocityTexture, PositionTexture, this.UpdateVelocityShader, this.UpdatePositionShader, SetAnimalPhysicsUniforms, !DoubleBuffering );
 		}
 	}
 	
@@ -376,6 +374,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Pop.Debug("Actor has no position texture",Actor);
 			return;
 		}
+		const PositionOffsetTexture = this.GetPositionOffsetTexture() || BlackTexture;
 		let VelocityTexture = this.GetVelocityTexture();
 		if ( !VelocityTexture )
 			VelocityTexture = BlackTexture;
@@ -411,7 +410,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Shader.SetUniform('LocalToWorldTransform', LocalToWorldTransform );
 			Shader.SetUniform('LocalPositions', LocalPositions );
 			Shader.SetUniform('BillboardTriangles', Params.BillboardTriangles );
-			Shader.SetUniform('WorldPositions',PositionTexture);
+			Shader.SetUniform('OrigPositions',PositionTexture);
+			Shader.SetUniform('WorldPositions',PositionOffsetTexture);
 			Shader.SetUniform('WorldPositionsWidth',PositionTexture.GetWidth());
 			Shader.SetUniform('WorldPositionsHeight',PositionTexture.GetHeight());
 			Shader.SetUniform('ColourImage',ColourTexture);
@@ -455,10 +455,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		if ( this.PositionAnimationTextures )
 			this.PositionAnimationTextures.forEach(ClearTexture);
 		
-		ClearTexture( this.PositionTexture );
+		ClearTexture( this.OffsetTexture );
 		ClearTexture( this.VelocityTexture );
 		ClearTexture( this.ScratchVelocityTexture );
-		ClearTexture( this.ScratchPositionTexture );
+		ClearTexture( this.ScratchOffsetTexture );
 		//ClearTexture( this.PositionOrigTexture );
 	}
 	

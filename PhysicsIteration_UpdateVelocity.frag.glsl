@@ -63,20 +63,35 @@ float3 GetGravity(float2 uv)
 	return float3(0,Gravity,0);
 }
 
-void main()
+float3 GetInputVelocity(float2 uv)
 {
 	//	gr: just a blit should be stable
 	vec4 Vel = texture( LastVelocitys, uv );
 	
-	Vel.xyz += GetNoise(uv) * PhysicsStep;
-	//Vel.xyz += GetNoise(uv) * PhysicsStep;
-	//Vel.xyz += GetGravity(uv) * PhysicsStep;
+	//	todo: use w as scalar
+	Vel.xyz -= float3( 0.5, 0.5, 0.5 );
+
+	return Vel.xyz;
+}
+
+float4 GetOutputVelocity(float3 Velocity)
+{
+	Velocity += float3( 0.5, 0.5, 0.5 );
+	return float4( Velocity, 1.0 );
+}
+
+void main()
+{
+	float3 Velocity = GetInputVelocity(uv);
+	
+	Velocity += GetNoise(uv) * PhysicsStep;
+	//Velocity += GetNoise(uv) * PhysicsStep;
+	//Velocity += GetGravity(uv) * PhysicsStep;
 	
 	//	damping
-	Vel.xyz *= 1.0 - Damping;
+	Velocity *= 1.0 - Damping;
 
-	Vel.w = 1.0;
-	gl_FragColor = Vel;
+	gl_FragColor = GetOutputVelocity( Velocity );
 }
 
 
