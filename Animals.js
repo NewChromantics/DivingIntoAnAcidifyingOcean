@@ -1,3 +1,8 @@
+const ExplosionSoundFilename = 'Audio/AcidicOcean_FX_Explosion.mp3';
+const AnimalSelectedSoundFilename = 'Audio/AcidicOcean_FX_MouseClick.mp3';
+const AnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_AnimalDissolution.mp3';
+const NastyAnimalDissolveSoundFilename = 'Audio/AcidicOcean_FX_NastyAnimal.mp3';
+
 
 function LoadAnimalDatabase(Filename)
 {
