@@ -35,7 +35,7 @@ uniform float Wave3_DirZ;
 uniform float Wave3_Phase;
 uniform float Wave3_Sharpness;
 
-
+uniform sampler2D OrigPositions;
 uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
@@ -182,7 +182,7 @@ void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out fl
 	float2 uv = GetTriangleUvf( TriangleIndex );
 	float Lod = 0.0;
 	
-	float3 GridPos = textureLod( WorldPositions, uv, Lod ).xyz;
+	float3 GridPos = textureLod( OrigPositions, uv, Lod ).xyz;
 	//	for some reason, this doesn't give me y=0
 	WorldPos = GridPos;
 	//WorldPos.y = 0.0;
