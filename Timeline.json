@@ -139,6 +139,16 @@
 		"Subtitle":""
 	},
 
+	"1876":
+	{
+		"YearsPerSecond":0.1
+	},
+
+	"1880":
+	{
+		"YearsPerSecond":0.35
+	},
+
 	"1882":
 	{
 		"CreateSwirlEveryXYears":4
