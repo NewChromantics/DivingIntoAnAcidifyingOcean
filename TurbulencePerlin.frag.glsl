@@ -162,5 +162,5 @@ void main()
 	//	move to 0..1
 	h = h * 0.5 + 0.5;
 	
-	gl_FragColor = float4(h, 1);
+	gl_FragColor = float4(h, 0.4);
 }

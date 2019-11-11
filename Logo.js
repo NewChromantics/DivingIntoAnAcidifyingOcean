@@ -136,7 +136,7 @@ function TLogoState()
 	 	'AnimalParticle.vert.glsl',
 		'DustParticle.vert.glsl',
 		'WaterParticle.vert.glsl',
-	 	'Noise/TurbulencePerlin.frag.glsl',
+	 	'TurbulencePerlin.frag.glsl',
 
 
 		//	code

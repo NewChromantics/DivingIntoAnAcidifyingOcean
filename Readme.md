@@ -15,7 +15,6 @@ Models/*.png
 Web/*
 PopEngineCommon/*.js
 Logo/*
-Noise/*
 *.js
 *.html
 *.json
