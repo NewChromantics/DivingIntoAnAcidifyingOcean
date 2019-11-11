@@ -6,7 +6,7 @@ uniform sampler2D Velocitys;
 uniform float PhysicsStep;//= 1.0/60.0;
 uniform bool FirstUpdate;
 const float2 PositionScalarMinMax = float2(0.1,2.0);
-const float2 VelocityScalarMinMax = float2(0.01,0.5);
+const float2 VelocityScalarMinMax = float2(0.005,0.5);
 
 
 float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)

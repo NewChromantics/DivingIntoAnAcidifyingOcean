@@ -14,7 +14,7 @@ uniform int WorldPositionsHeight;
 uniform sampler2D OrigPositions;
 uniform float3 OrigPositionsBoundingBox[2];
 const float2 PositionScalarMinMax = float2(0.1,2.0);
-const float2 VelocityScalarMinMax = float2(0.01,0.5);
+const float2 VelocityScalarMinMax = float2(0.005,0.5);
 
 uniform int TriangleCount;
 
