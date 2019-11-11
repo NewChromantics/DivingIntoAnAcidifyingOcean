@@ -4,6 +4,7 @@ varying vec2 uv;
 uniform sampler2D LastVelocitys;
 uniform sampler2D OrigPositions;
 uniform float3 OrigPositionsBoundingBox[2];
+uniform bool FirstUpdate;
 
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
@@ -65,12 +66,12 @@ float3 GetGravity(float2 uv)
 
 float3 GetInputVelocity(float2 uv)
 {
-	//	gr: just a blit should be stable
-	vec4 Vel = texture( LastVelocitys, uv );
+	if ( FirstUpdate )
+		return float3(0,0,0);
 	
+	vec4 Vel = texture( LastVelocitys, uv );
 	//	todo: use w as scalar
 	Vel.xyz -= float3( 0.5, 0.5, 0.5 );
-
 	return Vel.xyz;
 }
 

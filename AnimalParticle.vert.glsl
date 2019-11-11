@@ -61,13 +61,22 @@ vec2 GetTriangleUv(int TriangleIndex)
 }
 
 
+float3 GetInputPositionOffset(float2 uv)
+{
+	float Lod = 0.0;
+	vec4 Pos = textureLod( WorldPositions, uv, Lod );
+	//	todo: use w as scalar
+	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	return Pos.xyz;
+}
+
 void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out float4 Colour)
 {
 	float2 uv = GetTriangleUvf( TriangleIndex );
 	float Lod = 0.0;
 	
 	float3 OrigPos = textureLod( OrigPositions, uv, Lod ).xyz;
-	float3 Offset = textureLod( WorldPositions, uv, Lod ).xyz;
+	float3 Offset = GetInputPositionOffset( uv );
 	WorldPos = OrigPos + Offset;
 #if defined(TEST_ONE_COLOUR)
 	Colour = TEST_ONE_COLOUR;

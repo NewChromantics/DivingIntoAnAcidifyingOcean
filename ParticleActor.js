@@ -374,7 +374,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			Pop.Debug("Actor has no position texture",Actor);
 			return;
 		}
-		const PositionOffsetTexture = this.GetPositionOffsetTexture() || BlackTexture;
+		const PositionOffsetTexture = this.GetPositionOffsetTexture() || ZeroOffsetTexture;
 		let VelocityTexture = this.GetVelocityTexture();
 		if ( !VelocityTexture )
 			VelocityTexture = BlackTexture;
