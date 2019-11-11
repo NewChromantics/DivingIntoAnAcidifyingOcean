@@ -270,7 +270,7 @@ function GetRenderScene(GetActorScene,Time)
 		//DebugTextures.push( OceanColourTexture );
 		//DebugTextures.push( DebrisColourTexture );
 		//DebugTextures.push( RandomTexture );
-		//DebugTextures.push( Noise_TurbulenceTexture );
+		DebugTextures.push( Noise_TurbulenceTexture );
 	}
 
 	//	show all the actor positions

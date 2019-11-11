@@ -24,8 +24,8 @@ uniform float StringStrips;
 
 
 uniform bool FirstUpdate;
-const float2 PositionScalarMinMax = float2(0.2,1.0);
-const float2 VelocityScalarMinMax = float2(0.1,0.5);
+const float2 PositionScalarMinMax = float2(0.1,2.0);
+const float2 VelocityScalarMinMax = float2(0.01,0.5);
 
 uniform float3 AvoidRayStart;
 uniform float3 AvoidRayDirection;
@@ -202,6 +202,11 @@ float3 GetAvoidForce(float3 Pos)
 	AvoidForce = normalize(AvoidForce) * AvoidRayScale;
 	
 	return AvoidForce;
+}
+
+float3 abs3(float3 xyz)
+{
+	return float3( abs(xyz.x), abs(xyz.y), abs(xyz.z) );
 }
 
 float4 GetScaledOutput(float3 Position,float2 ScalarMinMax)

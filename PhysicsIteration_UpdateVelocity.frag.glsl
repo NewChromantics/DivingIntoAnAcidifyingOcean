@@ -5,8 +5,8 @@ uniform sampler2D LastVelocitys;
 uniform sampler2D OrigPositions;
 uniform float3 OrigPositionsBoundingBox[2];
 uniform bool FirstUpdate;
-const float2 PositionScalarMinMax = float2(0.2,1.0);
-const float2 VelocityScalarMinMax = float2(0.1,0.5);
+const float2 PositionScalarMinMax = float2(0.1,2.0);
+const float2 VelocityScalarMinMax = float2(0.01,0.5);
 
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
