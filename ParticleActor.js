@@ -289,7 +289,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		//this.PositionTexture = this.TextureBuffers.PositionTexture;
 		
 		const Size = [ PosTexture.GetWidth(), PosTexture.GetHeight() ];
-		const Format = 'RGBA';
+		const Format = Pop.Opengl.CanRenderToFloat ? 'Float4' : 'RGBA';
 		
 		this.OffsetTexture = new Pop.Image(Size,Format);
 		this.VelocityTexture = new Pop.Image(Size,Format);

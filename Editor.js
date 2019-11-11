@@ -40,7 +40,7 @@ EditorParams.ActorNodeName = WaterActorPrefix;
 //EditorParams.ActorNodeName = SplineActorPrefix;
 EditorParams.ActorNodeName = 'Animal_XXX';
 //EditorParams.ActorNodeName = NastyAnimalPrefix;
-EditorParams.ActorNodeName = BigBangAnimalPrefix;
+//EditorParams.ActorNodeName = BigBangAnimalPrefix;
 
 
 EditorParams.ReloadAfterSecs = 300;

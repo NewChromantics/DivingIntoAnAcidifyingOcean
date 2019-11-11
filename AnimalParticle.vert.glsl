@@ -13,8 +13,8 @@ uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
 uniform sampler2D OrigPositions;
 uniform float3 OrigPositionsBoundingBox[2];
-const float ScalarMin = 0.2;
-const float ScalarMax = 1.0;
+const float2 PositionScalarMinMax = float2(0.2,1.0);
+const float2 VelocityScalarMinMax = float2(0.1,0.5);
 
 uniform int TriangleCount;
 
@@ -62,14 +62,24 @@ vec2 GetTriangleUv(int TriangleIndex)
 }
 
 
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	/*
+	if ( FirstUpdate )
+		return float3(0,0,0);
+	*/
+	float Lod = 0.0;
+	vec4 Pos = textureLod( Texture, uv, Lod );
+	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	Pos.xyz *= 2.0;
+	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	
+	return Pos.xyz;
+}
 
 float3 GetInputPositionOffset(float2 uv)
 {
-	float Lod = 0.0;
-	vec4 Pos = textureLod( WorldPositions, uv, Lod );
-	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
-	Pos.xyz *= mix( ScalarMin, ScalarMax, Pos.w );
-	return Pos.xyz;
+	return GetScaledInput( uv, WorldPositions, PositionScalarMinMax );
 }
 
 void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out float4 Colour)

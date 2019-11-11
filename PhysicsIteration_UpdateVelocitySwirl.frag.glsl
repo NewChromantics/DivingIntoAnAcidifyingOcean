@@ -24,6 +24,8 @@ uniform float StringStrips;
 
 
 uniform bool FirstUpdate;
+const float2 PositionScalarMinMax = float2(0.2,1.0);
+const float2 VelocityScalarMinMax = float2(0.1,0.5);
 
 uniform float3 AvoidRayStart;
 uniform float3 AvoidRayDirection;
@@ -201,24 +203,52 @@ float3 GetAvoidForce(float3 Pos)
 	
 	return AvoidForce;
 }
+
+float4 GetScaledOutput(float3 Position,float2 ScalarMinMax)
+{
+	//	get the scalar, but remember, we are normalising to -0.5,,,0.5
+	//	so it needs to double
+	//	and then its still 0...1 so we need to multiply by an arbritry number I guess
+	//	or 1/scalar
+	float3 PosAbs = abs3(Position);
+	float Big = max( ScalarMinMax.x, max( PosAbs.x, max( PosAbs.y, PosAbs.z ) ) );
+	float Scalar = Range( ScalarMinMax.x, ScalarMinMax.y, Big );
+	Position /= Big;
+	Position /= 2.0;
+	Position += float3( 0.5, 0.5, 0.5 );
 	
+	return float4( Position, Scalar );
+}
+
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	if ( FirstUpdate )
+		return float3(0,0,0);
+	
+	vec4 Pos = texture2D( Texture, uv );
+	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	Pos.xyz *= 2.0;
+	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	
+	return Pos.xyz;
+}
+
+
 void main()
 {
-	vec4 Vel = texture( LastVelocitys, uv );
-	vec4 Pos = texture2D( LastPositions, uv );
-	
+	vec3 Pos = GetScaledInput( uv, LastPositions, PositionScalarMinMax );
+	vec3 Vel = GetScaledInput( uv, LastVelocitys, VelocityScalarMinMax );
+
 	if ( FirstUpdate )
-		Pos.xyz = GetSpringTargetPos(uv);
+		Pos = GetSpringTargetPos(uv);
 	
 	//Vel.xyz += GetNoiseForce(uv) * PhysicsStep;
-	Vel.xyz += GetSpringForce(Pos.xyz,uv) * PhysicsStep;
+	Vel += GetSpringForce(Pos,uv) * PhysicsStep;
 	
 	//	damping
-	Vel.xyz *= 1.0 - Damping;
+	Vel *= 1.0 - Damping;
 
-	//Vel = float4(0.4,0,0,1);
-	Vel.w = 1.0;
-	gl_FragColor = Vel;
+	gl_FragColor = GetScaledOutput( Vel, VelocityScalarMinMax );
 }
 
 
