@@ -103,7 +103,7 @@ function TLogoState()
 	LogoMeta.UpdatePositionShader = LogoParticlePhysicsIteration_UpdatePosition;
 
 	
-	this.LogoActor = new TPhysicsActor(LogoMeta);
+	this.LogoActor = null;
 	this.PreloadPromises = [];
 	this.StartButton = null;
 	this.StartButtonPressed = false;
