@@ -15,9 +15,11 @@ SetGlobal.call(this);
 
 Pop.Include('PopEngineCommon/PopApi.js');
 
-
 //	debug, make desktop act like mobile
-Pop.Opengl.CanRenderToFloat = false;
+if ( Pop.GetExeArguments().includes('NoFloatTarget') )
+{
+	Pop.Opengl.CanRenderToFloat = false;
+}
 
 const RandomNumberCache = [];
 
@@ -231,7 +233,7 @@ Params.LoadTextureBufferNoise = 0.007;
 Params.TestRayDistance = 0.82;
 Params.DebugPhysicsTextures = false;
 Params.DebugNoiseTextures = IsDebugEnabled();
-Params.DebugTextureAlpha = true;
+Params.DebugTextureAlpha = false;
 
 Params.FogColour = [0,0,0.2];
 Params.FogMinDistance = 8.0;
