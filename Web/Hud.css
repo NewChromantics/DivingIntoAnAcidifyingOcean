@@ -1,3 +1,15 @@
+/* cookie script inserts a script tag, which overrides anything in our css, so need to add !important */
+#cookieBar .cookieBarText, #cookieBar .cookieBarButtons
+{
+	font-size:	3vh !important;
+}
+
+/* stick cookie buttons on their own line */
+.cookieBarButtons
+{
+	display:	block;
+}
+
 /* disable scrolling on ios
 https://stackoverflow.com/a/57489918/355753
 */
