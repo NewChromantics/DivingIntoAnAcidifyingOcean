@@ -289,6 +289,8 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		//this.PositionTexture = this.TextureBuffers.PositionTexture;
 		
 		const Size = [ PosTexture.GetWidth(), PosTexture.GetHeight() ];
+		if ( Pop.Opengl.CanRenderToFloat === undefined )
+			Pop.Debug("Warning: Pop.Opengl.CanRenderToFloat has not yet been set (using before opengl context created)");
 		const Format = Pop.Opengl.CanRenderToFloat ? 'Float4' : 'RGBA';
 		
 		this.OffsetTexture = new Pop.Image(Size,Format);
