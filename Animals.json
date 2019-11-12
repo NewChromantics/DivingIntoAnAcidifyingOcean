@@ -181,7 +181,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.0033
 
 	},
 	"DeepSeaCrab":
