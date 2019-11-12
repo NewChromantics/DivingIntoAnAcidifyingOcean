@@ -373,7 +373,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":0.55,
-        "TriangleScale":0.0015
+        "TriangleScale":0.002
 
 	},
 		"Coral":
@@ -384,7 +384,7 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
         "Scale":0.6,
-        "TriangleScale":0.0015
+        "TriangleScale":0.0025
 
 	},
 	
