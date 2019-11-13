@@ -1780,6 +1780,16 @@ function UpdateSceneVisibility(Time)
 			//	turn of any actor sounds
 			Actor.Sounds.forEach( s => AudioManager.StopSound(s) );
 			Actor.Sounds = [];
+
+			//	if an animal exploded, and we've now reset the physics
+			//	then they're no longer exploded, and when they're visible next time
+			//	they'll be normal to the user, so let them select them again
+			if ( Actor.AnimalHasBeenExploded )
+			{
+				Pop.Debug("Un-setting AnimalHasBeenExploded",Actor);
+				Actor.AnimalHasBeenExploded = false;
+				Actor.ResetPhysics();
+			}
 		}
 		if ( Actor.IsVisible )
 			VisibleActorCount++;
