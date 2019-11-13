@@ -33,7 +33,6 @@ function GetActorWorldBoundingBox(Actor,LocalBounds)
 
 function ScaleBounds(Bounds,Scale)
 {
-	Pop.Debug("Scale bounds");
 	const Size = Math.Subtract3( Bounds.Max, Bounds.Min );
 	const HalfScale3 = [ Scale * 0.5, Scale * 0.5, Scale * 0.5 ];
 	const HalfSize = Math.Multiply3( Size, HalfScale3 );
