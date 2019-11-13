@@ -327,9 +327,9 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.3,
         "TriangleScale":0.0005,
-		"ShowAnimal_CameraOffsetX": 0.06,
+		"ShowAnimal_CameraOffsetX": 0.2,
 		"ShowAnimal_CameraOffsetY": -0.02,
-		"ShowAnimal_CameraOffsetZ": 0.30
+		"ShowAnimal_CameraOffsetZ": 0.62
 	},
 
 	"Menidia":
