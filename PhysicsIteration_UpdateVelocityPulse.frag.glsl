@@ -13,6 +13,11 @@ uniform float Damping;
 uniform float SpringScale;
 
 
+uniform bool FirstUpdate;
+const float2 PositionScalarMinMax = float2(0.1,2.0);
+const float2 VelocityScalarMinMax = float2(0.005,0.5);
+
+
 float3 GetSpringForce(float2 uv)
 {
 	vec3 OrigPos = texture2D( OrigPositions, uv ).xyz;
@@ -44,21 +49,66 @@ float3 GetGravity(float2 uv)
 	return float3(0,Gravity,0);
 }
 
+
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	if ( FirstUpdate )
+		return float3(0,0,0);
+	
+	vec4 Pos = texture2D( Texture, uv );
+	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	Pos.xyz *= 2.0;
+	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	
+	return Pos.xyz;
+}
+
+float3 GetInputVelocity(float2 uv)
+{
+	return GetScaledInput( uv, LastVelocitys, VelocityScalarMinMax );
+}
+
+float Range(float Min,float Max,float Value)
+{
+	return (Value-Min) / (Max-Min);
+}
+
+
+float3 abs3(float3 xyz)
+{
+	return float3( abs(xyz.x), abs(xyz.y), abs(xyz.z) );
+}
+
+float4 GetScaledOutput(float3 Position,float2 ScalarMinMax)
+{
+	//	get the scalar, but remember, we are normalising to -0.5,,,0.5
+	//	so it needs to double
+	//	and then its still 0...1 so we need to multiply by an arbritry number I guess
+	//	or 1/scalar
+	float3 PosAbs = abs3(Position);
+	float Big = max( ScalarMinMax.x, max( PosAbs.x, max( PosAbs.y, PosAbs.z ) ) );
+	float Scalar = Range( ScalarMinMax.x, ScalarMinMax.y, Big );
+	Position /= Big;
+	Position /= 2.0;
+	Position += float3( 0.5, 0.5, 0.5 );
+	
+	return float4( Position, Scalar );
+}
+
 void main()
 {
 	//	gr: just a blit should be stable
-	vec4 Vel = texture( LastVelocitys, uv );
+	float3 Velocity = GetInputVelocity(uv);
 	
-	Vel.xyz += GetNoise(uv) * PhysicsStep;
-	Vel.xyz += GetGravity(uv) * PhysicsStep;
-	Vel.xyz += GetSpringForce(uv) ;//* PhysicsStep;
-	Vel.xyz += GetExplodeForce(uv) * PhysicsStep;
+	Velocity += GetNoise(uv) * PhysicsStep;
+	Velocity += GetGravity(uv) * PhysicsStep;
+	Velocity += GetSpringForce(uv) ;//* PhysicsStep;
+	Velocity += GetExplodeForce(uv) * PhysicsStep;
 
 	//	damping
-	Vel.xyz *= 1.0 - Damping;
+	Velocity *= 1.0 - Damping;
 
-	Vel.w = 1.0;
-	gl_FragColor = Vel;
+	gl_FragColor = GetScaledOutput( Velocity, VelocityScalarMinMax );
 }
 
 
