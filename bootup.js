@@ -225,7 +225,7 @@ Params.ScrollFlySpeed = 1;
 Params.AnimalDebugParticleColour = false;
 //Params.FogColour = [1,0,0];
 Params.AnimalBufferLod = 1;
-Params.DrawBoundingBoxes = false;//IsDebugEnabled();
+Params.DrawBoundingBoxes = IsDebugEnabled();
 Params.DrawBoundingBoxesFilled = false;
 Params.DrawHighlightedActors = false;
 Params.MaxHighlightDistance = 6.5;
@@ -253,6 +253,7 @@ Params.Animal_PhysicsTinyNoiseScale_End = 10;
 Params.Animal_PhysicsDuration = 45;
 Params.AnimalScale = 1.0;
 Params.AnimalFlip = false;
+Params.AnimalPhysicsCullBoundsScale = 2.8;
 
 Params.NastyAnimal_PhysicsNoiseScale = 1.45;
 Params.NastyAnimal_PhysicsSpringScale = 0.35;
@@ -350,6 +351,7 @@ Params.InitParamsWindow = function(ParamsWindow)
 	ParamsWindow.AddParam('XrTrackTimelineCamera');
 	ParamsWindow.AddParam('DebugCameraClearColour');
 	ParamsWindow.AddParam('DrawBoundingBoxes');
+	ParamsWindow.AddParam('AnimalPhysicsCullBoundsScale',0.01,4);
 	ParamsWindow.AddParam('DrawBoundingBoxesFilled');
 	ParamsWindow.AddParam('LoadTextureBufferNoise',0,0.3);
 	

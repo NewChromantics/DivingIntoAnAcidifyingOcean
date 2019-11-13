@@ -12,11 +12,12 @@ AssetFetchFunctions['AutoTriangleMesh'] = function(RenderTarget)	{	return GetAut
 
 
 //	move this to TActor once everything derives from it
-function GetActorWorldBoundingBox(Actor)
+function GetActorWorldBoundingBox(Actor,LocalBounds)
 {
+	const BoundingBoxLocal = LocalBounds || Actor.GetBoundingBox();
+	
 	const LocalTransform = Actor.GetLocalToWorldTransform();
 	const Scale = Math.GetMatrixScale( LocalTransform );
-	const BoundingBoxLocal = Actor.GetBoundingBox();
 	const Position = Math.GetMatrixTranslation( LocalTransform );
 	
 	//	todo: we should mult without rotating, or rotate and then get new min/max
@@ -28,6 +29,36 @@ function GetActorWorldBoundingBox(Actor)
 	BoundingBoxWorld.Max = Math.Add3( BoundingBoxWorld.Max, Position );
 	
 	return BoundingBoxWorld;
+}
+
+function ScaleBounds(Bounds,Scale)
+{
+	Pop.Debug("Scale bounds");
+	const Size = Math.Subtract3( Bounds.Max, Bounds.Min );
+	const HalfScale3 = [ Scale * 0.5, Scale * 0.5, Scale * 0.5 ];
+	const HalfSize = Math.Multiply3( Size, HalfScale3 );
+	const Middle = Math.Lerp3( Bounds.Min, Bounds.Max, 0.5 );
+	const NewBounds = {};
+	NewBounds.Min = Math.Subtract3( Middle, HalfSize );
+	NewBounds.Max = Math.Add3( Middle, HalfSize );
+	return NewBounds;
+}
+
+function GetActorWorldCullingBoundingBox(Actor)
+{
+	//	if physics are running make bounding box bigger
+	let LocalBounds = Actor.GetBoundingBox();
+	if ( Actor.UpdatePhysics )
+	{
+		LocalBounds = ScaleBounds( LocalBounds, Params.AnimalPhysicsCullBoundsScale );
+	}
+	return GetActorWorldBoundingBox( Actor, LocalBounds );
+}
+
+function GetActorWorldSelectionBoundingBox(Actor)
+{
+	const LocalBounds = Actor.GetBoundingBox();
+	return GetActorWorldBoundingBox( Actor, LocalBounds );
 }
 
 function GetActorWorldBoundingBoxCorners(BoundingBoxWorld,IncludeBothX=true,IncludeBothY=true,IncludeBothZ=true)
@@ -66,7 +97,7 @@ function GetIntersectingActors(Ray,Scene,MaxDistance)
 		if ( !IsActorSelectable(Actor) )
 			return;
 		
-		const BoundingBox = GetActorWorldBoundingBox( Actor );
+		const BoundingBox = GetActorWorldSelectionBoundingBox( Actor );
 		const IntersectionPos = Math.GetIntersectionRayBox3( Ray.Start, Ray.Direction, BoundingBox.Min, BoundingBox.Max );
 		if ( !IntersectionPos )
 			return;
@@ -102,7 +133,7 @@ function GetCameraActorCullingFilter(Camera,Viewport)
 	
 	const IsVisibleFunction = function(Actor)
 	{
-		const BoundingBox = GetActorWorldBoundingBox(Actor);
+		const BoundingBox = GetActorWorldCullingBoundingBox(Actor);
 		return Math.IsBoundingBoxIntersectingFrustumPlanes( BoundingBox, FrustumPlanes );
 	}
 	return IsVisibleFunction;
@@ -469,7 +500,6 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		ClearTexture( this.VelocityTexture );
 		ClearTexture( this.ScratchVelocityTexture );
 		ClearTexture( this.ScratchOffsetTexture );
-		//ClearTexture( this.PositionOrigTexture );
 		
 		//	note: if we don't null these, the system tries to render(to) these as if they still exist
 		//		with no errors (chrome), making me think they're NOT being deleted?? maybe need a flag our side to ensure we can't use them

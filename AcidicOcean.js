@@ -737,8 +737,11 @@ function GetRenderScene(GetActorScene,Time)
 		//PushActorBox( Actor.GetLocalToWorldTransform(), LocalBoundingBox.Min, LocalBoundingBox.Max );
 
 		//	test world bounding box calculation
-		const WorldBoundingBox = GetActorWorldBoundingBox(Actor);
-		PushActorBox( Math.CreateIdentityMatrix(), WorldBoundingBox.Min, WorldBoundingBox.Max );
+		const CullBoundingBox = GetActorWorldCullingBoundingBox(Actor);
+		PushActorBox( Math.CreateIdentityMatrix(), CullBoundingBox.Min, CullBoundingBox.Max );
+
+		const SelectBoundingBox = GetActorWorldSelectionBoundingBox(Actor);
+		PushActorBox( Math.CreateIdentityMatrix(), SelectBoundingBox.Min, SelectBoundingBox.Max );
 	}
 	
 	let PushDebugCameraActor = function(Camera)
@@ -1083,7 +1086,7 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	//	no timeline!
 	Hud.Timeline.SetVisible(false);
 	
-	const AnimalBounds = GetActorWorldBoundingBox(Acid.SelectedActor);
+	const AnimalBounds = GetActorWorldSelectionBoundingBox(Acid.SelectedActor);
 	
 	//	target the near side of the bounds (this helps for meshes which are offset, as well as size)
 	const TargetCameraPos = Math.Lerp3( AnimalBounds.Min, AnimalBounds.Max, 0.5 );
