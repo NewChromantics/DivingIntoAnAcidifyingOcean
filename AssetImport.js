@@ -391,7 +391,7 @@ function LoadGeometryToTextureBuffers(Geo,MaxPositions,ScaleToBounds=undefined,P
 	//	scale positions
 	if ( ScaleToBounds && Positions )
 	{
-		Pop.Debug("Scaling to ",ScaleToBounds);
+		Pop.Debug("Scaling to ",JSON.stringify(ScaleToBounds) );
 		const PositionCount = Positions.length / PositionSize;
 		for ( let p=0;	p<PositionCount;	p++ )
 		{
