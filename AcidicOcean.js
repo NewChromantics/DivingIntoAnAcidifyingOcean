@@ -1048,6 +1048,7 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	if ( FirstUpdate )
 	{
+		Pop.Debug("Update_ShowAnimal firstupdate");
 		Acid.EnableClickHint = false;
 
 		//	update hud to the current animal
