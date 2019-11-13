@@ -18,10 +18,27 @@ const float2 PositionScalarMinMax = float2(0.1,2.0);
 const float2 VelocityScalarMinMax = float2(0.005,0.5);
 
 
+
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	if ( FirstUpdate )
+		return float3(0,0,0);
+	
+	vec4 Pos = texture2D( Texture, uv );
+	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+	Pos.xyz *= 2.0;
+	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	
+	return Pos.xyz;
+}
+
 float3 GetSpringForce(float2 uv)
 {
 	vec3 OrigPos = texture2D( OrigPositions, uv ).xyz;
-	vec3 LastPos = texture2D( LastPositions, uv ).xyz;
+	
+	float3 LastOffset = GetScaledInput( uv, LastPositions, PositionScalarMinMax );
+	float3 LastPos = OrigPos + LastOffset;
+	
 	return (OrigPos - LastPos) * SpringScale;
 }
 
@@ -50,18 +67,6 @@ float3 GetGravity(float2 uv)
 }
 
 
-float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
-{
-	if ( FirstUpdate )
-		return float3(0,0,0);
-	
-	vec4 Pos = texture2D( Texture, uv );
-	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
-	Pos.xyz *= 2.0;
-	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
-	
-	return Pos.xyz;
-}
 
 float3 GetInputVelocity(float2 uv)
 {
