@@ -872,7 +872,9 @@ function Init()
 	{
 		Pop.Debug("Slider changed",NewValue);
 		Acid.UserSetYear = NewValue;
-		Acid.EnableDragHint = false;
+		
+		//	don't hide the hint any more after dragging.
+		//Acid.EnableDragHint = false;
 	}
 	
 	Hud.Stats = new Pop.Hud.Label('Stats');
@@ -1053,6 +1055,8 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	{
 		Pop.Debug("Update_ShowAnimal firstupdate");
 		Acid.EnableClickHint = false;
+		Acid.RestoreDragHint = Acid.EnableDragHint;
+		Acid.EnableDragHint = false;
 
 		//	update hud to the current animal
 		//	move/offset camera to focus on it
@@ -1135,7 +1139,10 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 	
 	//	hide hud
 	Hud.Animal_Card.SetVisible(false);
-	
+
+	//	restore hint state
+	Acid.EnableDragHint = Acid.RestoreDragHint;
+
 	return Acid.State_Fly;
 }
 
