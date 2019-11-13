@@ -49,7 +49,8 @@ function GetActorWorldCullingBoundingBox(Actor)
 	let LocalBounds = Actor.GetBoundingBox();
 	if ( Actor.UpdatePhysics )
 	{
-		LocalBounds = ScaleBounds( LocalBounds, Params.AnimalPhysicsCullBoundsScale );
+		const Scale = Actor.GetCullBoundsScale();
+		LocalBounds = ScaleBounds( LocalBounds, Scale );
 	}
 	return GetActorWorldBoundingBox( Actor, LocalBounds );
 }
@@ -508,11 +509,20 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		this.ScratchOffsetTexture = null;
 	}
 	
+	this.GetCullBoundsScale = function()
+	{
+		return Params.AnimalPhysicsCullBoundsScale;
+	}
 }
 
 function SetupSwirlTextureBufferActor(Filename,GetMeta)
 {
 	SetupAnimalTextureBufferActor.call( this, ...arguments );
+	
+	this.GetCullBoundsScale = function()
+	{
+		return 1;
+	}
 	
 	this.Update = function()
 	{
@@ -546,6 +556,11 @@ function TActor(Transform,Geometry,Shader,Uniforms)
 	{
 		//	return false to delete actor
 		return true;
+	}
+	
+	this.GetCullBoundsScale = function()
+	{
+		return 1.0;
 	}
 	
 	this.PhysicsIteration = function(DurationSecs,Time,RenderTarget,SetPhysicsUniforms)
