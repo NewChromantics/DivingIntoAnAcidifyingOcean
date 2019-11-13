@@ -466,7 +466,7 @@ function AddSwirlActor()
 		
 		SetupSwirlTextureBufferActor.call( Actor, GetSwirlMeta().Filename, GetSwirlMeta );
 		Acid.SwirlActors.push( Actor );
-		Actor.EnablePhysics();
+		//Actor.EnablePhysics();
 		//Actor.BoundingBox.Min = [-100,-100,-100];
 		//Actor.BoundingBox.Max = [100,100,100];
 		Pop.Debug("Created swirl",Actor);
