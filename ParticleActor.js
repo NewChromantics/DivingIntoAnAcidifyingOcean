@@ -181,6 +181,7 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	const Meta = GetMeta(this);
 	this.Geometry = 'AutoTriangleMesh';
 	this.RenderShader = Meta.RenderShader;
+	this.UpdatePhysicsTime = undefined;
 	this.GetMeta = function()	{	return GetMeta(this);	};
 	
 	const AddNoise = Meta.AddNoiseToTextureBuffer!==false;
@@ -250,6 +251,12 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			return;
 		this.UpdatePhysics = true;
 		this.UpdatePhysicsTime = Pop.GetTimeNowMs();
+	}
+	
+	this.ResetPhysics = function()
+	{
+		this.UpdatePhysics = false;
+		this.UpdatePhysicsTime = undefined;
 	}
 	
 	this.GetVelocityTexture = function()
@@ -463,6 +470,13 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		ClearTexture( this.ScratchVelocityTexture );
 		ClearTexture( this.ScratchOffsetTexture );
 		//ClearTexture( this.PositionOrigTexture );
+		
+		//	note: if we don't null these, the system tries to render(to) these as if they still exist
+		//		with no errors (chrome), making me think they're NOT being deleted?? maybe need a flag our side to ensure we can't use them
+		this.OffsetTexture = null;
+		this.VelocityTexture = null;
+		this.ScratchVelocityTexture = null;
+		this.ScratchOffsetTexture = null;
 	}
 	
 }
