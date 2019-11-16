@@ -278,24 +278,15 @@ function TLogoState()
 		{
 			let OnClickedStart = function()
 			{
-				Params.XrMode = false;
-				this.StartButtonPressed = true;
-			}
-			let OnClickedStartXr = function()
-			{
-				Params.XrMode = true;
 				this.StartButtonPressed = true;
 			}
 			this.StartButton = new Pop.Hud.Button('Hint_Start');
-			this.StartXrButton = new Pop.Hud.Button('Hint_StartXr');
 			this.StartButton.OnClicked = OnClickedStart.bind(this);
-			this.StartXrButton.OnClicked = OnClickedStartXr.bind(this);
 		}
 		
 		//	show button when preloads done
 		//	gr: due to above, this may disable itself again
 		this.StartButton.SetVisible( AllPreloadsFinished );
-		this.StartXrButton.SetVisible( AllPreloadsFinished && Pop.Xr && Pop.Xr.IsSupported() );
 	}
 }
 

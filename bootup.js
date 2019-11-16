@@ -215,6 +215,22 @@ Window.OnRender = BootupRender;
 Window.OnKeyDown = OnKeyPress;
 
 
+function SetupFullscreen()
+{
+	function OnToggleFullscreen()
+	{
+		const IsFullscreen = Window.IsFullscreen();
+		Window.SetFullscreen(!IsFullscreen);
+	}
+	
+	Window.FullscreenButton = new Pop.Hud.Button('FullscreenButton');
+	//	disable button if not supported
+	Window.FullscreenButton.SetVisible( Window.IsFullscreenSupported() );
+	Window.FullscreenButton.OnClicked = OnToggleFullscreen;
+}
+SetupFullscreen();
+
+
 const BoldMode = Pop.GetExeArguments().includes('Bold');
 
 //	global params...

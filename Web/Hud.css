@@ -37,7 +37,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Hint_StartXr
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start
 {
 	z-index:	902;
 }
@@ -87,7 +87,7 @@ a:hover
 	visibility:	hidden;
 }
 
-#Hint_StartXr, #Hint_Start
+#Hint_Start
 {
 	visibility:	hidden;
 }
@@ -234,7 +234,7 @@ a:hover
 
 }
 
-#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #Hint_StartXr
+#PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton
 {
 	/* these are for debug really, as they dont react until they're setup with style in code */
 	xxpointer-events:	auto;
@@ -266,12 +266,21 @@ a:hover
 	top:			2vmin;
 }
 
-#Hint_StartXr
+#PauseButton
 {
-	font-weight:	bold;
-	text-align:		center;
-	font-size:		2.5vmin;
+	top:			6vmin;
 }
+
+#FullscreenButton
+{
+	top:			10vmin;
+}
+
+#VrButton
+{
+	top:			14vmin;
+}
+
 
 #PrevButton
 {
@@ -304,6 +313,8 @@ a:hover
 /* make background bigger on hover*/
 #PauseButton:hover span,
 #AboutButton:hover span,
+#FullscreenButton:hover span,
+#VrButton:hover span,
 #AboutPageCloseButton:hover span,
 #SkipButton:hover span,
 #PrevButton:hover span,
@@ -316,6 +327,8 @@ a:hover
 
 #PauseButton span,
 #AboutButton span,
+#FullscreenButton span,
+#VrButton span,
 #AboutPageCloseButton span,
 #SkipButton span,
 #PrevButton span,
@@ -329,6 +342,8 @@ a:hover
 #PauseLabel,
 #ResumeLabel,
 #AboutLabel,
+#FullscreenLabel,
+#VrLabel,
 #AboutPageCloseLabel,
 #SkipLabel,
 #PrevLabel,
@@ -353,7 +368,7 @@ a:hover
 @media (max-device-width: 700px)
 {
 	/* make these bigger so they're easier to click */
-	#PauseButton, #AboutButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton, #ContinueLabel
+	#PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton, #ContinueLabel
 	{
 		width:			8vmin;
 		height:			8vmin;
@@ -379,6 +394,19 @@ a:hover
 #AboutLabel
 {
 	background:     url(icons/About.svg) no-repeat;
+	xxbackground-color:	red;
+}
+
+#FullscreenLabel
+{
+	background:     url(icons/Fullscreen.svg) no-repeat;
+	xxbackground-color:	red;
+}
+
+#VrLabel
+{
+	background:     url(icons/Vr.svg) no-repeat;
+	font-size:		100%;		/* Hide the text */
 	xxbackground-color:	red;
 }
 
