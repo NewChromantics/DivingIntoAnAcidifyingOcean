@@ -1249,7 +1249,8 @@ hr:nth-child(even)
 	outline: none;
 }
 
-#YearSlider::-webkit-slider-runnable-track
+#YearSlider::-webkit-slider-runnable-track,
+#YearSlider::-moz-range-track
 {
 	height:			0.20vh;	/* same as #AnimalCard_Title border */
 	min-height:		2px;
@@ -1264,7 +1265,8 @@ hr:nth-child(even)
 	background-color:		white;
 }
 
-#YearSlider::-webkit-slider-thumb
+#YearSlider::-webkit-slider-thumb,
+#YearSlider::-moz-range-thumb
 {
 	margin:		-2vh 0px 0px 0px;
 	padding:	0px;
