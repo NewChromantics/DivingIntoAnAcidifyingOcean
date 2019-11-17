@@ -6,6 +6,7 @@ uniform sampler2D OrigPositions;
 uniform sampler2D LastPositions;
 uniform float PositionCount;
 uniform float2 OrigPositionsWidthHeight;
+const float2 OrigPositionScalarMinMax = float2(0.0,1.0);
 
 uniform sampler2D Noise;
 
@@ -106,6 +107,28 @@ float Clamp01(float Value)
 	return max( 0.0, min( 0.99, Value ) );
 }
 
+
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	if ( FirstUpdate )
+		return float3(0,0,0);
+	
+	vec4 Pos = texture2D( Texture, uv );
+	if ( Pos.w != 1.0 )	//	our float textures have a pure 1.0 alpha, and dont want to be rescaled
+	{
+		Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+		Pos.xyz *= 2.0;
+		Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	}
+	return Pos.xyz;
+}
+
+
+float3 GetInputOrigPosition(float2 uv)
+{
+	return GetScaledInput( uv, OrigPositions, OrigPositionScalarMinMax );
+}
+
 float3 GetSpringTargetPos(float2 uv)
 {
 	//	retarget uv
@@ -123,7 +146,7 @@ float3 GetSpringTargetPos(float2 uv)
 	float SplineSampleTime = mix( SplineMin, SplineMax, Normal );
 	
 	float2 SplinePosUv = PositionIndexToUv( SplineSampleTime * PositionCount );
-	float3 SplinePos = texture2D( OrigPositions, SplinePosUv ).xyz;
+	float3 SplinePos = GetInputOrigPosition( SplinePosUv );
 	
 	//	get noise related to our spline position to make divergence from the path as strips
 	float2 SplineNoiseUv = GetNoiseUvFromIndex( Normal );
@@ -223,19 +246,6 @@ float4 GetScaledOutput(float3 Position,float2 ScalarMinMax)
 	Position += float3( 0.5, 0.5, 0.5 );
 	
 	return float4( Position, Scalar );
-}
-
-float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
-{
-	if ( FirstUpdate )
-		return float3(0,0,0);
-	
-	vec4 Pos = texture2D( Texture, uv );
-	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
-	Pos.xyz *= 2.0;
-	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
-	
-	return Pos.xyz;
 }
 
 

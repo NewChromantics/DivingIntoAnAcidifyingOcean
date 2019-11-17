@@ -39,6 +39,7 @@ uniform sampler2D OrigPositions;
 uniform sampler2D WorldPositions;
 uniform int WorldPositionsWidth;
 uniform int WorldPositionsHeight;
+const float2 OrigPositionScalarMinMax = float2(0.0,1.0);
 
 uniform int TriangleCount;
 
@@ -177,12 +178,34 @@ float3 GetWaterNoiseOffset(float2 Mapuv)
 }
 
 
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	/*
+	 if ( FirstUpdate )
+	 return float3(0,0,0);
+	 */
+	float Lod = 0.0;
+	vec4 Pos = textureLod( Texture, uv, Lod );
+	if ( Pos.w != 1.0 )	//	our float textures have a pure 1.0 alpha, and dont want to be rescaled
+	{
+		Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+		Pos.xyz *= 2.0;
+		Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	}
+	return Pos.xyz;
+}
+
+float3 GetInputOrigPosition(float2 uv)
+{
+	return GetScaledInput( uv, OrigPositions, OrigPositionScalarMinMax );
+}
+
 void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out float4 Colour)
 {
 	float2 uv = GetTriangleUvf( TriangleIndex );
 	float Lod = 0.0;
 	
-	float3 GridPos = textureLod( OrigPositions, uv, Lod ).xyz;
+	float3 GridPos = GetInputOrigPosition( uv );
 	//	for some reason, this doesn't give me y=0
 	WorldPos = GridPos;
 	//WorldPos.y = 0.0;

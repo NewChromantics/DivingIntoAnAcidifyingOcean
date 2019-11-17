@@ -7,6 +7,7 @@ uniform float3 OrigPositionsBoundingBox[2];
 uniform bool FirstUpdate;
 const float2 PositionScalarMinMax = float2(0.1,2.0);
 const float2 VelocityScalarMinMax = float2(0.005,0.5);
+const float2 OrigPositionScalarMinMax = float2(0.0,1.0);
 
 uniform sampler2D Noise;
 uniform float PhysicsStep;// = 1.0/60.0;
@@ -28,9 +29,30 @@ float3 Range3(float3 Min,float3 Max,float3 Value)
 	return float3(x,y,z);
 }
 
+
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+{
+	if ( FirstUpdate )
+		return float3(0,0,0);
+	
+	vec4 Pos = texture2D( Texture, uv );
+	if ( Pos.w != 1.0 )	//	our float textures have a pure 1.0 alpha, and dont want to be rescaled
+	{
+		Pos.xyz -= float3( 0.5, 0.5, 0.5 );
+		Pos.xyz *= 2.0;
+		Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
+	}
+	return Pos.xyz;
+}
+
+float3 GetInputOrigPosition(float2 uv)
+{
+	return GetScaledInput( uv, OrigPositions, OrigPositionScalarMinMax );
+}
+
 float3 GetNormal(float2 uv)
 {
-	vec3 Position = texture2D( OrigPositions, uv ).xyz;
+	vec3 Position = GetInputOrigPosition( uv );
 
 	vec3 PositionNorm = Range3( OrigPositionsBoundingBox[0], OrigPositionsBoundingBox[1], Position );
 	return PositionNorm;
@@ -66,18 +88,6 @@ float3 GetGravity(float2 uv)
 	return float3(0,Gravity,0);
 }
 
-float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
-{
-	if ( FirstUpdate )
-		return float3(0,0,0);
-	
-	vec4 Pos = texture2D( Texture, uv );
-	Pos.xyz -= float3( 0.5, 0.5, 0.5 );
-	Pos.xyz *= 2.0;
-	Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
-	
-	return Pos.xyz;
-}
 
 float3 GetInputVelocity(float2 uv)
 {
