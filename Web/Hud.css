@@ -234,6 +234,24 @@ a:hover
 
 }
 
+
+:root
+{
+	--ButtonSize:	4vmin;
+	--ButtonMargin:	2vmin;
+}
+
+
+/* small screen */
+@media (max-device-width: 700px)
+{
+	:root
+	{
+		--ButtonSize:	8vmin;
+		--ButtonMargin:	4vmin;
+	}
+}
+
 #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton
 {
 	/* these are for debug really, as they dont react until they're setup with style in code */
@@ -242,10 +260,9 @@ a:hover
 	xxvisibility:		visible !important;	/* force on for debug */
 
 	position:		absolute;
-	left:			2vmin;
-	top:			6vmin;/*2+4+2*/
-	width:			4vmin;
-	height:			4vmin;
+	left:			var(--ButtonMargin);
+	width:			var(--ButtonSize);
+	height:			var(--ButtonSize);
 	
 	background:		black;
 	border-radius:	50%;
@@ -260,25 +277,24 @@ a:hover
 	xxborder-radius:	50%;
 }
 
-
 #AboutButton
 {
-	top:			2vmin;
+	top:			var(--ButtonMargin);
 }
 
 #PauseButton
 {
-	top:			6vmin;
+	top:			calc( var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 #FullscreenButton
 {
-	top:			10vmin;
+	top:			calc( var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 #VrButton
 {
-	top:			14vmin;
+	top:			calc( var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 
@@ -367,28 +383,10 @@ a:hover
 /* small screen */
 @media (max-device-width: 700px)
 {
-	/* make these bigger so they're easier to click */
-	#PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #AboutPageCloseButton, #ContinueLabel
-	{
-		width:			8vmin;
-		height:			8vmin;
-	}
-	
-	#Continue
-	{
-		height:			8vmin;
-	}
-
-	#PauseButton
-	{
-		top:			calc( 2vmin + 8vmin + 2vmin);/*2+4+2*/
-	}
-	
 	#NextButton, #SkipButton
 	{
 		left:			calc( 90vw - 8vmin );
 	}
-	
 }
 
 #AboutLabel
