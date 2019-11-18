@@ -1247,15 +1247,15 @@ hr:nth-child(even)
 	outline: none;
 }
 
-#YearSlider::-webkit-slider-runnable-track,
-#YearSlider::-moz-range-track
+/* https://stackoverflow.com/questions/16982449/why-isnt-it-possible-to-combine-vendor-specific-pseudo-elements-classes-into-on
+	ANY unknown-style (ie, moz in webkit) means the whole block is ignored, so we duplicate the lot
+*/
+#YearSlider::-webkit-slider-runnable-track
 {
 	height:			0.20vh;	/* same as #AnimalCard_Title border */
 	min-height:		2px;
-	
 	border:			none;
 	box-shadow:		none;
-	
 	-webkit-appearance:		none;
 	padding:	0px;
 	
@@ -1263,7 +1263,39 @@ hr:nth-child(even)
 	background-color:		white;
 }
 
-#YearSlider::-webkit-slider-thumb,
+#YearSlider::-moz-range-track
+{
+	height:			0.20vh;	/* same as #AnimalCard_Title border */
+	min-height:		2px;
+	border:			none;
+	box-shadow:		none;
+	-webkit-appearance:		none;
+	padding:	0px;
+	
+	/* on desktop, we are just white */
+	background-color:		white;
+}
+
+
+/* https://stackoverflow.com/questions/16982449/why-isnt-it-possible-to-combine-vendor-specific-pseudo-elements-classes-into-on
+ ANY unknown-style (ie, moz in webkit) means the whole block is ignored, so we duplicate the lot
+ */
+#YearSlider::-webkit-slider-thumb
+{
+	margin:		-2vh 0px 0px 0px;
+	padding:	0px;
+	box-shadow:	none;
+	border:		none;
+	height:		4vh;
+	width:		0.20vh;
+	min-width:	2px;
+	cursor:		pointer;
+	-webkit-appearance:		none;
+	
+	/* on desktop, we are just white */
+	background-color:		white;
+}
+
 #YearSlider::-moz-range-thumb
 {
 	margin:		-2vh 0px 0px 0px;
