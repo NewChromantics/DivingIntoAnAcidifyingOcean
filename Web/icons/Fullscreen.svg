@@ -1,8 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <defs><style>.cls-1{fill:#fff;}</style></defs>
-<title>
-    fullscreen
-  </title>
-  <path class="cls-1" fill-rule="evenodd" d="M1 1v6h2V3h4V1H1zm2 12H1v6h6v-2H3v-4zm14 4h-4v2h6v-6h-2v4zm0-16h-4v2h4v4h2V1h-2z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 973 970" style="enable-background:new 0 0 973 970;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#FFFFFF;stroke-width:128;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<title>about_icon</title>
+<g>
+	<polyline class="st0" points="103.5,311 103.5,99 315.5,99 	"/>
+	<line class="st0" x1="103.5" y1="99" x2="316.4" y2="311.9"/>
+</g>
+<g>
+	<polyline class="st0" points="872.5,311 872.5,99 660.5,99 	"/>
+	<line class="st0" x1="872.5" y1="99" x2="659.6" y2="311.9"/>
+</g>
+<g>
+	<polyline class="st0" points="103.5,659.7 103.5,871.7 315.5,871.7 	"/>
+	<line class="st0" x1="103.5" y1="871.7" x2="316.4" y2="658.8"/>
+</g>
+<g>
+	<polyline class="st0" points="872.5,659.7 872.5,871.7 660.5,871.7 	"/>
+	<line class="st0" x1="872.5" y1="871.7" x2="659.6" y2="658.8"/>
+</g>
 </svg>
