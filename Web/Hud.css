@@ -265,7 +265,7 @@ a:hover
 	height:			var(--ButtonSize);
 	
 	background:		black;
-	border-radius:	50%;
+	border-radius:	50%;	
 }
 
 #ContinueLabel
@@ -279,22 +279,22 @@ a:hover
 
 #AboutButton
 {
-	top:			var(--ButtonMargin);
+	top:			var( --ButtonMargin );
 }
 
 #PauseButton
 {
-	top:			calc( var(--ButtonMargin) + var(--ButtonSize) );
+	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 #FullscreenButton
 {
-	top:			calc( var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
+	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 #VrButton
 {
-	top:			calc( var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
+	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 
