@@ -247,8 +247,8 @@ a:hover
 {
 	:root
 	{
-		--ButtonSize:	8vmin;
-		--ButtonMargin:	4vmin;
+		--ButtonSize:	4vmin;
+		--ButtonMargin:	2vmin;
 	}
 }
 
@@ -284,12 +284,12 @@ a:hover
 
 #PauseButton
 {
-	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
+	top:			calc( var(--ButtonMargin) + var(--ButtonSize) );
 }
 
 #FullscreenButton
 {
-	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) );
+	top:			calc( var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonSize) );
 }
 
 #VrButton
@@ -718,7 +718,7 @@ hr:nth-child(even)
 	height:		4vh;
 	font-size:	2vh;
 	justify-content:	flex-end;
-	background: rgba(0, 0, 0, 0.65) url(icons/Mobile_Animal.svg) no-repeat 8% 50%;
+	background: rgba(0, 0, 0, 0.65) url(icons/Mobile_Animal2.svg) no-repeat 8% 50%;
 	background-size: 3vh;
 
 	display: flex;
@@ -796,12 +796,12 @@ hr:nth-child(even)
 {
 	#Hint_DragTimeline span
 	{
-		background-image:		url(icons/Mobile_Timeline.svg);
+		background-image:		url(icons/Mobile_Timeline2.svg);
 	}
 	
 	#Hint_ClickAnimal span
 	{
-		background-image:		url(icons/Mobile_Animal.svg);
+		background-image:		url(icons/Mobile_Animal2.svg);
 	}
 }
 
