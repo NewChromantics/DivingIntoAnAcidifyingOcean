@@ -146,6 +146,15 @@ a:hover
 	xxxflex-direction: row;
 }
 
+@media (max-device-width: 700px)
+{
+	#SubtitleLabel
+	{
+		top: 40vh;
+		vertical-align: middle;
+	}
+}
+
 
 #LogoBg
 {
@@ -702,6 +711,7 @@ hr:nth-child(even)
 	height:	0.05em;
 	background: white;
 }
+
 
 #SubIconText
 {
