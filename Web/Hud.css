@@ -642,8 +642,16 @@ hr:nth-child(even)
 	position: absolute;
 	left: 49.5vw;
 	top: 78vh;
-	width:1.8vw;
+	width:4vmin;
 	xxxheight:	5vh;
+}
+
+@media (max-device-width: 700px)
+{
+	#IconHeadphones
+	{
+		width:	7vmin;
+	}
 }
 
 #IconSubtitles
