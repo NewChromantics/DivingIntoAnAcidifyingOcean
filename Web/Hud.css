@@ -612,6 +612,7 @@ hr:nth-child(even)
 {
 	#Hint_Start
 	{
+		left:		24vw;
 		font-size:	7vmin;
 	}
 }
@@ -640,9 +641,9 @@ hr:nth-child(even)
 	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
-	left: 49.5vw;
+	left: calc(50% - 1vmin);
 	top: 78vh;
-	width:4vmin;
+	width:3vmin;
 	xxxheight:	5vh;
 }
 
@@ -650,6 +651,7 @@ hr:nth-child(even)
 {
 	#IconHeadphones
 	{
+		left: calc(50% - 2vmin);
 		width:	7vmin;
 	}
 }
