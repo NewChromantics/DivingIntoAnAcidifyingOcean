@@ -246,8 +246,9 @@ a:hover
 
 :root
 {
-	--ButtonSize:	4vmin;
-	--ButtonMargin:	2vmin;
+	--ButtonSize:		4vmin;
+	--ButtonMargin:		2vmin;
+	--ButtonFontSize:	2vmin;
 }
 
 
@@ -256,10 +257,86 @@ a:hover
 {
 	:root
 	{
-		--ButtonSize:	8vmin;
-		--ButtonMargin:	4vmin;
+		--ButtonSize:		8vmin;
+		--ButtonMargin:		4vmin;
+		--ButtonFontSize:	3vmin;
 	}
 }
+
+
+.ShareButton_Link,
+.ShareButton_Twitter
+{
+	display:			block;
+	width:				calc( 3 * var(--ButtonSize) );
+	height:				calc( 1.5 * var(--ButtonSize) );
+	font-size:			var(--ButtonFontSize);
+	xbackground:			red;
+	background-repeat:	no-repeat;
+	xborder-radius:		50%;
+	padding-left:		calc( 1.7 * var(--ButtonSize) );
+	text-align:			left;
+	
+	/* vertically center child label */
+	display:			flex;
+	justify-content:	left;
+	align-items:		center;
+}
+
+#AboutSharingButtons .ShareButton_Link,
+#AboutSharingButtons .ShareButton_Twitter
+{
+	/* vertically center child label */
+	display:			flex;
+	justify-content:	left;
+	align-items:		center;
+}
+
+#LogoSharingButtons
+{
+	display:			flex;
+	justify-content:	center;
+	align-items:		center;
+	
+	position:		absolute;
+	top:			2vh;
+	width:			80vw;
+	left:			10vw;
+	height:			calc( 4 * var(--ButtonSize) );
+	xbackground:	green;
+}
+
+#LogoSharingButtons .ShareButton_Link,
+#LogoSharingButtons .ShareButton_Twitter
+{
+	padding-left:	0px;
+	padding-top:	calc( 1.1 * var(--ButtonSize) );
+	width:			calc( 2.0 * var(--ButtonSize) );
+	height:			calc( 1.0 * var(--ButtonSize) );
+	background-size:	auto 50%;
+	background-position:	top center;
+	display:	block;
+	text-align:		center;
+}
+
+.ShareButton_Link
+{
+	background-image:	url(icons/Share_Link.svg);
+	xfont-size:		0;
+}
+
+.ShareButton_Twitter
+{
+	background-image:	url(icons/Share_Twitter.svg);
+	xfont-size:		0;
+}
+
+.ShareButton_Facebook
+{
+	background-image:	url(icons/Share_Facebook.svg);
+	xfont-size:		0;
+}
+
 
 #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton
 {
@@ -568,19 +645,19 @@ hr:nth-child(even)
 #TeamCredits
 {
 	position:	absolute;
-	width:		40%;
-	left:		30%;
+	width:		60%;
+	left:		20%;
 }
-#Disclaimer
+#AboutDisclaimer
 {
 	position:	absolute;
-	width:		30%;
-	left:		70%;
+	width:		20%;
+	left:		80%;
 }
 #AboutSharingButtons
 {
 	position:	absolute;
-	width:		30%;
+	width:		20%;
 	left:		0%;
 }
 
@@ -590,7 +667,7 @@ hr:nth-child(even)
 	margin-bottom:	2vh;
 }
 
-#Disclaimer div
+#AboutDisclaimer div
 {
 	margin-bottom:	2vh;
 }

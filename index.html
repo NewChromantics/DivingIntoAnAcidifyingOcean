@@ -75,6 +75,84 @@
 		Element = GetElement(Element);
 		Element.style.visibility = 'hidden';
 	}
+
+	function GetShareMeta()
+	{
+		const ShareMeta =
+		{
+			title: document.title,
+			text: '',
+			url: window.location.href,
+		}
+		return ShareMeta;
+	}
+
+	function ShareLink()
+	{
+		const ShareMeta = GetShareMeta();
+		function OldCopyToClipboard()
+		{
+			//	todo: make a text box, copy text, exec command(copy)
+			if ( !document.execCommand )
+				throw "execCommand missing, cannot copy to clipboard";
+			/*
+			//	https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
+			ShareMeta.url.select();
+			ShareMeta.url.setSelectionRange(0, 99999)
+			document.execCommand("copy");
+			alert("Copied " + ShareMeta.url +" to clipboard");
+			 */
+		}
+		
+		function CopyToClipboard(ClickEvent)
+		{
+			//	use clipboard api
+			if ( !navigator.clipboard )
+			{
+				OldCopyToClipboard();
+				return;
+			}
+			
+			function OnCopy()
+			{
+				alert("Copied " + ShareMeta.url +" to clipboard");
+			}
+			function OnError(Error)
+			{
+				console.warn("navigator.clipboard.writeText error ", Error );
+				OldCopyToClipboard();
+			}
+			
+			navigator.clipboard.writeText( ShareMeta.url ).then( OnCopy ).catch( OnError );
+		}
+		
+		//	use native (ie. ios) sharing
+		if ( navigator.share )
+		{
+			navigator.share(ShareMeta).then( console.log ).catch( CopyToClipboard );
+		}
+		else
+		{
+			CopyToClipboard();
+		}
+
+		return false;	//	preventDefault
+	}
+
+	function ShareTweet(Element)
+	{
+		const ShareMeta = GetShareMeta();
+		//	inject text into url for sharing
+		let Url = Element.getAttribute('href');
+		const TwitterTextPrefix = "text=";
+		if ( !Url.includes(TwitterTextPrefix) )
+		{
+			Url += TwitterTextPrefix + ShareMeta.title + " " + ShareMeta.url;
+			Element.setAttribute('href',Url);
+		}
+		//	DONT prevent default
+	}
+
 </script>
 
 	<div id="Ui">
@@ -121,7 +199,7 @@
 					</div>
 				</div>
 				
-				<div id="Disclaimer">
+				<div id="AboutDisclaimer">
 					<div id="DisclaimerTitle">
 						<strong>DISCLAIMER</strong>
 					</div>
@@ -135,15 +213,11 @@
 				</div>
 			
 				<div id="AboutSharingButtons">
-					<!-- SHARING BUTTONS - AddToAny BEGIN -->
-					<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-						<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-						<a class="a2a_button_facebook"></a>
-						<a class="a2a_button_twitter"></a>
-						<a class="a2a_button_copy_link"></a>
-					</div>
-					<script async src="https://static.addtoany.com/menu/page.js"></script>
-					<!-- AddToAny END -->
+					<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
+					
+					<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span>Share Link</span></a>
+					<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span>Share on Twitter</span></a>
+					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
 				</div>
 			
 			</div>
@@ -153,11 +227,9 @@
 		<div id="DisclaimerPage">
 			<a id="DisclaimerPageCloseButton" class="IconButton" href="javascript:HideElement('AboutPage');javascript:HideElement('DisclaimerPage');"><span id=DisclaimerPageCloseLabel>Close</span></a>
 			
-			<div id="Disclaimer">
-				<div><strong>DISCLAIMER</strong></div>
-				<div>
-					Please remember that this is an artistic interpretation and a speculative work. <br/>I did the best I could to find all appropriate and correct information but I am no scientist. Therefore I assumes no responsibility or liability for any errors or omissions in the content of this site. <br/>All the work and content here can only be used for personal use only and should not be used to make any scientific assessments.<br/> All the resorces used in this project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp=sharing> here.</a>
-				</div>
+			<div><strong>DISCLAIMER</strong></div>
+			<div>
+				Please remember that this is an artistic interpretation and a speculative work. <br/>I did the best I could to find all appropriate and correct information but I am no scientist. Therefore I assumes no responsibility or liability for any errors or omissions in the content of this site. <br/>All the work and content here can only be used for personal use only and should not be used to make any scientific assessments.<br/> All the resorces used in this project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp=sharing> here.</a>
 			</div>
 			
 		</div>
@@ -181,26 +253,23 @@
 
 		<!-- move this, only needed for the old opengl logo -->
 		<div id="Logo">
+			
+			
 			<!--<div id="TitleText">ACIDIC OCEAN</div>-->
 			<div id="LogoBg">&nbsp;</div>
 			<div id="Hint_Start">S T A R T</div>
 			
 			<div id="Hint_Headphones"> Use headphones for a better experience </div>
 			<div id="IconHeadphones"> <img src="Web/icons/Headphones.svg"> </div>
-			
-			
-			<!-- SHARING BUTTONS - AddToAny BEGIN -->
-			<!--
-			<div id="LogoShare">
-				<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-					<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-					<a class="a2a_button_facebook"></a>
-					<a class="a2a_button_twitter"></a>
-					<a class="a2a_button_copy_link"></a>
-				</div>
+
+			<div id="LogoSharingButtons">
+				<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
+				
+				<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span>Share Link</span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span>Share on Twitter</span></a>
+				<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
 			</div>
-			 -->
-			<!-- AddToAny END -->
+			
 		</div><!-- Logo screen -->
 
 		
@@ -291,16 +360,6 @@
 			<div id="Solution_WorldText">We have laid eyes only on 5% of the Oceans even though the Earth's surface is made of 71% of water and the oceans hold about 96.5% of all the Earth's water.</div>
 			<div id="Solution_WorldIcon">&nbsp;</div>
 			
-			<!-- SHARING BUTTONS - AddToAny BEGIN -->
-			<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-			<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-			<a class="a2a_button_facebook"></a>
-			<a class="a2a_button_twitter"></a>
-			<a class="a2a_button_copy_link"></a>
-			</div>
-			<script async src="https://static.addtoany.com/menu/page.js"></script>
-			<!-- AddToAny END -->
-
 		</div><!-- solution -->
 
 		
