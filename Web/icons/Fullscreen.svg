@@ -7,19 +7,11 @@
 </style>
 <title>about_icon</title>
 <g>
-	<polyline class="st0" points="103.5,311 103.5,99 315.5,99 	"/>
-	<line class="st0" x1="103.5" y1="99" x2="316.4" y2="311.9"/>
+	<polyline class="st0" points="872.5,421 872.5,99 548.5,99 	"/>
+	<line class="st0" x1="872.5" y1="99" x2="576.3" y2="395.2"/>
 </g>
 <g>
-	<polyline class="st0" points="872.5,311 872.5,99 660.5,99 	"/>
-	<line class="st0" x1="872.5" y1="99" x2="659.6" y2="311.9"/>
-</g>
-<g>
-	<polyline class="st0" points="103.5,659.7 103.5,871.7 315.5,871.7 	"/>
-	<line class="st0" x1="103.5" y1="871.7" x2="316.4" y2="658.8"/>
-</g>
-<g>
-	<polyline class="st0" points="872.5,659.7 872.5,871.7 660.5,871.7 	"/>
-	<line class="st0" x1="872.5" y1="871.7" x2="659.6" y2="658.8"/>
+	<polyline class="st0" points="103.5,549.7 103.5,871.7 422.5,871.7 	"/>
+	<line class="st0" x1="103.5" y1="871.7" x2="400.7" y2="574.5"/>
 </g>
 </svg>
