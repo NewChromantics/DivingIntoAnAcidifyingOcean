@@ -120,7 +120,7 @@
 			<div id="Disclaimer">
 				<div><strong>DISCLAIMER</strong></div>
 				<div>
-				Please remember that this is an artistic interpretation and a speculative work. <br/>I did the best I could to find all appropriate and correct information but I am no scientist. Therefore I assumes no responsibility or liability for any errors or omissions in the content of this site. <br/>All the work and content here can only be used for personal use only and should not be used to make any scientific assessments.<br/> All the resorces used in this project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp=sharing> here.</a>
+					<a href="javascript:HideElement('AboutPage');javascript:ShowElement('DisclaimerPage');">Read more...</a>
 				</div>
 			</div>
 
@@ -135,8 +135,20 @@
 			<!-- AddToAny END -->
 		</div>
 		
+		<div id="DisclaimerPage">
+			<a id="DisclaimerPageCloseButton" class="IconButton" href="javascript:HideElement('AboutPage');javascript:HideElement('DisclaimerPage');"><span id=DisclaimerPageCloseLabel>Close</span></a>
+			
+			<div id="Disclaimer">
+				<div><strong>DISCLAIMER</strong></div>
+				<div>
+					Please remember that this is an artistic interpretation and a speculative work. <br/>I did the best I could to find all appropriate and correct information but I am no scientist. Therefore I assumes no responsibility or liability for any errors or omissions in the content of this site. <br/>All the work and content here can only be used for personal use only and should not be used to make any scientific assessments.<br/> All the resorces used in this project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp=sharing> here.</a>
+				</div>
+			</div>
+			
+		</div>
+		
 	</div>
-	<a id="AboutButton" class="IconButton" href="javascript:ToggleElement('AboutPage');"><span id=AboutLabel>About</span></a>
+	<a id="AboutButton" class="IconButton" href="javascript:ToggleElement('AboutPage');javascript:HideElement('DisclaimerPage');"><span id=AboutLabel>About</span></a>
 	<!--<a id="VrButton" class="IconButton"><span id=VrLabel>VR</span></a>-->
 
 	<div id="Hud">

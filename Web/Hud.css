@@ -42,7 +42,7 @@ a:hover
 	z-index:	902;
 }
 
-#AboutPage
+#AboutPage, #DisclaimerPage
 {
 	z-index:	903;
 
@@ -324,7 +324,7 @@ a:hover
 	left:			calc( 90vw - 8vmin );
 }
 
-#AboutPageCloseButton
+#AboutPageCloseButton, #DisclaimerPageCloseButton
 {
 	width:			4vmin;
 	height:			4vmin;
@@ -341,6 +341,7 @@ a:hover
 #FullscreenButton:hover span,
 #VrButton:hover span,
 #AboutPageCloseButton:hover span,
+#DisclaimerPageCloseButton:hover span,
 #SkipButton:hover span,
 #PrevButton:hover span,
 #NextButton:hover span,
@@ -355,6 +356,7 @@ a:hover
 #FullscreenButton span,
 #VrButton span,
 #AboutPageCloseButton span,
+#DisclaimerPageCloseButton span,
 #SkipButton span,
 #PrevButton span,
 #NextButton span,
@@ -370,6 +372,7 @@ a:hover
 #FullscreenLabel,
 #VrLabel,
 #AboutPageCloseLabel,
+#DisclaimerPageCloseLabel,
 #SkipLabel,
 #PrevLabel,
 #NextLabel
@@ -417,7 +420,8 @@ a:hover
 	xxbackground-color:	red;
 }
 
-#AboutPageCloseLabel
+#AboutPageCloseLabel,
+#DisclaimerPageCloseLabel
 {
 	background:     url(icons/close.svg) no-repeat;
 	xxbackground-color:	red;
@@ -1389,7 +1393,7 @@ hr:nth-child(even)
 	width:	22vw;
 }
 
-#AboutPage
+#AboutPage, #DisclaimerPage
 {
 	visibility:	hidden;
 	position:	absolute;
