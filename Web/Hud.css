@@ -561,9 +561,37 @@ hr:nth-child(even)
 	padding:	0 2vw 0 2vw;
 }
 
-#TheTeam
+#ShareTeamDisclaimer
+{
+	position:	relative;
+}
+#TeamCredits
+{
+	position:	absolute;
+	width:		40%;
+	left:		30%;
+}
+#Disclaimer
+{
+	position:	absolute;
+	width:		30%;
+	left:		70%;
+}
+#AboutSharingButtons
+{
+	position:	absolute;
+	width:		30%;
+	left:		0%;
+}
+
+#TheTeamTitle, #DisclaimerTitle
 {
 	margin-top:	1vh;
+	margin-bottom:	2vh;
+}
+
+#Disclaimer div
+{
 	margin-bottom:	2vh;
 }
 
@@ -585,11 +613,6 @@ hr:nth-child(even)
 	text-align:		left;
 	width:			40%;
 	display:		inline-block;
-}
-
-#Disclaimer
-{
-	margin-top:		2vh;
 }
 
 
