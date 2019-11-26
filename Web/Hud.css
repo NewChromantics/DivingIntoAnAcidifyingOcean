@@ -256,8 +256,8 @@ a:hover
 {
 	:root
 	{
-		--ButtonSize:	4vmin;
-		--ButtonMargin:	2vmin;
+		--ButtonSize:	8vmin;
+		--ButtonMargin:	4vmin;
 	}
 }
 
