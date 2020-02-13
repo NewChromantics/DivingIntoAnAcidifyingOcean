@@ -213,7 +213,7 @@ Window.RenderFrameCounter = new Pop.FrameCounter();
 
 Window.OnRender = BootupRender;
 Window.OnKeyDown = OnKeyPress;
-
+Window.OnMouseMove = function () { };
 
 function SetupFullscreen()
 {
@@ -509,3 +509,11 @@ function Update_AssetServer(FirstUpdate,FrameDuration,StateTime)
 	}
 }
 
+//	run a webserver on desktop to serve the html version
+let HttpServer = null;
+if (Pop.GetPlatform() != "Web")
+{
+	HttpServer = new Pop.Http.Server(8001);
+	const Url = 'http://' + HttpServer.GetAddress()[0].Address;
+	//Pop.ShowWebPage(Url);
+}
