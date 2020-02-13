@@ -37,8 +37,11 @@ class SoundPool
 		//	not a user event!
 		//window.addEventListener('touchstart', this.AllocAudios.bind(this), true );
 
-		//	desktop & safari on ios
-		window.addEventListener('click', this.AllocAudios.bind(this), true );
+		if (Pop.GetPlatform() == "Web")
+		{
+			//	desktop & safari on ios
+			window.addEventListener('click',this.AllocAudios.bind(this),true);
+		}
 	}
 	
 	
