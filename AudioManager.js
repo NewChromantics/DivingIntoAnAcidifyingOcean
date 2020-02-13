@@ -148,7 +148,7 @@ Pop.Audio.AllocSound = function()
 	}
 	catch(e)
 	{
-		console.warn("Alloc sound failed: "+ e);
+		Pop.Debug("Alloc sound failed: "+ e);
 		const Sound = new AudioFake();
 		return Sound;
 	}
