@@ -4,38 +4,55 @@
 		"Subtitle":"THE OCEANS <strong>ABSORB AROUND 30% OF THE CARBON DIOXIDE (CO2)</strong> THAT IS RELEASED INTO THE ATMOSPHERE"
 	},
 
-	"8":
+	"7":
 	{
-		"Subtitle":"SINCE 1860, THE OCEANS’ PH HAS <strong> FALLEN BY 0.1 PH UNITS,</strong> <br> FROM 8.2 PH TO 8.1 PH"
+		"Subtitle":"SINCE 1860, THE OCEANS’ PH HAS <strong> FALLEN BY 0.1 PH UNITS</strong>"
+	},
+	"13":
+	{
+		"Subtitle":"FROM 8.2 PH TO 8.1 PH"
 	},
 	"17":
 	{
 		"Subtitle":"WHAT SEEMS LIKE A SMALL CHANGE OF 0.1 ACTUALLY MEANS THAT <br> TODAY THE <strong> OCEANS ARE 30% MORE ACIDIC</strong>"
 	},
-	"25":
+	"24":
 	{
-		"Subtitle":"IN <strong>HUMANS</strong>, A DROP OF 0.1 PH UNITS IN THE BLOOD CAN RESULT IN <br> <strong>SEIZURES, COMA OR EVEN DEATH</strong>"
+		"Subtitle":"IN <strong>HUMANS</strong>, A DROP OF 0.1 PH UNITS IN THE BLOOD CAN RESULT IN "
 	},
-	"32":
+	"30":
 	{
-		"Subtitle":"IF WE CONTINUE AT THIS PACE, <br> <strong>BY 2100 THE OCEANS WILL BE 170% MORE ACIDIC</strong>, <br> FALLING TO A PH OF AROUND 7.6"
+		"Subtitle":"SEIZURES, COMA OR EVEN <strong> DEATH</strong>"
 	},
-
-	"41":
+	"35":
 	{
-		"Subtitle":"LET’S CONSIDER THE HUGE CONSEQUENCES: <strong>OCEAN ACIDIFICATION CAN PRECIPITATE ECOLOGICAL COLLAPSE</strong>"
+		"Subtitle":"IF WE CONTINUE AT THIS PACE, <br> BY 2100 THE OCEANS WILL BE <strong>170% MORE ACIDIC</strong>"
 	},
-
-	"47":
+	"42":
 	{
-		"Subtitle":"RESEARCH HAS SHOWN THAT A DROP IN PH OF 0.25 WAS ENOUGH TO PRECIPITATE <strong>ANOTHER MASS EXTINCTION 66 MILLION YEARS AGO</strong>"
+		"Subtitle":"FALLING TO A PH OF AROUND 7.6"
 	},
 
-	"55":
+	"46":
+	{
+		"Subtitle":"LET’S CONSIDER THE HUGE CONSEQUENCES: <br> OCEAN ACIDIFICATION CAN PRECIPITATE <strong> ECOLOGICAL COLLAPSE</strong>"
+	},
+
+	"56":
+	{
+		"Subtitle":"RESEARCH HAS SHOWN THAT <strong>66 MILLION YEARS AGO</strong> A DROP IN PH OF 0.25"
+	},
+
+	"63":
+	{
+		"Subtitle":"WAS ENOUGH TO PRECIPITATE <strong>ANOTHER MASS EXTINCTION</strong>"
+	},
+
+	"68":
 	{
 		"Subtitle":" AND IT WAS <strong>HUNDREDS OF THOUSANDS OF YEARS</strong> BEFORE LIFE RETURNED TO NORMAL"
 	},
-	"60":
+	"75":
 	{
 		"Subtitle":" "
 	}
