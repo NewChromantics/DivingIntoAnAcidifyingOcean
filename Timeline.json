@@ -102,7 +102,7 @@
 		"Subtitle":""
 	},
 
-	"1857":
+	"1858":
 	{
 		"HintClickAnimalVisible":true
 	},
@@ -286,9 +286,9 @@
 		]
 	},
 
-	"2102":
+	"2101":
 	{
-		"YearsPerSecond":0.60,
+		"YearsPerSecond":0.9,
 		"Subtitle":"IF WE DON’T DRASTICALLY <strong> REDUCE OUR CO2 PRODUCTION </strong>, AND <strong> LIMIT THE PLANET’S TEMPERATURE RISE TO UNDER 1.5°C </strong>, THE WHOLE OCEAN SYSTEM MAY COLLAPSE",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
 	},
@@ -310,7 +310,7 @@
 
 	"2122":
 	{
-		"Subtitle":"YOU STILL HAVE THE POWER TO <strong>SLOW DOWN</strong> THIS CATASTROPHE"
+		"Subtitle":"<strong>YOU</strong> STILL HAVE THE POWER TO <strong>SLOW DOWN</strong> THIS CATASTROPHE"
 	},
 
 	"2127":

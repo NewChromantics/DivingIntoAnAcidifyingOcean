@@ -37,7 +37,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Solution_Greenpeace, #Solution_SeaSheperd
 {
 	z-index:	902;
 }
@@ -1184,21 +1184,38 @@ hr:nth-child(even)
 	text-align: center;
 }
 
+/* make background bigger on hover*/
+#Solution_Greenpeace:hover span,
+#Solution_SeaSheperd:hover span
+{
+	xbackground:red;
+	background-size:	95%;
+}
+
+#Solution_Greenpeace span,
+#Solution_SeaSheperd span
+{
+	background-size:	80%;
+	background-position:	center;
+}
+
 #Solution_Recycle		{	left:	0vw;	background-image:	url(icons/recycle.svg);	}
 #Solution_Walk			{	left:	14vw;	background-image:	url(icons/bike.svg);	}
-#Solution_CleanEnergy	{	left:	28vw;	background-image:	url(icons/wind.svg);	}
-#Solution_EnergyEff		{	left:	42vw;	background-image:	url(icons/a.svg);	}
+
+#Solution_Greenpeace	{	left:	25vw;	background-image:	url(icons/Greenpeace.svg);	}
+#Solution_SeaSheperd	{	left:	45vw;	background-image:	url(icons/SeaSheperd.svg);	}
+
 #Solution_EatLocal		{	left:	56vw;	background-image:	url(icons/organic.svg);	}
 #Solution_GrowTree		{	left:	70vw;	background-image:	url(icons/plant.svg);	}
 
 #Solution_Tips
 {
 	margin-top:	6vh;
+	margin-bottom: 6vh;
 	xbackground:	green;
 	position:	relative;
 	height:		20vh;
 	font-weight:	bold;
-
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
@@ -1207,13 +1224,12 @@ hr:nth-child(even)
 #Solution_Tips div
 {
 	position:	absolute;
-	top:		0px;
+	xtop:		5vh;
 	width:		14vw;
 	height:		16vh;
 	xbackground-color:	blue;
 	xbackground-image:	url(icons/recycle.svg);
 	background-repeat:	no-repeat;
-	background-size:	25%;
 	background-position:	center bottom;
 }
 
@@ -1230,6 +1246,7 @@ hr:nth-child(even)
 	xbackground-color:	yellow;
 	background-image:	url(icons/world.svg);
 	height:				5vh;
+	margin-top: 5vh;
 	background-repeat:	no-repeat;
 	background-size:	80% contain;
 	background-position:	center bottom;
