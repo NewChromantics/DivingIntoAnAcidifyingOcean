@@ -39,7 +39,7 @@
 
 	"1810":
 	{
-		"Subtitle":"EVERY  <strong>  SECOND  </strong>  BREATH WE TAKE COMES FROM THE OCEAN"
+		"Subtitle":"EVERY  <strong>  SECOND BREATH </strong> WE TAKE COMES FROM THE <strong>OCEAN</strong>"
 	},
 	"1814":
 	{
@@ -67,17 +67,27 @@
 	
 	"1831":
 	{
-		"Subtitle":"THAT’S WHAT HAPPENED SOME 252 MILLION YEARS AGO IN AN EVENT KNOWN AS <strong> <br> “THE GREAT DYING” </strong>"
+		"Subtitle":"252 MILLION YEARS AGO, IN AN EVENT KNOWN AS <strong> <br> “THE GREAT DYING” </strong>"
 	},
 
 	"1836":
 	{
-		"Subtitle":"WHEN A MASSIVE RELEASE OF <strong> CARBON DIOXIDE (CO2) </strong> AND OTHER GASES CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
+		"Subtitle":"A MASSIVE RELEASE OF <strong> CARBON DIOXIDE (CO2) </strong> AND OTHER GASES"
+	},
+
+	"1839":
+	{
+		"Subtitle":"CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
 	},
 
 	"1842":
 	{
-		"Subtitle":"THAT <strong>DEPLETED THE OCEANS OF OXYGEN</strong> AND <strong>ACIDIFIED THE WATERS</strong>"
+		"Subtitle":"DEPLETING THE OCEANS OF <strong> OXYGEN</strong>"
+	},
+
+	"1844":
+	{
+		"Subtitle":"AND <strong>ACIDIFYING</strong> THE WATERS"
 	},
 
 
@@ -87,25 +97,36 @@
 	},
 
 	
-	"1849":
+	"1848":
 	{
-		"Subtitle":"BUT RATHER THAN TAKING TENS OF THOUSANDS OF YEARS, WE ARE DOING THIS <br> IN A LITTLE MORE THAN <strong>ONE SINGLE LIFETIME</strong>"
+		"Subtitle":" AT A SPEED THAT SURPASSESS THAT OF THE GREAT DYING BY <strong> TENS OF THOUSANDS OF YEARS.</strong>"
 	},
 
-	"1853":
+	"1851":
 	{
-		"Subtitle":"IF WE FAIL TO ACT, WHAT WILL HAPPEN TO OCEAN LIFE… <strong>AND TO US?</strong>"
+		"Subtitle":"...BACK THEN <strong>LIFE</strong> RETURNED AFTER <strong>10 MILLION YEARS.</strong>"
+	},
+
+	"1854":
+	{
+		"Subtitle":"...IF WE FAIL TO ACT, WHAT WILL HAPPEN TO <strong>OCEAN LIFE?</strong>"
 	},
 
 	"1856":
 	{
-		"Subtitle":""
+		"Subtitle":"...AND TO <strong> US?</strong>"
 	},
 
 	"1858":
 	{
+		"Subtitle":""
+	},
+
+	"1859":
+	{
 		"HintClickAnimalVisible":true
 	},
+
 
 	"1860":
 	{
