@@ -1,0 +1,17 @@
+﻿Build started 13/02/2020 12:29:18.
+     1>Project "D:\TUTS\AcidicOcean.visualstudio\AcidicOcean\AcidicOcean.vcxproj" on node 3 (Build target(s)).
+     1>PrepareForBuild:
+         Creating directory "D:\PopCave\PopCave.visualstudio\PopCave\x64\Debug\".
+         Creating directory "x64\Debug\AcidicOcean.tlog\".
+       InitializeBuildStatus:
+         Creating "x64\Debug\AcidicOcean.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+       FinalizeBuildStatus:
+         Deleting file "x64\Debug\AcidicOcean.tlog\unsuccessfulbuild".
+         Touching "x64\Debug\AcidicOcean.tlog\AcidicOcean.lastbuildstate".
+     1>Done Building Project "D:\TUTS\AcidicOcean.visualstudio\AcidicOcean\AcidicOcean.vcxproj" (Build target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.06

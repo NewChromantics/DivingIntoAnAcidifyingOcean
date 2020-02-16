@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\PopEngineCommon">
+      <UniqueIdentifier>{364e1c56-b130-4c61-a2fc-53b3cc3ff79d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\.gitignore">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\.gitmodules">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\AcidicOcean.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Actors.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\AnimalParticle.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\AnimalParticle.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Animals.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Animals.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\AssetImport.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\AssetManager.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\AudioManager.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\BlitCopy.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\BlitCopyMultiple.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\BlitDebug.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\bootup.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\CameraSpline.dae.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\CNAME">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Colour.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\ConvertAssets.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\DustParticle.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Edge.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Editor.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Geo.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Hud.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\index.html">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Logo.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\NastyAnimalParticle.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\NastyAnimalParticle.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\ParticleActor.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\ParticleTriangles.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PathTrace.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PhysicsIteration_UpdatePosition.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PhysicsIteration_UpdatePositionSwirl.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PhysicsIteration_UpdateSwirl.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PhysicsIteration_UpdateVelocity.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PhysicsIteration_UpdateVelocityPulse.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PhysicsIteration_UpdateVelocitySwirl.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Quad.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Readme.md">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\TextTimeline1.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\TextTimeline2.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\TextTimeline3.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Timeline.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\Timeline.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\TurbulencePerlin.frag.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\WaterParticle.vert.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\MemCheckLoop.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\ParamsWindow.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopAruco.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopCamera.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopCinema4d.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopCollada.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopDll.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopFrameCounter.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopMath.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopMedia.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopMp4.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopObj.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopPly.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopShaderCache.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopSvg.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopTexture.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopWebApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopWebGuiApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopWebImageApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopWebOpenglApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopWebSocketApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\PopWebXrApi.js">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+    <None Include="..\..\PopEngineCommon\Readme.md">
+      <Filter>Source Files\PopEngineCommon</Filter>
+    </None>
+  </ItemGroup>
+</Project>

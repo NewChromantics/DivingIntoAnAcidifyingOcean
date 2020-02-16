@@ -515,5 +515,5 @@ if (Pop.GetPlatform() != "Web")
 {
 	HttpServer = new Pop.Http.Server(8001);
 	const Url = 'http://' + HttpServer.GetAddress()[0].Address;
-	//Pop.ShowWebPage(Url);
+	Pop.ShowWebPage(Url);
 }
