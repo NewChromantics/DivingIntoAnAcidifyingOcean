@@ -197,8 +197,8 @@ a:hover
 	position:	absolute;
 	width:		100vw;
 	height:		100vh;
-	background-color: black;
-	background-image:		url(icons/Mosaic.jpg);
+	xbackground-color: black;
+	background-image:		url(icons/Mosaic2_opa.png);
 	background-repeat:		no-repeat;
 	background-size:		contain;
 	background-position:	center center;

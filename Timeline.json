@@ -109,7 +109,6 @@
 
 	"1860":
 	{
-		"YearsPerSecond":0.35,
 		"StatsVisible":true,
 		"TimelineVisible":true,
 		"Subtitle":"",
@@ -119,6 +118,11 @@
 		"Stats_Oxygen":0,
 		"Stats_Ph":0,
 		"Subtitle":""
+	},
+
+	"1861":
+	{
+		"YearsPerSecond":0.35
 	},
 
 	"1862":
