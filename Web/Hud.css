@@ -265,7 +265,9 @@ a:hover
 
 
 .ShareButton_Link,
-.ShareButton_Twitter
+.ShareButton_Twitter,
+.ShareButton_Facebook,
+.ShareButton_Linkedin
 {
 	display:			block;
 	width:				calc( 3 * var(--ButtonSize) );
@@ -284,10 +286,12 @@ a:hover
 }
 
 #AboutSharingButtons .ShareButton_Link,
-#AboutSharingButtons .ShareButton_Twitter
+#AboutSharingButtons .ShareButton_Twitter,
+#AboutSharingButtons .ShareButton_Facebook,
+#AboutSharingButtons .ShareButton_Linkedin
 {
 	/* vertically center child label */
-	display:			flex;
+	display:			block;
 	justify-content:	left;
 	align-items:		center;
 }
@@ -307,7 +311,9 @@ a:hover
 }
 
 #LogoSharingButtons .ShareButton_Link,
-#LogoSharingButtons .ShareButton_Twitter
+#LogoSharingButtons .ShareButton_Twitter,
+#LogoSharingButtons .ShareButton_Facebook,
+#LogoSharingButtons .ShareButton_Linkedin
 {
 	padding-left:	0px;
 	padding-top:	calc( 1.1 * var(--ButtonSize) );
@@ -336,6 +342,14 @@ a:hover
 .ShareButton_Facebook
 {
 	background-image:	url(icons/Share_Facebook.svg);
+	background-size: 3vw;
+	xfont-size:		0;
+}
+
+.ShareButton_Linkedin
+{
+	background-image:	url(icons/Share_Linkedin.svg);
+	background-size: 2.5vw;
 	xfont-size:		0;
 }
 
@@ -548,6 +562,7 @@ hr
 	 */
 }
 
+
 hr:nth-child(even)
 {
 	background:	url('icons/wave2.svg') no-repeat top center;
@@ -654,8 +669,8 @@ hr:nth-child(even)
 {
 	position:	absolute;
 	top: 6%;
-	width:		80%;
-	left:		10%;
+	width:		90%;
+	left:		5%;
 }
 #AboutDisclaimer
 {
@@ -666,6 +681,7 @@ hr:nth-child(even)
 #AboutSharingButtons
 {
 	position:	absolute;
+	top: 		20%;
 	width:		20%;
 	left:		0%;
 }
@@ -673,9 +689,10 @@ hr:nth-child(even)
 #AboutSharingButtons2
 {
 	position:	absolute;
-	top: 		66.7%;
+	top: 		20%;
 	width:		20%;
 	left:		0%;
+
 }
 
 #TheTeamTitle, #DisclaimerTitle
