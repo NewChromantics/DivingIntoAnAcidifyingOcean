@@ -874,8 +874,7 @@ hr:nth-child(even)
 
 }
 
-#Hint_ClickAnimal,
-#Hint_DragTimeline
+#Hint_ClickAnimal
 {
 	/* debug
 	visibility:	visible !important;
@@ -886,6 +885,19 @@ hr:nth-child(even)
 	position:	absolute;
 	width:		100vw;
 	top:		40vh;
+}
+
+#Hint_DragTimeline
+{
+	/* debug
+	visibility:	visible !important;
+	z-index:		9999 !important;
+	background:	magenta !important;
+	/* */
+	display:	block;
+	position:	absolute;
+	width:		100vw;
+	top:		70vh;
 }
 
 
