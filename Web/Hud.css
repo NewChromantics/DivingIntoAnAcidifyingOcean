@@ -416,34 +416,37 @@ a:hover
 	display: block;
 	position: absolute;
 	left: 44.5vw;
-	top:	85vh;
+	top:	90vh;
 	width: 12vw;
 	height:	5vh;
-	font-size: 1.2vh;
+	font-size: 1vh;
 	text-align:	center;
 
 	text-decoration:	underline;
 	text-underline-position: under;
+	text-transform: uppercase;
 	
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
 }
 
+
 #JumpButtonConclusion
 {
-	xxxvisibility: hidden;
+	visibility: hidden;
 	display: block;
 	position: absolute;
 	left: 44.5vw;
-	top:	85vh;
+	top:	90vh;
 	width: 12vw;
 	height:	5vh;
-	font-size: 1.2vh;
+	font-size: 1vh;
 	text-align:	center;
 
 	text-decoration:	underline;
 	text-underline-position: under;
+	text-transform: uppercase;
 	
 	display:			flex;
 	align-items:		center;
