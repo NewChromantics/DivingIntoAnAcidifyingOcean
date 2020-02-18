@@ -1149,36 +1149,69 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 }
 
 
+//	could be a better way to do this
+const IntroSkipYears =
+	[
+		//1810
+		Timeline_AllowIntroSkipAfterYear,
+		1816,
+		1823,
+		//	in intro, skip OVER this subtitle="" to the next text, otherwise we skip, but text stays onscreen
+		//TimelineBigBangStartYear,	//1826
+		1831,
+		1836,
+		1842,
+		1846,
+		1849,
+		1853,
+		TimelineBigBangEndYear	//	57
+	];
+function GetNextIntroKeyframeYear(ThisYear,NoNextYearResult=undefined)
+{
+	for (let SkipYear of IntroSkipYears)
+	{
+		if (SkipYear <= ThisYear )
+			continue;
+		return SkipYear;
+	}
+	return NoNextYearResult;
+}
 
 function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 {
+	if (AppTime === null)
+		Init();
+
 	if ( FirstUpdate )
 	{
+		Acid.UserSkippedIntro = false;
+		Hud.SubtitleSkipButton.OnClicked = function ()
+		{
+			Acid.UserSkippedIntro = true;
+			Hud.SubtitleSkipButton.SetVisible(false);
+		}
 	}
-	
+	function OnExit()
+	{
+		Hud.SubtitleSkipButton.SetVisible(false);
+	}
+
+	if (Params.TimelineYear >= Timeline_AllowIntroSkipAfterYear)
+	{
+		Hud.SubtitleSkipButton.SetVisible(true);
+	}
+
+	//	if user skips, go to next keyframe
 	if ( Acid.UserSkippedIntro )
 	{
-		Pop.Debug("Acid.UserSkippedIntro");
-		Params.TimelineYear = TimelineBigBangStartYear;
+		Acid.UserSkippedIntro = false;
+		const NextYear = GetNextIntroKeyframeYear(Params.TimelineYear,null);
+		Pop.Debug("Acid.UserSkippedIntro skipped to " + NextYear);
+		Params.TimelineYear = NextYear;
 	}
 	
 	Update( FrameDuration );
 	UpdateYearTime( FrameDuration );
-
-	//	hud init's in the first Update here, so we do it later
-	if ( Params.TimelineYear >= Timeline_AllowIntroSkipAfterYear )
-	{
-		if ( !Acid.UserSkippedIntro && !Hud.SubtitleSkipButton.IsVisible() )
-		{
-			Hud.SubtitleSkipButton.SetVisible(true);
-			Hud.SubtitleSkipButton.OnClicked = function()
-			{
-				Acid.UserSkippedIntro = true;
-				Hud.SubtitleSkipButton.SetVisible(false);
-			}
-			Acid.UserSkippedIntro = false;
-		}
-	}
 
 	//	move camera
 	{
@@ -1190,8 +1223,11 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	UpdateFog(FrameDuration);
 	
 	//	fly until we hit big bang
-	if ( Params.TimelineYear >= TimelineBigBangStartYear )
+	if (Params.TimelineYear >= TimelineBigBangStartYear)
+	{
+		OnExit();
 		return Acid.State_BigBang;
+	}
 	
 	//	stay flying
 	return null;
@@ -1219,13 +1255,16 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		Hud.SubtitleSkipButton.SetVisible(true);
-		Hud.SubtitleSkipButton.OnClicked = function()
+		Acid.UserSkippedIntro = false;
+		Hud.SubtitleSkipButton.OnClicked = function ()
 		{
-			Acid.UserSkippedBigBang = true;
+			Acid.UserSkippedIntro = true;
 			Hud.SubtitleSkipButton.SetVisible(false);
 		}
-		Acid.UserSkippedBigBang = false;
+	}
+	function OnExit()
+	{
+		Hud.SubtitleSkipButton.SetVisible(false);
 	}
 	
 	UpdateFog( FrameDuration );
@@ -1233,9 +1272,19 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	UpdateYearTime( FrameDuration );
 	UpdateCameraPos();
 
-	if ( Acid.UserSkippedBigBang )
-		Params.TimelineYear = TimelineBigBangEndYear;
-	
+	//	if user skips, go to next keyframe
+	if (Acid.UserSkippedIntro)
+	{
+		Acid.UserSkippedIntro = false;
+		const NextYear = GetNextIntroKeyframeYear(Params.TimelineYear,null);
+		Pop.Debug("Acid.UserSkippedIntro/BigBang skipped to " + NextYear);
+		Params.TimelineYear = NextYear;
+	}
+	else
+	{
+		Hud.SubtitleSkipButton.SetVisible(true);
+	}
+
 	const Actors = {};
 	function IsBigBangActor(Actor)
 	{
