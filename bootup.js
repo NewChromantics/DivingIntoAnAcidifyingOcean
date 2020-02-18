@@ -511,7 +511,7 @@ function Update_AssetServer(FirstUpdate,FrameDuration,StateTime)
 
 //	run a webserver on desktop to serve the html version
 let HttpServer = null;
-if (Pop.GetPlatform() != "Web")
+if (Pop.GetExeArguments().includes('HttpServer'))
 {
 	HttpServer = new Pop.Http.Server(8001);
 	const Url = 'http://' + HttpServer.GetAddress()[0].Address;

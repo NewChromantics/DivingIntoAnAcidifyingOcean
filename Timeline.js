@@ -48,6 +48,17 @@ class TTimeline
 		return LastKeyframe.Time;
 	}
 
+	GetNextKeyframeTime(Time,NoNextResult=undefined)
+	{
+		for (let Keyframe of this.Keyframes)
+		{
+			if (Keyframe.Time <= Time)
+				continue;
+			return Keyframe.Time;
+		}
+		return NoNextResult;
+	}
+
 	EnumAllUniforms()
 	{
 		//	keyed list and their first & last keyframe time

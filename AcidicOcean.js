@@ -898,7 +898,9 @@ function Init()
 	
 	//	setup window (we do it here so we know update has happened first)
 	Window.OnRender = Render;
-	
+
+	Window.OnMouseUp = function () { };
+
 	Window.OnMouseDown = function(x,y,Button)
 	{
 		if ( Button == 0 )
@@ -1473,14 +1475,13 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 		Hud.SubtitleSkipButton.OnClicked = function()
 		{
 			Acid.UserSkippedTextTimeline = true;
-			Hud.SubtitleSkipButton.SetVisible(false);
 		}
 		Acid.UserSkippedTextTimeline = false;
+		Acid.TextTimelineStateTimeOffset = 0;
 	}
 	function OnExit()
 	{
 		Hud.SubtitleSkipButton.SetVisible(false);
-		Acid.UserSkippedTextTimeline = false;
 	}
 	
 	Update( FrameDuration );
@@ -1490,23 +1491,30 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 
 	//	gr: change these hud things after Update as it updates subtitles/hud for us
 	Hud.Timeline.SetVisible( false );
-	
+
+	const TimelineTime = StateTime + Acid.TextTimelineStateTimeOffset;
+
 	//	update text timeline
-	const Subtitle = TextTimeline.GetUniform(StateTime,'Subtitle');
+	const Subtitle = TextTimeline.GetUniform(TimelineTime,'Subtitle');
 	Hud.SubtitleLabel.SetValue( Subtitle );
 	Hud.SubtitleLabel.SetVisible( Subtitle.length > 0 );
-	
+
+	//	if user skips, jump to next keyframe in timeline
 	if ( Acid.UserSkippedTextTimeline )
 	{
-		OnExit();
-		return Acid.State_Fly;
+		Acid.UserSkippedTextTimeline = false;
+		const LastTime = TextTimeline.LastKeyframeTime();
+		const NextTime = TextTimeline.GetNextKeyframeTime(TimelineTime,LastTime);
+
+		//	change offset to make next frame appear at the start of next keyframe
+		Acid.TextTimelineStateTimeOffset = NextTime - StateTime;
 	}
 	
 	//	exit back to flying
-	if ( StateTime >= TextTimeline.LastKeyframeTime() )
+	if (TimelineTime >= TextTimeline.LastKeyframeTime() )
 	{
 		OnExit();
-		Pop.Debug('exit text timeline Update_TextTimelineX',StateTime,TextTimeline.LastKeyframeTime());
+		Pop.Debug('exit text timeline Update_TextTimelineX',TimelineTime,StateTime,TextTimeline.LastKeyframeTime());
 		return Acid.State_Fly;
 	}
 	
