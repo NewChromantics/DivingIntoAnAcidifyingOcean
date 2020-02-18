@@ -37,7 +37,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Solution_Greenpeace, #Solution_SeaSheperd
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Solution
 {
 	z-index:	902;
 }
@@ -332,11 +332,31 @@ a:hover
 	xfont-size:		0;
 }
 
+@media (max-device-width: 700px)
+{
+	.ShareButton_Link
+	{
+		background-image:	url(icons/Share_Plane.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
+}
+
 .ShareButton_Twitter
 {
 	background-image:	url(icons/Share_Twitter.svg);
 	background-size: 2.5vw;
 	xfont-size:		0;
+}
+
+@media (max-device-width: 700px)
+{
+	.ShareButton_Twitter
+	{
+		background-image:	url(icons/Share_Twitter.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
 }
 
 .ShareButton_Facebook
@@ -346,11 +366,31 @@ a:hover
 	xfont-size:		0;
 }
 
+@media (max-device-width: 700px)
+{
+	.ShareButton_Facebook
+	{
+		background-image:	url(icons/Share_Twitter.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
+}
+
 .ShareButton_Linkedin
 {
 	background-image:	url(icons/Share_Linkedin.svg);
 	background-size: 2.5vw;
 	xfont-size:		0;
+}
+
+@media (max-device-width: 700px)
+{
+	.ShareButton_Linkedin
+	{
+		background-image:	url(icons/Share_Twitter.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
 }
 
 
@@ -608,6 +648,20 @@ hr:nth-child(even)
 	xbackground:	blue;
 }
 
+@media (max-device-width: 700px)
+{
+	#OpeningText
+	{
+
+		margin: auto;
+		margin-top: -8vh;
+		margin-bottom: 0; 
+		width:		80%;
+		left:		10%;
+		xbackground:	blue;
+	}
+}
+
 #gac, #crtq, #graham
 {
 	font-size:	0px;	/* hide text*/
@@ -691,11 +745,24 @@ hr:nth-child(even)
 	width:		90%;
 	left:		5%;
 }
+
+@media (max-device-width: 700px)
+{
+	#TeamCredits
+	{
+		position:	absolute;
+		top: 3.5%;
+		width:		90%;
+		left:		5%;
+	}
+}
+
 #AboutDisclaimer
 {
 	position:	absolute;
 	width:		40%;
 	left:		70%;
+	xbackground: red;
 }
 #AboutSharingButtons
 {
@@ -1221,20 +1288,6 @@ hr:nth-child(even)
 }
 
 /* make background bigger on hover*/
-#Solution_Greenpeace:hover span,
-#Solution_SeaSheperd:hover span
-{
-	xbackground:red;
-	background-size:	95%;
-}
-
-#Solution_Greenpeace span,
-#Solution_SeaSheperd span
-{
-	background-size:	80%;
-	background-position:	center;
-}
-
 #Solution_Recycle		{	left:	0vw;	background-image:	url(icons/recycle.svg);	}
 #Solution_Walk			{	left:	14vw;	background-image:	url(icons/bike.svg);	}
 
