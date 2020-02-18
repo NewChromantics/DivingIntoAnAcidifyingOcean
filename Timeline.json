@@ -39,7 +39,7 @@
 
 	"1810":
 	{
-		"Subtitle":"EVERY  <strong>  SECOND  </strong>  BREATH WE TAKE COMES FROM THE OCEAN"
+		"Subtitle":"EVERY  <strong>  SECOND BREATH </strong> WE TAKE COMES FROM THE <strong>OCEAN</strong>"
 	},
 	"1814":
 	{
@@ -67,17 +67,27 @@
 	
 	"1831":
 	{
-		"Subtitle":"THAT’S WHAT HAPPENED SOME 252 MILLION YEARS AGO IN AN EVENT KNOWN AS <strong> <br> “THE GREAT DYING” </strong>"
+		"Subtitle":"252 MILLION YEARS AGO, IN AN EVENT KNOWN AS <strong> <br> “THE GREAT DYING” </strong>"
 	},
 
 	"1836":
 	{
-		"Subtitle":"WHEN A MASSIVE RELEASE OF <strong> CARBON DIOXIDE (CO2) </strong> AND OTHER GASES CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
+		"Subtitle":"A MASSIVE RELEASE OF <strong> CARBON DIOXIDE (CO2) </strong> AND OTHER GASES"
+	},
+
+	"1839":
+	{
+		"Subtitle":"CAUSED EXTREME <strong>GLOBAL WARMING</strong>"
 	},
 
 	"1842":
 	{
-		"Subtitle":"THAT <strong>DEPLETED THE OCEANS OF OXYGEN</strong> AND <strong>ACIDIFIED THE WATERS</strong>"
+		"Subtitle":"DEPLETING THE OCEANS OF <strong> OXYGEN</strong>"
+	},
+
+	"1844":
+	{
+		"Subtitle":"AND <strong>ACIDIFYING</strong> THE WATERS"
 	},
 
 
@@ -87,29 +97,39 @@
 	},
 
 	
-	"1849":
+	"1848":
 	{
-		"Subtitle":"BUT RATHER THAN TAKING TENS OF THOUSANDS OF YEARS, WE ARE DOING THIS <br> IN A LITTLE MORE THAN <strong>ONE SINGLE LIFETIME</strong>"
+		"Subtitle":" AT A SPEED THAT SURPASSESS THAT OF THE GREAT DYING BY <strong> TENS OF THOUSANDS OF YEARS.</strong>"
 	},
 
-	"1853":
+	"1851":
 	{
-		"Subtitle":"IF WE FAIL TO ACT, WHAT WILL HAPPEN TO OCEAN LIFE… <strong>AND TO US?</strong>"
+		"Subtitle":"...BACK THEN <strong>LIFE</strong> RETURNED AFTER <strong>10 MILLION YEARS.</strong>"
+	},
+
+	"1854":
+	{
+		"Subtitle":"...IF WE FAIL TO ACT, WHAT WILL HAPPEN TO <strong>OCEAN LIFE?</strong>"
 	},
 
 	"1856":
 	{
+		"Subtitle":"...AND TO <strong> US?</strong>"
+	},
+
+	"1858":
+	{
 		"Subtitle":""
 	},
 
-	"1857":
+	"1859":
 	{
 		"HintClickAnimalVisible":true
 	},
 
+
 	"1860":
 	{
-		"YearsPerSecond":0.35,
 		"StatsVisible":true,
 		"TimelineVisible":true,
 		"Subtitle":"",
@@ -119,6 +139,11 @@
 		"Stats_Oxygen":0,
 		"Stats_Ph":0,
 		"Subtitle":""
+	},
+
+	"1861":
+	{
+		"YearsPerSecond":0.35
 	},
 
 	"1862":
@@ -162,10 +187,10 @@
 	"2019":
 	{
 		"FogColour":[0,0,0],
-		"Stats_Temp":0.8,
+		"Stats_Temp":1.1,
 		"Stats_Co2":36,
-		"Stats_Oxygen":1.36,
-		"Stats_Ph":30,
+		"Stats_Oxygen":2,
+		"Stats_Ph":26,
 		"DebrisColours": [
 		[0.03,0.25,0.51],
 		[0.03,0.41,0.67],
@@ -244,9 +269,9 @@
 		"YearsPerSecond":0.25,
 		"FogColour":[0.09,0.06,0.02],
 		"Timeline_CameraPosition":[0,-3.60, 20],
-		"Stats_Temp":4,
+		"Stats_Temp":3.3,
 		"Stats_Co2":90,
-		"Stats_Oxygen":27,
+		"Stats_Oxygen":7,
 		"Stats_Ph":170,
 		"DebrisColours": [
 		[0.67,0.00,0.00],
@@ -286,11 +311,21 @@
 		]
 	},
 
-	"2102":
+	"2101":
 	{
-		"YearsPerSecond":0.60,
-		"Subtitle":"IF WE DON’T DRASTICALLY <strong> REDUCE OUR CO2 PRODUCTION </strong>, AND <strong> LIMIT THE PLANET’S TEMPERATURE RISE TO UNDER 1.5°C </strong>, THE WHOLE OCEAN SYSTEM MAY COLLAPSE",
+		"YearsPerSecond":0.9,
+		"Subtitle":"IF WE DON’T DRASTICALLY <strong> REDUCE OUR CO2 PRODUCTION </strong>",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
+	},
+
+	"2103":
+	{
+		"Subtitle":"AND <strong> LIMIT THE PLANET’S TEMPERATURE RISE TO UNDER 1.5°C </strong>"
+	},
+
+	"2107":
+	{
+		"Subtitle":"THE WHOLE OCEAN SYSTEM MAY COLLAPSE"
 	},
 
 	"2109":
@@ -310,7 +345,7 @@
 
 	"2122":
 	{
-		"Subtitle":"WE STILL HAVE THE POWER TO <strong>SLOW DOWN</strong> THIS CATASTROPHE"
+		"Subtitle":"<strong>YOU</strong> STILL HAVE THE POWER TO <strong>SLOW DOWN</strong> THIS CATASTROPHE"
 	},
 
 	"2127":

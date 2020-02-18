@@ -1,7 +1,7 @@
 /* cookie script inserts a script tag, which overrides anything in our css, so need to add !important */
 #cookieBar .cookieBarText, #cookieBar .cookieBarButtons
 {
-	font-size:	2.5vh !important;
+	font-size:	1.5vh !important;
 }
 
 /* stick cookie buttons on their own line */
@@ -37,7 +37,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Solution
 {
 	z-index:	902;
 }
@@ -162,7 +162,7 @@ a:hover
 	position:	absolute;
 	width:		100vw;
 	height:		100vh;
-	background-image:		url(icons/LogoBG.png);
+	background-image:		url(icons/Logo_BG.png);
 	background-repeat:		no-repeat;
 	background-size:		contain;
 	background-position:	center 40%;
@@ -197,8 +197,8 @@ a:hover
 	position:	absolute;
 	width:		100vw;
 	height:		100vh;
-	background-color: black;
-	background-image:		url(icons/Mosaic.jpg);
+	xbackground-color: black;
+	background-image:		url(icons/Mosaic2_opa.png);
 	background-repeat:		no-repeat;
 	background-size:		contain;
 	background-position:	center center;
@@ -265,7 +265,9 @@ a:hover
 
 
 .ShareButton_Link,
-.ShareButton_Twitter
+.ShareButton_Twitter,
+.ShareButton_Facebook,
+.ShareButton_Linkedin
 {
 	display:			block;
 	width:				calc( 3 * var(--ButtonSize) );
@@ -284,10 +286,12 @@ a:hover
 }
 
 #AboutSharingButtons .ShareButton_Link,
-#AboutSharingButtons .ShareButton_Twitter
+#AboutSharingButtons .ShareButton_Twitter,
+#AboutSharingButtons .ShareButton_Facebook,
+#AboutSharingButtons .ShareButton_Linkedin
 {
 	/* vertically center child label */
-	display:			flex;
+	display:			block;
 	justify-content:	left;
 	align-items:		center;
 }
@@ -307,7 +311,9 @@ a:hover
 }
 
 #LogoSharingButtons .ShareButton_Link,
-#LogoSharingButtons .ShareButton_Twitter
+#LogoSharingButtons .ShareButton_Twitter,
+#LogoSharingButtons .ShareButton_Facebook,
+#LogoSharingButtons .ShareButton_Linkedin
 {
 	padding-left:	0px;
 	padding-top:	calc( 1.1 * var(--ButtonSize) );
@@ -321,9 +327,19 @@ a:hover
 
 .ShareButton_Link
 {
-	background-image:	url(icons/Share_Link_Icon.svg);
+	background-image:	url(icons/Share_Plane.svg);
 	background-size: 2.5vw;
 	xfont-size:		0;
+}
+
+@media (max-device-width: 700px)
+{
+	.ShareButton_Link
+	{
+		background-image:	url(icons/Share_Plane.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
 }
 
 .ShareButton_Twitter
@@ -333,10 +349,48 @@ a:hover
 	xfont-size:		0;
 }
 
+@media (max-device-width: 700px)
+{
+	.ShareButton_Twitter
+	{
+		background-image:	url(icons/Share_Twitter.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
+}
+
 .ShareButton_Facebook
 {
 	background-image:	url(icons/Share_Facebook.svg);
+	background-size: 3vw;
 	xfont-size:		0;
+}
+
+@media (max-device-width: 700px)
+{
+	.ShareButton_Facebook
+	{
+		background-image:	url(icons/Share_Twitter.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
+}
+
+.ShareButton_Linkedin
+{
+	background-image:	url(icons/Share_Linkedin.svg);
+	background-size: 2.5vw;
+	xfont-size:		0;
+}
+
+@media (max-device-width: 700px)
+{
+	.ShareButton_Linkedin
+	{
+		background-image:	url(icons/Share_Twitter.svg);
+		background-size: 6.5vw;
+		xfont-size:		0;
+	}
 }
 
 
@@ -354,6 +408,49 @@ a:hover
 	
 	background:		black;
 	border-radius:	50%;	
+}
+
+#JumpButtonIntro
+{
+	xxxvisibility: hidden;
+	display: block;
+	position: absolute;
+	left: 44.5vw;
+	top:	90vh;
+	width: 12vw;
+	height:	5vh;
+	font-size: 1vh;
+	text-align:	center;
+
+	text-decoration:	underline;
+	text-underline-position: under;
+	text-transform: uppercase;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+
+#JumpButtonConclusion
+{
+	visibility: hidden;
+	display: block;
+	position: absolute;
+	left: 44.5vw;
+	top:	90vh;
+	width: 12vw;
+	height:	5vh;
+	font-size: 1vh;
+	text-align:	center;
+
+	text-decoration:	underline;
+	text-underline-position: under;
+	text-transform: uppercase;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
 }
 
 #ContinueLabel
@@ -548,6 +645,7 @@ hr
 	 */
 }
 
+
 hr:nth-child(even)
 {
 	background:	url('icons/wave2.svg') no-repeat top center;
@@ -565,8 +663,27 @@ hr:nth-child(even)
 
 #OpeningText
 {
+
+	margin: auto;
 	margin-top: -6vh;
+	margin-bottom: 0; 
+	width:		80%;
+	left:		10%;
 	xbackground:	blue;
+}
+
+@media (max-device-width: 700px)
+{
+	#OpeningText
+	{
+
+		margin: auto;
+		margin-top: -8vh;
+		margin-bottom: 0; 
+		width:		80%;
+		left:		10%;
+		xbackground:	blue;
+	}
 }
 
 #gac, #crtq, #graham
@@ -649,18 +766,32 @@ hr:nth-child(even)
 {
 	position:	absolute;
 	top: 6%;
-	width:		80%;
-	left:		10%;
+	width:		90%;
+	left:		5%;
 }
+
+@media (max-device-width: 700px)
+{
+	#TeamCredits
+	{
+		position:	absolute;
+		top: 3.5%;
+		width:		90%;
+		left:		5%;
+	}
+}
+
 #AboutDisclaimer
 {
 	position:	absolute;
 	width:		40%;
 	left:		70%;
+	xbackground: red;
 }
 #AboutSharingButtons
 {
 	position:	absolute;
+	top: 		20%;
 	width:		20%;
 	left:		0%;
 }
@@ -668,9 +799,10 @@ hr:nth-child(even)
 #AboutSharingButtons2
 {
 	position:	absolute;
-	top: 		66.7%;
+	top: 		20%;
 	width:		20%;
 	left:		0%;
+
 }
 
 #TheTeamTitle, #DisclaimerTitle
@@ -869,8 +1001,7 @@ hr:nth-child(even)
 
 }
 
-#Hint_ClickAnimal,
-#Hint_DragTimeline
+#Hint_ClickAnimal
 {
 	/* debug
 	visibility:	visible !important;
@@ -881,6 +1012,19 @@ hr:nth-child(even)
 	position:	absolute;
 	width:		100vw;
 	top:		40vh;
+}
+
+#Hint_DragTimeline
+{
+	/* debug
+	visibility:	visible !important;
+	z-index:		9999 !important;
+	background:	magenta !important;
+	/* */
+	display:	block;
+	position:	absolute;
+	width:		100vw;
+	top:		70vh;
 }
 
 
@@ -1167,21 +1311,24 @@ hr:nth-child(even)
 	text-align: center;
 }
 
+/* make background bigger on hover*/
 #Solution_Recycle		{	left:	0vw;	background-image:	url(icons/recycle.svg);	}
 #Solution_Walk			{	left:	14vw;	background-image:	url(icons/bike.svg);	}
-#Solution_CleanEnergy	{	left:	28vw;	background-image:	url(icons/wind.svg);	}
-#Solution_EnergyEff		{	left:	42vw;	background-image:	url(icons/a.svg);	}
+
+#Solution_Greenpeace	{	left:	25vw;	background-image:	url(icons/Greenpeace.svg);	}
+#Solution_SeaSheperd	{	left:	45vw;	background-image:	url(icons/SeaSheperd.svg);	}
+
 #Solution_EatLocal		{	left:	56vw;	background-image:	url(icons/organic.svg);	}
 #Solution_GrowTree		{	left:	70vw;	background-image:	url(icons/plant.svg);	}
 
 #Solution_Tips
 {
 	margin-top:	6vh;
+	margin-bottom: 6vh;
 	xbackground:	green;
 	position:	relative;
 	height:		20vh;
 	font-weight:	bold;
-
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
@@ -1190,13 +1337,12 @@ hr:nth-child(even)
 #Solution_Tips div
 {
 	position:	absolute;
-	top:		0px;
+	xtop:		5vh;
 	width:		14vw;
 	height:		16vh;
 	xbackground-color:	blue;
 	xbackground-image:	url(icons/recycle.svg);
 	background-repeat:	no-repeat;
-	background-size:	25%;
 	background-position:	center bottom;
 }
 
@@ -1213,6 +1359,7 @@ hr:nth-child(even)
 	xbackground-color:	yellow;
 	background-image:	url(icons/world.svg);
 	height:				5vh;
+	margin-top: 5vh;
 	background-repeat:	no-repeat;
 	background-size:	80% contain;
 	background-position:	center bottom;
