@@ -410,19 +410,40 @@ a:hover
 	border-radius:	50%;	
 }
 
-#JumpButton
+#JumpButtonIntro
 {
 	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
-	left: 0.5vw;
-	top: 1.5vh;
+	left: 44.5vw;
+	top:	85vh;
 	width: 12vw;
 	height:	5vh;
-	font-size: 1.5vh;
+	font-size: 1.2vh;
 	text-align:	center;
-	background: url(icons/jump.svg) no-repeat 80% 55%;
-	background-size: 2.5vh;
+
+	text-decoration:	underline;
+	text-underline-position: under;
+	
+	display:			flex;
+	align-items:		center;
+	justify-content:	center;
+}
+
+#JumpButtonConclusion
+{
+	xxxvisibility: hidden;
+	display: block;
+	position: absolute;
+	left: 44.5vw;
+	top:	85vh;
+	width: 12vw;
+	height:	5vh;
+	font-size: 1.2vh;
+	text-align:	center;
+
+	text-decoration:	underline;
+	text-underline-position: under;
 	
 	display:			flex;
 	align-items:		center;
