@@ -424,7 +424,7 @@
 		"Straw":
 	{
 		"Name":		"PLASTIC STRAW",
-		"Description":	"<h1> Colorful and lightweight, Plastic Straws have become a symbol of waste and a feasible way for consumers to feel like they're making a difference by avoiding using them. </h1> <h2> Most Plastic Straws are too lightweight to make it through the mechanical recycling sorter and, even though they could be recycled, they aren't accepted by most recycling programs. So they usually end up in landfills and the ocean. </h2> <h2>In the U.S.A alone, 500 million Straws are used every day, an amount that could fill over 127 school buses each day, or more than 46,400 school buses every year. </h2> <h2> <strong> Plastic Straws don't biodegrade, they just break down into smaller pieces that will always remain on Earth. </strong> </h2>",
+		"Description":	"<h1> Colorful and lightweight, Plastic Straws have become a symbol of waste and a feasible way for consumers to feel like they're making a difference by avoiding using them. </h1> <h2> Most Plastic Straws are too lightweight to make it through the mechanical recycling sorter and, even though they could be recycled, they aren't accepted by most recycling programs. So they usually end up in landfills and the ocean. </h2> <h2> <strong> In the U.S.A alone, 500 million Straws are used every day, an amount that could fill over 127 school buses each day, or more than 46,400 school buses every year. </strong> </h2> <h2> <strong> Plastic Straws don't biodegrade, they just break down into smaller pieces that will always remain on Earth. </strong> </h2>",
 		"Model":	"Models/Straw.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
