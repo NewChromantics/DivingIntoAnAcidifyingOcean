@@ -7,7 +7,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.6,
-        "TriangleScale":0.0016
+        "TriangleScale":0.0016,
+        "ShareText": "Studies show that when Pteropods are placed in water with the same pH levels and CO2 that are projected for the year 2100, their shells start decaying within 48 hours and nearly completely dissolve within 45 days"
 	},
 	
 	"Jellyfish":
@@ -18,7 +19,8 @@
 		"AfterYear":	1950,
 		"Categorys" : [ "Animal_"],
 		"Scale":0.7,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years. It’s remarkable how much these creatures can endure, but how do we keep our oceans from being predominantly full of Jellyfish?"
 
 	},
 
@@ -33,7 +35,8 @@
         "TriangleScale":0.002,
         "ShowAnimal_CameraOffsetX": 1.04,
 		"ShowAnimal_CameraOffsetY": 0.02,
-		"ShowAnimal_CameraOffsetZ": 1.62
+		"ShowAnimal_CameraOffsetZ": 1.62,
+        "ShareText": "Salmons use their sense of smell to detect predators, find food, and make their way back to their spawning grounds. In acidified waters that they lose this ability. They’re also one of the most overfished species and a key element in the Black Bear’s diet"
 
 	},
 	"Cephalopod":
@@ -44,7 +47,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":1,
-        "TriangleScale":0.0028
+        "TriangleScale":0.0028,
+        "ShareText": "When environmental hypoxia – a lack of oxygen in the water – and water acidification pressures are high, a Cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs"
 
 	},
 
@@ -56,7 +60,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "Seagrasses are in decline due to eutrophication – when waters get over-enriched with toxic nutrients like phosphates and nitrates. Other causes of their decline include the mechanical destruction of habitat and intense overfishing"
 
 	},
 
@@ -68,7 +73,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.8,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Acidification is expected to affect Oysters which play a disproportionately important role in ecosystems’ habitats. This leads to shifts in the composition, structure & function of these systems, ultimately affecting goods & services provided to society"
 
 	},
 
@@ -80,7 +86,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "Studies have found that in low pH levels Sea Anemones have an increased metabolism, and when low pH is combined with low oxygen, they encounter metabolic depression"
 
 	},
 	"Larvae":
@@ -91,7 +98,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "When grown in water with the levels of CO2 predicted for the year 2100, Fish Larvae show considerable tissue damage, necrosis, and severe internal damage, resulting in a general decrease in survival rates"
 
 	},
 	"Urchin":
@@ -102,7 +110,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-		"TriangleScale":0.002
+		"TriangleScale":0.002,
+        "ShareText": "Ocean acidification interferes with Sea Urchins’ ability to transform calcium, magnesium, and other minerals from seawater to grow their inner shell, spines & teeth. This leads to changes in their skeletal structures & problems with food digestion"
 
 	},
 	"Cockle":
@@ -113,7 +122,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.6,
-        "TriangleScale":0.0015
+        "TriangleScale":0.0015,
+        "ShareText": "Healthy Aragonite saturation state should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall to below 1Ω, all skeletons and shells will start dissolving"
 
 	},
 	"AlgalBloom":
@@ -124,7 +134,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":0.4,
-        "TriangleScale":0.0015
+        "TriangleScale":0.0015,
+        "ShareText": "With pollution and warming, Cyanobacteria, a photosynthetic bacteria causing some Harmful Algal Bloom, can bloom uncontrolled, die & decompose. Its decomposition consumes oxygen in the water, creating a state of low/no oxygen dissolved: a Dead Zone"
 
 	},
 	"Pollock":
@@ -138,7 +149,8 @@
         "TriangleScale":0.002,
         "ShowAnimal_CameraOffsetX": 0.74,
 		"ShowAnimal_CameraOffsetY": 0.02,
-		"ShowAnimal_CameraOffsetZ": 2.18
+		"ShowAnimal_CameraOffsetZ": 2.18,
+        "ShareText": "The Pollock's ability to detect predators and prey highly decreases in more acidic waters. When young Pollock are exposed to high levels of carbon dioxide and introduced to the scent of what they eat, some even struggle to recognise their food"
 	},
 	"Krill":
 	{
@@ -148,7 +160,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.8,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Krill’s exoskeleton, which contains carbonate, is susceptible to dissolution under the low pH conditions that occur in more acidified ocean waters. Studies show that increased carbon dioxide can disrupt the development of Krill eggs and hatching success"
 
 	},
 	"CorallineAlgae":
@@ -159,7 +172,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":0.6,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Coralline Algae’s cover has been found to be highly correlated with pH, decreasing rapidly below a pH of 7.8 and absent at a pH of 7.0; in lab experiments, they completely dissolve after two weeks at a pH of 7.0"
 
 	},
 	"Nodularia":
@@ -170,7 +184,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.6,
-        "TriangleScale":0.0009
+        "TriangleScale":0.0009,
+        "ShareText": "Ocean acidification has the potential to alter the marine nitrogen cycle which controls much of primary production in the sea. Fertilisers and pollution have overwhelmed the cycle with extra nitrogen, depleting the oceans of oxygen"
 
 	},
 	"Kelp":
@@ -181,7 +196,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.0033
+        "TriangleScale":0.0033,
+        "ShareText": "Kelp requires cold water for growth, and elevated seawater temperatures from global warming are a major threat to Kelp forest survival. Similarly, strong individual storms can wipe out large areas of Kelp forest by ripping the plants from the seafloor"
 
 	},
 	"DeepSeaCrab":
@@ -192,7 +208,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.8,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Deep sea waters are more acidic because of the accumulation of CO2 from the respiration of other deep sea organisms. Adding anthropogenic CO2 makes these waters even more acidic. Deep Sea Crabs don’t recover well from short term exposure to very high CO2 "
 
 	},
 	"Shark":
@@ -206,7 +223,8 @@
         "TriangleScale":0.002,
         "ShowAnimal_CameraOffsetX": 0.96,
 		"ShowAnimal_CameraOffsetY": 0.02,
-		"ShowAnimal_CameraOffsetZ": 1.92
+		"ShowAnimal_CameraOffsetZ": 1.92,
+        "ShareText": "Warming and acidification harms Sharks by increasing energetic demands, decreasing metabolic efficiency, and reducing their ability to locate food & in growth rates. The survival of hatched Shark embryos declines by up to 44% in low pH waters"
 
 	},
 
@@ -218,7 +236,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":0.6,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Research has found that Clownfish loses hearing in slightly more acidic waters, not fleeing threatening noise. Also their sense of smell is affected: they have trouble smelling their way back home and can become fatally attracted to the scent of predators"
 
 	},
 
@@ -233,7 +252,8 @@
         "TriangleScale":0.002,
         "ShowAnimal_CameraOffsetX": 0.48,
 		"ShowAnimal_CameraOffsetY": 0.02,
-		"ShowAnimal_CameraOffsetZ": 2.18
+		"ShowAnimal_CameraOffsetZ": 2.18,
+        "ShareText": "Cobia grows large Otoliths: small ear bones that affect hearing and balance. Acidic waters negatively affect them, especially in larvae, likely altering their ability to detect sound and impairing the ability of the animal to navigate and avoid prey"
 
 	},
 	
@@ -245,7 +265,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "In lower pH levels, the calcification rates in the cold water species Lophelia Pertusa (Deep Sea Coral) are reduced by an average of 30-56%"
 
 	},
 	"BubblegumCoral":
@@ -256,7 +277,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.6,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Like aragonitic Corals, Bubblegum Corals are likely to be affected by changes in calcite saturation with depth – even in the deepest waters there is no escape from acidification"
 
 	},
 	"Lobster":
@@ -267,7 +289,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "For the American Lobster, ocean acidification has devastating effects on the growth and exoskeleton building rates of juveniles. This is particularly tragic as they moult once a month, meaning their protective exoskeleton constantly needs to be rebuilt"
 
 	},
 	"JuvenileBivalve":
@@ -278,7 +301,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.5,
-        "TriangleScale":0.0015
+        "TriangleScale":0.0015,
+        "ShareText": "When immersed in waters of pH 7.6, which is expected by 2100, the shells of Juvenile Bivalve experience massive dissolution within 24h and completely disappear in two weeks"
 
 	},
 	"BlueCrab":
@@ -289,7 +313,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.7,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "According to research, when placed in waters with the level of acidity expected by 2100, juvenile Blue King Crabs show a change in morphology, reduced growth, and increased mortality"
 
 	},
 	"Turtle":
@@ -300,7 +325,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Increasing temperatures can be lethal to Sea Turtles’ eggs if above 33°C. In the Coral reefs where Hawksbills, a kind of Turtle, is found, increased water temperatures and acidification will undermine the ability of Coral Polyps to survive and build reefs"
 
 	},
 	"Tuna":
@@ -314,7 +340,8 @@
         "TriangleScale":0.002,
         "ShowAnimal_CameraOffsetX": 0.74,
 		"ShowAnimal_CameraOffsetY": 0.02,
-		"ShowAnimal_CameraOffsetZ": 1.92
+		"ShowAnimal_CameraOffsetZ": 1.92,
+        "ShareText": "Bluefin Tuna represents only 1% of the global catch, but illegal fishing is pushing it to the brink of extinction. Ocean acidification causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the Yellowfin larvae within a week of exposure"
 
 	},
 	
@@ -329,7 +356,8 @@
         "TriangleScale":0.0005,
 		"ShowAnimal_CameraOffsetX": 0.2,
 		"ShowAnimal_CameraOffsetY": -0.02,
-		"ShowAnimal_CameraOffsetZ": 0.62
+		"ShowAnimal_CameraOffsetZ": 0.62,
+        "ShareText": "The majority of published studies predict that Phytoplankton biomass and/or primary production has declined in the past century, and will decline over the next century"
 	},
 
 	"Menidia":
@@ -340,7 +368,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":1.2,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Studies find that the larval growth of the small Menidia Menidia fish is negatively affected in both reduced oxygen and low pH conditions, both independently and combined"
 
 	},
 
@@ -352,7 +381,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":1,
-        "TriangleScale":0.0015
+        "TriangleScale":0.0015,
+        "ShareText": "Mussels’ Byssal threads in acidified conditions are 40% weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%"
 
 	},
 
@@ -364,7 +394,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
 		"Scale":0.6,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Brachyuran Crabs have been studied in acidified waters with a pH of 7.5, which found that they grow slower and their survival decreases in these conditions"
 
 	},
 		"BrittleStar":
@@ -375,8 +406,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_" ],
         "Scale":0.55,
-        "TriangleScale":0.002
-
+        "TriangleScale":0.002,
+        "ShareText": "With increasing acidification, Brittle Stars & other invertebrates may have more difficulty secreting calcite, affecting their skeletal formation and their ability to survive. Current research suggests Brittle Stars are close to a threshold of dissolution"
 	},
 		"Coral":
 	{
@@ -386,7 +417,8 @@
 		"AfterYear":	1860,
 		"Categorys" : [ "Animal_"],
         "Scale":0.6,
-        "TriangleScale":0.0025
+        "TriangleScale":0.0025,
+        "ShareText": "Another important threat is ocean acidification: research has shown that most Corals grown in low pH conditions highly reduce their calcification rates, especially when in combination with warmer temperatures"
 
 	},
 	
@@ -398,7 +430,8 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "93 to 236 thousand metric tons of Microplastics are estimated in the world’s oceans. Scientists have recently discovered the gravity of the problem. In a recent study, 67% of the scat of 51 wild fur Seals showed an abundance of microfibres"
 
 	},
 		"Bottle":
@@ -408,7 +441,8 @@
 		"Model":	"Models/Bottle.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "1 million Plastic Bottles are bought around the world every minute. This will jump up another 20% by 2021, to about 583.3 billion - extend more than halfway to the Sun -, creating an environmental crisis predicted to be as serious as climate change"
 
 	},
 		"Can":
@@ -418,7 +452,8 @@
 		"Model":	"Models/Can.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "The Aluminium Can can be fully recycled. Yet it is found all over the oceans, injuring some marine animals and being consumed by others who confuse it for food, with deadly effect"
 
 	},
 		"Straw":
@@ -428,7 +463,8 @@
 		"Model":	"Models/Straw.ply",
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "Plastic Straws don't biodegrade, they break down into smaller pieces that will always remain on Earth. In the U.S.A alone, 500 million Straws are used every day, an amount that could fill over 127 school buses each day, or more than 46,400 every year"
 
 	},
 		"Bag":
@@ -442,7 +478,8 @@
         "TriangleScale":0.003,
         "ShowAnimal_CameraOffsetX": 0.8,
 		"ShowAnimal_CameraOffsetY": 0.06,
-		"ShowAnimal_CameraOffsetZ": 1.92
+		"ShowAnimal_CameraOffsetZ": 1.92,
+        "ShareText": "Seabirds, Turtles, Seals, Sea Lions, Whales, Fish and more eat Plastic Bags. The death of one Sperm Whale found in California in the USA in 2008 was caused by 22.2kg of plastic that the Whale had eaten"
 
 	},
 		"Assorbente":
@@ -453,7 +490,8 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "About 10,000 disposable products are used in a woman's reproductive lifetime, a carbon footprint of 5,3kg of CO2 per year for every woman on the planet. Every year, women in the United Kingdom alone produce 27 Eiffel Towers of menstrual waste"
 
 	},
 		"Plastic":
@@ -464,7 +502,8 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "One in three species of marine mammals have been found entangled in marine litter. It's predicted that by 2050, 99% of all species will have ingested plastic"
 
 	},
 		"FoodContainer":
@@ -475,7 +514,8 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "Food Packaging plastic waste accounts for just over 40% of total plastic usage. Over the last 10 years more plastic has been produced than during the whole of the last century"
 
 	},
 		"Cigarette":
@@ -486,7 +526,8 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":0.5,
-        "TriangleScale":0.002
+        "TriangleScale":0.002,
+        "ShareText": "Studies have shown that one Cigarette filter in about two gallons of water is lethal to water fleas, a tiny crustacean found in fresh water and salt water. Wildlife also easily confuses them for food and ingests them"
 
 	},
 		"Net":
@@ -497,7 +538,8 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
-        "TriangleScale":0.003
+        "TriangleScale":0.003,
+        "ShareText": "On average, abandoned fishing nets entangle and harm between 30-40 marine animals per net when left in the ocean"
 
 	}
 	
