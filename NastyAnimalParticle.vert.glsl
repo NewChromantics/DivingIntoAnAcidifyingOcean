@@ -88,6 +88,7 @@ float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
 
 float3 GetInputPositionOffset(float2 uv)
 {
+	return float3(0,0,0);
 	return GetScaledInput( uv, WorldPositions, PositionScalarMinMax );
 }
 
