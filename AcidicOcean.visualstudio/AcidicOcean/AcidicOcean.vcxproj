@@ -193,6 +193,7 @@
     <None Include="..\..\Timeline.json" />
     <None Include="..\..\TurbulencePerlin.frag.glsl" />
     <None Include="..\..\WaterParticle.vert.glsl" />
+    <None Include="..\..\Web\PopWebSharingApi.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

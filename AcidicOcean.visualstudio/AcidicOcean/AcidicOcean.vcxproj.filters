@@ -220,5 +220,8 @@
     <None Include="..\..\PopEngineCommon\Readme.md">
       <Filter>Source Files\PopEngineCommon</Filter>
     </None>
+    <None Include="..\..\Web\PopWebSharingApi.js">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

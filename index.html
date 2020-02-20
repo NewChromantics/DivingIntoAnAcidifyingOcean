@@ -45,6 +45,7 @@
 
 <body>
 	
+	<script src='Web/PopWebSharingApi.js'></script>
 <script>
 	function GetElement(Element)
 	{
@@ -195,10 +196,10 @@
 			</div>
 
 			<div id="AboutSharingButtons">
-					<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
-					
-					<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span></span></a>
+				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#" target="_blank"><span></span></a>
+				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
 					<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
 					<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
 					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
@@ -246,10 +247,10 @@
 		</div>
 
 		<div id="AboutSharingButtons2">
-					<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
-					
-					<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span></span></a>
+				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
+				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
 					<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
 					<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
 					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
@@ -286,10 +287,10 @@
 			<div id="IconHeadphones"> <img src="Web/icons/Headphones.svg"> </div>
 
 			<div id="LogoSharingButtons">
-				<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
-				
-				<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span></span></a>
-				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span></span></a>
+				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
+				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
 				<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
 				<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
 				<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
