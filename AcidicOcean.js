@@ -268,7 +268,7 @@ const TimelineGalleryEndYear		= 2143;
 const TimelineSolutionYear			= 2145;
 const TimelineMaxYear				= 2160;
 
-const Timeline_AllowIntroSkipAfterYear	= 1814;
+const Timeline_AllowIntroSkipAfterYear	= 1812;
 
 Params.TimelineYear = TimelineMinYear;
 Params.YearsPerSecond = 1;
