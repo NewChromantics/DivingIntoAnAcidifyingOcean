@@ -37,7 +37,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #Solution
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start
 {
 	z-index:	902;
 }
@@ -1309,14 +1309,15 @@ hr:nth-child(even)
 }
 
 /* make background bigger on hover*/
-#Solution_Recycle		{	left:	0vw;	background-image:	url(icons/recycle.svg);	}
-#Solution_Walk			{	left:	14vw;	background-image:	url(icons/bike.svg);	}
+#Solution_Recycle		{	left:	2vw;	background-image:	url(icons/recycle.svg);}
+#Solution_Walk			{	left:	16vw;	background-image:	url(icons/bike.svg);	}
+#Solution_Plastic		{	left:	30vw;	background-image:	url(icons/bottle.svg);	}
+#Solution_Fish			{	left:	44vw;	background-image:	url(icons/fish.svg);	}
+#Solution_EatLocal		{	left:	58vw;	background-image:	url(icons/plant.svg);	}
+#Solution_Energy		{	left:	72vw;	background-image:	url(icons/wind.svg);	}
 
 #Solution_Greenpeace	{	left:	25vw;	background-image:	url(icons/Greenpeace.svg);	}
 #Solution_SeaSheperd	{	left:	45vw;	background-image:	url(icons/SeaSheperd.svg);	}
-
-#Solution_EatLocal		{	left:	56vw;	background-image:	url(icons/organic.svg);	}
-#Solution_GrowTree		{	left:	70vw;	background-image:	url(icons/plant.svg);	}
 
 #Solution_Tips
 {
@@ -1324,38 +1325,41 @@ hr:nth-child(even)
 	margin-bottom: 6vh;
 	xbackground:	green;
 	position:	relative;
-	height:		20vh;
+	height:		10vh;
 	font-weight:	bold;
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
+
 }
 
 #Solution_Tips div
 {
 	position:	absolute;
-	xtop:		5vh;
-	width:		14vw;
+	top:		1vh;
+	width:		12vw;
 	height:		16vh;
 	xbackground-color:	blue;
 	xbackground-image:	url(icons/recycle.svg);
 	background-repeat:	no-repeat;
 	background-position:	center bottom;
+	background-size:	60%;
 }
 
 #Solution_WorldText
 {
 	xbackground-color:	magenta;
 	font-style:			italic;
-	top: 25vh;
-	height:				8vh;
+	top: 60vh;
+	height:	12vh;
+
 }
 
 #Solution_WorldIcon
 {
 	xbackground-color:	yellow;
 	background-image:	url(icons/world.svg);
-	height:				5vh;
+	height:	5vh;
 	margin-top: 5vh;
 	background-repeat:	no-repeat;
 	background-size:	80% contain;
