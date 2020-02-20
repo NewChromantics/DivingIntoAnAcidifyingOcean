@@ -150,3 +150,23 @@ function ShareLinkedIn(Element)
 
 	//	DONT prevent default so browser runs the href link click
 }
+
+function HideElementsIfShareLinkUnsupported(ClassName)
+{
+	try
+	{
+		if (IsShareLinkSupported())
+			return;
+
+		const Elements = document.querySelectorAll('.' +ClassName);
+		console.log("ShareLink not supported, hiding elements",Elements);
+		for (let Element of Elements)
+		{
+			Element.style.display = 'none';
+		}
+	}
+	catch (e)
+	{
+		console.error(e);
+	}
+}

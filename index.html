@@ -197,13 +197,10 @@
 
 			<div id="AboutSharingButtons">
 				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
-				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#" target="_blank"><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
 				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
 				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
-					<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
-					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
-				</div>
+			</div>
 			
 		</div>
 		
@@ -251,10 +248,7 @@
 				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
 				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
 				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
-					<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
-					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
-				</div>
+		</div>
 			
 		</div>
 		
@@ -291,9 +285,6 @@
 				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
 				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
 				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
-				<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
-				<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
-				<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
 			</div>
 			
 		</div><!-- Logo screen -->
@@ -425,7 +416,9 @@
 	<script src='PopEngineCommon/PopWebSocketApi.js'></script>
 	<script src='PopEngineCommon/PopWebXrApi.js'></script>
 	<script>
-		
+
+		HideElementsIfShareLinkUnsupported('ShareButton_Link');
+
 		async function Bootup()
 		{
 			const AsyncAssetLoads = Pop.GetExeArguments().includes('AsyncAssets');
