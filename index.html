@@ -44,141 +44,61 @@
 	</script>
 
 <body>
-	
-<script>
-	function GetElement(Element)
-	{
-		if ( typeof Element == 'string' )
-			Element = document.getElementById(Element);
-		if ( !Element )
-			throw "Element not found " + arguments[0];
-		return Element;
-	}
 
-	function ToggleElement(Element)
-	{
-		Element = GetElement(Element);
-		if ( Element.style.visibility != 'visible' )
+	<script src='Web/PopWebSharingApi.js'></script>
+	<script>
+		function GetElement(Element)
+		{
+			if (typeof Element == 'string')
+				Element = document.getElementById(Element);
+			if (!Element)
+				throw "Element not found " + arguments[0];
+			return Element;
+		}
+
+		function ToggleElement(Element)
+		{
+			Element = GetElement(Element);
+			if (Element.style.visibility != 'visible')
+				Element.style.visibility = 'visible';
+			else
+				Element.style.visibility = 'hidden';
+		}
+
+		function ShowElement(Element)
+		{
+			Element = GetElement(Element);
 			Element.style.visibility = 'visible';
-		else
+		}
+
+		function HideElement(Element)
+		{
+			Element = GetElement(Element);
 			Element.style.visibility = 'hidden';
-	}
-
-	function ShowElement(Element)
-	{
-		Element = GetElement(Element);
-		Element.style.visibility = 'visible';
-	}
-
-	function HideElement(Element)
-	{
-		Element = GetElement(Element);
-		Element.style.visibility = 'hidden';
-	}
-
-	function GetShareMeta()
-	{
-		const ShareMeta =
-		{
-			title: document.title,
-			text: '',
-			url: window.location.href,
-		}
-		return ShareMeta;
-	}
-
-	function ShareLink()
-	{
-		const ShareMeta = GetShareMeta();
-		function OldCopyToClipboard()
-		{
-			//	todo: make a text box, copy text, exec command(copy)
-			if ( !document.execCommand )
-				throw "execCommand missing, cannot copy to clipboard";
-			/*
-			//	https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
-			ShareMeta.url.select();
-			ShareMeta.url.setSelectionRange(0, 99999)
-			document.execCommand("copy");
-			alert("Copied " + ShareMeta.url +" to clipboard");
-			 */
-		}
-		
-		function CopyToClipboard(ClickEvent)
-		{
-			//	use clipboard api
-			if ( !navigator.clipboard )
-			{
-				OldCopyToClipboard();
-				return;
-			}
-			
-			function OnCopy()
-			{
-				alert("Copied " + ShareMeta.url +" to clipboard");
-			}
-			function OnError(Error)
-			{
-				console.warn("navigator.clipboard.writeText error ", Error );
-				OldCopyToClipboard();
-			}
-			
-			navigator.clipboard.writeText( ShareMeta.url ).then( OnCopy ).catch( OnError );
-		}
-		
-		//	use native (ie. ios) sharing
-		if ( navigator.share )
-		{
-			navigator.share(ShareMeta).then( console.log ).catch( CopyToClipboard );
-		}
-		else
-		{
-			CopyToClipboard();
 		}
 
-		return false;	//	preventDefault
-	}
-
-	function ShareTweet(Element)
-	{
-		const ShareMeta = GetShareMeta();
-		//	inject text into url for sharing
-		let Url = Element.getAttribute('href');
-		const TwitterTextPrefix = "text=";
-		if ( !Url.includes(TwitterTextPrefix) )
-		{
-			Url += TwitterTextPrefix + ShareMeta.title + " " + ShareMeta.url;
-			Element.setAttribute('href',Url);
-		}
-		//	DONT prevent default
-	}
-
-</script>
-
+	</script>
 	<div id="Ui">
 		<div id="AboutPage">
 			<a id="AboutPageCloseButton" class="IconButton" href="javascript:HideElement('AboutPage');"><span id=AboutPageCloseLabel>Close</span></a>
-			
+
 			<div id="OpeningText">
-				<span id="AboutText1"> Our Blue Planet is in a state of emergency. <br/> The chemistry of seawater is changing faster than ever before with catastrophic consequences across the whole marine food web. <br/> <strong> It's time for us to do something to change this. </strong> <br/><br/> Diving into an Acidic Ocean is part of: <br/><br/><font size="5"> <strong> HEARTBEAT OF THE EARTH </strong> </font> <br/> <em> A global artistic response to climate catastrophe </em> <br/> <br/> Heartbeat of the Earth is a Google Arts & Culture Climate Change project fusing art, science and technology to interpret our planet's future scenarios. <br/> We have invited artists to take one of the key findings from the UN's landmark 2018 IPCC report and data from global scientific institutions, to each create a visualisation that illustrates visions of our bleak future. Through these artistic responses, the aim is to enable communication, engagement and action, exploring pathways and possible solutions to avoid the worst possible scenarios. 
+				<span id="AboutText1"> Our Blue Planet is in a state of emergency. <br /> The chemistry of seawater is changing faster than ever before with catastrophic consequences across the whole marine food web. <br /> <strong> It's time for us to do something to change this. </strong> <br /><br /> Diving into an Acidic Ocean is part of: <br /><br /><font size="5"> <strong> HEARTBEAT OF THE EARTH </strong> </font> <br /> <em> A global artistic response to climate catastrophe </em> <br /> <br /> Heartbeat of the Earth is a Google Arts & Culture Climate Change project fusing art, science and technology to interpret our planet's future scenarios. <br /> We have invited artists to take one of the key findings from the UN's landmark 2018 IPCC report and data from global scientific institutions, to each create a visualisation that illustrates visions of our bleak future. Through these artistic responses, the aim is to enable communication, engagement and action, exploring pathways and possible solutions to avoid the worst possible scenarios.
 			</div>
-			<hr/>
-
-			<div id="AboutText2">A project by</div> <div id="crtq"><a href=https://www.studiocrtq.com/><img src="Web/icons/crtq.svg" alt="Cristina Tarquini">Cristina Tarquini</a></div>
-
+			<hr />
+			<div id="AboutText2">A project by</div> <div id="crtq"><a href=https://www.studiocrtq.com /><img src="Web/icons/crtq.svg" alt="Cristina Tarquini">Cristina Tarquini</a></div>
 			<div id="and">Developed by </div>
-				<div id="graham"><a href=http://www.newchromantics.com><img src="Web/icons/NewChromantics_Logo.svg" alt="The New Chromantics">The New Chromantics</a></div>
-				
-			<div id="AboutText3">in collaboration with</div>
-			
-			<div id="gac"><a href=https://artsandculture.google.com/><img src="Web/icons/gac.svg" alt="Google arts and culture">Google arts and culture</a></div>
-				
-			<!-- <hr/> -->
+			<div id="graham"><a href=http://www.newchromantics.com><img src="Web/icons/NewChromantics_Logo.svg" alt="The New Chromantics">The New Chromantics</a></div>
 
+			<div id="AboutText3">in collaboration with</div>
+
+			<div id="gac"><a href=https://artsandculture.google.com /><img src="Web/icons/gac.svg" alt="Google arts and culture">Google arts and culture</a></div>
+
+			<!-- <hr/> -->
 			<div id="ShareTeamDisclaimer">
-				
-				
-				
+
+
+
 				<div id="AboutDisclaimer">
 					<div id="DisclaimerTitle">
 						<strong> </strong>
@@ -186,222 +106,206 @@
 					<div>
 						<a href="javascript:HideElement('AboutPage');javascript:ShowElement('DisclaimerPage');"> <img src="Web/icons/arrow_right.svg" width="30"> </a>
 					</div>
-					
-					
+
+
 				</div>
-			
-				
-			
+
+
+
+			</div>
+			<div id="AboutSharingButtons">
+				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#" target="_blank"><span></span></a>
+				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
 			</div>
 
-			<div id="AboutSharingButtons">
-					<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
-					
-					<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span></span></a>
-					<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
-					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
-				</div>
-			
 		</div>
-		
+
 		<div id="DisclaimerPage">
 			<a id="DisclaimerPageCloseButton" class="IconButton" href="javascript:HideElement('AboutPage');javascript:HideElement('DisclaimerPage');"><span id=DisclaimerPageCloseLabel>Close</span></a>
-
 			<div id="TeamCredits">
-					<div id="TheTeamTitle">
-						<strong>FOR THE TEAM</strong>
-					</div>
-					<div id="TeamList">
-						<div><span>Concept, Artistic &amp; Creative Direction:</span><strong>Cristina Tarquini </strong></div>
-						<div><span>Development &amp; Effects:</span><strong>Graham Reeves </strong></div>
-						<div><span>Sound Design:</span><strong>Antoine Bertin</strong></div>
-						<div><span>Sound Assistant:</span><strong>Julien Fauconnier</strong></div>
-						<div><span>Sounds created at: </span><strong>Sound Anything</strong> </div>
-						<div><span>3D Modelling &amp; Texturing:</span><strong>Izaak Pardey</strong></div>
-						<div><span>Additional VFX Technical Director:</span><strong>Adam Chabane</strong></div>
-						<div><span>Additional Texture Artist:</span><strong>Florence Green</strong></div>
-						<div><span>Copywriting:</span><strong>Helen Morgan</strong></div>
-						
-						<br/>
-						<div><span>Thanks for the scientific advice to: </span><strong>Frederic Gazeau</strong><br/><br/><br/></div>
-					</div>
-			
-
-			
-			<div><strong>DISCLAIMER</strong></div>
-			<div>
-				Every reasonable effort has been made to make this web experiment as accurate and as interesting as possible, but no warranty or fitness for use has been implied. The artist shall have neither liability nor responsibility to any person, company or entity whatsoever, with respect to any loss, damages or misunderstandings arising from any scientific information or speculation contained in this web experiment and its updates. This web experiment is an expression by the artist to generate discussion, awareness and interest in Climate Change, the data behind it, and consequences of human inaction. Diving into an Acidic Ocean is not intended as a validated source of scientific discoveries or processes.<br/><br/> <br/></a>
-			</div>
-
-			<div><strong>RESOURCES</strong></div>
-			<div>
-				 For this project the datasets used are the following: <br/> <a href=https://sos.noaa.gov/datasets/ocean-acidification-surface-ph> Ocean Acidification: Surface pH </a> by NOAA <br/> <a href=https://sos.noaa.gov/datasets/ocean-atmosphere-co2-exchange/> Ocean-Atmosphere CO2 exchange </a> by NOAA <br/>  <a href=https://library.wmo.int/index.php?lvl=notice_display&id=21626#.XkGWiRNKh24> WMO Provisional Statement on the State of the Global Climate in 2019 </a> by World Meteorological Organization <br/> 
-				 All the resorces concerning the marine life used in this project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp=sharing> here.<br/><br/><br/></a>
-			</div>
-			<div> For <strong> Privacy &amp; Terms </strong> click <a href="https://policies.google.com/privacy"> here </a>
-			</div>
-
-		</div>
-
-		<div id="AboutSharingButtons2">
-					<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
-					
-					<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span></span></a>
-					<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
-					<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
-					<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
+				<div id="TheTeamTitle">
+					<strong>FOR THE TEAM</strong>
 				</div>
-			
+				<div id="TeamList">
+					<div><span>Concept, Artistic &amp; Creative Direction:</span><strong>Cristina Tarquini </strong></div>
+					<div><span>Development &amp; Effects:</span><strong>Graham Reeves </strong></div>
+					<div><span>Sound Design:</span><strong>Antoine Bertin</strong></div>
+					<div><span>Sound Assistant:</span><strong>Julien Fauconnier</strong></div>
+					<div><span>Sounds created at: </span><strong>Sound Anything</strong> </div>
+					<div><span>3D Modelling &amp; Texturing:</span><strong>Izaak Pardey</strong></div>
+					<div><span>Additional VFX Technical Director:</span><strong>Adam Chabane</strong></div>
+					<div><span>Additional Texture Artist:</span><strong>Florence Green</strong></div>
+					<div><span>Copywriting:</span><strong>Helen Morgan</strong></div>
+
+					<br />
+					<div><span>Thanks for the scientific advice to: </span><strong>Frederic Gazeau</strong><br /><br /><br /></div>
+				</div>
+
+
+				<div><strong>DISCLAIMER</strong></div>
+				<div>
+					Every reasonable effort has been made to make this web experiment as accurate and as interesting as possible, but no warranty or fitness for use has been implied. The artist shall have neither liability nor responsibility to any person, company or entity whatsoever, with respect to any loss, damages or misunderstandings arising from any scientific information or speculation contained in this web experiment and its updates. This web experiment is an expression by the artist to generate discussion, awareness and interest in Climate Change, the data behind it, and consequences of human inaction. Diving into an Acidic Ocean is not intended as a validated source of scientific discoveries or processes.<br /><br /> <br /></a>
+				</div>
+				<div><strong>RESOURCES</strong></div>
+				<div>
+					For this project the datasets used are the following: <br /> <a href=https://sos.noaa.gov/datasets/ocean-acidification-surface-ph> Ocean Acidification: Surface pH </a> by NOAA <br /> <a href=https://sos.noaa.gov/datasets/ocean-atmosphere-co2-exchange /> Ocean-Atmosphere CO2 exchange </a> by NOAA <br />  <a href=https://library.wmo.int/index.php?lvl =notice_display&id =21626#.XkGWiRNKh24> WMO Provisional Statement on the State of the Global Climate in 2019 </a> by World Meteorological Organization <br />
+					All the resorces concerning the marine life used in this project can be found <a href=https://docs.google.com/document/d/1jx8Ckdyjy_ex5NcetQAkQm6q8NTQmA1yLXc-5xL9S2A/edit?usp =sharing> here.<br /><br /><br /></a>
+				</div>
+				<div>
+					For <strong> Privacy &amp; Terms </strong> click <a href="https://policies.google.com/privacy"> here </a>
+				</div>
+			</div>
+			<div id="AboutSharingButtons2">
+				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
+				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
+			</div>
+
 		</div>
-		
+
 	</div>
 	<a id="AboutButton" class="IconButton" href="javascript:ToggleElement('AboutPage');javascript:HideElement('DisclaimerPage');"><span id=AboutLabel>About</span></a>
 	<!--<a id="VrButton" class="IconButton"><span id=VrLabel>VR</span></a>-->
-
 	<div id="Hud">
 		<!--
-		
+
 		<div id="IconSubtitles"><img src="Web/icons/Subtitles.svg"></div>
 		 <div id="SubIconText"> Enable subtitles</div>
-		 
+
 		 <div id="IconSubtitles_Enable"><img src="Web/icons/Subtitles_Enable.svg"></div>
 		 <div id="SubIconText">Disable subtitles</div>
 		 <div id="IconSubtitles_Disable"><img src="Web/icons/Subtitles_Disable.svg"></div>
-		
+
 		<span id="Subtitle_Line"> </span>
 		-->
-
 		<!-- move this, only needed for the old opengl logo -->
 		<div id="Logo">
-			
-			
+
+
 			<!--<div id="TitleText">ACIDIC OCEAN</div>-->
 			<div id="LogoBg">&nbsp;</div>
 			<div id="Hint_Start">S T A R T</div>
-			
+
 			<div id="Hint_Headphones"> Use headphones for a better experience </div>
 			<div id="IconHeadphones"> <img src="Web/icons/Headphones.svg"> </div>
-
 			<div id="LogoSharingButtons">
-				<!-- async="" src="https://platform.twitter.com/widgets.js" charset="utf-8" -->
-				
-				<a class=ShareButton_Link onclick="return ShareLink();" href=# ><span></span></a>
-				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="https://twitter.com/intent/tweet?" target="_blank"><span></span></a>
-				<a class=ShareButton_Facebook onclick="return ShareLink();" href=# ><span></span></a>
-				<a class=ShareButton_Linkedin onclick="return ShareLink();" href=# ><span></span></a>
-				<!--<a href=# class=ShareButton id=Share_Facebook><span>Share on Facebook</span></a>-->
+				<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+				<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
+				<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+				<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
 			</div>
-			
+
 		</div><!-- Logo screen -->
 
-		
-		
+
 		<div id="Experience">
 			<div id="PauseButton" class="IconButton">
 				<span id="PauseLabel">Pause</span>
 				<span id="ResumeLabel">Resume</span>
 			</div>
 			<a id="FullscreenButton" class="IconButton"><span id=FullscreenLabel>Fullscreen</span></a>
-
 			<div id="JumpButtonIntro"> Skip Intro </div>
 			<div id="JumpButtonConclusion"> Back to 1860 </div>
-			
-			<div ><span id="SubtitleLabel">Subtitles</span></div>
-			
+
+			<div><span id="SubtitleLabel">Subtitles</span></div>
+
 			<div id="SkipButton" class="IconButton"><span id="SkipLabel">Skip Section</span></div>
 			<div id="NextButton" class="IconButton"><span id="NextLabel">Next</span></div>
 			<div id="PrevButton" class="IconButton"><span id="PrevLabel">Prev</span></div>
-
 			<div id="TimelineContainer">
-				<input type=range id="YearSlider" min=1900 max=2600 oninput="MoveWithThumb(this);" onchange="MoveWithThumb(this);"/>
-				
+				<input type=range id="YearSlider" min=1900 max=2600 oninput="MoveWithThumb(this);" onchange="MoveWithThumb(this);" />
+
 				<div id="YearLabelBox"><div id="YearLabel">XXXX</div></div>
 				<div id="YearStart">1860</div>
 				<div id="YearEnd">2100</div>
 				<script>
-					function MoveWithThumb(Slider,LabelName='YearLabel')
+					function MoveWithThumb(Slider,LabelName = 'YearLabel')
 					{
 						const Label = document.getElementById(LabelName);
-						const SliderTime = (Slider.valueAsNumber-Slider.min) / (Slider.max-Slider.min);
+						const SliderTime = (Slider.valueAsNumber - Slider.min) / (Slider.max - Slider.min);
 						Label.innerText = Slider.value;
-						Label.style.left = (SliderTime*100) + '%';
+						Label.style.left = (SliderTime * 100) + '%';
 					};
 					//	init
 					const Slider = document.getElementById('YearSlider');
 					MoveWithThumb(Slider);
 				</script>
 			</div>
-			
+
 			<div id="Stats">
 				<div id="Stats_Temp"><strong>Planet's temperature increase:</strong> +<span id="Stats_Temp_Label">XXX</span>&deg;C</div>
 				<div id="Stats_Ph"><strong>Oceans' pH acidity increment:</strong> +<span id="Stats_Ph_Label">X</span>% </div>
 				<div id="Stats_Co2"><strong>Oceans' CO2 intake:</strong> +<span id="Stats_Co2_Label">XXX</span>% </div>
 				<div id="Stats_Oxygen"><strong>Oceans' oxygen loss:</strong> -<span id="Stats_Oxygen_Label"> X.X</span>%</div>
-				
+
 			</div>
-		
 
 			<div id="Hint_ClickAnimal"><span>Click on an animal to select it</span></div>
 			<div id="Hint_DragTimeline"><span>Drag the timeline to explore</span></div>
-			
+
 			<div id="AnimalCardContainer">
 				<div id="AnimalCard">
 					<div id="AnimalCard_Title">JELLYFISH</div>
-					
+
 					<div id="AnimalCard_Description">
 						<h1> Bubblegum coral appear comfortable nearly everywhere outside of the tropics – where they can grow between 200 and 1300m of depth. </h1>
 						<h2> Deep-water corals are damaged beep-water corals are damaged beep-water corals are damaged beep-water corals are damaged beep-water corals are damaged beep-water corals are damaged by a number of things: deep-water trawling, long line fishing, and oil and gas exploration. </h2>
 						<h2> Like aragonitic corals, bubblegum corals are likely to be affected by changes in calcite saturation with depth. </h2>
 					</div>
+
+					<div id="AnimalCard_Sharing">
+						<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+						<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
+						<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+						<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
+					</div>
+
 					<div id="Continue">Continue with the experience<span id="ContinueLabel">Continue</span></div>
 				</div>
 				<div id="AnimalView">
 					&nbsp;
 				</div>
 			</div><!--AnimalCardContainer-->
-			
+
 		</div><!-- experience -->
 
-		
-		
+
 		<div id="Mosaic">
 			<div id="MosaicText"> WHAT KIND OF OCEAN DO YOU WANT TO REMEMBER? </div>
 		</div>
-		
+
 		<div id="Solution">
-			
+
 			<div> </div>
 			<div>Here are some associations to take action:</div>
-		
+
 			<div id="Solution_Tips">
 				<!--<div id="Solution_Recycle">Recycle</div>-->
 				<!--<div id="Solution_Walk">Walk &amp; Bike</div>-->
-
-				<div id="Solution_Greenpeace" ><a href=https://www.greenpeace.org/international/>   <br/> <br/></a></div>
-				<div id="Solution_SeaSheperd" ><a href=https://seashepherd.org/>     <br/> <br/> </a> </div>
+				<div id="Solution_Greenpeace"><a href=https://www.greenpeace.org/international />   <br /> <br /></a></div>
+				<div id="Solution_SeaSheperd"><a href=https://seashepherd.org />     <br /> <br /> </a> </div>
 				<!--<div id="Solution_EatLocal">Eat locally-produced<br/>and organic food</div>-->
 				<!--<div id="Solution_GrowTree">Grow trees<br/> &amp; plants</div>-->
 			</div>
-			
-			<div id="Solution_WorldText"><br/><br/> <br/>We have laid eyes only on 5% of the Oceans even though the Earth's surface is made of 71% of water and the oceans hold about 96.5% of all the Earth's water.</div>
+
+			<div id="Solution_WorldText"><br /><br /> <br />We have laid eyes only on 5% of the Oceans even though the Earth's surface is made of 71% of water and the oceans hold about 96.5% of all the Earth's water.</div>
 			<div id="Solution_WorldIcon">&nbsp;</div>
-			
+
 		</div><!-- solution -->
 
-		
-		<div><!-- error page -->
-	
+		<div>
+			<!-- error page -->
+
 			<div id="ErrorImage">&nbsp; </div>
 			<div id="ErrorTextTitle"> SOMETHING WENT WRONG </div>
 			<div id="ErrorText"> error goes here </div>
-
 		</div><!-- error page -->
-		
-	
-		
+
+
+
 		<div id="Debug">
 			<div id="Debug_State">State ?</div>
 			<div id="Debug_AudioMusic">Music: <span id="AudioMusicLabel">Track</span></div>
@@ -415,7 +319,26 @@
 			<div id="Debug_GeometryHeap">Debug_GeometryHeap</div>
 		</div><!-- Debug -->
 	</div>
-	
+	<script>
+		try
+		{
+			if (!IsShareLinkSupported())
+			{
+				console.log("ShareLink not supported, hiding elements");
+				const Elements = document.querySelectorAll('.ShareButton_Link');
+				for (let Element of Elements)
+				{
+					Element.style.display = 'none';
+					Element.style.background = 'red';
+				}
+			}
+		}
+		catch (e)
+		{
+			console.error(e);
+		}
+	</script>
+
 	<script src='PopEngineCommon/PopWebApi.js'></script>
 	<script src='PopEngineCommon/PopApi.js'></script>
 	<script src='PopEngineCommon/PopWebOpenglApi.js'></script>
@@ -424,91 +347,91 @@
 	<script src='PopEngineCommon/PopWebSocketApi.js'></script>
 	<script src='PopEngineCommon/PopWebXrApi.js'></script>
 	<script>
-		
+
 		async function Bootup()
 		{
 			const AsyncAssetLoads = Pop.GetExeArguments().includes('AsyncAssets');
-						
+
 			const PreloadAssets =
-			[
-			 //'ConvertAssets.js',
-			 
-			 'Editor.js',
-			 
-				'bootup.js',
-				'Logo.js',
-				'Actors.js',
-				'AssetManager.js',
-				'AssetImport.js',
-			 'Hud.js',
-			 'ParticleActor.js',
-			 'AudioManager.js',
+				[
+					//'ConvertAssets.js',
 
-			 'Timeline.js',
-			 'Animals.js',
-			 'PopEngineCommon/PopApi.js',
-			 'PopEngineCommon/PopShaderCache.js',
-			 'PopEngineCommon/PopFrameCounter.js',
-			 'PopEngineCommon/PopMath.js',
-			 'PopEngineCommon/ParamsWindow.js',
-			 'PopEngineCommon/PopTexture.js',
-			 
-			 'PopEngineCommon/PopCinema4d.js',
-			 'PopEngineCommon/PopCollada.js',
-			 'PopEngineCommon/PopPly.js',
-			 'PopEngineCommon/PopObj.js',
-			 'PopEngineCommon/PopSvg.js',
+					'Editor.js',
 
-			 'BlitCopy.frag.glsl',
-			 'BlitDebug.frag.glsl',
-			 'PhysicsIteration_UpdateVelocity.frag.glsl',
-			 'PhysicsIteration_UpdatePosition.frag.glsl',
-			 'PhysicsIteration_UpdateVelocityPulse.frag.glsl',
-			 'ParticleTriangles.vert.glsl',
-			 'Quad.vert.glsl',
-			 //'Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl',
-			 //'Logo/Logo_PhysicsIteration_UpdatePosition.frag.glsl',
-			// 'Logo/LogoParticle.frag.glsl',
-			 //'Logo/LogoParticle.vert.glsl',
-			 //'Logo/LogoSdf.frag.glsl',
-			 //'Logo/Logo.svg.json',
-			 
-			 'Animals.json'
-	 
-			];
-			
+					'bootup.js',
+					'Logo.js',
+					'Actors.js',
+					'AssetManager.js',
+					'AssetImport.js',
+					'Hud.js',
+					'ParticleActor.js',
+					'AudioManager.js',
+
+					'Timeline.js',
+					'Animals.js',
+					'PopEngineCommon/PopApi.js',
+					'PopEngineCommon/PopShaderCache.js',
+					'PopEngineCommon/PopFrameCounter.js',
+					'PopEngineCommon/PopMath.js',
+					'PopEngineCommon/ParamsWindow.js',
+					'PopEngineCommon/PopTexture.js',
+
+					'PopEngineCommon/PopCinema4d.js',
+					'PopEngineCommon/PopCollada.js',
+					'PopEngineCommon/PopPly.js',
+					'PopEngineCommon/PopObj.js',
+					'PopEngineCommon/PopSvg.js',
+
+					'BlitCopy.frag.glsl',
+					'BlitDebug.frag.glsl',
+					'PhysicsIteration_UpdateVelocity.frag.glsl',
+					'PhysicsIteration_UpdatePosition.frag.glsl',
+					'PhysicsIteration_UpdateVelocityPulse.frag.glsl',
+					'ParticleTriangles.vert.glsl',
+					'Quad.vert.glsl',
+					//'Logo/Logo_PhysicsIteration_UpdateVelocity.frag.glsl',
+					//'Logo/Logo_PhysicsIteration_UpdatePosition.frag.glsl',
+					// 'Logo/LogoParticle.frag.glsl',
+					//'Logo/LogoParticle.vert.glsl',
+					//'Logo/LogoSdf.frag.glsl',
+					//'Logo/Logo.svg.json',
+
+					'Animals.json'
+
+				];
+
 			//	queue up dependencies for bootup
-			if ( AsyncAssetLoads )
+			if (AsyncAssetLoads)
 			{
 				//	trigger all then wait for them all to finish
 				const AssetPromises = [];
-				const Load = function(Filename)
+				const Load = function (Filename)
 				{
 					const Promise = Pop.AsyncCacheAssetAsString(Filename);
-					AssetPromises.push( Promise );
+					AssetPromises.push(Promise);
 				}
-				PreloadAssets.forEach( Load );
-				await Promise.all( AssetPromises );
+				PreloadAssets.forEach(Load);
+				await Promise.all(AssetPromises);
 			}
 			else
 			{
 				//	await one by one
-				for ( let i=0;	i<PreloadAssets.length;	i++ )
+				for (let i = 0;i < PreloadAssets.length;i++)
 				{
 					const Filename = PreloadAssets[i];
 					await Pop.AsyncCacheAssetAsString(Filename);
 				}
 			}
-			
+
 			//	these need to finish for bootup
 			let Source = await Pop.LoadFileAsStringAsync('bootup.js');
-			Pop.CompileAndRun( Source, 'bootup.js' );
+			Pop.CompileAndRun(Source,'bootup.js');
 		}
 
-		Bootup().then( e=>Pop.Debug("Finished!",e) ).catch( console.error );
-	
+		Bootup().then(e => Pop.Debug("Finished!",e)).catch(console.error);
+
 	</script>
-	
+
 </body>
 <script data-autoload-cookie-consent-bar="true" src="https://www.gstatic.com/brandstudio/kato/cookie_choice_component/cookie_consent_bar.v2.js"></script>
 </html>
