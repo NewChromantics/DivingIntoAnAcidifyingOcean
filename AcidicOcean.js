@@ -864,6 +864,8 @@ function Init()
 	Hud.SubtitleLabel = new Pop.Hud.Label('SubtitleLabel');
 	Hud.SubtitleSkipButton = new Pop.Hud.Button('SkipButton');
 	Hud.SubtitleSkipButton.SetVisible(false);
+	Hud.IntroSkipButton = new Pop.Hud.Button('JumpButtonIntro');
+	Hud.IntroSkipButton.SetVisible(false);
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
@@ -1038,7 +1040,8 @@ Acid.TextTimeline3 = null;
 /* disable hints by making these !true */
 Acid.EnableClickHint = true;
 Acid.EnableDragHint = true;
-
+Acid.UserSkippedIntro = false;
+Acid.UserSkippedText = false;	//	any sub-text in a section
 
 function UpdateFog(FrameDuration)
 {
@@ -1184,11 +1187,18 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 
 	if ( FirstUpdate )
 	{
-		Acid.UserSkippedIntro = false;
+		Acid.UserSkippedText = false;
 		Hud.SubtitleSkipButton.OnClicked = function ()
 		{
-			Acid.UserSkippedIntro = true;
+			Acid.UserSkippedText = true;
 			Hud.SubtitleSkipButton.SetVisible(false);
+		}
+
+		Acid.UserSkippedIntro = false;
+		Hud.IntroSkipButton.OnClicked = function ()
+		{
+			Acid.UserSkippedIntro = true;
+			Hud.IntroSkipButton.SetVisible(false);
 		}
 	}
 	function OnExit()
@@ -1199,15 +1209,21 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 	if (Params.TimelineYear >= Timeline_AllowIntroSkipAfterYear)
 	{
 		Hud.SubtitleSkipButton.SetVisible(true);
+		Hud.IntroSkipButton.SetVisible(true);
 	}
 
 	//	if user skips, go to next keyframe
-	if ( Acid.UserSkippedIntro )
+	if (Acid.UserSkippedText )
 	{
-		Acid.UserSkippedIntro = false;
+		Acid.UserSkippedText = false;
 		const NextYear = GetNextIntroKeyframeYear(Params.TimelineYear,null);
-		Pop.Debug("Acid.UserSkippedIntro skipped to " + NextYear);
+		Pop.Debug("Acid.UserSkippedText skipped to " + NextYear);
 		Params.TimelineYear = NextYear;
+	}
+
+	if (Acid.UserSkippedIntro)
+	{
+		Params.TimelineYear = TimelineBigBangEndYear;
 	}
 	
 	Update( FrameDuration );
@@ -1255,10 +1271,10 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		Acid.UserSkippedIntro = false;
+		Acid.UserSkippedText = false;
 		Hud.SubtitleSkipButton.OnClicked = function ()
 		{
-			Acid.UserSkippedIntro = true;
+			Acid.UserSkippedText = true;
 			Hud.SubtitleSkipButton.SetVisible(false);
 		}
 	}
@@ -1273,16 +1289,21 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	UpdateCameraPos();
 
 	//	if user skips, go to next keyframe
-	if (Acid.UserSkippedIntro)
+	if (Acid.UserSkippedText)
 	{
-		Acid.UserSkippedIntro = false;
+		Acid.UserSkippedText = false;
 		const NextYear = GetNextIntroKeyframeYear(Params.TimelineYear,null);
-		Pop.Debug("Acid.UserSkippedIntro/BigBang skipped to " + NextYear);
+		Pop.Debug("Acid.UserSkippedText/BigBang skipped to " + NextYear);
 		Params.TimelineYear = NextYear;
 	}
 	else
 	{
 		Hud.SubtitleSkipButton.SetVisible(true);
+	}
+
+	if (Acid.UserSkippedIntro)
+	{
+		Params.TimelineYear = TimelineBigBangEndYear;
 	}
 
 	const Actors = {};
@@ -1412,6 +1433,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	if ( FirstUpdate )
 	{
 		Hud.SubtitleSkipButton.SetVisible(false);
+		Hud.IntroSkipButton.SetVisible(false);
 		
 		//	init very first camera pos
 		if ( !Acid.CameraPosition )
