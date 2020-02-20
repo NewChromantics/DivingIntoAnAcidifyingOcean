@@ -360,6 +360,8 @@ Params.Wave3_DirZ = -0.112;
 Params.Wave3_Phase = 0.868;
 Params.Wave3_Sharpness = 4.46;
 
+Params.TextSectionYearTimeScale = 0.1;
+
 Params.InitParamsWindow = function(ParamsWindow)
 {
 	ParamsWindow.AddParam('ScrollFlySpeed',1,300);

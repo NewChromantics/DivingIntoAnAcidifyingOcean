@@ -1042,6 +1042,8 @@ Acid.EnableClickHint = true;
 Acid.EnableDragHint = true;
 Acid.UserSkippedIntro = false;
 Acid.UserSkippedText = false;	//	any sub-text in a section
+Acid.TextTimelineSubTime = null;
+
 
 function UpdateFog(FrameDuration)
 {
@@ -1545,17 +1547,24 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 		Hud.SubtitleSkipButton.SetVisible(true);
 		Hud.SubtitleSkipButton.OnClicked = function()
 		{
-			Acid.UserSkippedTextTimeline = true;
+			Acid.UserSkippedText = true;
 		}
-		Acid.UserSkippedTextTimeline = false;
-		Acid.TextTimelineStateTimeOffset = 0;
+		Acid.UserSkippedText = false;
+		Acid.TextTimelineSubTime = 0;
 	}
 	function OnExit()
 	{
 		Hud.SubtitleSkipButton.SetVisible(false);
 	}
 	
-	Update( FrameDuration );
+	Update(FrameDuration);
+	UpdateYearTime(FrameDuration * Params.TextSectionYearTimeScale);
+
+	//	update subtime
+	if (Params.ExperiencePlaying)
+	{
+		Acid.TextTimelineSubTime += FrameDuration;
+	}
 
 	//	move camera
 	UpdateCameraPos();
@@ -1563,29 +1572,29 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 	//	gr: change these hud things after Update as it updates subtitles/hud for us
 	Hud.Timeline.SetVisible( false );
 
-	const TimelineTime = StateTime + Acid.TextTimelineStateTimeOffset;
+	
 
 	//	update text timeline
-	const Subtitle = TextTimeline.GetUniform(TimelineTime,'Subtitle');
+	const Subtitle = TextTimeline.GetUniform(Acid.TextTimelineSubTime,'Subtitle');
 	Hud.SubtitleLabel.SetValue( Subtitle );
 	Hud.SubtitleLabel.SetVisible( Subtitle.length > 0 );
 
 	//	if user skips, jump to next keyframe in timeline
-	if ( Acid.UserSkippedTextTimeline )
+	if (Acid.UserSkippedText )
 	{
-		Acid.UserSkippedTextTimeline = false;
+		Acid.UserSkippedText = false;
 		const LastTime = TextTimeline.LastKeyframeTime();
-		const NextTime = TextTimeline.GetNextKeyframeTime(TimelineTime,LastTime);
+		const NextTime = TextTimeline.GetNextKeyframeTime(Acid.TextTimelineSubTime,LastTime);
 
 		//	change offset to make next frame appear at the start of next keyframe
-		Acid.TextTimelineStateTimeOffset = NextTime - StateTime;
+		Acid.TextTimelineSubTime = NextTime;
 	}
 	
 	//	exit back to flying
-	if (TimelineTime >= TextTimeline.LastKeyframeTime() )
+	if (Acid.TextTimelineSubTime >= TextTimeline.LastKeyframeTime() )
 	{
 		OnExit();
-		Pop.Debug('exit text timeline Update_TextTimelineX',TimelineTime,StateTime,TextTimeline.LastKeyframeTime());
+		Pop.Debug('exit text timeline Update_TextTimelineX',Acid.TextTimelineSubTime,TextTimeline.LastKeyframeTime());
 		return Acid.State_Fly;
 	}
 	
