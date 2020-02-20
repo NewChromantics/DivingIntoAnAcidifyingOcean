@@ -353,7 +353,6 @@ a:hover
 {
 	.ShareButton_Twitter
 	{
-		background-image:	url(icons/Share_Twitter.svg);
 		background-size: 6.5vw;
 		xfont-size:		0;
 	}
@@ -370,7 +369,6 @@ a:hover
 {
 	.ShareButton_Facebook
 	{
-		background-image:	url(icons/Share_Twitter.svg);
 		background-size: 6.5vw;
 		xfont-size:		0;
 	}
@@ -387,7 +385,6 @@ a:hover
 {
 	.ShareButton_Linkedin
 	{
-		background-image:	url(icons/Share_Twitter.svg);
 		background-size: 6.5vw;
 		xfont-size:		0;
 	}
