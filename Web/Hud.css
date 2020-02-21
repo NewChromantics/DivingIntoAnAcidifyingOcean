@@ -732,6 +732,20 @@ hr:nth-child(even)
 	margin-bottom:	2vh;
 }
 
+@media (max-device-width: 700px)
+{
+	#crtq a
+	{
+		width:			65vw;
+		height:			3vh;
+		xbackground:	lime;
+		display:		inline-block;
+		text-align:		center;
+		margin-top:		1vh;
+		margin-bottom:	2vh;
+	}
+}
+
 /*
 #GoogleAndGraham
 {
@@ -753,6 +767,17 @@ hr:nth-child(even)
 	align-items: center;
 }
 
+@media (max-device-width: 700px)
+{
+	#gac
+	{
+		display:	inline-block;
+		xbackground:	blue;
+		height:		7vh;
+		width:		50vw;
+		align-items: center;
+	}
+}
 
 #graham
 {
@@ -764,6 +789,21 @@ hr:nth-child(even)
 	xxxpadding-bottom: 1vh;
 	align-items:		center;
 	margin-bottom:	0.4vh;
+}
+
+@media (max-device-width: 700px)
+{
+	#graham
+	{
+		display:	inline-block;
+		xbackground:	purple;
+		height:		5vh;
+		width:		50vw;
+		padding-top:	1.5vh;
+		xxxpadding-bottom: 1vh;
+		align-items:		center;
+		margin-bottom:	0.4vh;
+	}
 }
 
 /*
@@ -1744,6 +1784,21 @@ hr:nth-child(even)
 	margin:		0px;
 	padding-top:	11vh;
 	xbackground:	red;
+}
+
+#AboutNext
+{
+	width: 8%;
+	left: 90vw;
+}
+
+@media (max-device-width: 700px)
+{
+	#AboutNext
+	{
+		width: 20%;
+		left: 90vw;
+	}
 }
 
 
