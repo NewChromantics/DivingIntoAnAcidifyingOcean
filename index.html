@@ -77,82 +77,6 @@
 		Element.style.visibility = 'hidden';
 	}
 
-	function GetShareMeta()
-	{
-		const ShareMeta =
-		{
-			title: document.title,
-			text: '',
-			url: window.location.href,
-		}
-		return ShareMeta;
-	}
-
-	function ShareLink()
-	{
-		const ShareMeta = GetShareMeta();
-		function OldCopyToClipboard()
-		{
-			//	todo: make a text box, copy text, exec command(copy)
-			if ( !document.execCommand )
-				throw "execCommand missing, cannot copy to clipboard";
-			/*
-			//	https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
-			ShareMeta.url.select();
-			ShareMeta.url.setSelectionRange(0, 99999)
-			document.execCommand("copy");
-			alert("Copied " + ShareMeta.url +" to clipboard");
-			 */
-		}
-		
-		function CopyToClipboard(ClickEvent)
-		{
-			//	use clipboard api
-			if ( !navigator.clipboard )
-			{
-				OldCopyToClipboard();
-				return;
-			}
-			
-			function OnCopy()
-			{
-				alert("Copied " + ShareMeta.url +" to clipboard");
-			}
-			function OnError(Error)
-			{
-				console.warn("navigator.clipboard.writeText error ", Error );
-				OldCopyToClipboard();
-			}
-			
-			navigator.clipboard.writeText( ShareMeta.url ).then( OnCopy ).catch( OnError );
-		}
-		
-		//	use native (ie. ios) sharing
-		if ( navigator.share )
-		{
-			navigator.share(ShareMeta).then( console.log ).catch( CopyToClipboard );
-		}
-		else
-		{
-			CopyToClipboard();
-		}
-
-		return false;	//	preventDefault
-	}
-
-	function ShareTweet(Element)
-	{
-		const ShareMeta = GetShareMeta();
-		//	inject text into url for sharing
-		let Url = Element.getAttribute('href');
-		const TwitterTextPrefix = "text=";
-		if ( !Url.includes(TwitterTextPrefix) )
-		{
-			Url += TwitterTextPrefix + ShareMeta.title + " " + ShareMeta.url;
-			Element.setAttribute('href',Url);
-		}
-		//	DONT prevent default
-	}
 
 </script>
 
@@ -351,10 +275,10 @@
 					<div id="Continue">Continue with the experience<span id="ContinueLabel">Continue</span></div>
 					
 					<div id="AnimalCardSharingButtons">
-						<a class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
-						<a class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
-						<a class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
-						<a class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
+						<a id="AnimalCardShare_0" class=ShareButton_Link onclick="return ShareLink(this);" href=#><span></span></a>
+						<a id="AnimalCardShare_1" class=ShareButton_Twitter onclick="return ShareTweet(this);" href="#"><span></span></a>
+						<a id="AnimalCardShare_2" class=ShareButton_Facebook onclick="return ShareFacebook(this);" href=#><span></span></a>
+						<a id="AnimalCardShare_3" class=ShareButton_Linkedin onclick="return ShareLinkedIn(this);" href=#><span></span></a>
 					</div>
 				</div>
 				<div id="AnimalView">
