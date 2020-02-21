@@ -318,6 +318,9 @@ a:hover
 	background-position:	top center;
 	display:	block;
 	text-align:		center;
+	pointer-events: auto;
+	cursor: pointer;
+
 }
 
 .ShareButton_Link
@@ -1677,11 +1680,12 @@ hr:nth-child(even)
 }
 
 
-#AnimalCardSharingButtons > *
+#AnimalCardSharingButtons > * 
 {
 	display: inline-block;
+	xxbackground: red;
 }
-
+/*
 #AnimalCard_Sharing {
 	xxxdisplay: none;
 }
@@ -1689,3 +1693,4 @@ hr:nth-child(even)
 {
 	visibility: visible !important;
 }
+	*/x

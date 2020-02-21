@@ -896,7 +896,23 @@ function Init()
 	
 	Hud.Hint_ClickAnimal = new Pop.Hud.Label('Hint_ClickAnimal');
 	Hud.Hint_DragTimeline = new Pop.Hud.Label('Hint_DragTimeline');
-	
+
+	Hud.SetShareText = function(Text)
+	{
+		//	hacky web thing
+		if (!document)
+			return;
+		function SetShareText(ElementName)
+		{
+			const Element = document.getElementById(ElementName);
+			if (!Element)
+				return;
+			Element.ShareText = Text;
+		}
+		const Elements = ['AnimalCardShare_0','AnimalCardShare_1','AnimalCardShare_2','AnimalCardShare_3'];
+		Elements.forEach(SetShareText);
+	}
+
 	
 	//	setup window (we do it here so we know update has happened first)
 	Window.OnRender = Render;
@@ -1077,7 +1093,8 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		Hud.Animal_Card.SetVisible(true);
 		Hud.Animal_Title.SetValue( Animal.Name );
 		Hud.Animal_Description.SetValue( Animal.Description );
-		
+		Hud.SetShareText(Animal.ShareText);
+
 		Acid.SkipSelectedAnimal = false;
 		Hud.Animal_ContinueButton.OnClicked = function()
 		{
