@@ -285,10 +285,7 @@ a:hover
 	align-items:		center;
 }
 
-#AboutSharingButtons .ShareButton_Link,
-#AboutSharingButtons .ShareButton_Twitter,
-#AboutSharingButtons .ShareButton_Facebook,
-#AboutSharingButtons .ShareButton_Linkedin
+#AboutSharingButtons a
 {
 	/* vertically center child label */
 	display:			block;
@@ -310,10 +307,8 @@ a:hover
 	xbackground:	green;
 }
 
-#LogoSharingButtons .ShareButton_Link,
-#LogoSharingButtons .ShareButton_Twitter,
-#LogoSharingButtons .ShareButton_Facebook,
-#LogoSharingButtons .ShareButton_Linkedin
+#LogoSharingButtons > *,
+#AnimalCardSharingButtons > *
 {
 	padding-left:	0px;
 	padding-top:	calc( 1.1 * var(--ButtonSize) );
@@ -1171,7 +1166,7 @@ hr:nth-child(even)
 		height:			85vh;
 	}
 
-	#AnimalCardContainer *
+	#AnimalCardContainer > *
 	{
 		position:		static;
 		width:			auto;
@@ -1682,6 +1677,15 @@ hr:nth-child(even)
 }
 
 
+#AnimalCardSharingButtons > *
+{
+	display: inline-block;
+}
+
 #AnimalCard_Sharing {
 	xxxdisplay: none;
+}
+#Experience 
+{
+	visibility: visible !important;
 }
