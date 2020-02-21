@@ -205,6 +205,24 @@ a:hover
 
 }
 
+@media (max-device-width: 700px)
+{
+	#Mosaic
+	{
+		visibility: hidden;
+		display:	block;
+		position:	absolute;
+		width:		100vw;
+		height:		100vh;
+		xbackground-color: black;
+		background-image:		url(icons/Mosaic_Mobile.png);
+		background-repeat:		no-repeat;
+		background-size:		contain;
+		background-position:	center center;
+
+	}
+}
+
 #MosaicText
 {
 	font-size:		10vmin;
@@ -1317,6 +1335,28 @@ hr:nth-child(even)
 	text-align: center;
 }
 
+@media (max-device-width: 700px)
+{
+	#Solution
+	{
+		overflow:hidden;
+
+		xbackground:	red;
+
+		position:	absolute;
+		padding-top:	10vh;
+		top:		12vh;
+		left:		4vw;
+		width:		94vw;
+		height:		70vh;
+
+		font-weight:	300;
+		font-size:		1.3vh;
+		text-align: center;
+	}
+	
+}
+
 /* make background bigger on hover*/
 #Solution_Recycle		{	left:	2vw;	background-image:	url(icons/recycle.svg);}
 #Solution_Walk			{	left:	16vw;	background-image:	url(icons/bike.svg);	}
@@ -1324,6 +1364,18 @@ hr:nth-child(even)
 #Solution_Fish			{	left:	44vw;	background-image:	url(icons/fish.svg);	}
 #Solution_EatLocal		{	left:	58vw;	background-image:	url(icons/plant.svg);	}
 #Solution_Energy		{	left:	72vw;	background-image:	url(icons/wind.svg);	}
+
+@media (max-device-width: 700px)
+{
+
+	#Solution_Recycle		{	left:	0vw;	background-image:	url(icons/recycle.svg);}
+	#Solution_Walk			{	left:	16vw;	background-image:	url(icons/bike.svg);	}
+	#Solution_Plastic		{	left:	32vw;	background-image:	url(icons/bottle.svg);	}
+	#Solution_Fish			{	left:	48vw;	background-image:	url(icons/fish.svg);	}
+	#Solution_EatLocal		{	left:	66vw;	background-image:	url(icons/plant.svg);	}
+	#Solution_Energy		{	left:	82vw;	background-image:	url(icons/wind.svg);	}
+	
+}
 
 #Solution_Greenpeace	{	left:	25vw;	background-image:	url(icons/Greenpeace.svg);	}
 #Solution_SeaSheperd	{	left:	45vw;	background-image:	url(icons/SeaSheperd.svg);	}
@@ -1353,6 +1405,21 @@ hr:nth-child(even)
 	background-repeat:	no-repeat;
 	background-position:	center bottom;
 	background-size:	60%;
+}
+
+@media (max-device-width: 700px)
+{
+	#Solution_Tips div
+	{
+		position:	absolute;
+		top:		-2vh;
+		width:		12vw;
+		height:		20vh;
+		background-repeat:	no-repeat;
+		background-position:	center bottom;
+		background-size:	100%;
+	}
+	
 }
 
 #Solution_WorldText
