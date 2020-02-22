@@ -8,6 +8,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.6,
         "TriangleScale":0.0016,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Studies show that when Pteropods are placed in water with the same pH levels and CO2 that are projected for the year 2100, their shells start decaying within 48 hours and nearly completely dissolve within 45 days"
 	},
 	
@@ -36,6 +37,7 @@
         "ShowAnimal_CameraOffsetX": 1.04,
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.62,
+		"Animal_PhysicsDuration":35,
         "ShareText": "Salmons use their sense of smell to detect predators, find food, and make their way back to their spawning grounds. In acidified waters that they lose this ability. They’re also one of the most overfished species and a key element in the Black Bear’s diet"
 
 	},
@@ -48,6 +50,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":1,
         "TriangleScale":0.0028,
+        "Animal_PhysicsDuration":35,
         "ShareText": "When environmental hypoxia – a lack of oxygen in the water – and water acidification pressures are high, a Cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs"
 
 	},
@@ -61,6 +64,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
         "TriangleScale":0.003,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Seagrasses are in decline due to eutrophication – when waters get over-enriched with toxic nutrients like phosphates and nitrates. Other causes of their decline include the mechanical destruction of habitat and intense overfishing"
 
 	},
@@ -74,6 +78,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.8,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Acidification is expected to affect Oysters which play a disproportionately important role in ecosystems’ habitats. This leads to shifts in the composition, structure & function of these systems, ultimately affecting goods & services provided to society"
 
 	},
@@ -87,6 +92,7 @@
 		"Categorys" : [ "Animal_"],
 		"Scale":1,
         "TriangleScale":0.003,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Studies have found that in low pH levels Sea Anemones have an increased metabolism, and when low pH is combined with low oxygen, they encounter metabolic depression"
 
 	},
@@ -111,6 +117,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
 		"TriangleScale":0.002,
+		"Animal_PhysicsDuration":40,
         "ShareText": "Ocean acidification interferes with Sea Urchins’ ability to transform calcium, magnesium, and other minerals from seawater to grow their inner shell, spines & teeth. This leads to changes in their skeletal structures & problems with food digestion"
 
 	},
@@ -123,6 +130,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.6,
         "TriangleScale":0.0015,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Healthy Aragonite saturation state should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall to below 1Ω, all skeletons and shells will start dissolving"
 
 	},
@@ -135,6 +143,7 @@
 		"Categorys" : [ "Animal_"],
 		"Scale":0.4,
         "TriangleScale":0.0015,
+        "Animal_PhysicsDuration":35,
         "ShareText": "With pollution and warming, Cyanobacteria, a photosynthetic bacteria causing some Harmful Algal Bloom, can bloom uncontrolled, die & decompose. Its decomposition consumes oxygen in the water, creating a state of low/no oxygen dissolved: a Dead Zone"
 
 	},
@@ -150,6 +159,7 @@
         "ShowAnimal_CameraOffsetX": 0.74,
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 2.18,
+		"Animal_PhysicsDuration":35,
         "ShareText": "The Pollock's ability to detect predators and prey highly decreases in more acidic waters. When young Pollock are exposed to high levels of carbon dioxide and introduced to the scent of what they eat, some even struggle to recognise their food"
 	},
 	"Krill":
@@ -161,6 +171,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":0.8,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":40,
         "ShareText": "Krill’s exoskeleton, which contains carbonate, is susceptible to dissolution under the low pH conditions that occur in more acidified ocean waters. Studies show that increased carbon dioxide can disrupt the development of Krill eggs and hatching success"
 
 	},
@@ -173,6 +184,7 @@
 		"Categorys" : [ "Animal_"],
 		"Scale":0.6,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Coralline Algae’s cover has been found to be highly correlated with pH, decreasing rapidly below a pH of 7.8 and absent at a pH of 7.0; in lab experiments, they completely dissolve after two weeks at a pH of 7.0"
 
 	},
@@ -185,6 +197,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.6,
         "TriangleScale":0.0009,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Ocean acidification has the potential to alter the marine nitrogen cycle which controls much of primary production in the sea. Fertilisers and pollution have overwhelmed the cycle with extra nitrogen, depleting the oceans of oxygen"
 
 	},
@@ -197,6 +210,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
         "TriangleScale":0.0033,
+        "Animal_PhysicsDuration":40,
         "ShareText": "Kelp requires cold water for growth, and elevated seawater temperatures from global warming are a major threat to Kelp forest survival. Similarly, strong individual storms can wipe out large areas of Kelp forest by ripping the plants from the seafloor"
 
 	},
@@ -209,6 +223,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.8,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Deep sea waters are more acidic because of the accumulation of CO2 from the respiration of other deep sea organisms. Adding anthropogenic CO2 makes these waters even more acidic. Deep Sea Crabs don’t recover well from short term exposure to very high CO2 "
 
 	},
@@ -224,6 +239,7 @@
         "ShowAnimal_CameraOffsetX": 0.96,
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.92,
+		"Animal_PhysicsDuration":30,
         "ShareText": "Warming and acidification harms Sharks by increasing energetic demands, decreasing metabolic efficiency, and reducing their ability to locate food & in growth rates. The survival of hatched Shark embryos declines by up to 44% in low pH waters"
 
 	},
@@ -237,6 +253,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":0.6,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":40,
         "ShareText": "Research has found that Clownfish loses hearing in slightly more acidic waters, not fleeing threatening noise. Also their sense of smell is affected: they have trouble smelling their way back home and can become fatally attracted to the scent of predators"
 
 	},
@@ -253,6 +270,7 @@
         "ShowAnimal_CameraOffsetX": 0.48,
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 2.18,
+		"Animal_PhysicsDuration":35,
         "ShareText": "Cobia grows large Otoliths: small ear bones that affect hearing and balance. Acidic waters negatively affect them, especially in larvae, likely altering their ability to detect sound and impairing the ability of the animal to navigate and avoid prey"
 
 	},
@@ -266,6 +284,7 @@
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "In lower pH levels, the calcification rates in the cold water species Lophelia Pertusa (Deep Sea Coral) are reduced by an average of 30-56%"
 
 	},
@@ -278,6 +297,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.6,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":30,
         "ShareText": "Like aragonitic Corals, Bubblegum Corals are likely to be affected by changes in calcite saturation with depth – even in the deepest waters there is no escape from acidification"
 
 	},
@@ -290,6 +310,7 @@
 		"Categorys" : [ "Animal_" ],
         "Scale":1,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":30,
         "ShareText": "For the American Lobster, ocean acidification has devastating effects on the growth and exoskeleton building rates of juveniles. This is particularly tragic as they moult once a month, meaning their protective exoskeleton constantly needs to be rebuilt"
 
 	},
@@ -302,6 +323,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.5,
         "TriangleScale":0.0015,
+        "Animal_PhysicsDuration":30,
         "ShareText": "When immersed in waters of pH 7.6, which is expected by 2100, the shells of Juvenile Bivalve experience massive dissolution within 24h and completely disappear in two weeks"
 
 	},
@@ -314,6 +336,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":0.7,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":30,
         "ShareText": "According to research, when placed in waters with the level of acidity expected by 2100, juvenile Blue King Crabs show a change in morphology, reduced growth, and increased mortality"
 
 	},
@@ -326,6 +349,7 @@
 		"Categorys" : [ "Animal_" ],
 		"Scale":1,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Increasing temperatures can be lethal to Sea Turtles’ eggs if above 33°C. In the Coral reefs where Hawksbills, a kind of Turtle, is found, increased water temperatures and acidification will undermine the ability of Coral Polyps to survive and build reefs"
 
 	},
@@ -341,6 +365,7 @@
         "ShowAnimal_CameraOffsetX": 0.74,
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.92,
+		"Animal_PhysicsDuration":30,
         "ShareText": "Bluefin Tuna represents only 1% of the global catch, but illegal fishing is pushing it to the brink of extinction. Ocean acidification causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the Yellowfin larvae within a week of exposure"
 
 	},
@@ -357,6 +382,7 @@
 		"ShowAnimal_CameraOffsetX": 0.2,
 		"ShowAnimal_CameraOffsetY": -0.02,
 		"ShowAnimal_CameraOffsetZ": 0.62,
+		"Animal_PhysicsDuration":35,
         "ShareText": "The majority of published studies predict that Phytoplankton biomass and/or primary production has declined in the past century, and will decline over the next century"
 	},
 
@@ -369,6 +395,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_"],
 		"Scale":1.2,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Studies find that the larval growth of the small Menidia Menidia fish is negatively affected in both reduced oxygen and low pH conditions, both independently and combined"
 
 	},
@@ -382,6 +409,7 @@
 		"Categorys" : [ "Animal_", "Bigbang_" ],
 		"Scale":1,
         "TriangleScale":0.0015,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Mussels’ Byssal threads in acidified conditions are 40% weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%"
 
 	},
@@ -395,6 +423,7 @@
 		"Categorys" : [ "Animal_"],
 		"Scale":0.6,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Brachyuran Crabs have been studied in acidified waters with a pH of 7.5, which found that they grow slower and their survival decreases in these conditions"
 
 	},
@@ -407,6 +436,7 @@
 		"Categorys" : [ "Animal_" ],
         "Scale":0.55,
         "TriangleScale":0.002,
+        "Animal_PhysicsDuration":30,
         "ShareText": "With increasing acidification, Brittle Stars & other invertebrates may have more difficulty secreting calcite, affecting their skeletal formation and their ability to survive. Current research suggests Brittle Stars are close to a threshold of dissolution"
 	},
 		"Coral":
@@ -418,6 +448,7 @@
 		"Categorys" : [ "Animal_"],
         "Scale":0.6,
         "TriangleScale":0.0025,
+        "Animal_PhysicsDuration":35,
         "ShareText": "Another important threat is ocean acidification: research has shown that most Corals grown in low pH conditions highly reduce their calcification rates, especially when in combination with warmer temperatures"
 
 	},
