@@ -458,7 +458,7 @@ a:hover
 
 #JumpButtonConclusion
 {
-	visibility: hidden;
+	xvisibility: hidden;
 	display: block;
 	position: absolute;
 	left: 44.5vw;
@@ -475,6 +475,18 @@ a:hover
 	display:			flex;
 	align-items:		center;
 	justify-content:	center;
+}
+
+@media (max-device-width: 700px)
+{
+	#JumpButtonConclusion
+	{
+		width:	22vmin;
+		height:	10vmin;
+		left: 38vw;
+		font-size: 1.4vh;
+	}
+	
 }
 
 #ContinueLabel
