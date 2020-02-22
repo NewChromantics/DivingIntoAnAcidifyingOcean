@@ -335,30 +335,30 @@ Params.XrTrackTimelineCamera = true;
 Params.DebugCameraClearColour = false;
 
 Params.Water_TimeScale = 1.565;
-Params.Water_PosScale = 350;
+Params.Water_PosScale = 385;
 Params.Water_HeightScale = 0.33;
 Params.Water_SidewaysScalar = 0.05;
 
-Params.Wave1_Amplitude = 1.0;
-Params.Wave1_Frequency = 0.2;
-Params.Wave1_DirX = -0.808;
-Params.Wave1_DirZ = -0.604;
-Params.Wave1_Phase = 0.57;
-Params.Wave1_Sharpness = 0.51;
+Params.Wave1_Amplitude = 1.27;
+Params.Wave1_Frequency = 0.15;
+Params.Wave1_DirX = -0.65;
+Params.Wave1_DirZ = -0.54;
+Params.Wave1_Phase = 0.71;
+Params.Wave1_Sharpness = 0.325;
 
-Params.Wave2_Amplitude = 0.71;
-Params.Wave2_Frequency = 0.32;
+Params.Wave2_Amplitude = 0.6;
+Params.Wave2_Frequency = 0.42;
 Params.Wave2_DirX = 0.21;
 Params.Wave2_DirZ = 0.7;
 Params.Wave2_Phase = 1.4;
 Params.Wave2_Sharpness = 2.74;
 
-Params.Wave3_Amplitude = 0.406;
+Params.Wave3_Amplitude = 0.438;
 Params.Wave3_Frequency = 1.498;
 Params.Wave3_DirX = -0.3;
 Params.Wave3_DirZ = -0.112;
 Params.Wave3_Phase = 0.868;
-Params.Wave3_Sharpness = 4.46;
+Params.Wave3_Sharpness = 1.32;
 
 Params.TextSectionYearTimeScale = 0.1;
 
