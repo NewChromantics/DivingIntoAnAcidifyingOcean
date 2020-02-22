@@ -1818,6 +1818,7 @@ hr:nth-child(even)
 {
 	display: inline-block;
 	xxbackground: red;
+	float: right;
 }
 /*
 #AnimalCard_Sharing {
