@@ -259,6 +259,7 @@ const TimelineMinYear				= 1808;
 const TimelineBigBangStartYear		= 1826;
 const TimelineBigBangEndYear		= 1857;
 const TimelineMinInteractiveYear	= 1859;
+const TimelineSkipIntroToYear		= TimelineMinInteractiveYear;
 const Timeline_Text1_Year			= 1881;
 const Timeline_Text2_Year			= 1910;
 const Timeline_Text3_Year			= 2020;
@@ -268,10 +269,12 @@ const TimelineGalleryEndYear		= 2143;
 const TimelineSolutionYear			= 2145;
 const TimelineMaxYear				= 2160;
 
-const Timeline_AllowIntroSkipAfterYear	= 1812;
+const Timeline_AllowIntroSkipAfterYear = 1812;
+const TimelineRewindToYear = 1808;
 
 Params.TimelineYear = TimelineMinYear;
 Params.YearsPerSecond = 1;
+Params.RewindYearsPerSecond = 35;
 Params.CustomYearsPerSecond = false;
 Params.ShowAnimal_ExplodeSecs = 0;
 Params.ShowAnimal_Duration = 600;
@@ -868,6 +871,11 @@ function Init()
 	Hud.IntroSkipButton.SetVisible(false);
 	Hud.RestartButton = new Pop.Hud.Button('JumpButtonConclusion');
 	Hud.RestartButton.SetVisible(false);
+	Hud.RestartButton.OnClicked = function ()
+	{
+		Acid.UserRestarted = true;
+	}
+
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
@@ -886,7 +894,10 @@ function Init()
 	Hud.Stats_Co2 = new Pop.Hud.Label('Stats_Co2_Label');
 	Hud.Stats_Oxygen = new Pop.Hud.Label('Stats_Oxygen_Label');
 	Hud.Stats_Ph = new Pop.Hud.Label('Stats_Ph_Label');
-		
+
+	Hud.Mosaic = new Pop.Hud.Label('Mosaic');
+	Hud.Solution = new Pop.Hud.Label('Solution');
+
 	Hud.Animal_Card = new Pop.Hud.Label('AnimalCard');
 	Hud.Animal_Title = new Pop.Hud.Label('AnimalCard_Title');
 	Hud.Animal_Description = new Pop.Hud.Label('AnimalCard_Description');
@@ -1014,6 +1025,7 @@ Acid.State_BigBang = 'BigBang';
 Acid.State_Outro = 'Outro';
 Acid.State_Gallery = 'Gallery';
 Acid.State_Solution = 'Solution';
+Acid.State_RewindToStart = 'RewindToStart';
 Acid.StateMap =
 {
 	'Intro':		Update_Intro,
@@ -1022,10 +1034,11 @@ Acid.StateMap =
 	'TextTimeline1':	Update_TextTimeline1,
 	'TextTimeline2':	Update_TextTimeline2,
 	'TextTimeline3':	Update_TextTimeline3,
-	'ShowAnimal':	Update_ShowAnimal,
-	'Outro':		Update_Outro,
-	'Gallery':		Update_Gallery,
-	'Solution':		Update_Solution
+	'ShowAnimal':		Update_ShowAnimal,
+	'Outro':			Update_Outro,
+	'Gallery':			Update_Gallery,
+	'Solution':			Update_Solution,
+	'RewindToStart':	Update_RewindToStart
 };
 Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, true );
 Acid.SelectedActor = null;
@@ -1060,6 +1073,7 @@ Acid.EnableClickHint = true;
 Acid.EnableDragHint = true;
 Acid.UserSkippedIntro = false;
 Acid.UserSkippedText = false;	//	any sub-text in a section
+Acid.UserRestarted = false;
 Acid.TextTimelineSubTime = null;
 
 
@@ -1188,7 +1202,8 @@ const IntroSkipYears =
 		1846,
 		1849,
 		1853,
-		TimelineBigBangEndYear	//	57
+		TimelineBigBangEndYear,	//	57
+		TimelineSkipIntroToYear
 	];
 function GetNextIntroKeyframeYear(ThisYear,NoNextYearResult=undefined)
 {
@@ -1378,7 +1393,7 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		
+		Hud.RestartButton.SetVisible(true);
 	}
 	
 	Update( FrameDuration );
@@ -1392,7 +1407,13 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 	Acid.SelectedActor = null;
 	
 	UpdateFog(FrameDuration);
-	
+
+	if (Acid.UserRestarted)
+	{
+		Acid.UserRestarted = false;
+		return Acid.State_RewindToStart;
+	}
+
 	//	fly until we reach end of timeline
 	if ( Params.TimelineYear >= TimelineGalleryStartYear )
 		return Acid.State_Gallery;
@@ -1405,11 +1426,7 @@ function Update_Gallery(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		if ( !Hud.Gallery )
-		{
-			Hud.Gallery = new Pop.Hud.Label('Mosaic');
-		}
-		Hud.Gallery.SetVisible(true);
+		Hud.RestartButton.SetVisible(true);
 	}
 	
 	Update( FrameDuration );
@@ -1423,11 +1440,11 @@ function Update_Gallery(FirstUpdate,FrameDuration,StateTime)
 	Acid.SelectedActor = null;
 	
 	UpdateFog(FrameDuration);
-	
-	//	hide hud after end of gallery year
-	if ( Params.TimelineYear >= TimelineGalleryEndYear )
+
+	if (Acid.UserRestarted)
 	{
-		Hud.Gallery.SetVisible(false);
+		Acid.UserRestarted = false;
+		return Acid.State_RewindToStart;
 	}
 	
 	if ( Params.TimelineYear >= TimelineSolutionYear )
@@ -1441,13 +1458,39 @@ function Update_Solution(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		const SolutionHud = new Pop.Hud.Label('Solution');
-		SolutionHud.SetVisible(true);
+		Hud.RestartButton.SetVisible(true);
 	}
 	
 	Update(FrameDuration);
+
+	if (Acid.UserRestarted)
+	{
+		Acid.UserRestarted = false;
+		return Acid.State_RewindToStart;
+	}
 }
 
+
+function Update_RewindToStart(FirstUpdate,FrameDuration,StateTime)
+{
+	if (FirstUpdate)
+	{
+		Hud.RestartButton.SetVisible(false);
+	}
+
+	Params.TimelineYear -= Params.RewindYearsPerSecond * FrameDuration;
+
+	Update(FrameDuration);
+	UpdateFog(FrameDuration);
+	UpdateCameraPos();
+	
+	if (Params.TimelineYear <= TimelineRewindToYear)
+	{
+		Hud
+		Params.TimelineYear = TimelineRewindToYear;
+		return Acid.State_Intro;
+	}
+}
 
 function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
@@ -1455,6 +1498,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	{
 		Hud.SubtitleSkipButton.SetVisible(false);
 		Hud.IntroSkipButton.SetVisible(false);
+		Hud.RestartButton.SetVisible(true);
 		
 		//	init very first camera pos
 		if ( !Acid.CameraPosition )
@@ -1482,7 +1526,11 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 	//	move camera
 	UpdateCameraPos();
 	
-	
+	if (Acid.UserRestarted)
+	{
+		Acid.UserRestarted = false;
+		return Acid.State_RewindToStart;
+	}
 
 	function GetActorFromUv(uv)
 	{
@@ -1757,11 +1805,15 @@ function Update(FrameDurationSecs)
 	const Hint_ClickAnimal_Visible = Timeline.GetUniform( Time, 'HintClickAnimalVisible' );
 	const Hint_DragTimeline_Visible = Timeline.GetUniform( Time, 'HintDragTimelineVisible' );
 	const Stats_Visible = Timeline.GetUniform( Time, 'StatsVisible' );
-	const Timeline_Visible = Timeline.GetUniform( Time, 'TimelineVisible' );
+	const Timeline_Visible = Timeline.GetUniform(Time,'TimelineVisible');
+	const Mosaic_Visible = Timeline.GetUniform(Time,'MosaicVisible');
+	const Solution_Visible = Timeline.GetUniform(Time,'SolutionVisible');
 	Hud.Hint_ClickAnimal.SetVisible( Hint_ClickAnimal_Visible && Acid.EnableClickHint );
 	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible && Acid.EnableDragHint );
 	Hud.Stats.SetVisible( Stats_Visible );
-	Hud.Timeline.SetVisible( Timeline_Visible );
+	Hud.Timeline.SetVisible(Timeline_Visible);
+	Hud.Mosaic.SetVisible(Mosaic_Visible);
+	Hud.Solution.SetVisible(Solution_Visible);
 
 	//	update colours
 	if ( !Params.CustomiseWaterColours )

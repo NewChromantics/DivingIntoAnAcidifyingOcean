@@ -7,6 +7,8 @@
 		"HintDragTimelineVisible":false,
 		"StatsVisible":false,
 		"TimelineVisible":false,
+		"MosaicVisible": false,
+		"SolutionVisible": false,
 		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
 		"Music2": "",
 		"Subtitle":"",
@@ -355,5 +357,18 @@
 	"2130":
 	{
 		"Subtitle":" "
+	"2133":
+	{
+		"MosaicVisible": true
+	},
+
+	"2143":
+	{
+		"MosaicVisible": false
+	},
+
+	"2145":
+	{
+		"SolutionVisible": true
 	}
 }
