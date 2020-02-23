@@ -442,10 +442,23 @@ a:hover
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
 	pointer-events:auto;
 	cursor:pointer;
 }
+
+@media (max-device-width: 700px)
+{
+	#JumpButtonIntro,
+    #JumpButtonConclusion 
+	{
+		width:	22vmin;
+		height:	10vmin;
+		left: 38vw;
+		font-size: 1.4vh;
+        top: 80vh;
+	}
+}
+	
 
 @media (max-device-width: 700px)
 {
@@ -455,6 +468,7 @@ a:hover
 		height: 10vmin;
 		left: 38vw;
 		font-size: 1.4vh;
+		top:	80vh;
 	}
 	
 }
