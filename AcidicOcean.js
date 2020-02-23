@@ -1492,6 +1492,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
+		Acid.UserSetYear = null;
 		Hud.SubtitleSkipButton.SetVisible(false);
 		Hud.IntroSkipButton.SetVisible(false);
 		Hud.RestartButton.SetVisible(true);
