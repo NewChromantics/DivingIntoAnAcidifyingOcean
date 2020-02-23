@@ -37,10 +37,37 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start
-{
-	z-index:	902;
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start {
+	z-index: 902;
 }
+
+
+@keyframes ButtonReveal {
+	from {
+		transform-origin: 50% 100%;
+		transform: scale(1) rotateY(90deg);
+	}
+
+	to {
+		transform-origin: 50% 100%;
+		transform: scale(1) rotateY(0deg);
+	}
+}
+
+/* Any element with a button reveal animation  */
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start,
+.ShareButton_Link,
+.ShareButton_Twitter,
+.ShareButton_Facebook,
+.ShareButton_Linkedin {
+	animation: ButtonReveal 0.2s linear both;
+	-webkit-animation-play-state: paused;
+	-moz-animation-play-state: paused;
+	-o-animation-play-state: paused;
+	animation-play-state: paused;
+	animation-delay: 2s;
+}
+
 
 #AboutPage, #DisclaimerPage
 {

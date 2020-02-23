@@ -854,6 +854,13 @@ function Init()
 	//	init very first camera pos
 	Acid.CameraPosition = GetTimelineCameraPosition( Params.TimelineYear );
 
+	//	retrigger anims
+	Hud.AboutButton = new Pop.Hud.Button('AboutButton');
+	Hud.AboutButton.SetVisible(true);
+	Hud.FullscreenButton = new Pop.Hud.Button('FullscreenButton');
+	Hud.FullscreenButton.SetVisible(false);
+	Hud.FullscreenButton.SetVisible(Window.IsFullscreenSupported());
+
 	Hud.PauseButton = new Pop.Hud.Button('PauseButton');
 	Hud.PauseButton.SetVisible(true);
 	Hud.PauseButton.OnClicked = function(){	OnPauseToggle(Hud.PauseButton);	};
@@ -866,6 +873,8 @@ function Init()
 	Hud.SubtitleSkipButton.SetVisible(false);
 	Hud.IntroSkipButton = new Pop.Hud.Button('JumpButtonIntro');
 	Hud.IntroSkipButton.SetVisible(false);
+	Hud.RestartButton = new Pop.Hud.Button('JumpButtonConclusion');
+	Hud.RestartButton.SetVisible(false);
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');

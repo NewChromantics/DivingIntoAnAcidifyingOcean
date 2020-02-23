@@ -3,6 +3,19 @@
 //	but for now, lets just mess with the DOM
 Pop.Hud = {};
 
+function EnableCssAnimation(Element)
+{
+	if (!Element)
+		return;
+
+	//	restart
+	const AnimName = Element.style.animationName;
+	Element.style.animationName = '';
+	Element.style.animationName = AnimName;
+	Element.style.animationPlayState = "running";
+	Pop.Debug("Enabling anim on ",Element);
+}
+
 Pop.Hud.Slider = function()
 {
 	Pop.Gui.Slider.apply( this, arguments );
@@ -22,6 +35,8 @@ Pop.Hud.Slider = function()
 		//this.Element.style.display = Visible ? 'initial' : 'none';
 		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
 		this.VisibleCache = Visible;
+		if (Visible)
+			EnableCssAnimation(this.Element);
 	}
 }
 
@@ -44,6 +59,8 @@ Pop.Hud.Label = function()
 		//this.Element.style.display = Visible ? 'initial' : 'none';
 		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
 		this.VisibleCache = Visible;
+		if (Visible)
+			EnableCssAnimation(this.Element);
 	}
 }
 
@@ -75,6 +92,8 @@ Pop.Hud.Button = function()
 		//this.Element.style.display = Visible ? 'initial' : 'none';
 		this.Element.style.visibility = Visible ? 'inherit' : 'hidden';
 		this.VisibleCache = Visible;
+		if (Visible)
+			EnableCssAnimation(this.Element);
 	}
 }
 
