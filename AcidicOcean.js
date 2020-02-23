@@ -866,6 +866,8 @@ function Init()
 	Hud.SubtitleSkipButton.SetVisible(false);
 	Hud.IntroSkipButton = new Pop.Hud.Button('JumpButtonIntro');
 	Hud.IntroSkipButton.SetVisible(false);
+	Hud.RestartButton = new Pop.Hud.Button('JumpButtonConclusion');
+	Hud.RestartButton.SetVisible(false);
 	Hud.Timeline = new Pop.Hud.Label('TimelineContainer');
 	Hud.YearLabel = new Pop.Hud.Label('YearLabel');
 	Hud.YearSlider = new Pop.Hud.Slider('YearSlider');
