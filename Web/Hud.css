@@ -1,3 +1,4 @@
+
 /* cookie script inserts a script tag, which overrides anything in our css, so need to add !important */
 #cookieBar .cookieBarText, #cookieBar .cookieBarButtons
 {
@@ -1798,4 +1799,19 @@ hr:nth-child(even)
 {
 	visibility: visible !important;
 }
-	*/x
+	*/
+
+
+#AppErrorBox {
+	z-index: 999;
+	background: black;
+	opacity: 0.9;
+	position: absolute;
+	width: 70vmin;
+	height: 50vmin;
+	padding: 10vmin;
+	margin: auto auto;
+	border: #c00 dashed 1px;
+	visibility: hidden;
+	overflow: scroll;
+}

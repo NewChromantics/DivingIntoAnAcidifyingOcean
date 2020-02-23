@@ -341,8 +341,15 @@
 			<div id="Debug_TextureHeap">Debug_MemoryUsage</div>
 			<div id="Debug_GeometryHeap">Debug_GeometryHeap</div>
 		</div><!-- Debug -->
+
+		
 	</div>
-	
+	<!-- on UC browser (maybe others) the visibility style doesnt apply until other stuff has loaded, so add it directly here -->
+	<div style="visibility:hidden" id="AppErrorBox">
+		Unspecified Error.
+	</div>
+
+
 	<script src='PopEngineCommon/PopWebApi.js'></script>
 	<script src='PopEngineCommon/PopApi.js'></script>
 	<script src='PopEngineCommon/PopWebOpenglApi.js'></script>
@@ -428,13 +435,32 @@
 					await Pop.AsyncCacheAssetAsString(Filename);
 				}
 			}
-			
+
 			//	these need to finish for bootup
 			let Source = await Pop.LoadFileAsStringAsync('bootup.js');
 			Pop.CompileAndRun( Source, 'bootup.js' );
 		}
 
-		Bootup().then( e=>Pop.Debug("Finished!",e) ).catch( console.error );
+		function ShowError(Error)
+		{
+			if (typeof Error != 'string')
+				Error = JSON.stringify(Error);
+			const ErrorElement = GetElement('AppErrorBox');
+			ShowElement(ErrorElement);
+			ErrorElement.innerText += '\n';
+			ErrorElement.innerText += Error;
+			ErrorElement.style.visibility = "visible";
+		}
+
+		//	gr: this isn't having an effect, so disabled for now
+		/*
+		//	catch global errors
+		window.addEventListener('error',ShowError);
+		window.onerror = ShowError;
+		//window.onerror = function (message,source,lineno,colno,error) { };
+		*/
+
+		Bootup().then( e=>Pop.Debug("Finished!",e) ).catch( ShowError );
 	
 	</script>
 	
