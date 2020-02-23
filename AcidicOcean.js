@@ -1393,7 +1393,6 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		Hud.RestartButton.SetVisible(true);
 	}
 	
 	Update( FrameDuration );
@@ -1426,7 +1425,6 @@ function Update_Gallery(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		Hud.RestartButton.SetVisible(true);
 	}
 	
 	Update( FrameDuration );
@@ -1458,7 +1456,6 @@ function Update_Solution(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
-		Hud.RestartButton.SetVisible(true);
 	}
 	
 	Update(FrameDuration);
@@ -1475,7 +1472,6 @@ function Update_RewindToStart(FirstUpdate,FrameDuration,StateTime)
 {
 	if (FirstUpdate)
 	{
-		Hud.RestartButton.SetVisible(false);
 	}
 
 	Params.TimelineYear -= Params.RewindYearsPerSecond * FrameDuration;
@@ -1808,12 +1804,14 @@ function Update(FrameDurationSecs)
 	const Timeline_Visible = Timeline.GetUniform(Time,'TimelineVisible');
 	const Mosaic_Visible = Timeline.GetUniform(Time,'MosaicVisible');
 	const Solution_Visible = Timeline.GetUniform(Time,'SolutionVisible');
+	const RestartButtonVisible = Timeline.GetUniform(Time,'RestartButtonVisible');
 	Hud.Hint_ClickAnimal.SetVisible( Hint_ClickAnimal_Visible && Acid.EnableClickHint );
 	Hud.Hint_DragTimeline.SetVisible( Hint_DragTimeline_Visible && Acid.EnableDragHint );
 	Hud.Stats.SetVisible( Stats_Visible );
 	Hud.Timeline.SetVisible(Timeline_Visible);
 	Hud.Mosaic.SetVisible(Mosaic_Visible);
 	Hud.Solution.SetVisible(Solution_Visible);
+	Hud.RestartButton.SetVisible(RestartButtonVisible);
 
 	//	update colours
 	if ( !Params.CustomiseWaterColours )

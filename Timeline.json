@@ -9,6 +9,7 @@
 		"TimelineVisible":false,
 		"MosaicVisible": false,
 		"SolutionVisible": false,
+		"RestartButtonVisible": false,
 		"Music": "Audio/AcidicOcean_AMB_Intro.mp3",
 		"Music2": "",
 		"Subtitle":"",
@@ -262,7 +263,8 @@
 	{
 		"StatsVisible":false,
 		"TimelineVisible":false,
-		"Subtitle":""
+		"Subtitle":"",
+		"RestartButtonVisible": true
 	},
 	
 	"2100":
