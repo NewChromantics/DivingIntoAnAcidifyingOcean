@@ -423,71 +423,41 @@ a:hover
 	border-radius:	50%;	
 }
 
-#JumpButtonIntro
+#JumpButtonIntro,
+#JumpButtonConclusion 
 {
 	xxxvisibility: hidden;
 	display: block;
 	position: absolute;
 	left: 44.5vw;
-	top:	90vh;
+	top: 90vh;
 	width: 12vw;
-	height:	5vh;
+	height: 5vh;
 	font-size: 1vh;
-	text-align:	center;
-
-	text-decoration:	underline;
+	text-align: center;
+	text-decoration: underline;
 	text-underline-position: under;
 	text-transform: uppercase;
-	
-	display:			flex;
-	align-items:		center;
-	justify-content:	center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	pointer-events:auto;
+	cursor:pointer;
 }
 
 @media (max-device-width: 700px)
 {
-	#JumpButtonIntro
+	#JumpButtonIntro, #JumpButtonConclusion 
 	{
-		width:	22vmin;
-		height:	10vmin;
+		width: 22vmin;
+		height: 10vmin;
 		left: 38vw;
 		font-size: 1.4vh;
 	}
 	
 }
 
-#JumpButtonConclusion
-{
-	xvisibility: hidden;
-	display: block;
-	position: absolute;
-	left: 44.5vw;
-	top:	90vh;
-	width: 12vw;
-	height:	5vh;
-	font-size: 1vh;
-	text-align:	center;
-
-	text-decoration:	underline;
-	text-underline-position: under;
-	text-transform: uppercase;
-	
-	display:			flex;
-	align-items:		center;
-	justify-content:	center;
-}
-
-@media (max-device-width: 700px)
-{
-	#JumpButtonConclusion
-	{
-		width:	22vmin;
-		height:	10vmin;
-		left: 38vw;
-		font-size: 1.4vh;
-	}
-	
-}
 
 #ContinueLabel
 {
