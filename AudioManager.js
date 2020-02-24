@@ -321,6 +321,8 @@ Pop.Audio.Sound = class
 	Play(Play=true)
 	{
 		Pop.Debug("Audio Play/Pause",Play);
+		if (!this.AudioPlayer)
+			return;
 		if ( Play )
 			this.AudioPlayer.play();
 		else
@@ -413,6 +415,19 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetMusic2Volu
 	this.Music2Queue = [];
 	this.VoiceQueue = [];
 	this.Sounds = [];
+	this.Enabled = true;
+
+
+	this.ForegroundCheckLoop = async function ()
+	{
+		while (true)
+		{
+			const IsForeground = await Pop.WebApi.WaitForForegroundChange();
+			Pop.Debug("Audio manager foreground change",IsForeground);
+			this.Enable(IsForeground);
+		}
+	}
+	this.ForegroundCheckLoop().then().catch(Pop.Debug);
 
 	this.UpdateAudioQueue = function(Queue,FadeStep)
 	{
@@ -445,7 +460,22 @@ const TAudioManager = function(GetCrossFadeDuration,GetMusicVolume,GetMusic2Volu
 		}
 		this.Sounds.forEach( UpdateSound );
 	}
-	
+
+	this.Enable = function (NewEnabled)
+	{
+		//	change enabled state
+		if (this.Enabled == NewEnabled)
+			return;
+
+		//	super hacky
+		function EnableSound(Sound)
+		{
+			Sound.Play(NewEnabled);
+		}
+		this.Sounds.forEach(EnableSound);
+		this.Enabled = NewEnabled;
+	}
+
 	this.Update = function(Timestep)
 	{
 		const FadeSecs = GetCrossFadeDuration();

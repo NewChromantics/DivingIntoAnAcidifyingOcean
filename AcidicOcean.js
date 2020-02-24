@@ -1763,6 +1763,12 @@ function Update(FrameDurationSecs)
 		const CurrentVoice = Timeline.GetUniform( Time, 'VoiceAudio' );
 		AudioManager.PlayVoice( CurrentVoice );
 	}
+
+	//	disable audio if in the background (assuming we even got an update
+	let AudioEnabled = Window.IsForeground();
+	AudioEnabled = AudioEnabled && Params.ExperiencePlaying;
+	//AudioManager.Enable(AudioEnabled);
+
 	AudioManager.Update( FrameDurationSecs );
 
 	//	update some stuff from timeline
