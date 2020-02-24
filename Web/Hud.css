@@ -38,7 +38,7 @@ a:hover
 }
 
 /* Stuff that needs to be on top of the experience */
-#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start
+#Ui, #PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #Hint_Start, #ExperienceSharingButton
 {
 	z-index:	902;
 }
@@ -408,7 +408,7 @@ a:hover
 }
 
 
-#PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton
+#PauseButton, #AboutButton, #FullscreenButton, #VrButton, #SkipButton, #PrevButton, #NextButton, #ExperienceSharingButton
 {
 	/* these are for debug really, as they dont react until they're setup with style in code */
 	xxpointer-events:	auto;
@@ -498,6 +498,12 @@ a:hover
 	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) +var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
 }
 
+#ExperienceSharingButton
+{
+	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
+}
+
+
 #VrButton
 {
 	top:			calc( var(--ButtonMargin) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) + var(--ButtonMargin) + var(--ButtonSize) );
@@ -542,7 +548,8 @@ a:hover
 #SkipButton:hover span,
 #PrevButton:hover span,
 #NextButton:hover span,
-#Continue:hover span
+#Continue:hover span,
+#ExperienceSharingButton:hover span
 {
 	xbackground:red;
 	background-size:	auto 65%;
@@ -557,7 +564,8 @@ a:hover
 #SkipButton span,
 #PrevButton span,
 #NextButton span,
-#Continue span
+#Continue span,
+#ExperienceSharingButton span
 {
 	background-size:		auto 55%;
 	background-position:	center;
@@ -572,7 +580,8 @@ a:hover
 #DisclaimerPageCloseLabel,
 #SkipLabel,
 #PrevLabel,
-#NextLabel
+#NextLabel,
+#ExperienceSharingButton
 {
 	/*xbackground-size:	auto 50%;	 this needs to go in the selector with hover */
 	font-size:		0;		/* Hide the text */
