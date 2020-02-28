@@ -744,7 +744,7 @@ hr:nth-child(even)
 {
 	#crtq a
 	{
-		width:			65vw;
+		width:			50vw;
 		height:			3vh;
 		xbackground:	lime;
 		display:		inline-block;
@@ -782,7 +782,7 @@ hr:nth-child(even)
 		display:	inline-block;
 		xbackground:	blue;
 		height:		7vh;
-		width:		50vw;
+		width:		40vw;
 		align-items: center;
 	}
 }
@@ -806,7 +806,7 @@ hr:nth-child(even)
 		display:	inline-block;
 		xbackground:	purple;
 		height:		5vh;
-		width:		50vw;
+		width:		40vw;
 		padding-top:	1.5vh;
 		xxxpadding-bottom: 1vh;
 		align-items:		center;
@@ -1793,6 +1793,7 @@ hr:nth-child(even)
 	padding-top:	11vh;
 	xbackground:	red;
 }
+
 
 #AboutNext
 {
