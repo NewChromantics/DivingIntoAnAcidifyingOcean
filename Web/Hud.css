@@ -442,8 +442,10 @@ a:hover
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	pointer-events:auto;
-	cursor:pointer;
+	pointer-events: auto;
+	cursor: pointer;
+
+	font-weight: bold;
 }
 
 @media (max-device-width: 700px)
