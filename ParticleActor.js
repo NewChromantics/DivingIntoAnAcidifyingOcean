@@ -633,49 +633,6 @@ function UpdateNoiseTexture(RenderTarget,Texture,NoiseShader,Time)
 
 
 
-function RenderScene(Scene,RenderTarget,Camera,Time,GlobalUniforms)
-{
-	const Viewport = RenderTarget.GetRenderTargetRect();
-	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
-	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
-	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
-	
-	GlobalUniforms['WorldToCameraTransform'] = WorldToCameraTransform;
-	GlobalUniforms['CameraToWorldTransform'] = CameraToWorldTransform;
-	GlobalUniforms['CameraProjectionTransform'] = CameraProjectionTransform;
-	
-	function RenderSceneActor(Actor,ActorIndex)
-	{
-		const SetGlobalUniforms = function(Shader)
-		{
-			function SetUniforms(Array)
-			{
-				function SetUniform(Key)
-				{
-					const Value = Array[Key];
-					Shader.SetUniform( Key, Value );
-				}
-				Object.keys( Array ).forEach( SetUniform );
-			}
-			SetUniforms( GlobalUniforms );
-			SetUniforms( Actor.Uniforms );
-		}
-		
-		//try
-		{
-			Actor.Render( RenderTarget, ActorIndex, SetGlobalUniforms, Time );
-		}
-		/*
-		 catch(e)
-		 {
-		 Pop.Debug("Error rendering actor", Actor.Name,e);
-		 }
-		 */
-	}
-	
-	Scene.forEach( RenderSceneActor );
-}
-
 
 
 function InitDebugHud(Hud)

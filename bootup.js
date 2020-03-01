@@ -1,4 +1,6 @@
-Pop.Include = function(Filename)
+Pop.Debug("Booting up");
+
+Pop.Include = function (Filename)
 {
 	let Source = Pop.LoadFileAsString(Filename);
 	return Pop.CompileAndRun( Source, Filename );
@@ -14,6 +16,8 @@ SetGlobal.call(this);
 
 
 Pop.Include('PopEngineCommon/PopApi.js');
+if (!Pop.StateMachine)
+	Pop.Include('StateMachine.js');
 
 //	debug, make desktop act like mobile
 if ( Pop.GetExeArguments().includes('NoFloatTarget') )
@@ -69,121 +73,12 @@ if ( !IsDebugEnabled() )
 	DebugHud.SetVisible(false);
 }
 
-Pop.StateMachine = function(StateMap,InitialState,ErrorState,AutoUpdate=true)
-{
-	//	void processing jumps
-	const MaxFrameDurationMs = 3/60;
-	
-	//	if no initial state, use first key (is this in declaration order in every engine?)
-	InitialState = InitialState || Object.keys(StateMap)[0];
-	ErrorState = ErrorState || InitialState;
-
-	this.CurrentState = InitialState;
-	this.CurrentStateStartTime = false;		//	when false, it hasnt been called
-	this.LastUpdateTime = Pop.GetTimeNowMs();
-	
-	this.LoopIteration = function(Paused)
-	{
-		Paused = (Paused === true);
-		const Now = Pop.GetTimeNowMs();
-		const ElapsedMs = Now - this.LastUpdateTime;
-		let NextState = null;
-		//try
-		{
-			//	get state to execute
-			const UpdateFuncName = StateMap[this.CurrentState];
-			const UpdateFunc = (typeof UpdateFuncName == 'function') ? UpdateFuncName : Pop.Global[UpdateFuncName];
-			const FirstUpdate = (this.CurrentStateStartTime===false);
-			
-			//	if we're paused, we need to discount this from the state time
-			//	maybe we need to switch to incrementing state time, but this suffers from drift
-			if ( Paused )
-			{
-				this.CurrentStateStartTime += ElapsedMs;
-			}
-			const StateTime = FirstUpdate ? 0 : Now - this.CurrentStateStartTime;
-			this.LastUpdateTime = Pop.GetTimeNowMs();
-			
-			const FrameDuration = Math.min( MaxFrameDurationMs, Paused ? 0 : ElapsedMs / 1000 );
-			const FrameStateTime = StateTime / 1000;
-			
-			
-			//	do update
-			NextState = UpdateFunc( FirstUpdate, FrameDuration, FrameStateTime );
-			
-			if ( FirstUpdate )
-				this.CurrentStateStartTime = Now;
-			
-			//	change state
-			if ( typeof NextState == 'string' )
-			{
-				this.CurrentState = NextState;
-				this.CurrentStateStartTime = false;
-			}
-			
-			return FrameDuration;
-		}
-		/*
-		catch(e)
-		{
-			Pop.Debug("State Machine Update error in " + this.CurrentState + ": "+ e);
-			this.CurrentState = ErrorState;
-			this.CurrentStateTime = false;
-			//	re throw errors for now
-			throw e;
-		}
-		*/
-	}
-	
-	this.LoopAsync = async function()
-	{
-		while ( true )
-		{
-			await Pop.Yield( 1000/60 );
-			this.LoopIteration();
-		}
-	}
-	
-	this.LoopAnimation = function()
-	{
-		if ( !Pop.Global.requestAnimationFrame )
-			throw "requestAnimationFrame not supported";
-		let Update = function()
-		{
-			this.LoopIteration();
-			Pop.Global.requestAnimationFrame( Update );
-		}.bind(this);
-		Pop.Global.requestAnimationFrame( Update );
-	}
-	
-	this.OnStateMachineFinished = function()
-	{
-		Pop.Debug('OnStateMachineFinished');
-	}
-	
-	this.OnStateMachineError = function(Error)
-	{
-		Pop.Debug('OnStateMachineError',Error);
-	}
-
-	
-	if ( AutoUpdate && !Pop.Global.requestAnimationFrame )
-		AutoUpdate = 'Async';
-	
-	if ( AutoUpdate == 'Async' )
-	{
-		this.LoopAsync().then( this.OnStateMachineFinished ).catch( this.OnStateMachineError );
-	}
-	else if ( AutoUpdate )
-	{
-		this.LoopAnimation();
-	}
-}
 
 //	use a string if function not yet declared
 let StateMap =
 {
-	'Logo':	'Update_Logo',
+	'Logo': 'Update_Logo',
+	'LogoScene':'Update_LogoScene',
 	'Experience': 'Update_Experience',
 	'Editor': 'Update_Editor',
 	'AssetServer': Update_AssetServer
@@ -208,7 +103,7 @@ function OnKeyPress(Key)
 Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //	window now shared from bootup
-const Window = new Pop.Opengl.Window("Tarqunder the sea");
+const Window = new Pop.Opengl.Window("The Acidifying Ocean");
 Window.RenderFrameCounter = new Pop.FrameCounter();
 
 Window.OnRender = BootupRender;
@@ -518,4 +413,48 @@ if (Pop.GetExeArguments().includes('HttpServer'))
 	HttpServer = new Pop.Http.Server(8001);
 	const Url = 'http://' + HttpServer.GetAddress()[0].Address;
 	Pop.ShowWebPage(Url);
+}
+
+
+function RenderScene(Scene,RenderTarget,Camera,Time,GlobalUniforms)
+{
+	const Viewport = RenderTarget.GetRenderTargetRect();
+	const CameraProjectionTransform = Camera.GetProjectionMatrix(Viewport);
+	const WorldToCameraTransform = Camera.GetWorldToCameraMatrix();
+	const CameraToWorldTransform = Math.MatrixInverse4x4(WorldToCameraTransform);
+
+	GlobalUniforms['WorldToCameraTransform'] = WorldToCameraTransform;
+	GlobalUniforms['CameraToWorldTransform'] = CameraToWorldTransform;
+	GlobalUniforms['CameraProjectionTransform'] = CameraProjectionTransform;
+
+	function RenderSceneActor(Actor,ActorIndex)
+	{
+		const SetGlobalUniforms = function (Shader)
+		{
+			function SetUniforms(Array)
+			{
+				function SetUniform(Key)
+				{
+					const Value = Array[Key];
+					Shader.SetUniform(Key,Value);
+				}
+				Object.keys(Array).forEach(SetUniform);
+			}
+			SetUniforms(GlobalUniforms);
+			SetUniforms(Actor.Uniforms);
+		}
+
+		//try
+		{
+			Actor.Render(RenderTarget,ActorIndex,SetGlobalUniforms,Time);
+		}
+		/*
+		 catch(e)
+		 {
+		 Pop.Debug("Error rendering actor", Actor.Name,e);
+		 }
+		 */
+	}
+
+	Scene.forEach(RenderSceneActor);
 }

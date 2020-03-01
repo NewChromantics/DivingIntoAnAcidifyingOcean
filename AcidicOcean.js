@@ -928,7 +928,7 @@ function Init()
 
 	
 	//	setup window (we do it here so we know update has happened first)
-	Window.OnRender = Render;
+	Window.OnRender = AcidScene_Render;
 
 	Window.OnMouseUp = function () { };
 
@@ -1987,7 +1987,7 @@ function FlushGpuJobs(RenderTarget)
 }
 
 
-function Render(RenderTarget,RenderCamera)
+function AcidScene_Render(RenderTarget,RenderCamera)
 {
 	const RenderContext = RenderTarget.GetRenderContext();
 	const IsXrRender = (RenderCamera != null);

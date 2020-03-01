@@ -149,6 +149,7 @@
     <None Include="..\..\Hud.js" />
     <None Include="..\..\index.html" />
     <None Include="..\..\Logo.js" />
+    <None Include="..\..\LogoScene.js" />
     <None Include="..\..\NastyAnimalParticle.frag.glsl" />
     <None Include="..\..\NastyAnimalParticle.vert.glsl" />
     <None Include="..\..\ParticleActor.js" />
@@ -186,6 +187,7 @@
     <None Include="..\..\PopEngineCommon\Readme.md" />
     <None Include="..\..\Quad.vert.glsl" />
     <None Include="..\..\Readme.md" />
+    <None Include="..\..\StateMachine.js" />
     <None Include="..\..\TextTimeline1.json" />
     <None Include="..\..\TextTimeline2.json" />
     <None Include="..\..\TextTimeline3.json" />

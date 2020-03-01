@@ -223,5 +223,11 @@
     <None Include="..\..\Web\PopWebSharingApi.js">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\..\StateMachine.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\LogoScene.js">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
