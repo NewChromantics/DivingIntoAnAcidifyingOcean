@@ -35,7 +35,6 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 //const IgnoreActorPrefixs = ['Camera_Spline',DebrisActorPrefix,NastyAnimalPrefix,BigBangAnimalPrefix,NormalAnimalPrefix];
 
 
-var OceanColourTexture = new Pop.Image('OceanColourTexture');
 var DebrisColourTexture = new Pop.Image('DebrisColourTexture');
 var SwirlColourTexture = new Pop.Image('SwirlColourTexture');
 
@@ -519,10 +518,6 @@ function LoadCameraScene(Filename)
 			else if ( IsWaterActor )
 			{
 				SetupAnimalTextureBufferActor.call( Actor, GetWaterMeta().Filename, GetWaterMeta );
-			}
-			else if ( IsOceanActor )
-			{
-				SetupAnimalTextureBufferActor.call( Actor, GetOceanMeta().Filename, GetOceanMeta );
 			}
 			else if ( IsDebrisActor )
 			{

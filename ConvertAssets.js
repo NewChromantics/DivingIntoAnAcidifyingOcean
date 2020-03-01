@@ -80,12 +80,7 @@ const GeoFiles =
 [
  	'Logo/Logo.svg.json',
 ];
-for ( let i=1;	i<=96;	i++ )
-{
-	let Filename = 'Ocean/ocean_pts.' + (''+i).padStart(4,'0');
-	Filename += '.ply';
-	GeoFiles.push(Filename);
-}
+
 
 const SceneFiles =
 [
@@ -95,12 +90,7 @@ const SceneFiles =
 const TextureBufferFiles =
 [
 ];
-for ( let i=1;	i<=96;	i++ )
-{
-	let Filename = 'Ocean/ocean_pts.' + (''+i).padStart(4,'0');
-	Filename += '.ply';
-	TextureBufferFiles.push(Filename);
-}
+
 TextureBufferFiles.push( ...GetAnimalAssetFilenames() );
 
 Pop.Debug( TextureBufferFiles );

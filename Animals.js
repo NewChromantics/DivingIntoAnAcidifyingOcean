@@ -91,15 +91,6 @@ const DustActorPrefix = 'Dust';
 const AnimalActorPrefixs = [NormalAnimalPrefix,BigBangAnimalPrefix,NastyAnimalPrefix];
 
 
-//	store this somewhere else so the preload matches
-var OceanFilenames = [];
-let LoadOceanFrames = 96;
-if ( Pop.GetExeArguments().includes('ShortOcean') )
-	LoadOceanFrames = 4;
-for ( let i=1;	i<=LoadOceanFrames;	i++ )
-	OceanFilenames.push('Ocean/ocean_pts.' + (''+i).padStart(4,'0') + '.ply');
-
-
 
 function GetDebrisMeta(Actor)
 {
@@ -272,7 +263,7 @@ function GetOceanMeta()
 	const Meta = {};
 	Meta.AddNoiseToTextureBuffer = false;
 	Meta.LocalScale = 1;
-	Meta.Filename = OceanFilenames;
+	Meta.Filename = null;
 	Meta.RenderShader = AnimalParticleShader;
 	
 	Meta.PhysicsNoiseScale = 0;

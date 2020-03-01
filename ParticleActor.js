@@ -253,6 +253,9 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 	
 	if ( Meta.FitToBoundingBox )
 	{
+		if (!this.BoundingBox)
+			throw "Meta set to FitToBoundingBox, but needs to be predefined";
+
 		//	box is local space, but world size
 		let BoxScale = Math.Subtract3( this.BoundingBox.Max, this.BoundingBox.Min );
 		let Position = Math.GetMatrixTranslation( this.LocalToWorldTransform );
