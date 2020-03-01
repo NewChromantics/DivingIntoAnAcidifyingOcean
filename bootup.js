@@ -64,7 +64,10 @@ if ( IsDebugEnabled() )
 }
 
 Pop.Include('Hud.js');
+Pop.Include('PopEngineCommon/PopCamera.js');
+Pop.Include('Scene.js');
 Pop.Include('Logo.js');
+Pop.Include('LogoScene.js');
 
 
 if ( !IsDebugEnabled() )
@@ -77,8 +80,8 @@ if ( !IsDebugEnabled() )
 //	use a string if function not yet declared
 let StateMap =
 {
+	'LogoScene': 'Update_LogoScene',
 	'Logo': 'Update_Logo',
-	'LogoScene':'Update_LogoScene',
 	'Experience': 'Update_Experience',
 	'Editor': 'Update_Editor',
 	'AssetServer': Update_AssetServer
@@ -146,7 +149,7 @@ Params.DebugPhysicsTextures = false;
 Params.DebugNoiseTextures = IsDebugEnabled();
 Params.DebugTextureAlpha = false;
 
-Params.FogColour = [0,0,0.2];
+Params.FogColour = IsDebugEnabled() ? [0,0,1] : [0,0,0];
 Params.FogMinDistance = 8.0;
 Params.FogMaxDistance = BoldMode ? 999 : 10.0;
 

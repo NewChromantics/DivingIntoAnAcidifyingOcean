@@ -41,9 +41,6 @@ var SwirlColourTexture = new Pop.Image('SwirlColourTexture');
 
 const LastUpdateColourTextureElapsed = {};
 
-var RenderFrameDurationSecs = false;
-var GpuJobs = [];
-
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
 DebugCamera.LookAt = [ 0,0,-1 ];
@@ -134,7 +131,7 @@ function GetMouseRay(uv)
 	const ViewRect = [-1,-1,1,1];
 	let Time = Params.TimelineYear;
 	//	get ray
-	const Camera = Params.MouseRayOnTimelineCamera ? GetTimelineCamera() : GetRenderCamera();
+	const Camera = Params.MouseRayOnTimelineCamera ? GetTimelineCamera() : Acid_GetRenderCamera();
 	const RayDistance = Params.TestRayDistance;
 	
 	let ScreenToCameraTransform = Camera.GetProjectionMatrix( ViewRect );
@@ -651,7 +648,7 @@ function GetTimelineCamera()
 	return Camera;
 }
 
-function GetRenderCamera()
+function Acid_GetRenderCamera()
 {
 	if ( Params.UseDebugCamera )
 		return DebugCamera;
@@ -821,6 +818,18 @@ function GetRenderScene(GetActorScene,Time)
 	return Scene;
 }
 
+
+function Acid_GetRenderScene()
+{
+	Pop.Debug('Acid_GetRenderScene');
+	//	grab scene first, we're only going to update physics on visible items
+	//	todo: just do them all?
+	const Time = Params.TimelineYear;
+
+	const Scene = GetRenderScene(GetActorScene_OnlyVisible,Time);
+	return Scene;
+}
+
 function ShowElement(ElementId,Visible=true)
 {
 	const Element = document.getElementById(ElementId);
@@ -928,7 +937,7 @@ function Init()
 
 	
 	//	setup window (we do it here so we know update has happened first)
-	Window.OnRender = AcidScene_Render;
+	//Window.OnRender = AcidScene_Render;
 
 	Window.OnMouseUp = function () { };
 
@@ -1015,6 +1024,7 @@ function Init()
 var Acid = {};
 
 //	use a string if function not yet declared
+Acid.State_Init = 'Init';
 Acid.State_Intro = 'Intro';
 Acid.State_Fly = 'Fly';
 Acid.State_TextTimeline1 = 'TextTimeline1';
@@ -1028,6 +1038,7 @@ Acid.State_Solution = 'Solution';
 Acid.State_RewindToStart = 'RewindToStart';
 Acid.StateMap =
 {
+	'Init':		Update_Init,
 	'Intro':		Update_Intro,
 	'BigBang':		Update_BigBang,
 	'Fly':			Update_Fly,
@@ -1040,7 +1051,7 @@ Acid.StateMap =
 	'Solution':			Update_Solution,
 	'RewindToStart':	Update_RewindToStart
 };
-Acid.StateMachine = new Pop.StateMachine( Acid.StateMap, Acid.State_Intro, Acid.State_Intro, true );
+Acid.StateMachine = new Pop.StateMachine(Acid.StateMap,Acid.State_Init,Acid.State_Init, true );
 Acid.SelectedActor = null;
 Acid.SkipSelectedAnimal = false;
 Acid.UserSetYear = null;
@@ -1216,11 +1227,29 @@ function GetNextIntroKeyframeYear(ThisYear,NoNextYearResult=undefined)
 	return NoNextYearResult;
 }
 
+function Acid_GetTime()
+{
+	return Params.TimelineYear;
+}
+
+function Update_Init(FirstUpdate,FrameDuration,StateTime)
+{
+	Pop.Debug("Acid Update_Init");
+	//	setup scene stuff
+	Scene_GetTime = Acid_GetTime;
+	Scene_GetGlobalUniforms = Acid_GetGlobalUniforms;
+	Scene_GetRenderScene = Acid_GetRenderScene;
+	Scene_GetRenderCamera = Acid_GetRenderCamera;
+	Scene_GetDebugTextures = Acid_GetDebugTextures;
+
+	Init();
+
+	return 'Intro';
+}
+
+
 function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 {
-	if (AppTime === null)
-		Init();
-
 	if ( FirstUpdate )
 	{
 		Acid.UserSkippedText = false;
@@ -1924,7 +1953,7 @@ function Update(FrameDurationSecs)
 	}
 	GpuJobs.push( UpdateActorPhysics );
 	
-	RenderFrameDurationSecs = FrameDurationSecs;
+	LastUpdateFrameDuration = FrameDurationSecs;
 }
 
 
@@ -1975,18 +2004,22 @@ function UpdateSceneVisibility(Time)
 	Hud.Debug_VisibleActors.SetValue("Visible Actors: " + VisibleActorCount + "/" + Actors.length );
 }
 
-function FlushGpuJobs(RenderTarget)
+
+function Acid_GetGlobalUniforms()
 {
-	const RunJob = function(Job)
-	{
-		Job( RenderTarget );
-	}
-	GpuJobs.forEach( RunJob );
-	
-	GpuJobs.length = 0;
+	const FogParams = Acid.GetFogParams();
+
+	let GlobalUniforms = Object.assign({},FogParams);
+	GlobalUniforms = Object.assign(GlobalUniforms,Params);
+	GlobalUniforms['Fog_MinDistance'] = FogParams.MinDistance;
+	GlobalUniforms['Fog_MaxDistance'] = FogParams.MaxDistance;
+	GlobalUniforms['Fog_Colour'] = Params.FogColour;
+	GlobalUniforms['Fog_WorldPosition'] = FogParams.WorldPosition;
+
+	return GlobalUniforms;
 }
 
-
+//	replace with Scene_Render
 function AcidScene_Render(RenderTarget,RenderCamera)
 {
 	const RenderContext = RenderTarget.GetRenderContext();
@@ -1995,7 +2028,7 @@ function AcidScene_Render(RenderTarget,RenderCamera)
 	//	if we don't have a camera from XR, use the normal system
 	if ( !RenderCamera )
 	{
-		RenderCamera = GetRenderCamera();
+		RenderCamera = Acid_GetRenderCamera();
 		//	skip render in xr mode atm
 		if ( Params.XrMode )
 		{
@@ -2040,13 +2073,13 @@ function AcidScene_Render(RenderTarget,RenderCamera)
 	}
 	
 	FlushGpuJobs( RenderTarget );
-
-	const Time = Params.TimelineYear;
+	
+	const Scene = Acid_GetRenderScene();
 
 	//	grab scene first, we're only going to update physics on visible items
 	//	todo: just do them all?
-	const DurationSecs = RenderFrameDurationSecs;
-	const Scene = GetRenderScene( GetActorScene_OnlyVisible, Time );
+	const Time = Params.TimelineYear;
+	const DurationSecs = LastUpdateFrameDuration;
 	
 
 	//	clear target
@@ -2148,5 +2181,12 @@ function SwitchToDebugCamera(ForceAutoGrab)
 	ParamsWindow.OnParamChanged('UseDebugCamera');
 }
 
-
+function Acid_GetDebugTextures()
+{
+	DebugTextures.push(OceanColourTexture);
+	DebugTextures.push(DebrisColourTexture);
+	DebugTextures.push(SwirlColourTexture);
+	DebugTextures.push(RandomTexture);
+	DebugTextures.push(Noise_TurbulenceTexture);
+}
 

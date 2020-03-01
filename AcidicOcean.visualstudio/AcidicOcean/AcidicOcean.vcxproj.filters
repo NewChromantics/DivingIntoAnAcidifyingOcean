@@ -229,5 +229,8 @@
     <None Include="..\..\LogoScene.js">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\..\Scene.js">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

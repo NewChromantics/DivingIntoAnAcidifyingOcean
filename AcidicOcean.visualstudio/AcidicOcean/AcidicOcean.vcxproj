@@ -187,6 +187,7 @@
     <None Include="..\..\PopEngineCommon\Readme.md" />
     <None Include="..\..\Quad.vert.glsl" />
     <None Include="..\..\Readme.md" />
+    <None Include="..\..\Scene.js" />
     <None Include="..\..\StateMachine.js" />
     <None Include="..\..\TextTimeline1.json" />
     <None Include="..\..\TextTimeline2.json" />
