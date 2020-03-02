@@ -139,12 +139,21 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 		InitOceanColourTexture();
 
 		Logo.PreloadPromise = PreloadFiles().then().catch(ShowError);
+
+		//Params.Ocean_TriangleScale = 0;
+		Params.AnimalBufferLod = 0;
 	}
+
+	//	smoothly reveal ocean particles
+	//	gr: noise via lod!
+	Params.AnimalBufferLod += FrameDuration * 0.2;//Params.OceanLodFadeInPerSec;
+	Params.AnimalBufferLod = Math.min(Params.AnimalBufferLod,1);
 
 	Logo_Update(FrameDuration);
 	
-	if (Logo.PreloadsFinished)
+	if (Logo.PreloadsFinished && Params.AnimalBufferLod >= 1)
 	{
+		Params.AnimalBufferLod = 1;
 		Pop.Include('LoadExperience.js');
 		return 'LoadExperience';
 	}
