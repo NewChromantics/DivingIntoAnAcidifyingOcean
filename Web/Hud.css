@@ -211,7 +211,10 @@ a:hover
 	width:		100vw;
 	height:		100vh;
 	xbackground-color: black;
+	/* gr: set this in code, as having it in CSS loads
+		it at bootup, and it's one of our biggest assets
 	background-image:		url(icons/Mosaic2_opa.png);
+		*/
 	background-repeat:		no-repeat;
 	background-size:		contain;
 	background-position:	center center;
@@ -1521,19 +1524,6 @@ hr:nth-child(even)
 	top:	18vh;
 }
 
-#ErrorImage
-{
-	visibility: hidden;
-	display:	block;
-	position:	absolute;
-	width:		100vw;
-	height:		100vh;
-	background-image:		url(icons/ErrorPage.jpg);
-	background-repeat:		no-repeat;
-	background-size:		contain;
-	background-position:	center center;
-
-}
 
 #ErrorTextTitle
 {

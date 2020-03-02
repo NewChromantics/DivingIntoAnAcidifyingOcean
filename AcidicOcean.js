@@ -1416,6 +1416,10 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 {
 	if ( FirstUpdate )
 	{
+		//	set image url on the div so it starts loading
+		const Url = 'url("Web/icons/Mosaic2_opa.png")';
+		Pop.Debug("Set mosaic image ",Hud.Mosaic.Element)
+		Hud.Mosaic.Element.style.backgroundImage = Url;
 	}
 	
 	Acid_Update( FrameDuration );
