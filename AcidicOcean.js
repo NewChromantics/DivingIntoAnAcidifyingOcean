@@ -96,7 +96,6 @@ function GetMusic2Volume()	{	return Params.Music2Volume;	}
 function GetVoiceVolume()	{	return Params.VoiceVolume;	}
 function GetSoundVolume()	{	return Params.SoundVolume;	}
 
-var AppTime = null;
 var Hud = {};
 var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
@@ -517,6 +516,7 @@ function LoadCameraScene(Filename)
 			}
 			else if ( IsWaterActor )
 			{
+				Pop.Debug("Wateractor",ActorNode);
 				SetupAnimalTextureBufferActor.call( Actor, GetWaterMeta().Filename, GetWaterMeta );
 			}
 			else if ( IsDebrisActor )
@@ -617,6 +617,7 @@ function GetCameraPath()
 		let Pos = Timeline.GetUniform( Year, CameraUniform );
 		CameraPositions.push( Pos );
 	}
+	//Pop.Debug("GetCameraPath",CameraPositions);
 	return CameraPositions;
 }
 
@@ -816,7 +817,7 @@ function GetRenderScene(GetActorScene,Time)
 
 function Acid_GetRenderScene()
 {
-	Pop.Debug('Acid_GetRenderScene');
+	//Pop.Debug('Acid_GetRenderScene');
 	//	grab scene first, we're only going to update physics on visible items
 	//	todo: just do them all?
 	const Time = Params.TimelineYear;
@@ -850,8 +851,6 @@ function OnPauseToggle(PauseButton)
 //	need a better place for this, app state!
 function Init()
 {
-	AppTime = 0;
-	
 	Acid.CameraScene = LoadCameraScene('CameraSpline.dae.json');
 	Acid.Timeline = LoadTimeline('Timeline.json');
 	Acid.TextTimeline1 = LoadTimeline('TextTimeline1.json');
@@ -1765,9 +1764,6 @@ function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
 
 function Acid_Update(FrameDurationSecs)
 {
-	if ( AppTime === null )
-		Init();
-	
 	//	gr: continue physics even if paused
 	//AppTime += FrameDurationSecs;
 	AppTime += 1/60;
@@ -1904,17 +1900,8 @@ function Acid_Update(FrameDurationSecs)
 	
 	//	mark actors visible this frame
 	UpdateSceneVisibility(Time);
-	
-	
-
-	//
-	const UpdateNoise = function(RenderTarget)
-	{
-		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
-		UpdateNoiseTexture( RenderTarget, Noise_TurbulenceTexture, Noise_TurbulenceShader, NoiseTime );
 		
-	}
-	GpuJobs.push( UpdateNoise );
+	UpdateNoise(FrameDurationSecs);
 	
 	const UpdateActorPhysics = function(RenderTarget)
 	{

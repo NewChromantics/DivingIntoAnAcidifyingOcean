@@ -153,19 +153,7 @@ float3 GetWave3(float2 uv)
 float3 GetWaterNoiseOffset(float2 Mapuv)
 {
 	float Lod = 0.0;
-	/*
-	float NoiseA = textureLod( NoiseImage, Mapuv, Lod ).x;
-	NoiseA *= NoiseA;
-	NoiseA *= NoiseA;
-	NoiseA *= 1.5;
-	//NoiseA = 1.0 - NoiseA;
-	//float NoiseB = textureLod( NoiseImage, Mapuv.yx, Lod ).y;
-
-	//float NoiseA = textureLod( NoiseImage, Mapuv, Lod ).x;
-	//NoiseA *= NoiseA;
 	
-	float Noise = NoiseA;
-	*/
 	float SpaceScalar = Water_PosScale;
 	float3 Noise;
 	Noise += GetWave1(Mapuv * float2(SpaceScalar,SpaceScalar));
@@ -205,11 +193,20 @@ void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out fl
 	float2 uv = GetTriangleUvf( TriangleIndex );
 	float Lod = 0.0;
 	
+	
+#if defined(TEST_ONE_COLOUR)
+	Colour = TEST_ONE_COLOUR;
+#else
+	float4 ColourImageColour = textureLod( ColourImage, uv, Lod );
+	Colour = float4(ColourImageColour.xyz,1);
+#endif
+	
+
 	float3 GridPos = GetInputOrigPosition( uv );
 	//	for some reason, this doesn't give me y=0
 	WorldPos = GridPos;
 	//WorldPos.y = 0.0;
-	
+	//return;
 	float2 NoiseUv = GridPos.xz;
 	float3 WaterNoise = GetWaterNoiseOffset( NoiseUv );
 	
@@ -220,13 +217,6 @@ void GetTriangleWorldPosAndColour(float TriangleIndex,out float3 WorldPos,out fl
 	if ( NoiseUv.x > 1.0 )
 		Colour = float4( 0, 0, 1, 1 );
 	*/
-	
-#if defined(TEST_ONE_COLOUR)
-	Colour = TEST_ONE_COLOUR;
-#else
-	float4 ColourImageColour = textureLod( ColourImage, uv, Lod );
-	Colour = float4(ColourImageColour.xyz,1);
-#endif
 	
 }
 

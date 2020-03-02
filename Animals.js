@@ -366,7 +366,9 @@ function GetWaterMeta()
 	Meta.RenderTimeIsRealTime = true;
 	Meta.FitToBoundingBox = true;
 	Meta.ForceBoundsY = 1;
-	
+
+	//Pop.Debug("GetWaterMeta",Meta);
+
 	return Meta;
 }
 

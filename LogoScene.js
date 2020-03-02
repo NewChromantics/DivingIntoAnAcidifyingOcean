@@ -1,7 +1,10 @@
 var OceanColourTexture = new Pop.Image('OceanColourTexture');
 
-
-
+const Water0_Pos = [0,2.85092,-8.61732];
+const CameraInitial_Pos = [0,3.92589,11.737];
+const CameraInitial_Look = CameraInitial_Pos.slice();
+CameraInitial_Look[2] -= 1;
+//0,3.283590021812135,7.744724626735667
 
 const Logo = {};
 Logo.Camera = CreateLogoCamera();
@@ -10,8 +13,8 @@ Logo.WaterActor = null;
 function CreateLogoCamera()
 {
 	const Camera = new Pop.Camera();
-	Camera.Position = [0,0,0];
-	Camera.LookAt = [0,0,-10];
+	Camera.Position = CameraInitial_Pos.slice();
+	Camera.LookAt = CameraInitial_Look.slice();
 	Camera.FarDistance = 400;	//	try not to clip anythig in debug mode
 	return Camera;
 }
@@ -42,6 +45,7 @@ function MouseControlCamera()
 		{
 			DebugCamera.OnCameraOrbit(x,y,0,FirstClick);
 		}
+		Pop.Debug(DebugCamera.Position);
 	}
 
 	Window.OnMouseScroll = function (x,y,Button,Delta)
@@ -56,20 +60,34 @@ function MouseControlCamera()
 
 function Logo_GetScene()
 {
+	Pop.Debug("Logo_GetScene");
 	if (!Logo.WaterActor)
 	{
+		const ActorNode = {};
+		ActorNode.BoundingBox = {};
+		ActorNode.BoundingBox.Min = [-25,0,-25];
+		ActorNode.BoundingBox.Max = [25,0,25];
+		ActorNode.Position = [0,2.85092,-8.61732];
+
 		const Actor = new TActor();
 
 		//	copy default node from whichever is the first
-		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix(0,0,0);
-		Actor.BoundingBox = {};
-		Actor.BoundingBox.Min = [0,0,0];
-		Actor.BoundingBox.Max = [1,1,1];
+		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix(...ActorNode.Position);
+		Actor.BoundingBox = ActorNode.BoundingBox;
 
+		/*//	gr: copied from debugging
+		Actor.LocalToWorldTransform = [
+			50,	 0,			0,		0,
+			0,	 1,			0,		0,
+			0,	 0,			50,		0,
+			-25, 2.8509,	-33.61732,1
+		];
+		*/
+		
 		SetupAnimalTextureBufferActor.call(Actor,GetWaterMeta().Filename,GetWaterMeta);
 		Logo.WaterActor = Actor;
 	}
-
+	
 	return [Logo.WaterActor];
 }
 
@@ -81,7 +99,7 @@ function Logo_GetCamera()
 
 function Logo_GetGlobalUniforms()
 {
-	const Uniforms = [];
+	let Uniforms = Object.assign({},Params);
 	Uniforms['Debug_ForceColour'] = true;
 	Uniforms['Fog_MinDistance'] = 1000;
 	Uniforms['Fog_MaxDistance'] = 1000;
@@ -107,7 +125,12 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 		Scene_GetGlobalUniforms = Logo_GetGlobalUniforms;
 	}
 
-	return 'Logo';
+	Logo_Update(FrameDuration);
+
+	if (StateTime > 6)
+	{
+		return 'Logo';
+	}
 }
 
 
@@ -115,17 +138,33 @@ function Logo_GetDebugTextures()
 {
 	return [
 		OceanColourTexture,
+		RandomTexture,
 		Noise_TurbulenceTexture,
 	];
 }
 
-//	match Acid_Update()
-function Logo_Update(FrameDurationSecs)
+var AppTime = 0;
+
+
+function UpdateNoise(FrameDurationSecs)
 {
 	const UpdateNoise = function (RenderTarget)
 	{
 		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
+		//Pop.Debug("Update noise texture",NoiseTime);
 		UpdateNoiseTexture(RenderTarget,Noise_TurbulenceTexture,Noise_TurbulenceShader,NoiseTime);
 	}
+
 	GpuJobs.push(UpdateNoise);
 }
+
+
+//	match Acid_Update()
+function Logo_Update(FrameDurationSecs)
+{
+	//AppTime += FrameDurationSecs;
+	AppTime += 1 / 60;
+
+	UpdateNoise(FrameDurationSecs);
+}
+
