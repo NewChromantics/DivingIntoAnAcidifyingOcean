@@ -85,9 +85,6 @@
     <None Include="..\..\index.html">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\..\Logo.js">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="..\..\NastyAnimalParticle.frag.glsl">
       <Filter>Source Files</Filter>
     </None>
@@ -236,6 +233,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="..\..\Water.js">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\LoadExperience.js">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

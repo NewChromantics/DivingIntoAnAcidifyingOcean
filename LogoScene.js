@@ -19,7 +19,7 @@ Logo.PreloadsFinished = false;
 const LoadJsPreloadFilenames = [
 	'Animals.js',
 	'Animals.json',
-	'Logo.js',
+	'LoadExperience.js',
 ];
 
 function CreateLogoCamera()
@@ -145,8 +145,8 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 	
 	if (Logo.PreloadsFinished)
 	{
-		Pop.Include('Logo.js');
-		return 'Logo';
+		Pop.Include('LoadExperience.js');
+		return 'LoadExperience';
 	}
 }
 

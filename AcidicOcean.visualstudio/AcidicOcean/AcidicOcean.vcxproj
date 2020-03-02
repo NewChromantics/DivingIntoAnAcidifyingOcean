@@ -148,7 +148,7 @@
     <None Include="..\..\Geo.vert.glsl" />
     <None Include="..\..\Hud.js" />
     <None Include="..\..\index.html" />
-    <None Include="..\..\Logo.js" />
+    <None Include="..\..\LoadExperience.js" />
     <None Include="..\..\LogoScene.js" />
     <None Include="..\..\NastyAnimalParticle.frag.glsl" />
     <None Include="..\..\NastyAnimalParticle.vert.glsl" />

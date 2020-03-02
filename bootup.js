@@ -42,7 +42,6 @@ if (!Pop.StateMachine)
 //	gr: this is currently early otherwise we don't register window click early enough
 Pop.Include('AudioManager.js');
 Pop.Include('AssetImport.js');
-//Pop.Include('Animals.js');
 Pop.Include('Water.js');
 Pop.Include('AssetManager.js');
 Pop.Include('Actors.js');
@@ -50,7 +49,6 @@ Pop.Include('ParticleActor.js');
 Pop.Include('Hud.js');
 Pop.Include('PopEngineCommon/PopCamera.js');
 Pop.Include('Scene.js');
-//Pop.Include('Logo.js');
 Pop.Include('LogoScene.js');
 Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
@@ -96,7 +94,7 @@ if ( !IsDebugEnabled() )
 let StateMap =
 {
 	'LogoScene': 'Update_LogoScene',
-	'Logo': 'Update_Logo',
+	'LoadExperience': 'Update_LoadExperience',
 	'Experience': 'Update_Experience',
 	'Editor': 'Update_Editor',
 	'AssetServer': Update_AssetServer

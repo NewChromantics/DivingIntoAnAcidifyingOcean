@@ -1,7 +1,6 @@
 Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('Animals.js');
 
-
 const MinimumLogoSecs = 0.01;
 
 function HideLogoElements()
@@ -195,7 +194,7 @@ function TLogoState()
 
 let LogoState = null;
 
-function Update_Logo(FirstUpdate,UpdateDuration,StateTime)
+function Update_LoadExperience(FirstUpdate,UpdateDuration,StateTime)
 {
 	//	setup preloads
 	if ( FirstUpdate )
