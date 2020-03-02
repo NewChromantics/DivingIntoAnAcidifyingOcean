@@ -146,7 +146,9 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 
 	//	smoothly reveal ocean particles
 	//	gr: noise via lod!
-	Params.AnimalBufferLod += FrameDuration * 0.2;//Params.OceanLodFadeInPerSec;
+	//	fade in faster if we've finished loading
+	const FadeInRate = Logo.PreloadsFinished ? 1 : 0.2;
+	Params.AnimalBufferLod += FrameDuration * FadeInRate;//Params.OceanLodFadeInPerSec;
 	Params.AnimalBufferLod = Math.min(Params.AnimalBufferLod,1);
 
 	Logo_Update(FrameDuration);
