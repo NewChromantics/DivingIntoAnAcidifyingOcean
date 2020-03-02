@@ -6,9 +6,21 @@ const CameraInitial_Look = CameraInitial_Pos.slice();
 CameraInitial_Look[2] -= 1;
 //0,3.283590021812135,7.744724626735667
 
+//	ShowError is global HTML error func
+if (!ShowError)
+	ShowError = Pop.Debug;
+
 const Logo = {};
 Logo.Camera = CreateLogoCamera();
 Logo.WaterActor = null;
+Logo.PreloadsFinished = false;
+
+//	files we need to preload before the "preload stuff"
+const LoadJsPreloadFilenames = [
+	'Animals.js',
+	'Animals.json',
+	'Logo.js',
+];
 
 function CreateLogoCamera()
 {
@@ -102,6 +114,15 @@ function Logo_GetGlobalUniforms()
 
 function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 {
+	async function PreloadFiles()
+	{
+		for (const Filename of LoadJsPreloadFilenames)
+		{
+			await Pop.AsyncCacheAssetAsString(Filename);
+		}
+		Logo.PreloadsFinished = true;
+	}
+
 	if (FirstUpdate)
 	{
 		Pop.Debug('Update_LogoScene FirstUpdate');
@@ -116,12 +137,15 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 		Scene_GetGlobalUniforms = Logo_GetGlobalUniforms;
 
 		InitOceanColourTexture();
+
+		Logo.PreloadPromise = PreloadFiles().then().catch(ShowError);
 	}
 
 	Logo_Update(FrameDuration);
-
-	if (StateTime > 6)
+	
+	if (Logo.PreloadsFinished)
 	{
+		Pop.Include('Logo.js');
 		return 'Logo';
 	}
 }

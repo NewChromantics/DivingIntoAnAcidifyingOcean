@@ -235,5 +235,8 @@
     <None Include="..\..\Web\Hud.css">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\..\Water.js">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

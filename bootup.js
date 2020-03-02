@@ -1,12 +1,19 @@
 Pop.Debug("Booting up");
 
+//	this isn't always a problem, but saves some CPU time
+const IncludedFiles = {};
 Pop.Include = function (Filename)
 {
+	if (IncludedFiles.hasOwnProperty(Filename))
+		return;
 	let Source = Pop.LoadFileAsString(Filename);
-	return Pop.CompileAndRun( Source, Filename );
+	const Result = Pop.CompileAndRun(Source,Filename);
+	IncludedFiles[Filename] = true;
+	//	result never used?
+	return Result;
 }
 
-//	auto setup global
+//	auto setup global, used to find global functions, but the global on web is different to native
 function SetGlobal()
 {
 	Pop.Global = this;
@@ -14,37 +21,47 @@ function SetGlobal()
 }
 SetGlobal.call(this);
 
-
-Pop.Include('PopEngineCommon/PopApi.js');
-if (!Pop.StateMachine)
-	Pop.Include('StateMachine.js');
-
-//	debug, make desktop act like mobile
-if ( Pop.GetExeArguments().includes('NoFloatTarget') )
-{
-	Pop.Opengl.CanRenderToFloat = false;
-}
-
 const RandomNumberCache = [];
 
 function GetRandomNumberArray(Count)
 {
-	if ( RandomNumberCache.length < Count )
-		Pop.Debug("calculating random numbers x"+Count);
-	while ( RandomNumberCache.length < Count )
+	if (RandomNumberCache.length < Count)
+		Pop.Debug("calculating random numbers x" + Count);
+	while (RandomNumberCache.length < Count)
 	{
-		RandomNumberCache.push( Math.random() );
+		RandomNumberCache.push(Math.random());
 	}
 	return RandomNumberCache;
 }
 
 
+Pop.Include('PopEngineCommon/PopApi.js');
+if (!Pop.StateMachine)
+	Pop.Include('StateMachine.js');
 
+//	gr: this is currently early otherwise we don't register window click early enough
+Pop.Include('AudioManager.js');
 Pop.Include('AssetImport.js');
-Pop.Include('Animals.js');
+//Pop.Include('Animals.js');
+Pop.Include('Water.js');
 Pop.Include('AssetManager.js');
 Pop.Include('Actors.js');
 Pop.Include('ParticleActor.js');
+Pop.Include('Hud.js');
+Pop.Include('PopEngineCommon/PopCamera.js');
+Pop.Include('Scene.js');
+//Pop.Include('Logo.js');
+Pop.Include('LogoScene.js');
+Pop.Include('PopEngineCommon/PopFrameCounter.js');
+
+
+//	debug, make desktop act like mobile
+if (Pop.GetExeArguments().includes('NoFloatTarget'))
+{
+	Pop.Opengl.CanRenderToFloat = false;
+}
+
+
 
 
 function IsDebugEnabled()
@@ -66,11 +83,6 @@ if ( IsDebugEnabled() )
 	}
 }
 
-Pop.Include('Hud.js');
-Pop.Include('PopEngineCommon/PopCamera.js');
-Pop.Include('Scene.js');
-Pop.Include('Logo.js');
-Pop.Include('LogoScene.js');
 
 
 if ( !IsDebugEnabled() )
@@ -105,8 +117,6 @@ function OnKeyPress(Key)
 		return true;
 	}
 }
-
-Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //	window now shared from bootup
 const Window = new Pop.Opengl.Window("The Acidifying Ocean");

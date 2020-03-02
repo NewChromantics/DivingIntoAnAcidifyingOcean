@@ -1,20 +1,5 @@
-Pop.Include('PopEngineCommon/PopCollada.js');
-//Pop.Include('AssetManager.js');
-//Pop.Include('Actors.js');
-Pop.Include('PopEngineCommon/ParamsWindow.js');
 Pop.Include('PopEngineCommon/PopMath.js');
-//Pop.Include('AssetImport.js');
-//Pop.Include('Animals.js');
-//	gr: this is currently early otherwise we don't register window click early enough
-Pop.Include('AudioManager.js');
-
-
-
-const LogoParticleVert = null;
-const LogoParticlePhysicsIteration_UpdateVelocity = null;
-const LogoParticlePhysicsIteration_UpdatePosition = null;
-const LogoSdfFrag = null;
-const QuadVertShader = Pop.LoadFileAsString('Quad.vert.glsl');
+Pop.Include('Animals.js');
 
 
 const MinimumLogoSecs = 0.01;
@@ -70,7 +55,6 @@ function TLogoState()
 		'WaterParticle.vert.glsl',
 	 	'TurbulencePerlin.frag.glsl',
 
-
 		//	code
 	 	'Timeline.js',
 		'AcidicOcean.js',
@@ -85,6 +69,7 @@ function TLogoState()
 		'PopEngineCommon/PopPly.js',
 		'PopEngineCommon/PopObj.js',
 		'PopEngineCommon/PopCollada.js',
+		'PopEngineCommon/PopCinema4d.js',
 		'PopEngineCommon/PopTexture.js'
 	];
 	this.PreloadSceneFilenames =

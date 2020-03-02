@@ -1,7 +1,9 @@
+/*
 Pop.Include('PopEngineCommon/PopCollada.js');
 Pop.Include('PopEngineCommon/PopPly.js');
 Pop.Include('PopEngineCommon/PopObj.js');
 Pop.Include('PopEngineCommon/PopSvg.js');
+*/
 Pop.Include('PopEngineCommon/PopMath.js');
 Pop.Include('Timeline.js');
 
