@@ -68,22 +68,13 @@ function Logo_GetScene()
 		ActorNode.BoundingBox.Min = [-25,0,-25];
 		ActorNode.BoundingBox.Max = [25,0,25];
 		ActorNode.Position = [0,2.85092,-8.61732];
+		ActorNode.Name = 'Ocean_surface_0';
 
 		const Actor = new TActor();
-
-		//	copy default node from whichever is the first
+		Actor.Name = ActorNode.Name;
 		Actor.LocalToWorldTransform = Math.CreateTranslationMatrix(...ActorNode.Position);
 		Actor.BoundingBox = ActorNode.BoundingBox;
-
-		/*//	gr: copied from debugging
-		Actor.LocalToWorldTransform = [
-			50,	 0,			0,		0,
-			0,	 1,			0,		0,
-			0,	 0,			50,		0,
-			-25, 2.8509,	-33.61732,1
-		];
-		*/
-		
+				
 		SetupAnimalTextureBufferActor.call(Actor,GetWaterMeta().Filename,GetWaterMeta);
 		Logo.WaterActor = Actor;
 	}
@@ -101,10 +92,10 @@ function Logo_GetGlobalUniforms()
 {
 	let Uniforms = Object.assign({},Params);
 	Uniforms['Debug_ForceColour'] = true;
-	Uniforms['Fog_MinDistance'] = 1000;
-	Uniforms['Fog_MaxDistance'] = 1000;
-	Uniforms['Fog_Colour'] = [1,0,0];
-	Uniforms['Fog_WorldPosition'] = [0,0,0];
+	Uniforms['Fog_MinDistance'] = Params.FogMinDistance;
+	Uniforms['Fog_MaxDistance'] = Params.FogMaxDistance;
+	Uniforms['Fog_Colour'] = Params.FogColour;
+	Uniforms['Fog_WorldPosition'] = Logo_GetCamera().Position;
 
 	return Uniforms;
 }

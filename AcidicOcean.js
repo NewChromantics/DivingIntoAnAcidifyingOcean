@@ -484,6 +484,16 @@ function LoadCameraScene(Filename)
 			Pop.Debug("Ignoring actor node " + ActorNode.Name, ActorNode );
 			return;
 		}
+
+		//	to try and keep everything in sync, grab the same actor from the logo scene
+		if (Logo.WaterActor)
+		{
+			if (Logo.WaterActor.Name == ActorNode.Name)
+			{
+				Scene.push(Logo.WaterActor);
+				return;
+			}
+		}
 		
 		//Pop.Debug("Loading actor", ActorNode.Name, ActorNode );
 		let Actor = new TActor();

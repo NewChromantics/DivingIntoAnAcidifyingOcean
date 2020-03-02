@@ -99,7 +99,7 @@ function Scene_Render(RenderTarget,RenderCamera)
 	}
 	else
 	{
-		//RenderTarget.ClearColour(...Params.FogColour);
+		RenderTarget.ClearColour(...Params.FogColour);
 	}
 
 	let GlobalUniforms = Scene_GetGlobalUniforms();
