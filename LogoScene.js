@@ -60,7 +60,7 @@ function MouseControlCamera()
 
 function Logo_GetScene()
 {
-	Pop.Debug("Logo_GetScene");
+	//Pop.Debug("Logo_GetScene");
 	if (!Logo.WaterActor)
 	{
 		const ActorNode = {};

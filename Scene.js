@@ -126,7 +126,7 @@ function Scene_Render(RenderTarget,RenderCamera)
 
 	//	make debug actors
 	let DebugTextures = [];
-	//if (Params.DebugNoiseTextures && !IsXrRender)
+	if (Params.DebugNoiseTextures && !IsXrRender)
 	{
 		DebugTextures = Scene_GetDebugTextures();
 		//Pop.Debug("Render DebugTextures",DebugTextures);

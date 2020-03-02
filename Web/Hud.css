@@ -157,16 +157,28 @@ a:hover
 }
 
 
-#LogoBg
+#LogoBg {
+	--TheTop: calc( 4 * var(--ButtonSize) + 2vh);
+	display: block;
+	position: absolute;
+	top: var(--TheTop);
+	left: 10vw;
+	width: 80vw;
+	height: calc( 60vh - var(--TheTop));
+	xbottom: 60vh; /* start top is 65 */
+	background-image: url(icons/Logo_landscape.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center 40%;
+	xxbackground-color: #c00;
+}
+
+/* portrait mode */
+@media (max-aspect-ratio: 1/1) 
 {
-	display:	block;
-	position:	absolute;
-	width:		100vw;
-	height:		100vh;
-	background-image:		url(icons/Logo_BG.png);
-	background-repeat:		no-repeat;
-	background-size:		contain;
-	background-position:	center 40%;
+	#LogoBg {
+		background-image: url(icons/Logo_portrait.png);
+	}
 }
 
 #Logo
