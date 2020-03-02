@@ -10,7 +10,7 @@ Pop.Include('PopEngineCommon/PopFrameCounter.js');
 
 //Pop.Include('AssetManager.js');
 //Pop.Include('AudioManager.js');
-Pop.Include('ParticleActor.js');
+//Pop.Include('ParticleActor.js');
 //	already included
 //Pop.Include('Timeline.js');
 //Pop.Include('Animals.js');
@@ -1131,7 +1131,7 @@ function Update_ShowAnimal(FirstUpdate,FrameDuration,StateTime)
 		AudioManager.PlaySound( AnimalSelectedSoundFilename );
 	}
 	
-	Update( FrameDuration );
+	Acid_Update( FrameDuration );
 
 	//	no timeline!
 	Hud.Timeline.SetVisible(false);
@@ -1286,7 +1286,7 @@ function Update_Intro(FirstUpdate,FrameDuration,StateTime)
 		Params.TimelineYear = TimelineBigBangEndYear;
 	}
 	
-	Update( FrameDuration );
+	Acid_Update( FrameDuration );
 	UpdateYearTime( FrameDuration );
 
 	//	move camera
@@ -1344,7 +1344,7 @@ function Update_BigBang(FirstUpdate,FrameDuration,StateTime)
 	}
 	
 	UpdateFog( FrameDuration );
-	Update( FrameDuration );
+	Acid_Update( FrameDuration );
 	UpdateYearTime( FrameDuration );
 	UpdateCameraPos();
 
@@ -1419,7 +1419,7 @@ function Update_Outro(FirstUpdate,FrameDuration,StateTime)
 	{
 	}
 	
-	Update( FrameDuration );
+	Acid_Update( FrameDuration );
 	
 	//	move time along
 	UpdateYearTime( FrameDuration );
@@ -1451,7 +1451,7 @@ function Update_Gallery(FirstUpdate,FrameDuration,StateTime)
 	{
 	}
 	
-	Update( FrameDuration );
+	Acid_Update( FrameDuration );
 	
 	//	move time along
 	UpdateYearTime( FrameDuration );
@@ -1482,7 +1482,7 @@ function Update_Solution(FirstUpdate,FrameDuration,StateTime)
 	{
 	}
 	
-	Update(FrameDuration);
+	Acid_Update(FrameDuration);
 
 	if (Acid.UserRestarted)
 	{
@@ -1500,7 +1500,7 @@ function Update_RewindToStart(FirstUpdate,FrameDuration,StateTime)
 
 	Params.TimelineYear -= Params.RewindYearsPerSecond * FrameDuration;
 
-	Update(FrameDuration);
+	Acid_Update(FrameDuration);
 	UpdateFog(FrameDuration);
 	UpdateCameraPos();
 	
@@ -1528,7 +1528,7 @@ function Update_Fly(FirstUpdate,FrameDuration,StateTime)
 		}
 	}
 
-	Update( FrameDuration );
+	Acid_Update( FrameDuration );
 	
 	//	move time along
 	if ( Acid.UserSetYear !== null )
@@ -1645,7 +1645,7 @@ function Update_TextTimelineX(FirstUpdate,FrameDuration,StateTime,TextTimeline)
 		Hud.SubtitleSkipButton.SetVisible(false);
 	}
 	
-	Update(FrameDuration);
+	Acid_Update(FrameDuration);
 	UpdateYearTime(FrameDuration * Params.TextSectionYearTimeScale);
 
 	//	update subtime
@@ -1763,7 +1763,7 @@ function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
 
 
 
-function Update(FrameDurationSecs)
+function Acid_Update(FrameDurationSecs)
 {
 	if ( AppTime === null )
 		Init();
@@ -2044,10 +2044,12 @@ function SwitchToDebugCamera(ForceAutoGrab)
 
 function Acid_GetDebugTextures()
 {
-	DebugTextures.push(OceanColourTexture);
-	DebugTextures.push(DebrisColourTexture);
-	DebugTextures.push(SwirlColourTexture);
-	DebugTextures.push(RandomTexture);
-	DebugTextures.push(Noise_TurbulenceTexture);
+	return [
+		OceanColourTexture,
+		DebrisColourTexture,
+		SwirlColourTexture,
+		RandomTexture,
+		Noise_TurbulenceTexture,
+	];
 }
 

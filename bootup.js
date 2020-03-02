@@ -42,6 +42,9 @@ function GetRandomNumberArray(Count)
 
 Pop.Include('AssetImport.js');
 Pop.Include('Animals.js');
+Pop.Include('AssetManager.js');
+Pop.Include('Actors.js');
+Pop.Include('ParticleActor.js');
 
 
 function IsDebugEnabled()
