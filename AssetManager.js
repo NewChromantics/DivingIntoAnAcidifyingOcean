@@ -1,4 +1,3 @@
-//Pop.Include('AssetImport.js');
 Pop.Include('PopEngineCommon/PopShaderCache.js');
 Pop.Include('PopEngineCommon/PopTexture.js');
 Pop.Include('PopEngineCommon/PopMath.js');
