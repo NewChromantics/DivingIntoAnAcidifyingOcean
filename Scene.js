@@ -142,3 +142,61 @@ function Scene_Render(RenderTarget,RenderCamera)
 	Window.RenderFrameCounter.Add();
 }
 
+
+
+
+const LastUpdateColourTextureElapsed = {};
+
+function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
+{
+	if (LastUpdateColourTextureElapsed[ColourNamePrefix] !== undefined)
+	{
+		LastUpdateColourTextureElapsed[ColourNamePrefix] += FrameDuration;
+		if (!Params.CustomiseWaterColours)
+		{
+			if (LastUpdateColourTextureElapsed[ColourNamePrefix] < Params.UpdateColourTextureFrequencySecs)
+				return;
+			if (!EnableColourTextureUpdate)
+				return;
+		}
+	}
+
+	LastUpdateColourTextureElapsed[ColourNamePrefix] = 0;
+
+	//Pop.Debug("Updating colours",ColourNamePrefix);
+
+	//	get all the values
+	let Colours = [];
+	let ColourSize = 3;
+
+	for (let i = 0;i < 20;i++)
+	{
+		const ParamName = ColourNamePrefix + i;
+		if (!Params.hasOwnProperty(ParamName))
+			break;
+		Colours.push(...Params[ParamName]);
+		ColourSize = Params[ParamName].length;
+	}
+	//	as bytes
+	Colours = Colours.map(c => c * 255);
+
+
+	//	pad to pow2
+	let ColourCount = Colours.length / ColourSize;
+	let PaddedColourCount = Math.GetNextPowerOf2(ColourCount);
+	for (let i = ColourCount;i < PaddedColourCount;i++)
+	{
+		let c = (i % ColourCount) * 3;
+		Colours.push(Colours[c + 0]);
+		Colours.push(Colours[c + 1]);
+		Colours.push(Colours[c + 2]);
+	}
+
+	//Pop.Debug("Setting texture colours");
+	Texture.SetLinearFilter(true);
+	Colours = new Uint8Array(Colours);
+	ColourCount = Colours.length / ColourSize;
+	const Height = 1;
+	Texture.WritePixels(ColourCount,Height,Colours,'RGB');
+}
+

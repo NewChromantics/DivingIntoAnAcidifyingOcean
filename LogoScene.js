@@ -114,6 +114,8 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 		Scene_GetRenderCamera = Logo_GetCamera;
 		Scene_GetDebugTextures = Logo_GetDebugTextures;
 		Scene_GetGlobalUniforms = Logo_GetGlobalUniforms;
+
+		InitOceanColourTexture();
 	}
 
 	Logo_Update(FrameDuration);
@@ -158,4 +160,10 @@ function Logo_Update(FrameDurationSecs)
 
 	UpdateNoise(FrameDurationSecs);
 }
+
+function InitOceanColourTexture()
+{
+	UpdateColourTexture(0,OceanColourTexture,'Ocean_Colour');
+}
+
 

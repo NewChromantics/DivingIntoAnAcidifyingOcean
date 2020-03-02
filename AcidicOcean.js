@@ -38,7 +38,6 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 var DebrisColourTexture = new Pop.Image('DebrisColourTexture');
 var SwirlColourTexture = new Pop.Image('SwirlColourTexture');
 
-const LastUpdateColourTextureElapsed = {};
 
 let DebugCamera = new Pop.Camera();
 DebugCamera.Position = [ 0,0,0 ];
@@ -321,16 +320,7 @@ Params.Debris_Colour6 = InvalidColour;
 Params.Debris_Colour7 = InvalidColour;
 Params.Debris_Colour8 = InvalidColour;
 Params.Debris_Colour9 = InvalidColour;
-Params.Ocean_Colour0 = InvalidColour;
-Params.Ocean_Colour1 = InvalidColour;
-Params.Ocean_Colour2 = InvalidColour;
-Params.Ocean_Colour3 = InvalidColour;
-Params.Ocean_Colour4 = InvalidColour;
-Params.Ocean_Colour5 = InvalidColour;
-Params.Ocean_Colour6 = InvalidColour;
-Params.Ocean_Colour7 = InvalidColour;
-Params.Ocean_Colour8 = InvalidColour;
-Params.Ocean_Colour9 = InvalidColour;
+
 
 Params.Swirl_Colour0 = [0.67,0.00,0.00];
 Params.Swirl_Colour1 = [1.00,0.00,0.05];
@@ -1718,57 +1708,6 @@ function Update_TextTimeline3(FirstUpdate,FrameDuration,StateTime)
 
 
 
-function UpdateColourTexture(FrameDuration,Texture,ColourNamePrefix)
-{
-	if ( LastUpdateColourTextureElapsed[ColourNamePrefix] !== undefined )
-	{
-		LastUpdateColourTextureElapsed[ColourNamePrefix] += FrameDuration;
-		if ( !Params.CustomiseWaterColours )
-		{
-			if ( LastUpdateColourTextureElapsed[ColourNamePrefix] < Params.UpdateColourTextureFrequencySecs )
-				return;
-			if ( !EnableColourTextureUpdate )
-				return;
-		}
-	}
-
-	LastUpdateColourTextureElapsed[ColourNamePrefix] = 0;
-	
-	//Pop.Debug("Updating colours",ColourNamePrefix);
-	
-	//	get all the values
-	let Colours = [];
-	let ColourSize = 3;
-	
-	for ( let i=0;	i<20;	i++ )
-	{
-		const ParamName = ColourNamePrefix + i;
-		if ( !Params.hasOwnProperty(ParamName) )
-			break;
-		Colours.push( ...Params[ParamName] );
-		ColourSize = Params[ParamName].length;
-	}
-	//	as bytes
-	Colours = Colours.map( c => c*255 );
-	
-	
-	//	pad to pow2
-	let ColourCount = Colours.length / ColourSize;
-	let PaddedColourCount = Math.GetNextPowerOf2(ColourCount);
-	for ( let i=ColourCount;	i<PaddedColourCount;	i++ )
-	{
-		let c = (i%ColourCount)*3;
-		Colours.push( Colours[c+0] );
-		Colours.push( Colours[c+1] );
-		Colours.push( Colours[c+2] );
-	}
-	
-	Texture.SetLinearFilter(true);
-	Colours = new Uint8Array(Colours);
-	ColourCount = Colours.length / ColourSize;
-	const Height = 1;
-	Texture.WritePixels( ColourCount, Height, Colours, 'RGB' );
-}
 
 
 

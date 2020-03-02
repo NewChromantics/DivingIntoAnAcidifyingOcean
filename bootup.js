@@ -261,6 +261,19 @@ Params.Wave3_DirZ = -0.112;
 Params.Wave3_Phase = 0.868;
 Params.Wave3_Sharpness = 1.32;
 
+//	initialised for logo, so make sure it matches timeline's first frame
+Params.Ocean_Colour0 = [0.79,0.91,0.95];
+Params.Ocean_Colour1 = [0.31,0.70,0.83];
+Params.Ocean_Colour2 = [0.17,0.55,0.75];
+Params.Ocean_Colour3 = [0.03,0.41,0.67];
+Params.Ocean_Colour4 = [0.03,0.25,0.51];
+Params.Ocean_Colour5 = [0.03,0.25,0.51];
+Params.Ocean_Colour6 = [0.03,0.41,0.67];
+Params.Ocean_Colour7 = [0.17,0.55,0.75];
+Params.Ocean_Colour8 = [0.31,0.70,0.83];
+Params.Ocean_Colour9 = [0.79,0.91,0.95];
+
+
 Params.TextSectionYearTimeScale = 0.1;
 
 Params.InitParamsWindow = function(ParamsWindow)
