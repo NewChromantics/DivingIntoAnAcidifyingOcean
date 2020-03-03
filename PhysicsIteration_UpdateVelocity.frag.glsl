@@ -30,12 +30,13 @@ float3 Range3(float3 Min,float3 Max,float3 Value)
 }
 
 
-float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
+float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax,float3 BoundsMin,float3 BoundsMax)
 {
 	if ( FirstUpdate )
 		return float3(0,0,0);
 	
 	vec4 Pos = texture2D( Texture, uv );
+	Pos.xyz = mix( BoundsMin, BoundsMax, Pos.xyz );
 	if ( Pos.w != 1.0 )	//	our float textures have a pure 1.0 alpha, and dont want to be rescaled
 	{
 		Pos.xyz -= float3( 0.5, 0.5, 0.5 );
@@ -47,7 +48,7 @@ float3 GetScaledInput(float2 uv,sampler2D Texture,float2 ScalarMinMax)
 
 float3 GetInputOrigPosition(float2 uv)
 {
-	return GetScaledInput( uv, OrigPositions, OrigPositionScalarMinMax );
+	return GetScaledInput( uv, OrigPositions, OrigPositionScalarMinMax, OrigPositionsBoundingBox[0], OrigPositionsBoundingBox[1] );
 }
 
 float3 GetNormal(float2 uv)
@@ -91,7 +92,9 @@ float3 GetGravity(float2 uv)
 
 float3 GetInputVelocity(float2 uv)
 {
-	return GetScaledInput( uv, LastVelocitys, VelocityScalarMinMax );
+	float3 BoundsMin = float3(0,0,0);
+	float3 BoundsMax = float3(1,1,1);
+	return GetScaledInput( uv, LastVelocitys, VelocityScalarMinMax, BoundsMin, BoundsMax );
 }
 
 float3 abs3(float3 xyz)

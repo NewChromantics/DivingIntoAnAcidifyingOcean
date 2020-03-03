@@ -1866,6 +1866,7 @@ function Acid_Update(FrameDurationSecs)
 			{
 				const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
 				Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
+				//Pop.Debug('OrigPositionsBoundingBox',Bounds);
 			}
 			Actor.PhysicsIteration( FrameDurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 		}

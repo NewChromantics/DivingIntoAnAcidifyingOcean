@@ -90,12 +90,15 @@ float3 GetInputOrigPosition(float2 uv)
 	float2 ScalarMinMax = OrigPositionScalarMinMax;
 	float Lod = 0.0;
 	vec4 Pos = textureLod( OrigPositions, uv, Lod );
+	Pos.xyz = mix( OrigPositionsBoundingBox[0], OrigPositionsBoundingBox[1], Pos.xyz );
+
 	if ( Pos.w != 1.0 )
 	{
 		Pos.xyz -= float3( 0.5, 0.5, 0.5 );
 		Pos.xyz *= 2.0;
 		Pos.xyz *= mix( ScalarMinMax.x, ScalarMinMax.y, Pos.w );
 	}
+	
 	return Pos.xyz;
 }
 

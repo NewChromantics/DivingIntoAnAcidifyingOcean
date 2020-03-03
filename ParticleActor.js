@@ -411,12 +411,19 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const Shader = GetAsset( this.RenderShader, RenderContext );
 		const LocalPositions = [ -1,-1,0,	1,-1,0,	0,1,0	];
 		let ColourTexture = this.TextureBuffers.ColourTexture;
-		const PositionTexture = this.GetPositionTexture(Time);
+		let PositionTextureBounds = {};
+		PositionTextureBounds.Min = [0,0,0];
+		PositionTextureBounds.Max = [1,1,1];
+
+		const PositionTexture = this.GetPositionTexture(Time,PositionTextureBounds);
 		if ( !PositionTexture )
 		{
 			Pop.Debug("Actor has no position texture",Actor);
 			return;
 		}
+		if (PositionTexture.Bounds)
+			PositionTextureBounds = PositionTexture.Bounds;
+
 		const PositionOffsetTexture = this.GetPositionOffsetTexture() || ZeroOffsetTexture;
 		let VelocityTexture = this.GetVelocityTexture();
 		if ( !VelocityTexture )
@@ -447,6 +454,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 			}
 			
 			Shader.SetUniform('Velocitys',VelocityTexture);
+
+			const Bounds = PositionTextureBounds.Min.concat(PositionTextureBounds.Max);
+			Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
+			//Pop.Debug('OrigPositionsBoundingBox',Bounds);
 			
 			Shader.SetUniform('Time',Time);
 			Shader.SetUniform('ShowClippedParticle', Params.ShowClippedParticle );

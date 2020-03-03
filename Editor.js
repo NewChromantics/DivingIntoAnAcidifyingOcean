@@ -515,6 +515,7 @@ class TAssetEditor
 				{
 					const Bounds = Actor.BoundingBox.Min.concat( Actor.BoundingBox.Max );
 					Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
+					Pop.Debug('OrigPositionsBoundingBox',Bounds);
 				}
 				Actor.PhysicsIteration( FrameDurationSecs, AppTime, RenderTarget, UpdatePhysicsUniforms );
 			}

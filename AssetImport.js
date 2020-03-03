@@ -907,6 +907,7 @@ function LoadPackedImage(Image,PositionNoise=0)
 	//	currently 17ms!
 	function RescaleImageToFloat(Image,Bounds)
 	{
+		Pop.Debug("RescaleImageToFloat",Image);
 		const PixelBytes = Image.GetPixelBuffer();
 		
 		//	need aligned image
@@ -915,27 +916,39 @@ function LoadPackedImage(Image,PositionNoise=0)
 		const Format = Image.GetFormat();
 		
 		const Channels = GetChannelsFromPixelFormat( Format );
-		const FloatFormat = 'Float' + Channels;
-
-		//	gr: save mem/resources by reusing buffer
-		const InputIsFloat = IsFloatFormat(Format);
-		//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
-		const PixelFloats = new Float32Array( Width*Height*Channels );
-
-		const Rands = GetRandomNumberArray( PixelBytes.length );
-		
-		const Scalar = InputIsFloat ? 1 : 1/255;
-		
-		for ( let i=0;	i<PixelBytes.length;	i++ )
+		const ConvertToFloat = true;
+		if (ConvertToFloat)
 		{
-			let c = i % Channels;
-			let f = PixelBytes[i] * Scalar;
-			f += (Rands[i]-0.5) * PositionNoise;
-			f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
-			PixelFloats[i] = f;
+			const FloatFormat = 'Float' + Channels;
+
+			//	gr: save mem/resources by reusing buffer
+			const InputIsFloat = IsFloatFormat(Format);
+			//const PixelFloats = InputIsFloat ? PixelBytes : new Float32Array( Width*Height*Channels );
+			const PixelFloats = new Float32Array(Width * Height * Channels);
+
+			const Rands = GetRandomNumberArray(PixelBytes.length);
+
+			const Scalar = InputIsFloat ? 1 : 1 / 255;
+
+			for (let i = 0;i < PixelBytes.length;i++)
+			{
+				let c = i % Channels;
+				let f = PixelBytes[i] * Scalar;
+				//	add noise to hide points causing moire effect
+				f += (Rands[i] - 0.5) * PositionNoise;
+				//f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
+				PixelFloats[i] = f;
+			}
+
+			Image.WritePixels(Width,Height,PixelFloats,FloatFormat);
 		}
-		
-		Image.WritePixels( Width, Height, PixelFloats, FloatFormat );
+		else
+		{
+			//	skip float mode
+			const PixelsAligned = ResizeTypedArray(PixelBytes,Width * Height * Channels);
+			Image.WritePixels(Width,Height,PixelsAligned,Format);
+		}
+		Image.Bounds = Bounds;
 	}
 	
 	//	pop next images
