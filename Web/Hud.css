@@ -1599,11 +1599,16 @@ hr:nth-child(even)
 	xleft:		-8vw;
 }
 
-#YearLabel, #YearStart, #YearEnd
+#YearLabel, #YearStart, #YearEnd 
 {
-	pointer-events:		none;
+	/* this doesn't stop selection, but lets mouse fall through to slider */
+	pointer-events: none;
 
-	
+	/* stop user from highlighting the labels */
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 #YearLabel
