@@ -353,6 +353,9 @@
 	<div style="visibility:hidden" id="AppErrorBox">
 		Unspecified Error.
 	</div>
+	<script>
+		HideElementsIfShareLinkUnsupported('ShareButton_Link');
+	</script>
 
 	<script src='PopEngineCommon/PromiseQueue.js'></script>
 	<script src='PopEngineCommon/PopWebApi.js'></script>
@@ -366,8 +369,6 @@
 	<!-- try and load anything with no dependencies here -->
 	<script src='StateMachine.js'></script>
 	<script>
-
-		HideElementsIfShareLinkUnsupported('ShareButton_Link');
 
 		async function Bootup()
 		{
