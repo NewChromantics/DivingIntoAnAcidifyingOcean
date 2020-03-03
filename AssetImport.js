@@ -780,6 +780,8 @@ function CreatePackedImage(Contents)
 	return PackedImage;
 }
 
+const GetImageAsPopImage_Canvas = document.createElement('canvas');
+let GetImageAsPopImage_Context = null;
 
 function GetImageAsPopImage(Img)
 {
@@ -790,9 +792,12 @@ function GetImageAsPopImage(Img)
 	const WebApi_HtmlImageElement = Pop.Global.hasOwnProperty('HTMLImageElement') ? Pop.Global['HTMLImageElement'] : null;
 	if ( Img.constructor == WebApi_HtmlImageElement )
 	{
+		const Canvas = GetImageAsPopImage_Canvas;
+		if (!GetImageAsPopImage_Context)
+			GetImageAsPopImage_Context = Canvas.getContext('2d');
+		const Context = GetImageAsPopImage_Context;
+
 		//	gr: is this really the best way :/
-		const Canvas = document.createElement('canvas');
-		const Context = Canvas.getContext('2d');
 		const Width = Img.width;
 		const Height = Img.height;
 		Canvas.width = Width;
@@ -805,9 +810,9 @@ function GetImageAsPopImage(Img)
 		PopImage.WritePixels( Width, Height, Buffer, 'RGBA' );
 		
 		//	destroy canvas (safari suggests its hanging around)
-		Canvas.width = 0;
-		Canvas.height = 0;
-		delete Canvas;
+		//Canvas.width = 0;
+		//Canvas.height = 0;
+		//delete Canvas;
 		//Canvas = null;
 		
 		return PopImage;
