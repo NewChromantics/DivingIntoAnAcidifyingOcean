@@ -158,13 +158,13 @@ a:hover
 
 
 #LogoBg {
-	--TheTop: calc( 4 * var(--ButtonSize) + 2vh);
+	--TheTop: calc( 6 * var(--ButtonSize) + 4vh);
 	display: block;
 	position: absolute;
 	top: var(--TheTop);
 	left: 10vw;
 	width: 80vw;
-	height: calc( 60vh - var(--TheTop));
+	height: calc( 50vh - var(--TheTop));
 	xbottom: 60vh; /* start top is 65 */
 	background-image: url(icons/Logo_landscape.png);
 	background-repeat: no-repeat;
@@ -177,7 +177,9 @@ a:hover
 @media (max-aspect-ratio: 1/1) 
 {
 	#LogoBg {
+		--TheTop: calc( 4 * var(--ButtonSize) + 2vh);
 		background-image: url(icons/Logo_portrait.png);
+		height: calc( 50vh - var(--TheTop));
 	}
 }
 
