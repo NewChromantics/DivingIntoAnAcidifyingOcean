@@ -404,8 +404,10 @@ function SetupAnimalTextureBufferActor(Filename,GetMeta)
 		const RenderContext = RenderTarget.GetRenderContext();
 		
 		const Meta = GetMeta(this);
-		if ( Meta.RenderTimeIsRealTime )
-			Time = Pop.GetTimeNowMs() / 1000;
+		//	gr: this is to get rid of the big jump on the water when loading
+		//		this can go if we can fix that...
+		if (Meta.RenderTimeIsRealTime)
+			Time = AppTime;//Pop.GetTimeNowMs() / 1000;
 		
 		const Geo = GetAsset( this.Geometry, RenderContext );
 		const Shader = GetAsset( this.RenderShader, RenderContext );

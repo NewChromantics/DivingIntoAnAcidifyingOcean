@@ -176,14 +176,14 @@ var AppTime = 0;
 
 function UpdateNoise(FrameDurationSecs)
 {
-	const UpdateNoise = function (RenderTarget)
+	const UpdateNoiseBlit = function (RenderTarget)
 	{
 		const NoiseTime = AppTime * Params.Turbulence_TimeScalar;
 		//Pop.Debug("Update noise texture",NoiseTime);
 		UpdateNoiseTexture(RenderTarget,Noise_TurbulenceTexture,Noise_TurbulenceShader,NoiseTime);
 	}
 
-	GpuJobs.push(UpdateNoise);
+	GpuJobs.push(UpdateNoiseBlit);
 }
 
 

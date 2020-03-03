@@ -1236,6 +1236,10 @@ function Update_Init(FirstUpdate,FrameDuration,StateTime)
 	Scene_GetRenderCamera = Acid_GetRenderCamera;
 	Scene_GetDebugTextures = Acid_GetDebugTextures;
 
+	//	try and make camera move from logo's pos so we don't get a jump
+	if (Logo.Camera)
+		Acid.CameraPosition = Logo.Camera.Position.slice();
+
 	Init();
 	//	make sure hud's initialise properly
 	Acid_Update(0);

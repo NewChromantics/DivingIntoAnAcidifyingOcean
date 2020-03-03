@@ -203,8 +203,10 @@ function Update_LoadExperience(FirstUpdate,UpdateDuration,StateTime)
 
 		ShowLogoElements();
 	}
-	
-	
+
+	//Pop.Debug("Update_LoadExperience");
+	Logo_Update(UpdateDuration);
+
 	LogoState.Update();
 	
 	
