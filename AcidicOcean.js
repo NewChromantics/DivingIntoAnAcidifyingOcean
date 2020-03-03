@@ -1237,6 +1237,8 @@ function Update_Init(FirstUpdate,FrameDuration,StateTime)
 	Scene_GetDebugTextures = Acid_GetDebugTextures;
 
 	Init();
+	//	make sure hud's initialise properly
+	Acid_Update(0);
 
 	return 'Intro';
 }
