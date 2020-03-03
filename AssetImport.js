@@ -826,26 +826,25 @@ function GetImageAsPopImage(Img)
 
 
 //	gr: currently 4ms
-function BufferToRgb(Buffer,BufferFormat,ChannelCount)
+function ResizeChannels(OldBuffer,OldChannelCount,NewChannelCount)
 {
-	const BufferChannels = GetChannelsFromPixelFormat(BufferFormat);
-	if ( BufferChannels == ChannelCount )
-		return Buffer;
-	
-	if ( BufferChannels < ChannelCount )
+	if (OldChannelCount == NewChannelCount)
+		return OldBuffer;
+
+	if (OldChannelCount < NewChannelCount )
 		throw "Source doesn't have enough data!";
-	
-	const PixelCount = Buffer.length / BufferChannels;
-	const Rgb = new Uint8Array( ChannelCount * PixelCount );
+
+	const PixelCount = OldBuffer.length / OldChannelCount;
+	const NewBuffer = new Uint8Array(NewChannelCount * PixelCount );
 	for ( let p=0;	p<PixelCount;	p++ )
 	{
-		let si = p * BufferChannels;
-		let di = p * ChannelCount;
-		Rgb[di+0] = Buffer[si+0];
-		Rgb[di+1] = Buffer[si+1];
-		Rgb[di+2] = Buffer[si+2];
+		let si = p * OldChannelCount;
+		let di = p * NewChannelCount;
+		NewBuffer[di+0] = OldBuffer[si+0];
+		NewBuffer[di+1] = OldBuffer[si+1];
+		NewBuffer[di+2] = OldBuffer[si+2];
 	}
-	return Rgb;
+	return NewBuffer;
 }
 
 function ResizeTypedArray(Array,NewSize)
@@ -875,30 +874,47 @@ function IsFloatFormat(Format)
 	}
 }
 
+function GetOtherChannelFormat(Format,NewChannelCount)
+{
+	if (Format == 'RGB')
+	{
+		switch (NewChannelCount)
+		{
+			case 3: return 'RGB';
+			case 4: return 'RGBA';
+		}
+	}
+
+	throw `GetOtherChannelFormat($(Format),$(NewChannelCount) unhandled case`;
+}
+
 function LoadPackedImage(Image,PositionNoise=0)
 {
 	Image = GetImageAsPopImage(Image);
-	let PixelBuffer = Image.GetPixelBuffer();
-	const PackedImageChannels = GetChannelsFromPixelFormat(PackedImageFormat);
-	PixelBuffer = BufferToRgb( PixelBuffer, Image.GetFormat(), PackedImageChannels );
-	
-	function GetPixels(PixelIndex,PixelCount,Channels)
+	Pop.Debug("LoadPackedImage",Image);
+
+	//	X is the unknown channels coming from blitting to canvas
+	const XChannels = GetChannelsFromPixelFormat(Image.GetFormat());
+	const PixelBufferX = Image.GetPixelBuffer();
+
+	const PackedChannels = GetChannelsFromPixelFormat(PackedImageFormat);
+	//const PixelBuffer3 = ResizeChannels(PixelBufferX,XChannels,PackedChannels );
+
+	let PixelOffset = 0;
+	function PopBytes(PixelLength,SourceAsChannelCount)
 	{
-		//	get the buffer
-		const Slice = PixelBuffer.slice( PixelIndex*Channels, (PixelIndex+PixelCount)*Channels );
+		const ByteOffset = PixelOffset * XChannels;
+		const LengthX = PixelLength * XChannels;
+		const SliceX = PixelBufferX.slice(ByteOffset,ByteOffset + LengthX );
+		PixelOffset += PixelLength;
+		const Slice = ResizeChannels(SliceX,XChannels,SourceAsChannelCount);
 		return Slice;
 	}
-	
-	let ByteOffset = 0;
-	function PopBytes(Length)
-	{
-		const Slice = PixelBuffer.slice( ByteOffset, ByteOffset+Length );
-		ByteOffset += Length;
-		return Slice;
-	}
+
+
 	
 	//	first line is meta
-	const FirstLineBytes = PopBytes( Image.GetWidth() * PackedImageChannels );
+	const FirstLineBytes = PopBytes(Image.GetWidth(),PackedChannels );
 	const FirstLine = BytesToString( FirstLineBytes );
 	//Pop.Debug("First line from image",FirstLine);
 	const Meta = JSON.parse( FirstLine );
@@ -912,7 +928,7 @@ function LoadPackedImage(Image,PositionNoise=0)
 	//	currently 17ms!
 	function RescaleImageToFloat(Image,Bounds)
 	{
-		Pop.Debug("RescaleImageToFloat",Image);
+		//Pop.Debug("RescaleImageToFloat",Image);
 		const PixelBytes = Image.GetPixelBuffer();
 		
 		//	need aligned image
@@ -939,9 +955,14 @@ function LoadPackedImage(Image,PositionNoise=0)
 			{
 				let c = i % Channels;
 				let f = PixelBytes[i] * Scalar;
-				//	add noise to hide points causing moire effect
-				f += (Rands[i] - 0.5) * PositionNoise;
-				//f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
+
+				if (c != 3)
+				{
+					//	add noise to hide points causing moire effect
+					f += (Rands[i] - 0.5) * PositionNoise;
+					//	bounds now applied in shader, trying to speed up this loop
+					//f = Math.lerp( Bounds.Min[c], Bounds.Max[c], f );
+				}
 				PixelFloats[i] = f;
 			}
 
@@ -962,8 +983,22 @@ function LoadPackedImage(Image,PositionNoise=0)
 		const ImageMeta = Meta.ImageMetas[i];
 		const PixelSize = GetBytesPerPixelFromPixelFormat( ImageMeta.Format );
 		const Channels = GetChannelsFromPixelFormat( ImageMeta.Format );
-		let Pixels = PopBytes( ImageMeta.Width * ImageMeta.Height * PixelSize );
-		
+
+		let Pixels = null;
+		//	allow a dumb copy without resizing to 3 channels
+		//	if image target is 3 channels, but the raw data is 4, switch to 4
+		//		assume alpha is blit as 255, and we end up writing a texture as RGBA instead
+		if (PixelSize == 3 && Channels == 3 && XChannels == 4)
+		{
+			ImageMeta.Format = GetOtherChannelFormat(ImageMeta.Format,XChannels);
+			Pixels = PopBytes(ImageMeta.Width * ImageMeta.Height,XChannels);	//	resize as original
+		}
+		else
+		{
+			Pixels = PopBytes(ImageMeta.Width * ImageMeta.Height,PackedChannels);	//	resize as original
+		}
+
+		//Pop.Debug("PixelSize=" + PixelSize);
 		//	cast bytes
 		if ( IsFloatFormat(ImageMeta.Format) )
 		{
