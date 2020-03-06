@@ -16,13 +16,61 @@ function ShowLogoElements()
 }
 
 
+function IsImageFilename(Filename)
+{
+	return Filename.toLowerCase().endsWith('.png');
+}
+
+function IsValidFilename(Filename)
+{
+	if (!Filename)
+		return false;
+	if (Filename.startsWith('.'))
+		return false;
+	return true;
+}
+
+async function DoPreloadFileset(Filenames)
+{
+	for (const Filename of Filenames)
+	{
+		try
+		{
+			const AsyncCacheFunction = IsImageFilename(Filename) ? Pop.AsyncCacheAssetAsImage : Pop.AsyncCacheAssetAsString;
+			await AsyncCacheFunction(Filename);
+			return;
+		}
+		catch (e)
+		{
+			//	error, try next
+			//Pop.Debug(`Error loading ${Filename} of ${Filenames};`,e);
+		}
+	}
+	throw `Failed to load any files for ${Filenames}`;
+}
+
+async function DoPreloadFiles(FilenameSets)
+{
+	//	this is one-by-one but clear
+	for ( const FilenameSet of FilenameSets )
+	{
+		//	try each in order
+		await DoPreloadFileset(FilenameSet);		
+	}
+	
+}
+
+async function DoPreloadAssets()
+{
+
+}
+
+
 function TLogoState()
 {
-	this.Time = false;
-	
-	this.PreloadPromises = [];
 	this.StartButton = null;
 	this.StartButtonPressed = false;
+	this.PreloadFinished = false;
 	this.PreloadFilenames =
 	[
 		//	assets
@@ -78,118 +126,110 @@ function TLogoState()
 	this.PreloadGeoFilenames =
 	[
 	];
+	this.PreloadAssets = 
+	[
+		'Models/Microplastic.ply',
+		'Models/Plastic.ply',
+		'Models/Cigarette.ply',
+		'Models/Assorbente.ply',
+		'Models/Jellyfish.ply',
+		'Models/Bag.ply',
+		'Models/Shark.ply',
+		'Models/Straw.ply',
+		'Models/Bottle.ply',
+		'Models/Tuna.ply',
+		'Models/Can.ply',
+		'Models/FoodContainer.ply',
+		'Models/Turtle.ply',
+		'Models/Salmon.ply',
+		'Models/Net.ply',
+		'Models/Pollock.ply',
+		'Models/Cobia.ply',
+		'Models/Menidia.ply',
+		'Models/Cephalopod.ply',
+		'Models/ClownFish.ply',
+		'Models/Anemone.ply',
+		'Models/Crab.ply',
+		'Models/Lobster.ply',
+		'Models/DeepSeaCrab.ply',
+		'Models/AlgalBloom.ply',
+		'Models/Urchin.ply',
+		'Models/BlueCrab.ply',
+		'Models/BrittleStar.ply',
+		'Models/Oyster.ply',
+		'Models/BubbleGumCoral.ply',
+		'Models/Seagrass.ply',
+		'Models/Mussels.ply',
+		'Models/DeepSeaCoral.ply',
+		'Models/CorallineAlgae.ply',
+		'Models/Cockle.ply',
+		'Models/Kelp.ply',
+		'Models/Coral.ply',
+		'Models/Phytoplankton.ply',
+		'Models/JuvenileBivalve.ply',
+		'Models/Larvae.ply',
+		'Models/Krill.ply',
+		'Models/Nodularia.ply',
+		'Models/Pteropod.ply',
+	];
 
 	//	autogen model asset filenames
 	this.PreloadGeoFilenames.push( ...GetAnimalAssetFilenames() );
 
-	function IsImageFilename(Filename)
-	{
-		return Filename.toLowerCase().endsWith('.png');
-	}
-	
-	function IsValidFilename(Filename)
-	{
-		if ( !Filename )
-			return false;
-		if ( Filename.startsWith('.') )
-			return false;
-		return true;
-	}
-	
-	//	load filenames, preference first
-	const Load = function(Filenames)
-	{
-		if ( !Filenames )
-			return;
-		if ( !Array.isArray(Filenames) )
-			Filenames = [Filenames];
-		
-		Filenames = Filenames.filter( IsValidFilename );
-		if ( Filenames.length == 0 )
-			return;
-		
-		const Filename = Filenames.shift();
-		const AsyncCacheFunction = IsImageFilename(Filename) ? Pop.AsyncCacheAssetAsImage : Pop.AsyncCacheAssetAsString;
-		//	no need to cache (desktop)
-		//	support this maybe?
-		if ( !AsyncCacheFunction )
-			return;
-		
-		const LoadBackup = function(Error)
-		{
-			Pop.Debug("Preload of",Filename,"failed, loading next backup",Filenames);
-			Load.call( this, Filenames );
-		}.bind(this);
 
-		//	create promise and put in the list
-		const Promise = AsyncCacheFunction(Filename);
-		Promise.IsSettled = false;
-		
-		//	track when promise is finished
-		const OnLoaded = function()
-		{
-			Promise.IsSettled = true;
-		}
-		
-		//	track & load backup where appropriate
-		const OnFailed = function(Error)
-		{
-			Promise.IsSettled = true;
-			LoadBackup(Error);
-		}
-		
-		Promise.then( OnLoaded ).catch( OnFailed );
-		
-		this.PreloadPromises.push( Promise );
-	}
-	
-	const LoadFile = function(Filename)
+	//	generate list of files to load
+	const PreloadFilenameSets = [];
+	const PreloadAssets = [];
+
+	function QueueFile(Filename)
 	{
-		Load.call( this, Filename );
-		if ( MonitorAssetFile )
-			MonitorAssetFile( Filename );
+		PreloadFilenameSets.push([Filename]);
 	}
-	this.PreloadFilenames.forEach( LoadFile.bind(this) );
-	
-	const LoadAsset = function(Filename,Types)
+
+	function QueueAssetFile(Filename,Types)
 	{
 		const AssetFilenames = [];
-		Types.forEach( t => AssetFilenames.push( GetCachedFilename(Filename,t) ) );
+		//	add cached filenames first
+		Types.forEach(t => AssetFilenames.push(GetCachedFilename(Filename,t)));
+		//	then original filename
 		AssetFilenames.push(Filename);
-		Load.call( this, AssetFilenames );
-		
-		if ( MonitorAssetFile )
-			AssetFilenames.forEach( MonitorAssetFile );
+		PreloadFilenameSets.push(AssetFilenames);
 	}
-	//this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png','geometry'] ) );
-	this.PreloadGeoFilenames.forEach( f => LoadAsset.call( this, f, ['texturebuffer.png'] ) );
-	this.PreloadSceneFilenames.forEach( f => LoadAsset.call( this, f, ['scene'] ) );
 
-	this.IsPreloadFinished = function()
+	function QueueAsset(Filename)
 	{
-		let AllFinished = this.PreloadPromises.every( p => p.IsSettled );
-		return AllFinished;
+		PreloadAssets.push(Filename);
 	}
-	
-	this.Update = function()
+
+	this.PreloadFilenames.forEach(QueueFile );
+	//this.PreloadGeoFilenames.forEach( f => QueueAssetFile( f, ['texturebuffer.png','geometry'] ) );
+	this.PreloadGeoFilenames.forEach(f => QueueAssetFile( f, ['texturebuffer.png'] ) );
+	this.PreloadSceneFilenames.forEach(f => QueueAssetFile( f, ['scene'] ) );
+	this.PreloadAssets.forEach(f => QueueAsset(f));
+
+	//	actual preload sequence
+	this.Preload = async function()
 	{
-		//	calling allSettled() and then adding more... prematurely completes
-		let AllPreloadsFinished = this.IsPreloadFinished();
-		
-		if ( !this.StartButton )
+		await DoPreloadFiles(PreloadFilenameSets);
+		await DoPreloadAssets(PreloadAssets);
+	}
+
+	this.ShowStartButton = function ()
+	{
+		this.StartButton.SetVisible(true);
+	}
+
+	this.CreateStartButton = function ()
+	{
+		function OnClickedStart()
 		{
-			let OnClickedStart = function()
-			{
-				this.StartButtonPressed = true;
-			}
-			this.StartButton = new Pop.Hud.Button('Hint_Start');
-			this.StartButton.OnClicked = OnClickedStart.bind(this);
+			this.StartButtonPressed = true;
 		}
-		
-		//	show button when preloads done
-		//	gr: due to above, this may disable itself again
-		this.StartButton.SetVisible( AllPreloadsFinished );
+		this.StartButton = new Pop.Hud.Button('Hint_Start');
+		this.StartButton.OnClicked = OnClickedStart.bind(this);
+		this.StartButton.SetVisible(false);
 	}
+	this.CreateStartButton();
 }
 
 let LogoState = null;
@@ -202,14 +242,23 @@ function Update_LoadExperience(FirstUpdate,UpdateDuration,StateTime)
 		LogoState = new TLogoState();
 
 		ShowLogoElements();
+
+		function OnPreloadFinished()
+		{
+			LogoState.PreloadFinished = true;
+			LogoState.ShowStartButton();
+		}
+		function OnPreloadError(Error)
+		{
+			ShowError(Error);
+		}
+
+		LogoState.Preload().then(OnPreloadFinished).catch(OnPreloadError);
 	}
 
 	//Pop.Debug("Update_LoadExperience");
 	Logo_Update(UpdateDuration);
-
-	LogoState.Update();
-	
-	
+		
 	//	wait minimum of X secs
 	//	todo: and button press
 	if ( StateTime < MinimumLogoSecs )
@@ -217,19 +266,19 @@ function Update_LoadExperience(FirstUpdate,UpdateDuration,StateTime)
 		//Pop.Debug("Logo...",StateTime);
 		return;
 	}
-	
+
+	if (!LogoState.PreloadFinished)
+		return;
+
 	//	wait for button to be pressed
 	const AssetServerMode = Pop.GetExeArguments().includes('AssetServer');
 	const EditorMode = Pop.GetExeArguments().includes('Editor');
 	const AutoStart = Pop.GetExeArguments().includes('AutoStart') || AssetServerMode || EditorMode;
-	if ( !AutoStart )
-		if ( !LogoState.StartButtonPressed )
-			return;
-	
-	//	wait for preloads
-	if ( !LogoState.IsPreloadFinished() )
+
+	const StartPressed = AutoStart || LogoState.StartButtonPressed;
+	if (!StartPressed)
 		return;
-	
+		
 	HideLogoElements();
 	
 	if ( AssetServerMode )
