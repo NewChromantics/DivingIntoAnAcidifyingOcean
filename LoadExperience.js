@@ -62,9 +62,37 @@ async function DoPreloadFiles(FilenameSets)
 	await Promise.all(Promises);
 }
 
-async function DoPreloadAssets()
-{
 
+async function DoPreloadGeoTextureBufferAsset(Filename)
+{
+	//	gr: not actually async... but adding a yield makes these load over multiple frames
+	await Pop.Yield(1);
+
+	//const AddNoise = Meta.AddNoiseToTextureBuffer !== false;
+	const AddNoise = true;
+
+	//	setup the fetch func on demand, if already cached, won't make a difference
+	AssetFetchFunctions[Filename] = function (RenderContext)
+	{
+		return LoadAssetGeoTextureBuffer(RenderContext,Filename,AddNoise);
+	};
+	const TextureBuffers = GetAsset(Filename,FakeRenderTarget);
+}
+
+async function DoPreloadAssets(Filenames)
+{
+	const Promises = [];
+	for (const Filename of Filenames)
+	{
+		//	instead of waiting for all, do one by one which forces one per frame
+		//	gr: if each is like 5ms, could do 2 per frame..
+		const LoadPromise = DoPreloadGeoTextureBufferAsset(Filename);
+		//Promises.push(LoadPromise);
+		await LoadPromise;
+	}
+
+	//	wait for all to finish
+	await Promise.all(Promises);
 }
 
 
@@ -225,6 +253,7 @@ function TLogoState()
 	{
 		function OnClickedStart()
 		{
+			Pop.Debug("Start clicked");
 			this.StartButtonPressed = true;
 		}
 		this.StartButton = new Pop.Hud.Button('Hint_Start');
