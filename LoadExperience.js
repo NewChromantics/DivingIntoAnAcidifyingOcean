@@ -51,13 +51,15 @@ async function DoPreloadFileset(Filenames)
 
 async function DoPreloadFiles(FilenameSets)
 {
-	//	this is one-by-one but clear
+	//	kick off each async load
+	const Promises = [];
 	for ( const FilenameSet of FilenameSets )
 	{
-		//	try each in order
-		await DoPreloadFileset(FilenameSet);		
+		Promises.push(DoPreloadFileset(FilenameSet));
 	}
-	
+
+	//	wait for all to finish
+	await Promise.all(Promises);
 }
 
 async function DoPreloadAssets()

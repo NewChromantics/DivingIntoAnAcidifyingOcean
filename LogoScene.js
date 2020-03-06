@@ -116,10 +116,12 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 {
 	async function PreloadFiles()
 	{
+		const Promises = [];
 		for (const Filename of LoadJsPreloadFilenames)
 		{
-			await Pop.AsyncCacheAssetAsString(Filename);
+			Promises.push(Pop.AsyncCacheAssetAsString(Filename));
 		}
+		await Promise.all(Promises);
 		Logo.PreloadsFinished = true;
 	}
 
