@@ -144,6 +144,10 @@ const BoldMode = Pop.GetExeArguments().includes('Bold');
 
 //	global params...
 const Params = {};
+Params.YearsPerSecond = 1;
+Params.LogoSwirl_StartPositionX = 0;
+Params.LogoSwirl_StartPositionY = 0.2;
+Params.LogoSwirl_StartPositionZ = -1;
 Params.EnablePhysicsIteration = true;
 Params.XrMode = false;
 Params.ScrollFlySpeed = 1;
@@ -281,6 +285,16 @@ Params.Ocean_Colour7 = [0.17,0.55,0.75];
 Params.Ocean_Colour8 = [0.31,0.70,0.83];
 Params.Ocean_Colour9 = [0.79,0.91,0.95];
 
+Params.Swirl_Colour0 = [1.00,0.00,0.05];
+Params.Swirl_Colour1 = [1.00,0.00,0.05];
+Params.Swirl_Colour2 = [1.00,0.00,0.05];
+Params.Swirl_Colour3 = [1.00,0.00,0.05];
+Params.Swirl_Colour4 = [1.00,0.00,0.05];
+Params.Swirl_Colour5 = [1.00,0.00,0.05];
+Params.Swirl_Colour6 = [1.00,0.00,0.05];
+Params.Swirl_Colour7 = [1.00,0.00,0.05];
+Params.Swirl_Colour8 = [1.00,0.00,0.05];
+Params.Swirl_Colour9 = [1.00,0.00,0.05];
 
 Params.TextSectionYearTimeScale = 0.1;
 

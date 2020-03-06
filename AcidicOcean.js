@@ -36,7 +36,6 @@ const IgnoreActorPrefixs = ['Camera_Spline'];
 
 
 var DebrisColourTexture = new Pop.Image('DebrisColourTexture');
-var SwirlColourTexture = new Pop.Image('SwirlColourTexture');
 
 
 let DebugCamera = new Pop.Camera();
@@ -98,7 +97,6 @@ function GetSoundVolume()	{	return Params.SoundVolume;	}
 var Hud = {};
 var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
 
-var LastMouseRayUv = null;
 var LastMouseClicks = [];	//	array of queued uvs
 
 
@@ -267,7 +265,6 @@ const Timeline_AllowIntroSkipAfterYear = 1812;
 const TimelineRewindToYear = 1808;
 
 Params.TimelineYear = TimelineMinYear;
-Params.YearsPerSecond = 1;
 Params.RewindYearsPerSecond = 35;
 Params.CustomYearsPerSecond = false;
 Params.ShowAnimal_ExplodeSecs = 0;
@@ -322,16 +319,6 @@ Params.Debris_Colour8 = InvalidColour;
 Params.Debris_Colour9 = InvalidColour;
 
 
-Params.Swirl_Colour0 = [0.67,0.00,0.00];
-Params.Swirl_Colour1 = [1.00,0.00,0.05];
-Params.Swirl_Colour2 = [0.71,0.02,0.13];
-Params.Swirl_Colour3 = [1.00,0.00,0.22];
-Params.Swirl_Colour4 = [1.00,0.33,0.31];
-Params.Swirl_Colour5 = [0.92,0.02,0.25];
-Params.Swirl_Colour6 = [0.80,0.05,0.09];
-Params.Swirl_Colour7 = [1.00,0.82,0.29];
-Params.Swirl_Colour8 = [1.00,0.90,0.09];
-Params.Swirl_Colour9 = [0.51,0.25,0.12];
 
 
 let OnParamsChanged = function(Params,ChangedParamName)

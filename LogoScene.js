@@ -14,6 +14,7 @@ const Logo = {};
 Logo.Camera = CreateLogoCamera();
 Logo.WaterActor = null;
 Logo.PreloadsFinished = false;
+Logo.SwirlActor = null;
 
 //	files we need to preload before the "preload stuff"
 const LoadJsPreloadFilenames = [
@@ -70,6 +71,35 @@ function MouseControlCamera()
 	}
 }
 
+function CreateSwirlActor()
+{
+	function GetSplineStartPos()
+	{
+		const Pos = CameraInitial_Pos.slice();
+		Pos[0] += Params.LogoSwirl_StartPositionX;
+		Pos[1] += Params.LogoSwirl_StartPositionY;
+		Pos[2] += Params.LogoSwirl_StartPositionZ;
+		return Pos;
+	}
+
+	//	reset previous asset
+	//	gr: maybe need a better idea here (like set an incrementing function name, or generate the asset now)
+	InvalidateAsset('GenerateRandomSplinePathVertexes()');
+	let Actor = new TActor();
+	Actor.Name = "Swirl";
+	let SplineStartPos = GetSplineStartPos();
+	Actor.LocalToWorldTransform = Math.CreateTranslationMatrix(...SplineStartPos);
+
+	SetupSwirlTextureBufferActor.call(Actor,GetSwirlMeta(Actor).Filename,GetSwirlMeta);
+	//Acid.SwirlActors.push(Actor);
+	Actor.EnablePhysics();
+	//Actor.BoundingBox.Min = [-100,-100,-100];
+	//Actor.BoundingBox.Max = [100,100,100];
+	Pop.Debug("Created swirl",Actor);
+
+	return Actor;
+}
+
 function Logo_GetScene()
 {
 	//Pop.Debug("Logo_GetScene");
@@ -90,8 +120,23 @@ function Logo_GetScene()
 		SetupAnimalTextureBufferActor.call(Actor,GetWaterMeta().Filename,GetWaterMeta);
 		Logo.WaterActor = Actor;
 	}
+
+	//	regen swirl when it hides
+	if (Logo.SwirlActor)
+	{
+		const SplineTime = Logo.SwirlActor.GetMeta().PhysicsUniforms.SplineTime;
+		//Pop.Debug("SplineTime",SplineTime);
+		if (SplineTime > 0.2)
+			Logo.SwirlActor = null;
+	}
+
+	if (!Logo.SwirlActor)
+	{
+		Logo.SwirlActor = CreateSwirlActor();
+	}
+
 	
-	return [Logo.WaterActor];
+	return [Logo.WaterActor,Logo.SwirlActor];
 }
 
 function Logo_GetCamera()
@@ -127,6 +172,8 @@ function Update_LogoScene(FirstUpdate,FrameDuration,StateTime)
 
 	if (FirstUpdate)
 	{
+		Params.YearsPerSecond = 0.2;
+
 		Pop.Debug('Update_LogoScene FirstUpdate');
 		//	setup renderer
 		Window.OnRender = Scene_Render;
@@ -188,6 +235,43 @@ function UpdateNoise(FrameDurationSecs)
 	GpuJobs.push(UpdateNoiseBlit);
 }
 
+function Logo_UpdatePhysics(FrameDurationSecs)
+{
+	const UpdateActorPhysics = function (RenderTarget)
+	{
+		const UpdateActorPhysics = function (Actor)
+		{
+			//	only update actors visible
+			//	gr: maybe do this with the actors in scene from GetRenderScene?
+			const UpdatePhysicsUniforms = function (Shader)
+			{
+				const Bounds = Actor.BoundingBox.Min.concat(Actor.BoundingBox.Max);
+				Shader.SetUniform('OrigPositionsBoundingBox',Bounds);
+			}
+			Actor.PhysicsIteration(FrameDurationSecs,AppTime,RenderTarget,UpdatePhysicsUniforms);
+		}
+
+		//const Scene = GetActorScene_OnlyVisible();
+		const Scene = Logo_GetScene();
+
+		//	update physics
+		const PhysicsEnabled = true;
+		let PhsyicsUpdateCount = 0;
+		if (PhysicsEnabled || PhsyicsUpdateCount == 0)
+		{
+			try
+			{
+				Scene.forEach(UpdateActorPhysics);
+				PhsyicsUpdateCount++;
+			}
+			catch (e)
+			{
+				Pop.Debug("UpdateActorPhysics error",e);
+			}
+		}
+	}
+	GpuJobs.push(UpdateActorPhysics);
+}
 
 //	match Acid_Update()
 function Logo_Update(FrameDurationSecs)
@@ -196,11 +280,14 @@ function Logo_Update(FrameDurationSecs)
 	AppTime += 1 / 60;
 
 	UpdateNoise(FrameDurationSecs);
+	Logo_UpdatePhysics(FrameDurationSecs);
 }
 
 function InitOceanColourTexture()
 {
 	UpdateColourTexture(0,OceanColourTexture,'Ocean_Colour');
+	UpdateColourTexture(0,SwirlColourTexture,'Swirl_Colour');
+
 }
 
 

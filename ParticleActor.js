@@ -1,3 +1,5 @@
+var LastMouseRayUv = null;
+var SwirlColourTexture = new Pop.Image('SwirlColourTexture');
 
 const AutoTriangleMeshCount = 256*512;	//	130k
 const InvalidColour = [0,1,0];
@@ -864,6 +866,8 @@ function GetSwirlMeta(Actor)
 			Meta.PhysicsUniforms.SplineTime = Pop.GetTimeNowMs() / 1000 * Params.Swirl_Physics_SplineTimeSpeed;
 			Meta.PhysicsUniforms.SplineTime %= 1;
 		}
+		//if (isNaN(Meta.PhysicsUniforms.SplineTime))
+		//	throw "Nan splinetime";
 	}
 	//Pop.Debug("SplineTime",Meta.PhysicsUniforms.SplineTime);
 	
@@ -880,8 +884,8 @@ function GetSwirlMeta(Actor)
 	Meta.RenderUniforms = {};
 	Meta.RenderUniforms.TriangleScale = Params.Swirl_TriangleScale;
 	
-	let SwirlColourTexture = Pop.Global.SwirlColourTexture;
-	if ( SwirlColourTexture !== undefined )
+	//let SwirlColourTexture = Pop.Global.SwirlColourTexture;
+	//if ( SwirlColourTexture !== undefined )
 		Meta.OverridingColourTexture = SwirlColourTexture;
 	
 	//Meta.FitToBoundingBox = true;
