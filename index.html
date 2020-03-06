@@ -432,14 +432,16 @@
 			Pop.CompileAndRun( Source, 'bootup.js' );
 		}
 
-		function ShowError(Error)
+		function ShowError(ErrorString)
 		{
-			if (typeof Error != 'string')
-				Error = JSON.stringify(Error);
+			if (ErrorString instanceof Error)
+				ErrorString = ErrorString.toString();
+			if (typeof ErrorString != 'string')
+				ErrorString = JSON.stringify(ErrorString);
 			const ErrorElement = GetElement('AppErrorBox');
 			ShowElement(ErrorElement);
 			ErrorElement.innerText += '\n';
-			ErrorElement.innerText += Error;
+			ErrorElement.innerText += ErrorString;
 			ErrorElement.style.visibility = "visible";
 		}
 
