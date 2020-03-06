@@ -153,63 +153,13 @@ function TLogoState()
 	[
 	 'CameraSpline.dae.json'
 	];
-	this.PreloadGeoFilenames =
-	[
-	];
-	this.PreloadAssets = 
-	[
-		'Models/Microplastic.ply',
-		'Models/Plastic.ply',
-		'Models/Cigarette.ply',
-		'Models/Assorbente.ply',
-		'Models/Jellyfish.ply',
-		'Models/Bag.ply',
-		'Models/Shark.ply',
-		'Models/Straw.ply',
-		'Models/Bottle.ply',
-		'Models/Tuna.ply',
-		'Models/Can.ply',
-		'Models/FoodContainer.ply',
-		'Models/Turtle.ply',
-		'Models/Salmon.ply',
-		'Models/Net.ply',
-		'Models/Pollock.ply',
-		'Models/Cobia.ply',
-		'Models/Menidia.ply',
-		'Models/Cephalopod.ply',
-		'Models/ClownFish.ply',
-		'Models/Anemone.ply',
-		'Models/Crab.ply',
-		'Models/Lobster.ply',
-		'Models/DeepSeaCrab.ply',
-		'Models/AlgalBloom.ply',
-		'Models/Urchin.ply',
-		'Models/BlueCrab.ply',
-		'Models/BrittleStar.ply',
-		'Models/Oyster.ply',
-		'Models/BubbleGumCoral.ply',
-		'Models/Seagrass.ply',
-		'Models/Mussels.ply',
-		'Models/DeepSeaCoral.ply',
-		'Models/CorallineAlgae.ply',
-		'Models/Cockle.ply',
-		'Models/Kelp.ply',
-		'Models/Coral.ply',
-		'Models/Phytoplankton.ply',
-		'Models/JuvenileBivalve.ply',
-		'Models/Larvae.ply',
-		'Models/Krill.ply',
-		'Models/Nodularia.ply',
-		'Models/Pteropod.ply',
-	];
 
 	//	autogen model asset filenames
-	this.PreloadGeoFilenames.push( ...GetAnimalAssetFilenames() );
-
-
+	this.PreloadGeoFilenames = GetAnimalAssetFilenames();
+	
 	//	generate list of files to load
 	const PreloadFilenameSets = [];
-	const PreloadAssets = [];
+	const PreloadAssets = GetAnimalAssetFilenames();
 
 	function QueueFile(Filename)
 	{
@@ -226,16 +176,10 @@ function TLogoState()
 		PreloadFilenameSets.push(AssetFilenames);
 	}
 
-	function QueueAsset(Filename)
-	{
-		PreloadAssets.push(Filename);
-	}
-
 	this.PreloadFilenames.forEach(QueueFile );
 	//this.PreloadGeoFilenames.forEach( f => QueueAssetFile( f, ['texturebuffer.png','geometry'] ) );
 	this.PreloadGeoFilenames.forEach(f => QueueAssetFile( f, ['texturebuffer.png'] ) );
 	this.PreloadSceneFilenames.forEach(f => QueueAssetFile( f, ['scene'] ) );
-	this.PreloadAssets.forEach(f => QueueAsset(f));
 
 	//	actual preload sequence
 	this.Preload = async function()
