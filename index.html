@@ -434,9 +434,16 @@
 				}
 			}
 
+			let BootupFilename = 'bootup.js';
+
+			if (Pop.GetExeArguments().includes('AudioTest'))
+			{
+				BootupFilename = 'AudioTest.js';
+			}
+
 			//	these need to finish for bootup
-			let Source = await Pop.LoadFileAsStringAsync('bootup.js');
-			Pop.CompileAndRun( Source, 'bootup.js' );
+			let Source = await Pop.LoadFileAsStringAsync(BootupFilename);
+			Pop.CompileAndRun( Source, BootupFilename );
 		}
 
 		function ShowError(ErrorString)
