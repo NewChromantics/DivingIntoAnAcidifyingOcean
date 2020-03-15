@@ -166,7 +166,7 @@ a:hover
 	width: 80vw;
 	height: calc( 50vh - var(--TheTop));
 	xbottom: 60vh; /* start top is 65 */
-	background-image: url(icons/Logo_landscape.png);
+	background-image: url(icons/Logo_landscape_NormallySpaced.png);
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center 40%;
@@ -178,7 +178,7 @@ a:hover
 {
 	#LogoBg {
 		--TheTop: calc( 4 * var(--ButtonSize) + 2vh);
-		background-image: url(icons/Logo_portrait.png);
+		background-image: url(icons/Logo_portrait_normallySpaced.png);
 		height: calc( 50vh - var(--TheTop));
 	}
 }
@@ -1297,6 +1297,27 @@ hr:nth-child(even)
 	background-repeat:	no-repeat;
 	background-size:	0.5vh;
 	background-position:	0.0vh 1.2vh;
+}
+
+/* landscape small screen */
+@media (max-device-width: 780px)
+{
+	#AnimalCard_Description h1, #AnimalCard_Description h2
+	{
+		letter-spacing: 0.07vw;	/* use of viewport width! */
+		/* remove h1 & h2 default styles */
+		padding:		0px;
+		margin:			0px;
+		font-size:		2vh;
+		font-weight:	300;
+		margin-bottom:	1vh;
+		padding-left:	2vh;	/* space for bullet */
+
+		background-image:	url(icons/bullet.svg);
+		background-repeat:	no-repeat;
+		background-size:	0.5vh;
+		background-position:	0.0vh 1.2vh;
+	}
 }
 
 
