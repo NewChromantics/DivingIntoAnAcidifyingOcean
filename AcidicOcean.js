@@ -94,8 +94,20 @@ function GetMusic2Volume()	{	return Params.Music2Volume;	}
 function GetVoiceVolume()	{	return Params.VoiceVolume;	}
 function GetSoundVolume()	{	return Params.SoundVolume;	}
 
+function GetAudioOverrideState()
+{
+	const Default = Pop.Audio.DefaultGetGlobalAudioState();
+	if (Default)
+		return Default;
+
+	if (!Params.ExperiencePlaying)
+		return 'Pause';
+
+	return null;
+}
+
 var Hud = {};
-var AudioManager = new TAudioManager( GetAudioGetCrossFadeDuration, GetMusicVolume, GetMusic2Volume, GetVoiceVolume, GetSoundVolume );
+var AudioManager = new TAudioManager(GetAudioGetCrossFadeDuration,GetMusicVolume,GetMusic2Volume,GetVoiceVolume,GetSoundVolume,GetAudioOverrideState );
 
 var LastMouseClicks = [];	//	array of queued uvs
 
@@ -1707,6 +1719,7 @@ function Update_TextTimeline3(FirstUpdate,FrameDuration,StateTime)
 
 
 
+let LastAudioState = null;
 
 function Acid_Update(FrameDurationSecs)
 {
@@ -1730,10 +1743,15 @@ function Acid_Update(FrameDurationSecs)
 		AudioManager.PlayVoice( CurrentVoice );
 	}
 
-	//	disable audio if in the background (assuming we even got an update
-	let AudioEnabled = Window.IsForeground();
-	AudioEnabled = AudioEnabled && Params.ExperiencePlaying;
-	//AudioManager.Enable(AudioEnabled);
+	//	trigger the audio manager watch
+	//	gr: this should turn into a promise queue or something on the audio manager like a policy
+	const NewAudioState = GetAudioOverrideState();
+	if (NewAudioState != LastAudioState)
+	{
+		Pop.Debug("Manually triggering audio change");
+		LastAudioState = NewAudioState;
+		Pop.WebApi.SetIsForeground(undefined);
+	}
 
 	AudioManager.Update( FrameDurationSecs );
 
