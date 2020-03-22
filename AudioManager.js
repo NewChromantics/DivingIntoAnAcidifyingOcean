@@ -10,6 +10,7 @@ function OnDomTrigger()
 	DomTriggerPromise.Resolve();
 }
 window.addEventListener('click',OnDomTrigger,true);
+window.addEventListener('touchstart',OnDomTrigger,true);	//	for safari ios
 
 Pop.Audio.DefaultGetGlobalAudioState = function ()
 {
