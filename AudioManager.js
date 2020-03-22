@@ -10,7 +10,8 @@ function OnDomTrigger()
 	DomTriggerPromise.Resolve();
 }
 window.addEventListener('click',OnDomTrigger,true);
-window.addEventListener('touchstart',OnDomTrigger,true);	//	for safari ios
+window.addEventListener('touchend',OnDomTrigger,true);
+
 
 Pop.Audio.DefaultGetGlobalAudioState = function ()
 {
@@ -55,7 +56,95 @@ if ( Pop.GetPlatform() != 'Web' )
 	Audio = AudioFake;
 }
 
+const SoundPoolSize = 20;
 
+class TSoundPool
+{
+	constructor()
+	{
+		this.PreallocSounds = [];
+		this.UsedSounds = [];
+		this.FreeSounds = [];
+		this.PreallocPromise = Pop.CreatePromise();
+
+		for ( let i=0;	i<SoundPoolSize;	i++ )
+		{
+			const Sound = this.CreateSound();
+			this.PreallocSounds.push(Sound);
+		}
+		
+		//	we can't use the async methods here, the play on preallocs must be done in the same callstack
+		window.addEventListener('click', this.ReadyPreallocSounds.bind(this), true );
+		window.addEventListener('touchend', this.ReadyPreallocSounds.bind(this), true );
+	}
+
+	CreateSound()
+	{
+		const Sound = new Audio();
+		this.ResetSound(Sound);
+		return Sound;
+	}
+	
+
+	ResetSound(Sound)
+	{
+		//	"" triggers an error!
+		//Sound.src = "";
+		Sound.src = SilentMp3Url;
+		Sound.load();
+		Sound.pause();
+		Sound.PlayPromise = null;
+	}
+	
+	
+	//	for safari, this MUST be called in the callstack from a user-event (touchend)
+	ReadyPreallocSounds()
+	{
+		while ( this.PreallocSounds.length )
+		{
+			const Sound = this.PreallocSounds.shift();
+			Sound.PlayPromise = Sound.play();	//	should be silent mp3 at this point
+			this.FreeSounds.push(Sound);
+		}
+		//	notify anything waiting for preallocs
+		this.PreallocPromise.Resolve();
+	}
+	
+	async Allocate()
+	{
+		//	wait for prealloc
+		await this.PreallocPromise;
+		
+		//	pop sound from free pool
+		if ( this.FreeSounds.length == 0 )
+			throw `SoundPool.Allocate has no free sounds (${this.UsedSounds.length} used, ${this.PreallocSounds.length} prealloc)`;
+		const Sound = this.FreeSounds.shift();
+
+		//	move to used sounds
+		this.UsedSounds.push(Sound);
+
+		//	make sure the silent-play promise has completed
+		await Sound.PlayPromise;
+
+		//	return the sound which is ready to be changed & played
+		return Sound;
+	}
+	
+	Release(Sound)
+	{
+		this.ResetSound(Sound);
+		const Index = this.UsedSounds.indexOf(Sound);
+		if ( Index == -1 )
+		{
+			Pop.Debug("Sound pool releasing sound not in used list",Sound);
+			return;
+		}
+		this.UsedSounds.splice(Index,1);
+		this.FreeSounds.push(Sound);
+	}
+}
+
+Pop.Audio.SoundPool = new TSoundPool();
 
 Pop.Audio.Sound = class
 {
@@ -75,23 +164,30 @@ Pop.Audio.Sound = class
 			return this.State;
 		}.bind(this);
 
+		this.Volume = 0;
 		this.Url = Url;
 		this.Loop = Loop;
 		this.StateQueue = new Pop.PromiseQueue();
 		this.State = 'Play';
-		this.Sound = new Audio();
+		this.Sound = null;
 		this.Error = null;
-		this.Sound.src = Url;
-		this.AsyncUpdate().then(this.OnFinished.bind(this)).catch(this.OnError.bind(this));
+		this.AsyncUpdate(Url).then(this.OnFinished.bind(this)).catch(this.OnError.bind(this));
 	}
 
 	HasFinished()
 	{
 		//	we manually stopped
-		if (this.Unloaded === true)
+		if ( this.State == 'Stop' )
 			return true;
 
-		return this.Sound.ended;
+		if ( this.Error != null )
+			return true;
+		
+		if ( this.Sound )
+			return this.Sound.ended;
+		
+		//	sound not allocated yet, pre-alloc state
+		return false;
 	}
 
 	Destroy()
@@ -112,7 +208,10 @@ Pop.Audio.Sound = class
 
 	OnFinished()
 	{
-		//Pop.Debug("AudioSound OnFinished");
+		Pop.Debug("Sound has finished",this);
+		//	async loop has finished
+		Pop.Audio.SoundPool.Release(this.Sound);
+		this.Sound = null;
 	}
 
 	OnError(Error)
@@ -121,14 +220,16 @@ Pop.Audio.Sound = class
 		Pop.Debug(`Pop.Audio.Sound OnError ${Error}`);
 	}
 
-	async AsyncUpdate()
+	async AsyncUpdate(Url)
 	{
-		//	we could ditch this wait and call Play() first and IF there's an error, THEN wait for a click
-		await DomTriggerPromise;
+		Pop.Debug(`Waiting for sound to alloc ${Url}`);
+		this.Sound = await Pop.Audio.SoundPool.Allocate();
 		//	load & prep to play
+		this.Sound.src = Url;
 		Pop.Debug("this.Sound.play",this.Sound);
 		await this.Sound.play();
 
+		this.Sound.Volume = this.Volume;
 		this.Sound.loop = this.Loop;
 
 		//	immediately pause so we're in a ready state
@@ -139,7 +240,7 @@ Pop.Audio.Sound = class
 		this.SyncState();
 
 		//	wait for state to change
-		while (true)
+		while (!this.HasFinished())
 		{
 			const NewState = await this.StateQueue.Allocate();
 			//Pop.Debug(`NewState = ${NewState}`);
@@ -149,7 +250,9 @@ Pop.Audio.Sound = class
 
 	SetVolume(Volume)
 	{
-		this.Sound.volume = Volume;
+		this.Volume = Volume;
+		if ( this.Sound )
+			this.Sound.volume = Volume;
 	}
 
 	SyncState()//private
@@ -168,12 +271,17 @@ Pop.Audio.Sound = class
 		}
 		else if (State == 'Stop')
 		{
+			//	make sure it's not playing
+			if ( this.Sound )
+				this.Sound.pause();
+
+			/*
 			//	there is no stop. Unload
-			//this.Sound.stop();
 			this.Sound.pause();
 			this.Sound.removeAttribute('src'); // empty source
 			this.Sound.load();
 			this.Unloaded = true;
+			 */
 			if (!this.HasFinished())
 				throw "After stop, we should be finished";
 		}
@@ -191,18 +299,6 @@ Pop.Audio.Sound = class
 	{
 		const State = this.GetState();
 		this.StateQueue.Resolve(State);
-	}
-
-	SetStateStop()
-	{
-		//	stop it playing
-		//	https://stackoverflow.com/a/28060352/355753
-		//	may need to check its loaded first...
-		this.Sound.pause();
-		//	"" triggers an error!
-		//Sound.src = "";
-		this.Sound.src = SilentMp3Url;
-		this.Sound.load();
 	}
 }
 
