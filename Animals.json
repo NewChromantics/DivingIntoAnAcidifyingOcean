@@ -21,7 +21,7 @@
 		"Categorys" : [ "Animal_"],
 		"Scale":0.7,
         "TriangleScale":0.002,
-        "ShareText": "Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years. It’s remarkable how much these creatures can endure, but how do we keep our oceans from being predominantly full of Jellyfish?"
+        "ShareText": "Jellyfish are one of the oldest species on the planet, having existed for more than 540 million years. It's remarkable how much these creatures can endure, but how do we keep our oceans from being predominantly full of Jellyfish?"
 
 	},
 
@@ -38,7 +38,7 @@
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.62,
 		"Animal_PhysicsDuration":35,
-        "ShareText": "Salmons use their sense of smell to detect predators, find food, and make their way back to their spawning grounds. In acidified waters that they lose this ability. They’re also one of the most overfished species and a key element in the Black Bear’s diet"
+        "ShareText": "Salmons use their sense of smell to detect predators, find food, and make their way back to their spawning grounds. In acidified waters that they lose this ability. They're also one of the most overfished species and a key element in the Black Bear's diet"
 
 	},
 	"Cephalopod":
@@ -51,7 +51,7 @@
 		"Scale":1,
         "TriangleScale":0.0028,
         "Animal_PhysicsDuration":35,
-        "ShareText": "When environmental hypoxia – a lack of oxygen in the water – and water acidification pressures are high, a Cephalopod’s blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs"
+        "ShareText": "When environmental hypoxia - a lack of oxygen in the water – and water acidification pressures are high, a Cephalopod's blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs"
 
 	},
 
@@ -79,7 +79,7 @@
 		"Scale":0.8,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Acidification is expected to affect Oysters which play a disproportionately important role in ecosystems’ habitats. This leads to shifts in the composition, structure & function of these systems, ultimately affecting goods & services provided to society"
+        "ShareText": "Acidification is expected to affect Oysters which play a disproportionately important role in ecosystems' habitats. This leads to shifts in the composition, structure & function of these systems, ultimately affecting goods & services provided to society"
 
 	},
 
@@ -118,7 +118,7 @@
 		"Scale":1,
 		"TriangleScale":0.002,
 		"Animal_PhysicsDuration":40,
-        "ShareText": "Ocean acidification interferes with Sea Urchins’ ability to transform calcium, magnesium, and other minerals from seawater to grow their inner shell, spines & teeth. This leads to changes in their skeletal structures & problems with food digestion"
+        "ShareText": "Ocean acidification interferes with Sea Urchins' ability to transform calcium, magnesium, and other minerals from seawater to grow their inner shell, spines and teeth. This leads to changes in skeletal structures and problems with food digestion"
 
 	},
 	"Cockle":
@@ -131,7 +131,7 @@
 		"Scale":0.6,
         "TriangleScale":0.0015,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Healthy Aragonite saturation state should sit between 3 and 4Ω, but around the world it has already fallen by 1Ω. If it continues to fall to below 1Ω, all skeletons and shells will start dissolving"
+        "ShareText": "Healthy Aragonite saturation state should sit between 3 and 4, but around the world it has already fallen by 1. If it continues to fall to below 1, all skeletons and shells will start dissolving"
 
 	},
 	"AlgalBloom":
@@ -144,7 +144,7 @@
 		"Scale":0.4,
         "TriangleScale":0.0015,
         "Animal_PhysicsDuration":35,
-        "ShareText": "With pollution and warming, Cyanobacteria, a photosynthetic bacteria causing some Harmful Algal Bloom, can bloom uncontrolled, die & decompose. Its decomposition consumes oxygen in the water, creating a state of low/no oxygen dissolved: a Dead Zone"
+        "ShareText": "With pollution and warming, Cyanobacteria, a photosynthetic bacteria causing some Harmful Algal Bloom, can bloom uncontrolled, die and decompose. Its decomposition consumes oxygen in the water, creating a state of low/no oxygen dissolved: a Dead Zone"
 
 	},
 	"Pollock":
@@ -172,7 +172,7 @@
 		"Scale":0.8,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":40,
-        "ShareText": "Krill’s exoskeleton, which contains carbonate, is susceptible to dissolution under the low pH conditions that occur in more acidified ocean waters. Studies show that increased carbon dioxide can disrupt the development of Krill eggs and hatching success"
+        "ShareText": "Krill's exoskeleton, which contains carbonate, is susceptible to dissolution under the low pH conditions that occur in more acidified ocean waters. Studies show that increased carbon dioxide can disrupt the development of Krill eggs and hatching success"
 
 	},
 	"CorallineAlgae":
@@ -185,7 +185,7 @@
 		"Scale":0.6,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Coralline Algae’s cover has been found to be highly correlated with pH, decreasing rapidly below a pH of 7.8 and absent at a pH of 7.0; in lab experiments, they completely dissolve after two weeks at a pH of 7.0"
+        "ShareText": "Coralline Algae's cover has been found to be highly correlated with pH, decreasing rapidly below a pH of 7.8 and absent at a pH of 7.0; in lab experiments, they completely dissolve after two weeks at a pH of 7.0"
 
 	},
 	"Nodularia":
@@ -224,7 +224,7 @@
 		"Scale":0.8,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Deep sea waters are more acidic because of the accumulation of CO2 from the respiration of other deep sea organisms. Adding anthropogenic CO2 makes these waters even more acidic. Deep Sea Crabs don’t recover well from short term exposure to very high CO2 "
+        "ShareText": "Deep sea waters are more acidic because of the accumulation of CO2 from the respiration of other deep sea organisms. Adding anthropogenic CO2 makes these waters even more acidic. Deep Sea Crabs don't recover well from short term exposure to very high CO2"
 
 	},
 	"Shark":
@@ -240,7 +240,7 @@
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.92,
 		"Animal_PhysicsDuration":30,
-        "ShareText": "Warming and acidification harms Sharks by increasing energetic demands, decreasing metabolic efficiency, and reducing their ability to locate food & in growth rates. The survival of hatched Shark embryos declines by up to 44% in low pH waters"
+        "ShareText": "Warming and acidification harms Sharks by increasing energetic demands, decreasing metabolic efficiency, reducing their ability to locate food and growth rates. The survival of hatched Shark embryos declines by up to 44% in low pH waters"
 
 	},
 
@@ -350,7 +350,7 @@
 		"Scale":1,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Increasing temperatures can be lethal to Sea Turtles’ eggs if above 33°C. In the Coral reefs where Hawksbills, a kind of Turtle, is found, increased water temperatures and acidification will undermine the ability of Coral Polyps to survive and build reefs"
+        "ShareText": "Increasing temperatures can be lethal to Sea Turtles' eggs if above 33C. In the Coral reefs where Hawksbills, a kind of Turtle, is found, increased water temperatures and acidification will undermine the ability of Coral Polyps to survive and build reefs"
 
 	},
 	"Tuna":
@@ -410,7 +410,7 @@
 		"Scale":1,
         "TriangleScale":0.0015,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Mussels’ Byssal threads in acidified conditions are 40% weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%"
+        "ShareText": "Mussels' Byssal threads in acidified conditions are 40% weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%"
 
 	},
 
@@ -437,7 +437,7 @@
         "Scale":0.55,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":30,
-        "ShareText": "With increasing acidification, Brittle Stars & other invertebrates may have more difficulty secreting calcite, affecting their skeletal formation and their ability to survive. Current research suggests Brittle Stars are close to a threshold of dissolution"
+        "ShareText": "With increasing acidification, Brittle Stars and other invertebrates may have more difficulty secreting calcite, affecting their skeletal formation and their ability to survive. Current research suggests Brittle Stars are close to a threshold of dissolution"
 	},
 		"Coral":
 	{
@@ -462,7 +462,7 @@
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
         "TriangleScale":0.003,
-        "ShareText": "93 to 236 thousand metric tons of Microplastics are estimated in the world’s oceans. Scientists have recently discovered the gravity of the problem. In a recent study, 67% of the scat of 51 wild fur Seals showed an abundance of microfibres"
+        "ShareText": "93 to 236 thousand metric tons of Microplastics are estimated in the world's oceans. Scientists have recently discovered the gravity of the problem. In a recent study, 67% of the scat of 51 wild fur Seals showed an abundance of microfibres"
 
 	},
 		"Bottle":
