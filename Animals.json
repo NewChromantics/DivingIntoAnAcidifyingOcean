@@ -79,7 +79,7 @@
 		"Scale":0.8,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Acidification is expected to affect Oysters which play a disproportionately important role in ecosystems' habitats. This leads to shifts in the composition, structure & function of these systems, ultimately affecting goods & services provided to society"
+        "ShareText": "Acidification is expected to affect Oysters which play a disproportionately important role in ecosystems' habitats. This leads to shifts in the composition, structure and function of these systems, ultimately affecting goods and services provided to society"
 
 	},
 
@@ -240,7 +240,7 @@
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.92,
 		"Animal_PhysicsDuration":30,
-        "ShareText": "Warming and acidification harms Sharks by increasing energetic demands, decreasing metabolic efficiency, reducing their ability to locate food and growth rates. The survival of hatched Shark embryos declines by up to 44% in low pH waters"
+        "ShareText": "Warming and acidification harms Sharks by increasing energetic demands, decreasing metabolic efficiency, reducing their ability to locate food and growth rates. The survival of hatched Shark embryos declines by up to 44%25 in low pH waters"
 
 	},
 
@@ -285,7 +285,7 @@
         "Scale":1,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":35,
-        "ShareText": "In lower pH levels, the calcification rates in the cold water species Lophelia Pertusa (Deep Sea Coral) are reduced by an average of 30-56%"
+        "ShareText": "In lower pH levels, the calcification rates in the cold water species Lophelia Pertusa (Deep Sea Coral) are reduced by an average of 30-56%25"
 
 	},
 	"BubblegumCoral":
@@ -366,7 +366,7 @@
 		"ShowAnimal_CameraOffsetY": 0.02,
 		"ShowAnimal_CameraOffsetZ": 1.92,
 		"Animal_PhysicsDuration":30,
-        "ShareText": "Bluefin Tuna represents only 1% of the global catch, but illegal fishing is pushing it to the brink of extinction. Ocean acidification causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the Yellowfin larvae within a week of exposure"
+        "ShareText": "Bluefin Tuna represents only 1%25 of the global catch, but illegal fishing is pushing it to the brink of extinction. Ocean acidification causes damages to the liver, kidney, pancreas, muscle tissue, and eyes of the Yellowfin larvae within a week of exposure"
 
 	},
 	
@@ -410,7 +410,7 @@
 		"Scale":1,
         "TriangleScale":0.0015,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Mussels' Byssal threads in acidified conditions are 40% weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%"
+        "ShareText": "Mussels' Byssal threads in acidified conditions are 40%25 weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%25"
 
 	},
 
@@ -462,7 +462,7 @@
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
         "TriangleScale":0.003,
-        "ShareText": "93 to 236 thousand metric tons of Microplastics are estimated in the world's oceans. Scientists have recently discovered the gravity of the problem. In a recent study, 67% of the scat of 51 wild fur Seals showed an abundance of microfibres"
+        "ShareText": "93 to 236 thousand metric tons of Microplastics are estimated in the world's oceans. Scientists have recently discovered the gravity of the problem. In a recent study, 67%25 of the scat of 51 wild fur Seals showed an abundance of microfibres"
 
 	},
 		"Bottle":
@@ -473,7 +473,7 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
         "TriangleScale":0.003,
-        "ShareText": "1 million Plastic Bottles are bought around the world every minute. This will jump up another 20% by 2021, to about 583.3 billion - extend more than halfway to the Sun -, creating an environmental crisis predicted to be as serious as climate change"
+        "ShareText": "1 million Plastic Bottles are bought around the world every minute. This will jump up another 20%25 by 2021, to about 583.3 billion - extend more than halfway to the Sun -, creating an environmental crisis predicted to be as serious as climate change"
 
 	},
 		"Can":
@@ -534,7 +534,7 @@
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
         "TriangleScale":0.003,
-        "ShareText": "One in three species of marine mammals have been found entangled in marine litter. It's predicted that by 2050, 99% of all species will have ingested plastic"
+        "ShareText": "One in three species of marine mammals have been found entangled in marine litter. It's predicted that by 2050, 99%25 of all species will have ingested plastic"
 
 	},
 		"FoodContainer":
@@ -546,7 +546,7 @@
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
         "TriangleScale":0.003,
-        "ShareText": "Food Packaging plastic waste accounts for just over 40% of total plastic usage. Over the last 10 years more plastic has been produced than during the whole of the last century"
+        "ShareText": "Food Packaging plastic waste accounts for just over 40%25 of total plastic usage. Over the last 10 years more plastic has been produced than during the whole of the last century"
 
 	},
 		"Cigarette":
