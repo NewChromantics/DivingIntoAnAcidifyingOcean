@@ -318,60 +318,31 @@
 	"2101":
 	{
 		"YearsPerSecond":0.9,
-		"Subtitle":"IF WE DON’T DRASTICALLY <strong> REDUCE OUR CO2 PRODUCTION </strong>",
+		"Subtitle":" <strong> YOU STILL HAVE THE POWER TO HELP OUR OCEANS. </strong>",
 		"VoiceAudio":"Audio/AcidicOcean_VOICE_Conclusion.mp3"
-	},
-
-	"2103":
-	{
-		"Subtitle":"AND <strong> LIMIT THE PLANET’S TEMPERATURE RISE TO UNDER 1.5°C </strong>"
 	},
 
 	"2107":
 	{
-		"Subtitle":"<strong>THE WHOLE OCEAN SYSTEM MAY COLLAPSE</strong>"
-	},
-
-	"2109":
-	{
-		"Subtitle":"THIS WON’T ONLY AFFECT THE OCEAN, MANY <strong>LAND ANIMALS</strong> DEPEND ON FISH TO SURVIVE"
+		"Subtitle":"BUT THE TIME TO ACT IS <strong> NOW </strong>"
 	},
 
 	"2114":
 	{
-		"Subtitle":"AND SO DO <strong>WE</strong>, OUR <strong>ECONOMIES</strong> AND OUR <strong>CULTURES</strong>"
+		"Subtitle":""
 	},
 
-	"2118":
-	{
-		"Subtitle":"TO PREVENT THIS, WE NEED TO <strong>REDUCE OUR CARBON FOOTPRINT</strong>"
-	},
-
-	"2122":
-	{
-		"Subtitle":"<strong>YOU</strong> STILL HAVE THE POWER TO <strong>SLOW DOWN</strong> THIS CATASTROPHE"
-	},
-
-	"2127":
-	{
-		"Subtitle":"BUT THE TIME TO ACT IS <strong>NOW</strong>"
-	},
-	"2130":
-	{
-		"Subtitle":" "
-	},
-
-	"2133":
+	"2115":
 	{
 		"MosaicVisible": true
 	},
 
-	"2143":
+	"2125":
 	{
 		"MosaicVisible": false
 	},
 
-	"2145":
+	"2127":
 	{
 		"SolutionVisible": true
 	}
