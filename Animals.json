@@ -51,7 +51,7 @@
 		"Scale":1,
         "TriangleScale":0.0028,
         "Animal_PhysicsDuration":35,
-        "ShareText": "When environmental hypoxia - a lack of oxygen in the water – and water acidification pressures are high, a Cephalopod's blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs"
+        "ShareText": "When environmental hypoxia, a lack of oxygen in the water, and water acidification pressures are high, a Cephalopod's blood is unable to take in a sufficient quantity of oxygen from their gills, and death from asphyxiation occurs"
 
 	},
 
@@ -65,7 +65,7 @@
 		"Scale":1,
         "TriangleScale":0.003,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Seagrasses are in decline due to eutrophication – when waters get over-enriched with toxic nutrients like phosphates and nitrates. Other causes of their decline include the mechanical destruction of habitat and intense overfishing"
+        "ShareText": "Seagrasses are in decline due to eutrophication: when waters get over enriched with toxic nutrients like phosphates and nitrates. Other causes of their decline include the mechanical destruction of habitat and intense overfishing"
 
 	},
 
@@ -298,7 +298,7 @@
 		"Scale":0.6,
         "TriangleScale":0.002,
         "Animal_PhysicsDuration":30,
-        "ShareText": "Like aragonitic Corals, Bubblegum Corals are likely to be affected by changes in calcite saturation with depth – even in the deepest waters there is no escape from acidification"
+        "ShareText": "Like aragonitic Corals, Bubblegum Corals are likely to be affected by changes in calcite saturation with depth. Even in the deepest waters there is no escape from acidification"
 
 	},
 	"Lobster":
@@ -410,7 +410,7 @@
 		"Scale":1,
         "TriangleScale":0.0015,
         "Animal_PhysicsDuration":35,
-        "ShareText": "Mussels' Byssal threads in acidified conditions are 40%25 weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6 - expected by 2100 - calcification decreased by 25%25"
+        "ShareText": "Mussels' Byssal threads in acidified conditions are 40%25 weaker than normal, impairing their ability to cling. Acidification also affects the way their shells are formed: at pH 7.6, expected by 2100, calcification decreased by 25%25"
 
 	},
 
@@ -473,7 +473,7 @@
 		"AfterYear":	1956,
 		"Categorys" : [ "Nasty_Animal_" ],
         "TriangleScale":0.003,
-        "ShareText": "1 million Plastic Bottles are bought around the world every minute. This will jump up another 20%25 by 2021, to about 583.3 billion - extend more than halfway to the Sun -, creating an environmental crisis predicted to be as serious as climate change"
+        "ShareText": "1 million Plastic Bottles are bought around the world every minute. This will jump up another 20%25 by 2021, to about 583.3 billion, more than halfway to the Sun, creating an environmental crisis predicted to be as serious as climate change"
 
 	},
 		"Can":
@@ -570,7 +570,7 @@
 		"Categorys" : [ "Nasty_Animal_" ],
 		"Scale":1,
         "TriangleScale":0.003,
-        "ShareText": "On average, abandoned fishing nets entangle and harm between 30-40 marine animals per net when left in the ocean"
+        "ShareText": "On average, abandoned fishing nets entangle and harm between 30,40 marine animals per net when left in the ocean"
 
 	}
 	
