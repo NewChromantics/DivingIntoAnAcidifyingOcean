@@ -748,7 +748,7 @@ hr:nth-child(even)
 
 #crtq a
 {
-	width:			32vw;
+	width:			45vw;
 	height:			4vh;
 	xbackground:	lime;
 	display:		inline-block;
@@ -761,7 +761,7 @@ hr:nth-child(even)
 {
 	#crtq a
 	{
-		width:			50vw;
+		width:			60vw;
 		height:			3vh;
 		xbackground:	lime;
 		display:		inline-block;
