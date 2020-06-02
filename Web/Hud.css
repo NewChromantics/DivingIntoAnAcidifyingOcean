@@ -1248,8 +1248,7 @@ hr:nth-child(even)
 		/* safari on ios cuts off the bottom
 		 https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser
 		 */
-		xheight: 	-webkit-fill-available;
-		height:			85vh;
+		height: 	-webkit-fill-available;
 	}
 
 	#AnimalCardContainer > *
