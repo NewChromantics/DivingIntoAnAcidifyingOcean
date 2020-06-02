@@ -729,8 +729,8 @@ hr:nth-child(even)
 		margin: auto;
 		margin-top: -8vh;
 		margin-bottom: 0; 
-		width:		80%;
-		left:		10%;
+		width:		85%;
+		left:		5%;
 		xbackground:	blue;
 	}
 }
@@ -798,7 +798,7 @@ hr:nth-child(even)
 	{
 		display:	inline-block;
 		xbackground:	blue;
-		height:		7vh;
+		height:		5vh;
 		width:		40vw;
 		align-items: center;
 	}
@@ -1829,6 +1829,7 @@ hr:nth-child(even)
 {
 	width: 8%;
 	left: 90vw;
+	margin-top: -2vh;
 }
 
 @media (max-device-width: 700px)
@@ -1836,7 +1837,9 @@ hr:nth-child(even)
 	#AboutNext
 	{
 		width: 20%;
-		left: 90vw;
+		left: 95vw;
+		margin-top: -6vh;
+		margin-left: 14vw;
 	}
 }
 
