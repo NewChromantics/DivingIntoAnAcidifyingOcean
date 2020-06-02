@@ -1249,7 +1249,8 @@ hr:nth-child(even)
 		 https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser
 		 */
 		xxheight: 	-webkit-fill-available;
-		margin-top: 2vh;
+		margin-top: 8vh;
+    	height: 85vh;
 	}
 
 	#AnimalCardContainer > *
